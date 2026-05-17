@@ -161,6 +161,22 @@ def test_list_runs(runner: CliRunner) -> None:
     assert result.exit_code == 0
 
 
+def test_list_finds_bundled_citation_audit(runner: CliRunner) -> None:
+    """The real bundled skills (not monkeypatched) load and surface."""
+    result = runner.invoke(cli.main, ["list"])
+    assert result.exit_code == 0
+    assert "citation-audit" in result.output
+    assert "knowledge/critique-techniques/citation-claim-alignment.md" in result.output
+
+
+def test_prompt_pack_includes_citation_audit(runner: CliRunner) -> None:
+    """The bundled citation-audit skill's prompt body lands in the pack."""
+    result = runner.invoke(cli.main, ["prompt-pack"])
+    assert result.exit_code == 0
+    assert "## Skill: citation-audit" in result.output
+    assert "Citation audit (platform-neutral prompt)" in result.output
+
+
 def test_list_shows_bundled_skills(runner: CliRunner, monkeypatch: pytest.MonkeyPatch) -> None:
     fake = [
         {

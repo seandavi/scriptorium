@@ -67,17 +67,13 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/scriptorium"]
-# Ship the JSON Schema, plugin manifest, and starter template as package
-# data so the CLI can locate them via `importlib.resources`.
-#
-# `skills/` is still intentionally excluded: it has no content yet
-# (v0.1 work in flight) and hatchling errors if a force-include points
-# at a missing directory. It will be added back when the directory has
-# content. See GitHub issues #5/#6/#7 (skills).
+# Ship the JSON Schema, plugin manifest, starter template, and skills as
+# package data so the CLI can locate them via `importlib.resources`.
 [tool.hatch.build.targets.wheel.force-include]
 "schemas" = "scriptorium/_schemas"
 ".claude-plugin" = "scriptorium/_claude_plugin"
 "templates" = "scriptorium/_templates"
+"skills" = "scriptorium/_skills"
 
 [tool.hatch.build.targets.sdist]
 include = [
