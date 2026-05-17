@@ -1,0 +1,39 @@
+project:
+  title: "Test manuscript"
+  target_type: manuscript
+  target_venue: "Journal of Tests"
+
+document_phase:
+  current: draft
+
+core_claims:
+  - "Method X outperforms baseline on benchmark Y."
+
+known_weaknesses:
+  - "Only validated on one dataset."
+
+terminology:
+  preferred: ["scriptorium"]
+  forbidden: ["very", "really"]
+  synonyms:
+    "scriptoria": "scriptorium"
+
+style:
+  tone: ["quantitative", "restrained"]
+  voice: active
+  audience: "general scientific audience"
+
+constraints:
+  preserve_citations: true
+  preserve_statistics: true
+  avoid_hype: true
+  max_word_count: 4000
+
+bibliography:
+  paths: ["refs.bib"]
+  format: bibtex
+
+sections:
+  - name: introduction
+    path: "sections/01-intro.md"
+    status: draft
