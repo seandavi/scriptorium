@@ -1,0 +1,50 @@
+# Scriptorium docs site (Astro + Starlight)
+#
+# One-time setup:
+#   just install                 # npm install (~30s)
+#
+# Daily workflow:
+#   just dev                     # local dev server with hot reload
+#   just build                   # production build into ./dist
+#   just preview                 # serve the production build
+#   just clean                   # blow away node_modules + generated content
+#
+# Requires:
+#   - node >= 20, npm
+#   - uv (for the preprocess script — uses inline script metadata)
+#   - quarto (only if any .qmd files exist under docs/qmd/)
+
+set shell := ["bash", "-uc"]
+
+# Default: list available targets.
+default:
+    @just --list
+
+# Install npm dependencies.
+install:
+    npm install
+
+# Run the preprocess pass: copy root docs + knowledge tree, render .qmd.
+preprocess:
+    @scripts/preprocess.py
+
+# Local dev server with hot reload. Runs preprocess first.
+dev: preprocess
+    npm run dev
+
+# Production build (preprocess → astro build).
+build: preprocess
+    npm run build
+
+# Serve the production build locally.
+preview:
+    npm run preview
+
+# Remove all generated artifacts.
+clean:
+    rm -rf node_modules dist .astro package-lock.json
+    rm -rf src/content/docs/concepts/knowledge
+    rm -f src/content/docs/concepts/design.md src/content/docs/roadmap.md
+
+# Convenience: full clean + reinstall + build.
+rebuild: clean install build
