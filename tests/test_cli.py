@@ -110,6 +110,52 @@ def test_init_force_overwrites(runner: CliRunner, tmp_path: Path) -> None:
     assert "project" in parsed
 
 
+def test_init_example_writes_filled_template(runner: CliRunner, tmp_path: Path) -> None:
+    manuscript = tmp_path / "example-manuscript"
+    result = runner.invoke(cli.main, ["init", str(manuscript), "--example"])
+    assert result.exit_code == 0, result.output
+    assert "example" in result.output
+    parsed = yaml.safe_load((manuscript / "MANUSCRIPT_STATE.yaml").read_text())
+    # The example is filled-in: core_claims has at least one entry, and
+    # known_weaknesses is populated. The blank template has empty lists
+    # for both — that's the load-bearing difference.
+    assert isinstance(parsed["core_claims"], list) and len(parsed["core_claims"]) >= 1
+    assert isinstance(parsed["known_weaknesses"], list) and len(parsed["known_weaknesses"]) >= 1
+    assert parsed["project"]["title"]
+    assert parsed["project"]["target_type"] in {
+        "manuscript",
+        "grant",
+        "review",
+        "preprint",
+        "book-chapter",
+        "thesis",
+        "white-paper",
+        "other",
+    }
+
+
+def test_init_example_passes_validate(runner: CliRunner, tmp_path: Path) -> None:
+    manuscript = tmp_path / "example-manuscript"
+    runner.invoke(cli.main, ["init", str(manuscript), "--example"])
+    result = runner.invoke(cli.main, ["validate", str(manuscript / "MANUSCRIPT_STATE.yaml")])
+    assert result.exit_code == 0, result.output
+
+
+def test_init_example_with_force(runner: CliRunner, tmp_path: Path) -> None:
+    runner.invoke(cli.main, ["init", str(tmp_path)])
+    result = runner.invoke(cli.main, ["init", str(tmp_path), "--example", "--force"])
+    assert result.exit_code == 0
+    parsed = yaml.safe_load((tmp_path / "MANUSCRIPT_STATE.yaml").read_text())
+    assert len(parsed["core_claims"]) >= 1
+
+
+def test_init_example_without_force_refuses_to_overwrite(runner: CliRunner, tmp_path: Path) -> None:
+    runner.invoke(cli.main, ["init", str(tmp_path)])
+    result = runner.invoke(cli.main, ["init", str(tmp_path), "--example"])
+    assert result.exit_code != 0
+    assert "already exists" in _combined_output(result)
+
+
 def test_list_runs(runner: CliRunner) -> None:
     result = runner.invoke(cli.main, ["list"])
     assert result.exit_code == 0

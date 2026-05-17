@@ -31,6 +31,7 @@ TEMPLATES_SUBDIR = "_templates"
 SKILLS_SUBDIR = "_skills"
 SCHEMA_FILENAME = "manuscript-state.schema.json"
 TEMPLATE_FILENAME = "MANUSCRIPT_STATE.yaml"
+EXAMPLE_TEMPLATE_FILENAME = "MANUSCRIPT_STATE.example.yaml"
 DEFAULT_INSTALL_TARGET = Path.home() / ".claude" / "plugins" / "scriptorium"
 
 
@@ -81,13 +82,20 @@ def _load_schema() -> dict[str, Any]:
     return parsed
 
 
-def _load_template() -> str:
+def _load_template(*, example: bool = False) -> str:
+    """Load the bundled MANUSCRIPT_STATE.yaml template text.
+
+    When ``example=True``, returns the fully-populated reference template
+    (fictional biomedical manuscript). Otherwise returns the blank-with-
+    comments starter template.
+    """
     templates_dir = _bundled_dir(TEMPLATES_SUBDIR, "templates")
+    filename = EXAMPLE_TEMPLATE_FILENAME if example else TEMPLATE_FILENAME
     if templates_dir is None:
-        raise click.ClickException("Template MANUSCRIPT_STATE.yaml is not bundled in this build.")
-    template_resource = templates_dir.joinpath(TEMPLATE_FILENAME)
+        raise click.ClickException(f"Template {filename} is not bundled in this build.")
+    template_resource = templates_dir.joinpath(filename)
     if not template_resource.is_file():
-        raise click.ClickException("Template MANUSCRIPT_STATE.yaml is not bundled in this build.")
+        raise click.ClickException(f"Template {filename} is not bundled in this build.")
     return template_resource.read_text(encoding="utf-8")
 
 
@@ -298,14 +306,24 @@ def list_skills() -> None:
     is_flag=True,
     help="Overwrite an existing MANUSCRIPT_STATE.yaml.",
 )
-def init(manuscript_dir: Path, force: bool) -> None:
+@click.option(
+    "--example",
+    "use_example",
+    is_flag=True,
+    help=(
+        "Write a fully-populated reference manuscript (fictional biomedical "
+        "paper) instead of the blank starter. Useful for learning the schema."
+    ),
+)
+def init(manuscript_dir: Path, force: bool, use_example: bool) -> None:
     """Scaffold a starter MANUSCRIPT_STATE.yaml in a manuscript directory."""
     manuscript_dir.mkdir(parents=True, exist_ok=True)
     dest = manuscript_dir / TEMPLATE_FILENAME
     if dest.exists() and not force:
         raise click.ClickException(f"{dest} already exists. Re-run with --force to overwrite.")
-    dest.write_text(_load_template(), encoding="utf-8")
-    click.echo(f"Wrote {dest}")
+    dest.write_text(_load_template(example=use_example), encoding="utf-8")
+    flavor = "example" if use_example else "blank"
+    click.echo(f"Wrote {dest} ({flavor})")
 
 
 if __name__ == "__main__":  # pragma: no cover
