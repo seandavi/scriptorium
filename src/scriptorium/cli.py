@@ -12,7 +12,6 @@ The CLI exposes five subcommands:
 from __future__ import annotations
 
 import json
-import re
 import shutil
 from importlib import resources
 from importlib.abc import Traversable
@@ -36,17 +35,12 @@ DEFAULT_INSTALL_TARGET = Path.home() / ".claude" / "plugins" / "scriptorium"
 
 
 def _package_root() -> Traversable:
-    """Return the package resource root."""
     return resources.files(PACKAGE)
 
 
 def _repo_root() -> Path | None:
-    """Locate the repo root for editable installs.
-
-    Returns the directory containing ``pyproject.toml`` and ``.claude-plugin``
-    when scriptorium was installed in editable mode (``pip install -e .``).
-    Returns ``None`` for wheel installs where no source repo is reachable.
-    """
+    # Editable installs leave the package files under <repo>/src/scriptorium;
+    # wheel installs don't, so this returns None for them.
     pkg_file = Path(__file__).resolve()
     for candidate in (pkg_file.parent.parent.parent, pkg_file.parent.parent):
         if (candidate / "pyproject.toml").is_file() and (candidate / ".claude-plugin").is_dir():
@@ -55,13 +49,9 @@ def _repo_root() -> Path | None:
 
 
 def _bundled_dir(pkg_subdir: str, repo_subdir: str) -> Traversable | None:
-    """Locate a bundled resource directory.
-
-    Hatchling's ``force-include`` populates package data inside the built
-    wheel — but editable installs don't apply force-include, so we fall
-    back to the repo source layout when running from an editable checkout.
-    Returns ``None`` if the directory can't be found either way.
-    """
+    # Hatchling force-include populates package data inside built wheels.
+    # Editable installs don't apply force-include, so fall back to the
+    # repo source layout when running from `pip install -e .`.
     pkg_dir = _package_root().joinpath(pkg_subdir)
     if pkg_dir.is_dir():
         return pkg_dir
@@ -74,7 +64,6 @@ def _bundled_dir(pkg_subdir: str, repo_subdir: str) -> Traversable | None:
 
 
 def _copy_traversable(src: Traversable, dest: Path) -> None:
-    """Recursively copy an ``importlib.resources`` traversable into ``dest``."""
     if src.is_dir():
         dest.mkdir(parents=True, exist_ok=True)
         for child in src.iterdir():
@@ -84,18 +73,15 @@ def _copy_traversable(src: Traversable, dest: Path) -> None:
 
 
 def _load_schema() -> dict[str, Any]:
-    """Load the bundled MANUSCRIPT_STATE JSON Schema."""
     schemas_dir = _bundled_dir(SCHEMA_SUBDIR, "schemas")
     if schemas_dir is None:
         raise click.ClickException("JSON Schema is not bundled in this build.")
-    schema_resource = schemas_dir.joinpath(SCHEMA_FILENAME)
-    text = schema_resource.read_text(encoding="utf-8")
+    text = schemas_dir.joinpath(SCHEMA_FILENAME).read_text(encoding="utf-8")
     parsed: dict[str, Any] = json.loads(text)
     return parsed
 
 
 def _load_template() -> str:
-    """Load the bundled MANUSCRIPT_STATE.yaml template text."""
     templates_dir = _bundled_dir(TEMPLATES_SUBDIR, "templates")
     if templates_dir is None:
         raise click.ClickException("Template MANUSCRIPT_STATE.yaml is not bundled in this build.")
@@ -105,17 +91,9 @@ def _load_template() -> str:
     return template_resource.read_text(encoding="utf-8")
 
 
-_DESCRIPTION_RE = re.compile(r"^description:\s*(.+?)\s*$", re.MULTILINE)
-_GROUNDING_RE = re.compile(r"^\s*-\s+(.+?)\s*$", re.MULTILINE)
-
-
 def _parse_skill_metadata(skill_md_text: str) -> tuple[str | None, list[str]]:
-    """Extract the description and grounding refs from a SKILL.md file.
-
-    ``SKILL.md`` files start with YAML frontmatter delimited by ``---``.
-    The frontmatter ``description:`` field becomes the short summary.
-    Anything listed under ``grounding:`` is treated as a grounding-doc ref.
-    """
+    # SKILL.md files use YAML frontmatter delimited by `---`. Pull the
+    # `description` and `grounding` fields out; ignore the body.
     if not skill_md_text.startswith("---"):
         return None, []
     end = skill_md_text.find("\n---", 3)
@@ -137,11 +115,6 @@ def _parse_skill_metadata(skill_md_text: str) -> tuple[str | None, list[str]]:
 
 
 def _iter_skills() -> list[dict[str, Any]]:
-    """Return a list of bundled skill metadata dicts.
-
-    Each entry has keys: ``name``, ``description``, ``grounding``, ``prompt``.
-    When skills are not bundled (e.g. v0.1 pre-skill builds), returns ``[]``.
-    """
     skills_root = _bundled_dir(SKILLS_SUBDIR, "skills")
     if skills_root is None:
         return []
@@ -170,7 +143,6 @@ def _iter_skills() -> list[dict[str, Any]]:
 
 
 def _remove_existing(dest: Path) -> None:
-    """Remove an existing file, directory, or symlink at ``dest``."""
     if dest.is_symlink() or dest.is_file():
         dest.unlink()
     elif dest.is_dir():
