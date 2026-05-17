@@ -101,7 +101,44 @@ Useful labels (we'll add more as patterns emerge):
 Filing a "documentation idea" issue is encouraged whenever you notice
 a gap during implementation. Documentation debt compounds.
 
+## Docs site
+
+The Astro/Starlight docs site lives under `docs/`. It pulls top-level
+prose (`README.md`, `DESIGN.md`, `docs/roadmap.md`) and the entire
+`knowledge/` tree into the site at build time, so most contributions
+don't need to touch the site directly — edit the source, rerun
+`just preprocess`, and the site updates.
+
+The workflow:
+
+```bash
+cd docs
+just install       # one-time: npm install (~30s)
+just dev           # local dev server with hot reload
+just build         # production build (also runs in CI)
+just clean         # blow away node_modules + generated content
+```
+
+`just preprocess` does three things: (1) copies `DESIGN.md` and
+`docs/roadmap.md` into the site, (2) mirrors `knowledge/` under
+`concepts/knowledge/`, rewriting `[[wikilinks]]` to Starlight URLs,
+(3) renders any `.qmd` files under `docs/qmd/` via Quarto. Generated
+content is gitignored; the source of truth stays at the repo root.
+
+Requirements for docs work: Node 20+, npm, `uv` (used by the preprocess
+script), and `just` (1.x). Quarto is optional and only needed if you
+add `.qmd` source files.
+
+The docs site builds in CI on every PR via the `docs-build` job.
+
 ## License
 
-By contributing, you agree your contributions are released under the
-project's [MIT license](LICENSE).
+The project is dual-licensed by category:
+
+- **Code** (everything under `src/`, tests, schemas, scripts,
+  configuration) — [MIT](LICENSE).
+- **Prose** (the `docs/` site, the `knowledge/` evidence base, the
+  top-level `.md` files, per-skill `README.md`s) — [CC BY 4.0](LICENSE-DOCS).
+
+By contributing code you agree it is released under the MIT license;
+by contributing prose you agree it is released under CC BY 4.0.

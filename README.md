@@ -119,4 +119,7 @@ follow once the leaves prove out on real manuscripts.
 
 ## License
 
-[MIT](LICENSE).
+Dual-licensed by category:
+
+- **Code** — source under `src/`, tests, schemas, scripts, and configuration files — is [MIT](LICENSE).
+- **Documentation and knowledge layer** — the `docs/` site, the `knowledge/` evidence base, top-level prose files (`README.md`, `DESIGN.md`, `INSTALL.md`, `CONTRIBUTING.md`), and per-skill `README.md` files — is [CC BY 4.0](LICENSE-DOCS).

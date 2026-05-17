@@ -1,0 +1,39 @@
+Documentation and knowledge-layer content license
+==================================================
+
+The prose content of this repository — the `docs/` site, the `knowledge/`
+evidence base, `README.md`, `DESIGN.md`, `INSTALL.md`, `CONTRIBUTING.md`,
+and the per-skill `README.md` files — is licensed under the
+
+    Creative Commons Attribution 4.0 International License (CC BY 4.0).
+
+You are free to share, adapt, and build on this content for any purpose,
+including commercial use, provided you give appropriate credit, link to
+the license, and indicate if changes were made.
+
+Canonical license text and machine-readable metadata:
+    https://creativecommons.org/licenses/by/4.0/
+    https://creativecommons.org/licenses/by/4.0/legalcode
+
+Attribution
+-----------
+
+When reusing knowledge-layer documents, cite them by document name and
+link back to the source, e.g.:
+
+    Citation accuracy evidence — Scriptorium knowledge layer.
+    https://github.com/seandavi/scriptorium/blob/main/knowledge/citations/
+        citation-accuracy-evidence.md
+    Licensed CC BY 4.0.
+
+The cited primary literature inside each knowledge document carries
+its own publisher licensing — those works are referenced, not
+redistributed, and the CC BY license here covers the synthesis and
+annotation around them.
+
+Code
+----
+
+All non-prose content — source code under `src/`, tests, schemas,
+configuration files, scripts, and the JSON Schema in `schemas/` — is
+licensed under the MIT License, as stated in `LICENSE`.
