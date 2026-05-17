@@ -1,0 +1,83 @@
+# scriptorium skill manifest
+
+name: init
+version: 0.1.0
+category: utility            # critique | validation | normalization | transformation | generation | utility
+
+description: >
+  Conversationally bootstrap MANUSCRIPT_STATE.yaml for a new or
+  existing manuscript directory. Infers what it can from the
+  filesystem; elicits the subjective fields one at a time; validates
+  against the JSON Schema before writing. The conversational
+  counterpart to the CLI's \`scriptorium init <dir>\` (file scaffold
+  vs content elicitation).
+
+produces:
+  - manuscript_state_yaml
+
+modifies:
+  - manuscript_state_yaml    # single, named file at the manuscript root
+
+# Explicit invocation. The skill never auto-invokes, never runs as a
+# follow-up to another skill without the user asking. Convention-set
+# alignment: CLI subcommand and skill share the name \`init\`, mirroring
+# Claude Code's \`/init\` pattern.
+invocation: explicit
+
+# Author owns final write. Validation precedes write; the proposed file
+# is shown as a diff and the author must confirm before the skill
+# persists anything.
+write_discipline: confirm-before-write
+
+platforms:
+  claude-code:
+    skill_file: SKILL.md
+  platform-neutral:
+    prompt_file: prompt.md
+
+inputs:
+  - name: manuscript_dir
+    required: true
+    description: >
+      Directory the manuscript lives in (and where MANUSCRIPT_STATE.yaml
+      should land). Defaults to the user's current working directory.
+  - name: existing_state
+    required: false
+    description: >
+      Existing MANUSCRIPT_STATE.yaml content, if the file already
+      exists. The skill reads it and offers to fill missing fields
+      rather than starting over.
+  - name: schema
+    required: true
+    description: >
+      The MANUSCRIPT_STATE JSON Schema. Bundled with scriptorium; the
+      skill reads it at runtime so elicitation stays in sync with
+      schema evolution.
+    schema: manuscript-state.schema.json
+  - name: directory_listing
+    required: false
+    description: >
+      File listing of the manuscript directory, used to infer
+      project.title (from the main file's H1), bibliography.paths
+      (from .bib / .json globs), sections[] (from sub-files), and
+      project.source_format (from predominant extensions).
+  - name: main_file_excerpt
+    required: false
+    description: >
+      First page or table of contents of the main manuscript file.
+      Improves target_type and title inference but not required.
+
+# Knowledge-layer documents that ground this skill's design decisions.
+# init is a utility, not an evidence-grounded skill — the grounding is
+# light by design.
+grounding:
+  - schemas/manuscript-state.schema.json
+  - knowledge/peer-review/common-critiques-taxonomy.md
+
+non_goals:
+  - Writing fields not declared in the schema.
+  - Overwriting existing values silently.
+  - Writing the file before the author confirms.
+  - Auto-invoking the v0.1 leaf skills when the conversation ends.
+  - Replacing the CLI's \`scriptorium init\` — the CLI scaffolds the
+    template; this skill fills it in.
