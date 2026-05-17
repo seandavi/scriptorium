@@ -1,0 +1,60 @@
+# scriptorium skill manifest
+
+name: reviewer-simulation
+version: 0.1.0
+category: critique           # critique | validation | normalization | transformation | generation
+
+description: >
+  Author-side simulation of peer review across four attentional lenses
+  (methodological skeptic, domain expert, translational/clinical,
+  statistical). Surfaces likely critiques, fatal concerns, enthusiasm
+  drivers, and concrete revision suggestions as structured markdown.
+
+produces:
+  - structured-markdown-report
+
+modifies: []
+
+# Explicit invocation. The skill must NOT be auto-invoked — it is a
+# pressure-test that the author chooses to run on their own work.
+invocation: explicit
+
+# CRITICAL: author-side only. The skill must refuse to run on a
+# manuscript the user did not author. Editorial use violates ICMJE,
+# NIH, Elsevier, and Nature peer-review policy.
+positioning: author-side-only
+
+platforms:
+  claude-code:
+    skill_file: SKILL.md
+  platform-neutral:
+    prompt_file: prompt.md
+
+inputs:
+  - name: manuscript_text
+    required: true
+    description: Manuscript prose. Full paper or representative sections.
+  - name: manuscript_state
+    required: true
+    description: MANUSCRIPT_STATE.yaml from the project root.
+    schema: manuscript-state.schema.json
+  - name: bibliography
+    required: true
+    description: Bibliography file(s) listed under bibliography.paths.
+
+# Knowledge-layer documents that ground this skill's design decisions.
+grounding:
+  - knowledge/peer-review/reviewer-archetypes-evidence.md
+  - knowledge/peer-review/common-critiques-taxonomy.md
+  - knowledge/peer-review/ai-peer-review-research.md
+  - knowledge/peer-review/critique-quality-evidence.md
+  - knowledge/scientific-writing/reporting-guidelines.md
+  - knowledge/prior-art/ai-writing-failure-modes.md
+
+non_goals:
+  - Editorial-side review of someone else's submission.
+  - Numeric acceptance scoring.
+  - Statistical recomputation (use Statcheck, GRIM, or similar).
+  - Replicating analyses or re-executing experiments.
+  - Fact-checking cited literature beyond the manuscript itself.
+  - Reproducing reviewer affect or "Reviewer 2" tone.
