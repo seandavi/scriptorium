@@ -125,7 +125,7 @@ just clean         # blow away node_modules + generated content
 (3) renders any `.qmd` files under `docs/qmd/` via Quarto. Generated
 content is gitignored; the source of truth stays at the repo root.
 
-Requirements for docs work: Node 20+, npm, `uv` (used by the preprocess
+Requirements for docs work: Node 22+, npm, `uv` (used by the preprocess
 script), and `just` (1.x). Quarto is optional and only needed if you
 add `.qmd` source files.
 
