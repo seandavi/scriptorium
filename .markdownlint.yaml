@@ -1,0 +1,24 @@
+# markdownlint configuration for scriptorium.
+# Most defaults; loosened for academic-style prose.
+---
+default: true
+
+# Allow long lines — common in academic markdown with citations.
+MD013:
+  line_length: 120
+  tables: false
+  code_blocks: false
+  headings: false
+
+# Allow inline HTML where useful (e.g., <kbd>, <details>).
+MD033: false
+
+# Don't require a heading at the top of every file.
+MD041: false
+
+# Allow ordered lists numbered like "1." not "1. 2. 3."
+MD029:
+  style: ordered
+
+# Permit code blocks without language hints in some contexts.
+MD040: false

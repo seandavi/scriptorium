@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/seandavi/scriptorium/schemas/manuscript-state.schema.json",
+  "title": "MANUSCRIPT_STATE",
+  "description": "Shared editorial state for a scholarly writing project under scriptorium.",
+  "type": "object",
+  "required": ["project", "document_phase"],
+  "additionalProperties": false,
+  "properties": {
+    "project": {
+      "type": "object",
+      "required": ["title", "target_type"],
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Working title of the manuscript / grant / review."
+        },
+        "target_type": {
+          "type": "string",
+          "enum": ["manuscript", "grant", "review", "preprint", "book-chapter", "thesis", "white-paper", "other"],
+          "description": "What kind of artifact this is."
+        },
+        "target_venue": {
+          "type": "string",
+          "description": "Journal, funder, conference, or similar. Free text."
+        },
+        "target_journal": {
+          "type": "string",
+          "description": "Backward-compatibility alias for target_venue when target_type=manuscript."
+        }
+      }
+    },
+    "document_phase": {
+      "type": "object",
+      "required": ["current"],
+      "additionalProperties": false,
+      "properties": {
+        "current": {
+          "type": "string",
+          "enum": ["outline", "draft", "review", "revision", "submission", "post-submission", "accepted"],
+          "description": "Where the document is in its lifecycle."
+        },
+        "submission_target_date": {
+          "type": "string",
+          "format": "date",
+          "description": "Optional target date for the next submission milestone."
+        }
+      }
+    },
+    "core_claims": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "What the document is arguing. Critique skills use this to test whether the prose supports each claim. Transformation skills use this to bound what may be cut."
+    },
+    "known_weaknesses": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Limitations the authors have already acknowledged. Reviewer-simulation will not flag these as 'fatal' since they're known."
+    },
+    "terminology": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "preferred": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Terms the document should use consistently."
+        },
+        "forbidden": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Terms to avoid (jargon, hype language, deprecated nomenclature)."
+        },
+        "synonyms": {
+          "type": "object",
+          "additionalProperties": {"type": "string"},
+          "description": "Map of variant → preferred term for normalization passes."
+        }
+      }
+    },
+    "style": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "tone": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Tonal targets, e.g. quantitative, restrained, evidence-driven."
+        },
+        "voice": {
+          "type": "string",
+          "enum": ["active", "passive", "mixed"],
+          "description": "Default voice preference."
+        },
+        "audience": {
+          "type": "string",
+          "description": "Who the document is written for. Reviewers, funders, clinicians, general scientific audience, …"
+        }
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "preserve_citations": {
+          "type": "boolean",
+          "default": true,
+          "description": "Transformation skills must not drop or add citations without explicit user instruction."
+        },
+        "preserve_statistics": {
+          "type": "boolean",
+          "default": true,
+          "description": "Transformation skills must not alter quantitative claims."
+        },
+        "avoid_hype": {
+          "type": "boolean",
+          "default": true,
+          "description": "Transformation and generation skills should avoid promotional language."
+        },
+        "max_word_count": {
+          "type": "integer",
+          "description": "Hard upper bound on the document's word count (e.g., journal page limit)."
+        }
+      }
+    },
+    "bibliography": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "paths": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Paths to .bib / .json / .yaml bibliography files. Relative to the manuscript root."
+        },
+        "format": {
+          "type": "string",
+          "enum": ["bibtex", "csl-json", "yaml", "mixed"],
+          "description": "Primary bibliography format."
+        }
+      }
+    },
+    "sections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "path"],
+        "additionalProperties": false,
+        "properties": {
+          "name": {"type": "string"},
+          "path": {"type": "string"},
+          "lead": {"type": "string", "description": "Primary author/owner for this section."},
+          "status": {
+            "type": "string",
+            "enum": ["outline", "draft", "review", "final"]
+          }
+        }
+      },
+      "description": "Optional explicit section manifest for multi-file projects (e.g., Quarto includes)."
+    }
+  }
+}

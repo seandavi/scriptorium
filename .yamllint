@@ -1,0 +1,16 @@
+# yamllint configuration for scriptorium.
+---
+extends: default
+
+rules:
+  line-length:
+    max: 120
+    level: warning
+  document-start:
+    present: false
+  truthy:
+    check-keys: false
+  comments:
+    min-spaces-from-content: 1
+  indentation:
+    indent-sequences: consistent

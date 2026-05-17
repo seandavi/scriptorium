@@ -1,0 +1,26 @@
+{
+  "name": "scriptorium",
+  "version": "0.1.0-dev",
+  "description": "An agentic scriptorium for scholarly writing — coordinated AI capabilities (citation audit, reviewer simulation, structural analysis) around shared editorial state.",
+  "author": {
+    "name": "Sean Davis",
+    "email": "seandavi@gmail.com",
+    "url": "https://github.com/seandavi"
+  },
+  "homepage": "https://github.com/seandavi/scriptorium",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/seandavi/scriptorium"
+  },
+  "license": "MIT",
+  "keywords": [
+    "scholarly-writing",
+    "scientific-writing",
+    "manuscripts",
+    "grants",
+    "peer-review",
+    "citation-audit",
+    "editorial",
+    "agentic"
+  ]
+}

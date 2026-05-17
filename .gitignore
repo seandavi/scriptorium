@@ -1,0 +1,12 @@
+.DS_Store
+*.pyc
+__pycache__/
+.venv/
+.env
+.vscode/
+.idea/
+*.log
+.claude/scheduled_tasks.lock
+node_modules/
+dist/
+build/
