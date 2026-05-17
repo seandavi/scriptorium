@@ -28,6 +28,11 @@
         "target_journal": {
           "type": "string",
           "description": "Backward-compatibility alias for target_venue when target_type=manuscript."
+        },
+        "source_format": {
+          "type": "string",
+          "enum": ["quarto", "latex", "markdown", "docx-via-pandoc", "gdocs-export", "other"],
+          "description": "Optional hint at the manuscript's original source format. v0.1 skills do not consume this field; v0.2+ skills may use it for smarter parsing (e.g. \\cite{} for latex, [@key] for markdown). See DESIGN.md, 'Manuscript format scope'."
         }
       }
     },

@@ -210,6 +210,45 @@ For v0.1–v0.3, default behavior assumes biomedical/clinical conventions.
 This is stated, not silent — so readers in other fields encounter the
 bias as explicit scope rather than hidden assumption.
 
+## Manuscript format scope
+
+Scriptorium operates on manuscript text. **We strongly suggest converting
+your manuscript to markdown first** using your preferred tool — see the
+[Convert your manuscript to markdown](https://github.com/seandavi/scriptorium/blob/main/docs/src/content/docs/how-to/convert-to-markdown.md)
+how-to guide. Scriptorium does not ship converters and does not promise
+round-trip preservation of format-native features such as tracked
+changes or field codes.
+
+Outputs are structured markdown reports; applying suggestions back to
+the original manuscript is the author's responsibility.
+
+For deeper format-specific integration — Quarto pre-render hooks,
+LaTeX `\cite{}` parsing, Word tracked-changes round-tripping — see the
+optional adapter packages (none ship with v0.1).
+
+### Tier structure
+
+Three tiers, increasing in coupling to a specific source format:
+
+| Tier | What ships when | Scope |
+|---|---|---|
+| **Tier 1 — Format-neutral core** | v0.1 | Markdown-flavored text in, structured markdown reports out. Universal scope. No source-format awareness. |
+| **Tier 2 — Optional `source_format:` hint** | Schema lands v0.1; skills consume v0.2+ | `MANUSCRIPT_STATE.yaml` carries `project.source_format` (enum: `quarto \| latex \| markdown \| docx-via-pandoc \| gdocs-export \| other`). Skills *may* use the hint for smarter parsing; never required. |
+| **Tier 3 — Format-specific adapter packages** | Out of repo, out of v0.1 | Optional packages — quartobot integration, scriptorium-latex, scriptorium-docx, etc. Live as independent projects; depend on scriptorium's CLI / schema; ship their own knowledge layer extensions where needed. |
+
+The reason "we strongly suggest" rather than "only works on": soft
+expandability. The framing doesn't box out future Tier 2/3 work, doesn't
+overpromise on Word/LaTeX/Quarto native handling today, and preserves
+agency for users who know what they're doing with their own format
+pipelines.
+
+The `source_format` hint also informs what skills can and cannot do.
+A skill that operates on citations might use `format: latex` to look
+for `\cite{}` rather than `[@key]`; one that operates on figures
+might use `format: quarto` to look for `#| label:` cross-references.
+Until a skill *uses* the hint, it's metadata for the author and for
+future tooling, not behavior.
+
 ## Roadmap
 
 ### v0.1 (this release): the leaves
