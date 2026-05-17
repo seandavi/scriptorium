@@ -1,0 +1,78 @@
+# scriptorium skill manifest
+
+name: argumentative-flow
+version: 0.1.0
+category: transformation     # critique | validation | normalization | transformation | generation
+
+description: >
+  Improve a manuscript section's logical and argumentative coherence
+  while preserving every citation, statistic, and declared terminology
+  choice. Produces a structural diagnosis, a proposed outline, the
+  revised text with a diff against the source, and a preservation
+  report.
+
+# This is the v0.1 TRANSFORMATIVE skill — it modifies prose. Sets the
+# pattern for conservative-edit posture all future transformation
+# skills inherit.
+produces:
+  - structured-markdown-report
+  - revised-prose
+  - diff-against-source
+
+modifies:
+  # Single named section at a time. Never the whole manuscript at once.
+  - manuscript_section
+
+# Explicit invocation is hard-coded into the prompt. This skill must
+# NEVER auto-invoke or be invoked as a follow-up to another skill's
+# output without the user re-asking. The author owns their voice;
+# unrequested rewrites — even "helpful" ones — are unwelcome.
+invocation: explicit-only
+
+# Hard preservation constraints. Violating any of these is a contract
+# breach, not a judgment call.
+preservation_constraints:
+  - citations         # every cite key in source present in output
+  - quantitative      # numbers, units, p-values, CIs preserved verbatim
+  - terminology       # MANUSCRIPT_STATE.terminology honored
+  - voice             # active/passive matches source
+  - tone              # style.tone targets respected
+  - claim_set         # no added/removed/weakened claims
+
+platforms:
+  claude-code:
+    skill_file: SKILL.md
+  platform-neutral:
+    prompt_file: prompt.md
+
+inputs:
+  - name: section_text
+    required: true
+    description: A single named section (introduction, discussion, etc.) or subsection.
+  - name: manuscript_state
+    required: true
+    description: MANUSCRIPT_STATE.yaml from the project root.
+    schema: manuscript-state.schema.json
+  - name: bibliography
+    required: true
+    description: Bibliography entries for cite keys appearing in the section.
+
+# Knowledge-layer documents that ground this skill's design decisions.
+grounding:
+  - knowledge/scientific-writing/reader-expectation-approach.md
+  - knowledge/scientific-writing/narrative-frameworks.md
+  - knowledge/critique-techniques/argument-mapping.md
+  - knowledge/editing/semantic-preservation.md
+  - knowledge/editing/revision-research.md
+  - knowledge/scientific-writing/esl-writers-swales-hyland.md
+
+non_goals:
+  - Adding or removing citations.
+  - Changing numbers or quantitative statements.
+  - Substituting terminology not licensed by the state file.
+  - Adding stylistic embellishment.
+  - Rewriting the methods section (different problem; out of v0.1).
+  - Compressing length (different skill; v0.2 candidate).
+  - Smoothing out ESL hedging or stance patterns.
+  - Transforming an entire manuscript at once.
+  - Auto-invocation as a follow-up to another skill.
