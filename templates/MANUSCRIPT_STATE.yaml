@@ -11,6 +11,7 @@ project:
   title: "Working title goes here"
   target_type: manuscript   # one of: manuscript, grant, review, preprint, book-chapter, thesis, white-paper, other
   target_venue: ""          # journal / funder / conference (free text)
+  # source_format: markdown # optional hint: quarto | latex | markdown | docx-via-pandoc | gdocs-export | other
 
 document_phase:
   current: outline          # one of: outline, draft, review, revision, submission, post-submission, accepted

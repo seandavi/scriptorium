@@ -2,6 +2,7 @@ project:
   title: "Test manuscript"
   target_type: manuscript
   target_venue: "Journal of Tests"
+  source_format: markdown
 
 document_phase:
   current: draft
