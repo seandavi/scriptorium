@@ -1,0 +1,48 @@
+# MANUSCRIPT_STATE.yaml
+#
+# Shared editorial state for a scriptorium-managed writing project.
+# Every scriptorium skill reads this file to ground its work.
+# Validate at any time with: scriptorium validate MANUSCRIPT_STATE.yaml
+#
+# Only `project` and `document_phase` are required. Fill in the rest as
+# the manuscript matures.
+
+project:
+  title: "Working title goes here"
+  target_type: manuscript   # one of: manuscript, grant, review, preprint, book-chapter, thesis, white-paper, other
+  target_venue: ""          # journal / funder / conference (free text)
+
+document_phase:
+  current: outline          # one of: outline, draft, review, revision, submission, post-submission, accepted
+  # submission_target_date: 2026-12-31
+
+# What the document is arguing. Critique skills test whether the prose
+# actually supports each claim; transformation skills must preserve them.
+core_claims: []
+
+# Limitations the authors have already acknowledged. Reviewer-simulation
+# will not flag these as fatal because they're known.
+known_weaknesses: []
+
+terminology:
+  preferred: []
+  forbidden: []
+  synonyms: {}
+
+style:
+  tone: []                  # e.g. ["quantitative", "restrained", "evidence-driven"]
+  # voice: active           # one of: active, passive, mixed
+  # audience: ""
+
+constraints:
+  preserve_citations: true
+  preserve_statistics: true
+  avoid_hype: true
+  # max_word_count: 4000
+
+bibliography:
+  paths: []                 # paths to .bib / .json / .yaml bibliographies
+  # format: bibtex          # one of: bibtex, csl-json, yaml, mixed
+
+# Optional explicit section manifest for multi-file projects.
+sections: []

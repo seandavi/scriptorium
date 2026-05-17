@@ -1,0 +1,7 @@
+# Missing required `document_phase`; `target_type` not in enum;
+# `core_claims` items must be strings.
+project:
+  title: "Test manuscript"
+  target_type: book          # invalid enum
+core_claims:
+  - 42                       # not a string

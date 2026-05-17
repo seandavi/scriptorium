@@ -2,6 +2,12 @@
 ---
 extends: default
 
+# Test fixtures that are intentionally malformed to exercise error paths
+# in the CLI's validate command — yamllint must skip them.
+ignore: |
+  tests/fixtures/malformed.yaml
+  tests/fixtures/not_a_mapping.yaml
+
 rules:
   line-length:
     max: 120
