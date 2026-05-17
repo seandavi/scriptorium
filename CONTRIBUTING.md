@@ -129,7 +129,16 @@ Requirements for docs work: Node 22+, npm, `uv` (used by the preprocess
 script), and `just` (1.x). Quarto is optional and only needed if you
 add `.qmd` source files.
 
-The docs site builds in CI on every PR via the `docs-build` job.
+The docs site builds in CI on every PR via the `docs-build` job and
+deploys to GitHub Pages on every push to `main` via the `docs-deploy`
+workflow.
+
+### Enabling GitHub Pages (one-time, repo-admin)
+
+The deploy workflow assumes Pages is enabled with **Source: GitHub Actions**.
+To enable: Settings → Pages → Build and deployment → Source → "GitHub
+Actions". Once enabled, every push to `main` deploys to
+`https://seandavi.github.io/scriptorium/` within ~2 minutes.
 
 ## License
 
