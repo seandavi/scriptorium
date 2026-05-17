@@ -3,12 +3,10 @@
 ---
 default: true
 
-# Allow long lines — common in academic markdown with citations.
-MD013:
-  line_length: 120
-  tables: false
-  code_blocks: false
-  headings: false
+# Disable line-length checking. Cross-link lists and dense
+# academic-style citations regularly run past any reasonable limit;
+# soft-wrap is left to the editor, not the linter.
+MD013: false
 
 # Allow inline HTML where useful (e.g., <kbd>, <details>).
 MD033: false
@@ -22,3 +20,8 @@ MD029:
 
 # Permit code blocks without language hints in some contexts.
 MD040: false
+
+# Disable table-column-style — compact tables (no spaces around pipes)
+# are valid Markdown and easier to read in many contexts; enforcing
+# whitespace style is cosmetic noise.
+MD060: false
