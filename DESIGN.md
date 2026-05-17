@@ -129,6 +129,87 @@ A skill's description declares which mode it intends. There's no
 automatic enforcement — the discipline is in the description language
 and in user habit.
 
+## Defensive design choices
+
+Several of scriptorium's design choices are *responses* to documented
+failure modes of AI writing assistance. The choices look conservative
+because the failure modes are real.
+
+### Hallucinated citations
+
+LLMs reliably invent references with plausible authors, journals, and
+DOIs ([Walters & Wilder 2023 *Sci Reports*][walters-wilder-2023];
+[Bhattacharyya et al. 2023 *Cureus*][bhattacharyya-2023]). Scriptorium's
+critique skills (`citation-audit`, `reviewer-simulation`) **must not
+generate, suggest, or add citations** under any circumstances. They can
+only assess existing ones. This is hardcoded by convention and by
+`MANUSCRIPT_STATE.yaml`'s `constraints.preserve_citations: true`
+default. See [`knowledge/citations/hallucination-in-llm-citations.md`](knowledge/citations/hallucination-in-llm-citations.md).
+
+### Authorial-voice loss / "ChatGPT smell"
+
+[Kobak et al. 2024][kobak-2024] documented the lexical fingerprint of
+LLM-edited scientific writing — over-use of "delve," "intricate,"
+"underscore," and similar markers. Scriptorium's conservative-edit
+posture (preserve source language, transformations are minimal and
+inspectable, never auto-invoked) is the design defense against this.
+We don't claim to eliminate the smell, only to minimize and surface it.
+See [`knowledge/prior-art/ai-writing-failure-modes.md`](knowledge/prior-art/ai-writing-failure-modes.md).
+
+### Automation complacency
+
+[Parasuraman & Manzey 2010][parasuraman-2010] established that users
+over-rely on automated decision aids, missing what the aid missed.
+Scriptorium's structured outputs include explicit **"What this skill
+did NOT check"** sections, forcing the user to engage with the limits
+rather than treating the output as comprehensive.
+
+### Suggestion-acceptance bias
+
+Buschek, Jakesch, and colleagues' CHI work shows users accept LLM
+suggestions even when they would have written differently — biasing
+the resulting prose toward the model's stylistic defaults. Scriptorium
+transformative skills are **explicit-invocation only** (never
+auto-invoked) and emit inspectable diffs so the user can reject as
+easily as accept.
+
+### Author skill degradation
+
+This is the failure mode scriptorium does **not** defend against.
+Over-reliance on AI writing assistance plausibly atrophies the
+underlying skill, but the evidence is too early to design around. We
+flag this honestly as a known limit rather than pretend the
+conservative-edit posture solves it. Author retains responsibility for
+their writing.
+
+[walters-wilder-2023]: https://doi.org/10.1038/s41598-023-41032-5
+[bhattacharyya-2023]: https://doi.org/10.7759/cureus.39238
+[kobak-2024]: https://arxiv.org/abs/2406.07016
+[parasuraman-2010]: https://doi.org/10.1177/0018720810376055
+
+## Scope
+
+Scriptorium's evidence base is most thoroughly grounded in **biomedical
+and clinical reporting standards** — EQUATOR Network guidelines,
+CONSORT, STROBE, PRISMA, ARRIVE, STARD, TRIPOD+AI, CONSORT-AI/SPIRIT-AI.
+This is where the reporting-guideline density is highest, where the
+LLM-hallucination evidence is most thoroughly studied, and where the
+audience overlap is greatest with the project's authors and
+contributors.
+
+Extensions to other fields — physics (PRL "Letters" format), CS/ML
+(NeurIPS norms, no-theorems-vs-theorems papers), qualitative social
+science, mathematics (theorem-proof structure), economics (alphabetical
+authorship), humanities (argument-driven, not IMRaD) — are welcome
+but not yet evidenced. PRs adding discipline-specific knowledge
+layers and skill variants are explicitly invited; see
+[`knowledge/scientific-writing/discipline-conventions.md`](knowledge/scientific-writing/discipline-conventions.md)
+for the landscape.
+
+For v0.1–v0.3, default behavior assumes biomedical/clinical conventions.
+This is stated, not silent — so readers in other fields encounter the
+bias as explicit scope rather than hidden assumption.
+
 ## Roadmap
 
 ### v0.1 (this release): the leaves
