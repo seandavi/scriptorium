@@ -119,15 +119,29 @@ just build         # production build (also runs in CI)
 just clean         # blow away node_modules + generated content
 ```
 
-`just preprocess` does three things: (1) copies `DESIGN.md` and
-`docs/roadmap.md` into the site, (2) mirrors `knowledge/` under
-`concepts/knowledge/`, rewriting `[[wikilinks]]` to Starlight URLs,
-(3) renders any `.qmd` files under `docs/qmd/` via Quarto. Generated
-content is gitignored; the source of truth stays at the repo root.
+`just preprocess` does four things: (1) copies `DESIGN.md` and
+`docs/roadmap.md` into the site; (2) mirrors `knowledge/*.md` under
+`concepts/knowledge/`, rewriting `[[wikilinks]]` to Starlight URLs;
+(3) renders any `knowledge/*.qmd` files via the [quartobot][quartobot]
+pre-render hook (resolves `@pmid:` / `@doi:` cite keys to CSL JSON
+through manubot) followed by `quarto render` (citeproc); (4) renders
+any `.qmd` files under `docs/qmd/` via Quarto. Generated content —
+`references.json` and Quarto's build dirs — is gitignored; the source
+of truth stays at the repo root.
 
 Requirements for docs work: Node 22+, npm, `uv` (used by the preprocess
-script), and `just` (1.x). Quarto is optional and only needed if you
-add `.qmd` source files.
+script + to install quartobot), and `just` (1.x). Quarto and
+[quartobot][quartobot] are required if you touch any `.qmd` source files
+(one knowledge doc, `knowledge/citations/citation-accuracy-evidence.qmd`,
+uses the pipeline today). The preprocess script errors out cleanly when
+they are needed but missing:
+
+```bash
+# Quarto: see https://quarto.org/docs/get-started/
+uv tool install quartobot
+```
+
+[quartobot]: https://github.com/quartobot/quartobot
 
 The docs site builds in CI on every PR via the `docs-build` job and
 deploys to GitHub Pages on every push to `main` via the `docs-deploy`

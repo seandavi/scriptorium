@@ -14,3 +14,10 @@ build/
 .pytest_cache/
 .ruff_cache/
 site/
+
+# Quartobot pre-render output. The resolved CSL JSON is reproducible
+# from the cite keys in the .qmd source; recompute on every build
+# rather than commit a build artifact.
+references.json
+.quarto/
+**/*.quarto_ipynb
