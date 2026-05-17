@@ -20,11 +20,14 @@ Risk appears **moderate-to-high** for a journal at the *Diabetes Care* tier. The
 
 ## Likely minor critiques
 
-7. **[Domain expert]** TRIPOD checklist is not mentioned in the methods. *Diabetes Care* increasingly expects TRIPOD-AI or TRIPOD adherence for clinical-prediction-model papers; including the checklist as a supplementary file is low-friction and reduces reviewer friction.
+(Numbered independently from majors above; "Suggested revisions"
+cross-references use the form "minor #N" for clarity.)
 
-8. **[Presentation]** "Compares favorably to previously published scores" is vague hedging — replace with the actual AUC comparison.
+1. **[Domain expert]** TRIPOD checklist is not mentioned in the methods. *Diabetes Care* increasingly expects TRIPOD-AI or TRIPOD adherence for clinical-prediction-model papers; including the checklist as a supplementary file is low-friction and reduces reviewer friction.
 
-9. **[Presentation]** Abstract conclusion ("our model can be used to predict diabetes remission … and should be incorporated into pre-operative counseling") is stronger than the discussion supports; tighten to match the more conservative scoping recommended above.
+2. **[Presentation]** "Compares favorably to previously published scores" is vague hedging — replace with the actual AUC comparison.
+
+3. **[Presentation]** Abstract conclusion ("our model can be used to predict diabetes remission … and should be incorporated into pre-operative counseling") is stronger than the discussion supports; tighten to match the more conservative scoping recommended above.
 
 ## Potential fatal concerns
 
@@ -43,15 +46,15 @@ The combination of (a) no internal validation, (b) no calibration metric, and (c
 
 2. **Add a calibration plot and report calibration intercept and slope.** Add to supplementary materials with a one-paragraph Methods description. (Addresses major #2.)
 
-3. **Rescope discussion conclusions.** Replace the insurer-coverage recommendation with "warrants external validation in an independent cohort; if confirmed, the findings support consideration of earlier referral for surgically eligible patients within 5 years of T2D diagnosis." Tighten the abstract's "should be incorporated into pre-operative counseling" to match. (Addresses major #3 and minor #9.)
+3. **Rescope discussion conclusions.** Replace the insurer-coverage recommendation with "warrants external validation in an independent cohort; if confirmed, the findings support consideration of earlier referral for surgically eligible patients within 5 years of T2D diagnosis." Tighten the abstract's "should be incorporated into pre-operative counseling" to match. (Addresses major #3 and minor #3.)
 
 4. **Add a paragraph on cohort construction.** Between the current Methods §2.1 and §2.2 (or wherever the analytic cohort is defined), state n screened, n excluded for missing 24-month follow-up data, n excluded for incomplete pre-operative variables, with a brief description of the excluded patients' pre-op characteristics. (Addresses major #4.)
 
-5. **Expand the comparison to prior work.** Add 2–3 sentences explicitly comparing this model's feature set and AUC to the Kim 2019 score, with a brief argument for what the present work adds. (Addresses major #5 and minor #8.)
+5. **Expand the comparison to prior work.** Add 2–3 sentences explicitly comparing this model's feature set and AUC to the Kim 2019 score, with a brief argument for what the present work adds. (Addresses major #5 and minor #2.)
 
 6. **Address the duration-vs-treatment-history confound.** Add 2–3 sentences in the Discussion acknowledging that duration is correlated with cumulative treatment intensity and that the present design cannot disentangle β-cell decline from treatment-related effects. (Addresses major #6.)
 
-7. **Add a TRIPOD checklist to supplementary materials.** Low effort, large reviewer-perception payoff at this venue. (Addresses minor #7.)
+7. **Add a TRIPOD checklist to supplementary materials.** Low effort, large reviewer-perception payoff at this venue. (Addresses minor #1.)
 
 ## Lenses applied
 
