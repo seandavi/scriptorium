@@ -1,0 +1,72 @@
+# scriptorium skill manifest
+# This file declares the skill's metadata, supported platforms,
+# tool requirements, and knowledge-layer grounding. It is consumed
+# by the scriptorium CLI (`list`, `prompt-pack`) and by future
+# orchestrators that compose skills.
+
+name: citation-audit
+version: 0.1.0
+category: critique          # critique | validation | normalization | transformation | generation
+
+description: >
+  Audit a manuscript's existing citations for claim-support alignment,
+  primary-vs-review mismatch, causal overreach, and unsupported
+  assertions. Reports findings as structured markdown.
+
+# Skills are split by what they can produce.
+# This is a CRITIQUE skill — it assesses; it does not modify the manuscript
+# and does not add or invent citations.
+produces:
+  - structured-markdown-report
+
+modifies: []                 # No file modifications.
+
+# The skill MUST be invoked explicitly. It is safe to suggest in contexts
+# where the user is reviewing citations, but it should never be auto-invoked
+# (e.g. in a pre-commit hook or implicitly inside another skill) without
+# the user's explicit ask.
+invocation: explicit
+
+# Platforms this skill ships for.
+platforms:
+  claude-code:
+    skill_file: SKILL.md
+  platform-neutral:
+    prompt_file: prompt.md
+
+# Inputs the skill needs to do its job.
+inputs:
+  - name: manuscript_text
+    required: true
+    description: Manuscript prose. File path, pasted text, or section excerpt.
+  - name: manuscript_state
+    required: true
+    description: MANUSCRIPT_STATE.yaml from the project root.
+    schema: manuscript-state.schema.json
+  - name: bibliography
+    required: true
+    description: >
+      Bibliography file(s) listed in MANUSCRIPT_STATE.yaml under
+      bibliography.paths. BibTeX, CSL-JSON, or YAML.
+  - name: cited_paper_full_texts
+    required: false
+    description: >
+      Full text (or abstracts) of cited papers, when available.
+      Without these, the skill assesses from bibliographic metadata
+      only and says so explicitly in the output.
+
+# Knowledge-layer documents that ground this skill's design decisions.
+# Listed in the order they apply most directly.
+grounding:
+  - knowledge/critique-techniques/citation-claim-alignment.md
+  - knowledge/citations/citation-accuracy-evidence.md
+  - knowledge/citations/citation-overreach-research.md
+  - knowledge/citations/hallucination-in-llm-citations.md
+
+# What this skill explicitly is NOT.
+non_goals:
+  - Adding or suggesting new citations.
+  - Modifying the manuscript text.
+  - Detecting retractions (separate utility; out of v0.1).
+  - Validating bibliography entries themselves (separate utility).
+  - Scoring the manuscript on a quality scale.
