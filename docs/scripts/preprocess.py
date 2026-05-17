@@ -5,20 +5,26 @@
 # ///
 """Preprocess source markdown + Quarto into the Astro/Starlight content tree.
 
-Three things happen:
+Four things happen:
 
 1. Top-level repo docs (`DESIGN.md`, `docs/roadmap.md`) are copied into the
    site as standalone pages with appropriate frontmatter.
 2. The `knowledge/` tree is mirrored under
    `docs/src/content/docs/concepts/knowledge/`, with Obsidian-style
    `[[wikilinks]]` rewritten to Starlight URLs and frontmatter added.
-3. Any `.qmd` files found under `docs/qmd/` (currently none) are rendered
-   via the Quarto CLI into matching `.md` output. Quarto is optional —
-   if not installed and no `.qmd` files exist, this step no-ops.
+3. Any `.qmd` files in `knowledge/` are rendered via quartobot (citation
+   resolution from inline `@pmid:` / `@doi:` keys) plus Quarto (citeproc
+   rendering); the resulting markdown is then put through the same
+   wikilink / frontmatter pass as the `.md` knowledge docs.
+4. Any `.qmd` files found under `docs/qmd/` (currently none) are
+   rendered via the Quarto CLI directly into the content tree.
+
+Quartobot and Quarto are optional — if neither is installed and no `.qmd`
+files exist, the relevant steps no-op cleanly.
 
 The generated output is gitignored; the source of truth lives at the
-repo root. Contributors edit `knowledge/*.md` (and one day `*.qmd`) and
-run `just preprocess` to refresh the site.
+repo root. Contributors edit `knowledge/*.{md,qmd}` and run
+`just preprocess` to refresh the site.
 """
 
 from __future__ import annotations
@@ -27,6 +33,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 DOCS_DIR = Path(__file__).resolve().parent.parent
@@ -78,15 +85,86 @@ def yaml_quote(s: str) -> str:
 
 
 def build_knowledge_index() -> dict[str, Path]:
-    """Map every knowledge doc slug to its path relative to KNOWLEDGE_SRC."""
+    """Map every knowledge doc slug to its path relative to KNOWLEDGE_SRC.
+
+    Both `.md` and `.qmd` source files are indexed; the slug is the
+    filename stem, so `[[citation-accuracy-evidence]]` resolves
+    regardless of which extension the source uses.
+    """
     index: dict[str, Path] = {}
     if not KNOWLEDGE_SRC.is_dir():
         return index
-    for md in KNOWLEDGE_SRC.rglob("*.md"):
-        if md.name == "README.md":
+    for src in KNOWLEDGE_SRC.rglob("*"):
+        if src.name == "README.md":
             continue
-        index[md.stem] = md.relative_to(KNOWLEDGE_SRC)
+        if src.suffix in {".md", ".qmd"}:
+            index[src.stem] = src.relative_to(KNOWLEDGE_SRC)
     return index
+
+
+def render_qmd(qmd_path: Path) -> str:
+    """Render a knowledge .qmd file to GFM markdown via quartobot + Quarto.
+
+    Runs the resolve-then-render dance: quartobot resolves persistent-ID
+    cite keys (`@pmid:`, `@doi:`) to CSL JSON, then `quarto render`
+    produces final markdown with citations formatted via citeproc. The
+    rendered markdown is returned as a string; nothing is left in the
+    source tree (the Quarto build dir and the resolved references.json
+    are gitignored anyway).
+    """
+    if shutil.which("quarto") is None:
+        raise RuntimeError(
+            f"Quarto is required to render {qmd_path.relative_to(REPO_ROOT)}. "
+            "Install from https://quarto.org/docs/get-started/."
+        )
+    if shutil.which("quartobot") is None:
+        raise RuntimeError(
+            f"quartobot is required to render {qmd_path.relative_to(REPO_ROOT)} "
+            "(citation resolution from inline @pmid: / @doi: keys). "
+            "Install with: uv tool install quartobot"
+        )
+
+    src_dir = qmd_path.parent
+    # quartobot writes references.json into the .qmd's directory; the
+    # .qmd's frontmatter references it relatively. The file is gitignored.
+    resolve_cmd = [
+        "quartobot",
+        "resolve",
+        "--from-scan",
+        str(src_dir),
+        "--output",
+        str(src_dir / "references.json"),
+        "--id-mode",
+        "citation-key",
+    ]
+    result = subprocess.run(resolve_cmd, check=False, capture_output=True, text=True)
+    if result.returncode != 0:
+        sys.stderr.write(result.stdout)
+        sys.stderr.write(result.stderr)
+        raise RuntimeError(f"quartobot resolve failed for {qmd_path}")
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        render_cmd = [
+            "quarto",
+            "render",
+            str(qmd_path),
+            "--to",
+            "gfm",
+            "--output-dir",
+            tmpdir,
+        ]
+        result = subprocess.run(render_cmd, check=False, capture_output=True, text=True)
+        if result.returncode != 0:
+            sys.stderr.write(result.stdout)
+            sys.stderr.write(result.stderr)
+            raise RuntimeError(f"quarto render failed for {qmd_path}")
+        rendered = Path(tmpdir) / (qmd_path.stem + ".md")
+        if not rendered.is_file():
+            raise RuntimeError(
+                f"Expected Quarto to produce {rendered.name}; found "
+                f"{[p.name for p in Path(tmpdir).iterdir()]}"
+            )
+        return rendered.read_text(encoding="utf-8")
 
 
 def rewrite_wikilinks(text: str, index: dict[str, Path]) -> str:
@@ -179,6 +257,15 @@ def emit_directory_landing(subdir: str) -> None:
     )
 
 
+def _iter_knowledge_sources() -> list[Path]:
+    """Yield every `.md` and `.qmd` source file under knowledge/, sorted."""
+    sources: list[Path] = []
+    for path in KNOWLEDGE_SRC.rglob("*"):
+        if path.is_file() and path.suffix in {".md", ".qmd"}:
+            sources.append(path)
+    return sorted(sources)
+
+
 def process_knowledge() -> int:
     """Mirror knowledge/ into the site. Return the count of files processed."""
     if not KNOWLEDGE_SRC.is_dir():
@@ -190,9 +277,19 @@ def process_knowledge() -> int:
     index = build_knowledge_index()
 
     count = 0
-    for src_path in sorted(KNOWLEDGE_SRC.rglob("*.md")):
+    for src_path in _iter_knowledge_sources():
         rel = src_path.relative_to(KNOWLEDGE_SRC)
-        text = src_path.read_text(encoding="utf-8")
+
+        # .qmd files go through quartobot + Quarto to resolve citations
+        # before the standard knowledge-doc post-processing kicks in.
+        if src_path.suffix == ".qmd":
+            print(f"  rendering {rel} via quartobot + Quarto")
+            text = render_qmd(src_path)
+            # The site URL for a .qmd is the same as for a .md with the
+            # same stem — strip the suffix when computing the destination.
+            rel = rel.with_suffix(".md")
+        else:
+            text = src_path.read_text(encoding="utf-8")
 
         # Strip any pre-existing frontmatter — we generate our own.
         text = FRONTMATTER_RE.sub("", text, count=1)

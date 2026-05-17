@@ -27,13 +27,14 @@ jobs:
           node-version: "22"
           cache: npm
           cache-dependency-path: docs/package-lock.json
+      - uses: quarto-dev/quarto-actions/setup@v2
+      - name: Install quartobot
+        run: uv tool install quartobot
       - name: Install docs dependencies
         working-directory: docs
         run: npm ci
-      - name: Preprocess (knowledge layer + root docs)
+      - name: Preprocess (knowledge layer + root docs + Quarto render)
         working-directory: docs
-        # Skip Quarto — no .qmd files in v0.1; the preprocess script
-        # already no-ops when quarto isn't installed.
         run: ./scripts/preprocess.py
       - name: Build the docs site
         working-directory: docs
