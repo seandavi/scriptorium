@@ -1,0 +1,4 @@
+{"type":"summary","customTitle":"ToolUse","sessionId":"00000000-1111-2222-3333-bbbbbbbbbbbb"}
+{"sessionId":"00000000-1111-2222-3333-bbbbbbbbbbbb","timestamp":"2026-05-17T11:00:00Z","message":{"role":"user","content":[{"type":"text","text":"Please run citation audit on my discussion section."}]}}
+{"sessionId":"00000000-1111-2222-3333-bbbbbbbbbbbb","timestamp":"2026-05-17T11:00:05Z","message":{"role":"assistant","model":"claude-opus-4-7","content":[{"type":"tool_use","name":"Skill","input":{"skill":"scriptorium:reviewer-simulation","args":""}}]}}
+{"sessionId":"00000000-1111-2222-3333-bbbbbbbbbbbb","timestamp":"2026-05-17T11:00:25Z","message":{"role":"assistant","model":"claude-opus-4-7","content":[{"type":"text","text":"# Reviewer simulation\n\nAcceptance risk: moderate. Strongest concerns appear under methodological skeptic and statistical lenses."}]}}

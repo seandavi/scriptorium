@@ -1,0 +1,6 @@
+{"type":"summary","customTitle":"Multi","sessionId":"00000000-1111-2222-3333-cccccccccccc"}
+{"sessionId":"00000000-1111-2222-3333-cccccccccccc","timestamp":"2026-05-17T12:00:00Z","message":{"role":"user","content":[{"type":"text","text":"<command-name>/scriptorium:citation-audit</command-name>"}]}}
+{"sessionId":"00000000-1111-2222-3333-cccccccccccc","timestamp":"2026-05-17T12:00:10Z","message":{"role":"assistant","model":"claude-opus-4-7","content":[{"type":"text","text":"# Citation audit\n\nFirst pass complete."}]}}
+{"sessionId":"00000000-1111-2222-3333-cccccccccccc","timestamp":"2026-05-17T12:01:00Z","message":{"role":"user","content":[{"type":"text","text":"<command-name>/scriptorium:argumentative-flow</command-name>"}]}}
+{"sessionId":"00000000-1111-2222-3333-cccccccccccc","timestamp":"2026-05-17T12:01:10Z","message":{"role":"assistant","model":"claude-opus-4-7","content":[{"type":"text","text":"# Argumentative flow\n\nStructural diagnosis follows."}]}}
+{"sessionId":"00000000-1111-2222-3333-cccccccccccc","timestamp":"2026-05-17T12:02:00Z","message":{"role":"user","content":[{"type":"text","text":"Thanks."}]}}

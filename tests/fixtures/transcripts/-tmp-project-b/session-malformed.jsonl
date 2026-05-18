@@ -1,0 +1,6 @@
+{"type":"summary","customTitle":"Malformed","sessionId":"00000000-1111-2222-3333-eeeeeeeeeeee"}
+{"sessionId":"00000000-1111-2222-3333-eeeeeeeeeeee","timestamp":"2026-05-17T14:00:00Z","message":{"role":"user","content":[{"type":"text","text":"<command-name>/scriptorium:citation-audit</command-name>"}]}}
+this line is not valid JSON and should be skipped gracefully
+{"sessionId":"00000000-1111-2222-3333-eeeeeeeeeeee","timestamp":"2026-05-17T14:00:05Z","message":{"role":"assistant","model":"claude-opus-4-7","content":[{"type":"text","text":"# Citation audit\n\nProceeding despite a malformed line earlier in the transcript."}]}}
+
+{"not_a_message":true}

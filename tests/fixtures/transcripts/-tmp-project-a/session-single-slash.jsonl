@@ -1,0 +1,4 @@
+{"type":"summary","customTitle":"Single","sessionId":"00000000-1111-2222-3333-aaaaaaaaaaaa"}
+{"sessionId":"00000000-1111-2222-3333-aaaaaaaaaaaa","timestamp":"2026-05-17T10:00:00Z","message":{"role":"user","content":[{"type":"text","text":"<command-name>/scriptorium:citation-audit</command-name>\n<command-args></command-args>"}]}}
+{"sessionId":"00000000-1111-2222-3333-aaaaaaaaaaaa","timestamp":"2026-05-17T10:00:02Z","message":{"role":"assistant","model":"claude-opus-4-7","content":[{"type":"text","text":"# Citation audit\n\nAnalyzing the manuscript bibliography against claims..."}]}}
+{"sessionId":"00000000-1111-2222-3333-aaaaaaaaaaaa","timestamp":"2026-05-17T10:00:30Z","message":{"role":"assistant","model":"claude-opus-4-7","content":[{"type":"text","text":"Audit complete. 7 strong matches, 2 overreach flags."}]}}

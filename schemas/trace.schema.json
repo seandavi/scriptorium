@@ -1,0 +1,212 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/seandavi/scriptorium/schemas/trace.schema.json",
+  "title": "ScriptoriumTrace",
+  "description": "One scriptorium skill invocation on one manuscript artifact, with the user actions that followed. The canonical record format for telemetry and eval data. Closes #47.",
+  "type": "object",
+  "required": [
+    "trace_schema_version",
+    "submission_id",
+    "submitted_at",
+    "scriptorium_version",
+    "consent_tier",
+    "provenance",
+    "skill",
+    "model"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "trace_schema_version": {
+      "type": "integer",
+      "const": 1,
+      "description": "Schema version. Bumped when fields are added, removed, or semantically changed so older records remain identifiable."
+    },
+    "submission_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Stable identifier for this record. Enables right-to-delete from any aggregated dataset."
+    },
+    "submitted_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this record was emitted (ISO 8601)."
+    },
+    "scriptorium_version": {
+      "type": "string",
+      "description": "Version of the scriptorium package that emitted (or extracted) this record."
+    },
+    "consent_tier": {
+      "type": "string",
+      "enum": ["structured-only", "output-text", "manuscript-chunk"],
+      "description": "Which data tier the user opted into for this record. structured-only: counts and metadata only, no text content. output-text: + skill output text. manuscript-chunk: + the manuscript chunk the skill ran on. Tier enforcement is encoded in the conditional schema below."
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["source"],
+      "additionalProperties": false,
+      "description": "Where this record came from. Enables aggregation discipline across capture surfaces.",
+      "properties": {
+        "source": {
+          "type": "string",
+          "enum": ["claude-code-transcript", "claude-code-hook", "sdk-runner", "manual"]
+        },
+        "session_id": {
+          "type": "string",
+          "description": "Surface-specific session identifier. For claude-code-transcript, this is the Claude Code session UUID."
+        },
+        "transcript_path": {
+          "type": "string",
+          "description": "Local path the record was extracted from, if applicable. Not transmitted under any sharing tier."
+        }
+      }
+    },
+    "skill": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Skill name without the scriptorium: prefix, e.g. citation-audit, reviewer-simulation, argumentative-flow."
+        },
+        "version": {
+          "type": "string",
+          "description": "Skill version if available from the skill manifest."
+        },
+        "invocation_surface": {
+          "type": "string",
+          "enum": ["claude-code", "gemini-cli", "sdk", "other"],
+          "description": "The surface the skill was invoked through."
+        }
+      }
+    },
+    "model": {
+      "type": "object",
+      "required": ["provider"],
+      "additionalProperties": false,
+      "properties": {
+        "provider": {
+          "type": "string",
+          "enum": ["anthropic", "google", "openai", "other", "unknown"]
+        },
+        "name": {
+          "type": "string",
+          "description": "Model identifier, e.g. claude-opus-4-7."
+        },
+        "thinking_used": {
+          "type": "boolean",
+          "description": "Whether the model used extended thinking during this skill invocation."
+        },
+        "thinking_text_captured": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether the thinking text itself is recorded in this trace. Claude Code transcripts persist thinking-block structure but NOT thinking text, so this is false for source=claude-code-transcript records even when thinking_used=true."
+        }
+      }
+    },
+    "manuscript": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Non-content metadata about the manuscript the skill ran on. Available in all tiers. The manuscript text itself only appears in tier 3 (manuscript-chunk).",
+      "properties": {
+        "discipline": {
+          "type": "string",
+          "description": "Free-text discipline tag, e.g. biomedical, ml-systems, condensed-matter-physics."
+        },
+        "target_venue_tier": {
+          "type": "string",
+          "enum": ["generalist", "specialty", "subspecialty", "preprint", "society-journal", "unspecified"]
+        },
+        "section": {
+          "type": "string",
+          "description": "Section the skill ran on, e.g. introduction, methods, results, discussion, full."
+        },
+        "word_count": {"type": "integer", "minimum": 0},
+        "citation_count": {"type": "integer", "minimum": 0},
+        "claim_count": {"type": "integer", "minimum": 0},
+        "language": {
+          "type": "string",
+          "enum": ["L1-english", "EAL", "unspecified"],
+          "description": "Author language self-report. Optional; unspecified is the default."
+        }
+      }
+    },
+    "skill_output": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "What the skill produced. Counts and structural fields available in all tiers; the freeform output text is tier 2 (output-text) or higher only.",
+      "properties": {
+        "suggestion_counts": {
+          "type": "object",
+          "additionalProperties": {"type": "integer", "minimum": 0},
+          "description": "Counts of suggestions by category, e.g. {strong: 3, moderate: 5, weak: 2}."
+        },
+        "finding_counts": {
+          "type": "object",
+          "additionalProperties": {"type": "integer", "minimum": 0},
+          "description": "Counts of findings by category, e.g. {citation-overreach: 2, missing-citation: 1}."
+        },
+        "text": {
+          "type": "string",
+          "description": "Full skill output text. Tier 2 (output-text) or tier 3 only. Forbidden at tier 1."
+        }
+      }
+    },
+    "manuscript_chunk": {
+      "type": "string",
+      "description": "The manuscript chunk the skill ran on. Tier 3 (manuscript-chunk) only. Forbidden at tier 1 and tier 2."
+    },
+    "user_actions": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "What the user did with the skill output, when capturable. Optional; may be empty if the capture surface cannot observe user actions.",
+      "properties": {
+        "suggestions_accepted": {"type": "integer", "minimum": 0},
+        "suggestions_rejected": {"type": "integer", "minimum": 0},
+        "suggestions_ignored": {"type": "integer", "minimum": 0},
+        "free_text_feedback": {
+          "type": "string",
+          "description": "User-supplied free-text feedback on the skill output. Only collected when the user explicitly types it; never inferred."
+        }
+      }
+    },
+    "timing": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "skill_invoked_at": {"type": "string", "format": "date-time"},
+        "skill_completed_at": {"type": "string", "format": "date-time"},
+        "duration_seconds": {"type": "number", "minimum": 0}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"consent_tier": {"const": "structured-only"}},
+        "required": ["consent_tier"]
+      },
+      "then": {
+        "properties": {
+          "skill_output": {
+            "properties": {
+              "text": false
+            }
+          },
+          "manuscript_chunk": false
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"consent_tier": {"const": "output-text"}},
+        "required": ["consent_tier"]
+      },
+      "then": {
+        "properties": {
+          "manuscript_chunk": false
+        }
+      }
+    }
+  ]
+}
