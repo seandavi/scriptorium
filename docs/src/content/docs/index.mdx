@@ -1,9 +1,9 @@
 ---
 title: Scriptorium
-description: An agentic operating system for scholarly writing — small inspectable skills share a single editorial state and ground their critique in peer-reviewed evidence.
+description: AI critique that sharpens your manuscript — without rewriting your prose, your data, or your hedges.
 template: splash
 hero:
-  tagline: An agentic operating system for scholarly writing. Small inspectable skills share a single editorial state and ground their critique in peer-reviewed evidence.
+  tagline: AI critique that sharpens your manuscript — without rewriting your prose, your data, or your hedges.
   image:
     file: ../../assets/scriptorium-hero.webp
     alt: A leather-bound book with a gold illuminated initial 'S' against a starfield, evoking a medieval scriptorium in deep space.
@@ -11,10 +11,6 @@ hero:
     - text: Get started
       link: ./how-to/install/
       icon: right-arrow
-    - text: Read the design
-      link: ./concepts/design/
-      icon: open-book
-      variant: minimal
     - text: GitHub
       link: https://github.com/seandavi/scriptorium
       icon: external
@@ -23,11 +19,15 @@ hero:
 
 import { Card, CardGrid, Aside } from '@astrojs/starlight/components';
 
-<p class="hero-audience">For researchers who want AI help on their manuscript — without rewrites they can't audit.</p>
+<p class="hero-audience">Citation audit, simulated peer review, and argumentative-flow checks for in-progress manuscripts.</p>
+
+<Aside type="note" title="Status">
+v0.1.0.dev0 — pre-release. Install with `uv pip install --pre agentic-scriptorium`. End-to-end manuscript walkthrough still in flight; track v0.1 on the [roadmap](./roadmap/).
+</Aside>
 
 <div class="transform-strip">
   <div>
-    <p class="transform-strip__label">What you give scriptorium</p>
+    <p class="transform-strip__label">What you give scriptorium <small>(example: a biomedical claim — skills are discipline-agnostic)</small></p>
 
 ```markdown
 TOX expression marks a transcriptionally stable
@@ -70,8 +70,8 @@ scriptorium install            # adds skills to Claude Code
 scriptorium init ./my-paper    # scaffolds MANUSCRIPT_STATE.yaml
 ```
 
-Then [install →](./how-to/install/) walks the full setup for Claude
-Code, other agents, or manual use.
+The [install guide](./how-to/install/) covers the full setup for
+Claude Code, other agents, and manual use.
 
 ---
 
@@ -189,9 +189,12 @@ audience:
       PubMed ID.
     </p>
     <div class="feature-band__callout">
-      <strong>The knowledge layer is the moat.</strong> Skills are
-      narrow and replaceable; the evidence base they ground in is
-      what makes their critique calibrated rather than confident.
+      <strong>Grounded critique, not confident critique.</strong>
+      Skills cite the evidence base they're drawing on. When
+      citation-audit flags a claim as "overreach", the standard for
+      "overreach" is itself anchored to peer-reviewed literature on
+      citation accuracy and overclaim patterns — not the model's
+      default style preferences.
     </div>
     <p class="feature-band__cta">
       <a href="./concepts/knowledge/">Browse the knowledge layer →</a>
