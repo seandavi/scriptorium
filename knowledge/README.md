@@ -36,7 +36,8 @@ knowledge/
 ├── editing/                  # editing methodology
 ├── grants/                   # grant-writing evidence
 ├── critique-techniques/      # how to find problems systematically
-└── reproducibility/          # the crisis context scriptorium responds to
+├── reproducibility/          # the crisis context scriptorium responds to
+└── author-roles/             # career stage, role, and language behavioral evidence
 ```
 
 Each subdirectory has a consistent document structure:
