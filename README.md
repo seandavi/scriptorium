@@ -87,10 +87,11 @@ scriptorium validate /path/to/your/manuscript/MANUSCRIPT_STATE.yaml
 /scriptorium:argumentative-flow
 ```
 
-A populated example for the Venice 2026 spatial hackathon manuscript
-lives at [`examples/venice-paper/MANUSCRIPT_STATE.yaml`](examples/venice-paper/MANUSCRIPT_STATE.yaml).
-Use `scriptorium init --example /tmp/example` to drop a copy of the
-reference manuscript anywhere as a learning aid.
+A fully-populated reference manuscript lives at
+[`templates/MANUSCRIPT_STATE.example.yaml`](templates/MANUSCRIPT_STATE.example.yaml)
+(an imaginary biomedical paper that exercises every field in the
+schema). Use `scriptorium init --example /tmp/example` to drop a copy
+anywhere as a learning aid.
 
 ## What's in the box (v0.1)
 
