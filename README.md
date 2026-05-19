@@ -35,16 +35,23 @@ just now being built.
 
 ### Claude Code (recommended)
 
-```bash
-# Personal use (live-link the dev copy)
-./scripts/dev-link.sh
+Pre-release; install from source until the first PyPI cut:
 
-# Or install a copy to your Claude plugins dir
-./scripts/install-claude.sh
+```bash
+git clone https://github.com/seandavi/scriptorium
+cd scriptorium
+uv pip install -e .
+
+# Live-linked (edits propagate immediately — best for iterating)
+scriptorium install --mode dev-link
+
+# Or a copy install (stable snapshot, no live edits)
+scriptorium install
 ```
 
-Restart Claude Code; the skills appear as `scriptorium:citation-audit`,
-`scriptorium:reviewer-simulation`, `scriptorium:argumentative-flow`.
+Restart Claude Code; the skills appear as `scriptorium:init`,
+`scriptorium:citation-audit`, `scriptorium:reviewer-simulation`,
+`scriptorium:argumentative-flow`.
 
 ### Other agents (Codex, Gemini, Hermes, ChatGPT, …)
 
@@ -53,7 +60,7 @@ any LLM directly. To get all skills concatenated into a single
 prompt-pack file:
 
 ```bash
-./scripts/prompt-pack.py > scriptorium-prompts.md
+scriptorium prompt-pack -o scriptorium-prompts.md
 ```
 
 See [INSTALL.md](INSTALL.md) for per-platform recipes.
@@ -61,16 +68,20 @@ See [INSTALL.md](INSTALL.md) for per-platform recipes.
 ## Quick start
 
 ```bash
-# 1. Initialize editorial state for your manuscript
-cp templates/manuscript-state.template.yaml \
-   /path/to/your/manuscript/MANUSCRIPT_STATE.yaml
+# 1. Scaffold editorial state for your manuscript
+scriptorium init /path/to/your/manuscript
 
-# 2. Edit the file — fill in title, core claims, terminology, etc.
+# 2. Populate it. Two ways:
+#    a) Edit /path/to/your/manuscript/MANUSCRIPT_STATE.yaml directly.
+#    b) In Claude Code inside the manuscript repo, run the conversational
+#       bootstrap that walks you through core_claims, known_weaknesses,
+#       terminology, audience, and tone:
+#       /scriptorium:init
 
-# 3. Validate it
-python scripts/validate-state.py /path/to/your/manuscript/MANUSCRIPT_STATE.yaml
+# 3. Validate the result
+scriptorium validate /path/to/your/manuscript/MANUSCRIPT_STATE.yaml
 
-# 4. In Claude Code, inside the manuscript repo:
+# 4. Run the leaf skills in Claude Code, inside the manuscript repo:
 /scriptorium:citation-audit
 /scriptorium:reviewer-simulation
 /scriptorium:argumentative-flow
@@ -78,19 +89,53 @@ python scripts/validate-state.py /path/to/your/manuscript/MANUSCRIPT_STATE.yaml
 
 A populated example for the Venice 2026 spatial hackathon manuscript
 lives at [`examples/venice-paper/MANUSCRIPT_STATE.yaml`](examples/venice-paper/MANUSCRIPT_STATE.yaml).
+Use `scriptorium init --example /tmp/example` to drop a copy of the
+reference manuscript anywhere as a learning aid.
 
 ## What's in the box (v0.1)
 
+Four bundled skills, exposed through both Claude Code and the
+platform-neutral prompt-pack:
+
 | Skill | Phase | What it does |
 |---|---|---|
+| `init` | bootstrap | Conversational pass that populates `MANUSCRIPT_STATE.yaml` (core claims, known weaknesses, terminology, audience, tone) and routes to the right next skill for the document phase. Pairs with the `scriptorium init` CLI subcommand, which scaffolds the file. |
 | `citation-audit` | leaf | For each scientific claim: identify citation support, evaluate evidence strength, flag overreach. Outputs a structured claim/citation/assessment/recommendation table. No text modification. |
 | `reviewer-simulation` | leaf | Simulates four reviewer personas (methodological skeptic, domain expert, translational reviewer, statistical reviewer). Outputs Major/Minor Critiques, Fatal Concerns, Enthusiasm Drivers, Suggested Revisions, Acceptance Risk. |
 | `argumentative-flow` | transformative | Improves logical and argumentative coherence while preserving citations, statistics, and terminology. Outputs Structural Diagnosis / Logical Gaps / Proposed Outline / Revised Text / Remaining Weaknesses. |
 
+The `scriptorium` CLI exposes six subcommands: `install`, `init`,
+`validate`, `prompt-pack`, `list`, and `trace`. `scriptorium trace`
+extracts skill invocations from Claude Code transcripts as structured
+records conforming to `schemas/trace.schema.json` — useful for
+self-inspection and (eventually) eval-loop work. See
+`scriptorium --help` for the full surface.
+
 Deliberately not in v0.1 (see [DESIGN.md](DESIGN.md) for the build
-order): orchestrators, drafting skills, knowledge layer, Codex/Gemini
+order): orchestrators, drafting skills, additional knowledge-layer
+contributions beyond what skills currently cite, Codex/Gemini
 adapters. These earn their way in once the v0.1 skills have been used
 on real manuscripts.
+
+## Companion tools
+
+Scriptorium is the editorial layer; these tools are useful neighbors
+for the rest of the scholarly-writing workflow:
+
+- **[Semantic Scholar MCP](https://github.com/zongmin-yu/semantic-scholar-fastmcp-mcp-server)**
+  and **[PubMed MCP](https://github.com/JackKuo666/PubMed-MCP-Server)**
+  — bibliographic lookup and full-text retrieval as MCP servers,
+  consumable by Claude Code (and any MCP-aware agent). Pair well with
+  `scriptorium:citation-audit` when claims need to be checked against
+  primary literature.
+- **[quartobot](https://github.com/seandavi/quartobot)** — resolves
+  persistent-identifier cite keys (`@pmid:`, `@doi:`) in Quarto
+  documents before citeproc renders them. Used inside the scriptorium
+  docs build for the `knowledge/` evidence base; useful standalone for
+  any Quarto-based scholarly writing.
+
+These are external projects, not bundled with scriptorium. Install
+them separately following each project's own instructions.
 
 ## Design principles
 
@@ -113,7 +158,10 @@ roadmap.
 
 ## Status
 
-v0.1 in flight. Three leaf skills + shared state schema + Venice
+v0.1 in flight. Four bundled skills (`init`, `citation-audit`,
+`reviewer-simulation`, `argumentative-flow`), the consolidated
+`scriptorium` CLI (six subcommands, including `trace` for transcript
+analysis), the shared state schema, the trace schema, and the Venice
 example. Orchestrators, additional skills, and platform adapters
 follow once the leaves prove out on real manuscripts.
 
