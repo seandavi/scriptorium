@@ -35,8 +35,8 @@ scriptorium install
 This copies the bundled plugin into `~/.claude/plugins/scriptorium/`.
 Updates require re-running `scriptorium install`. Cleaner for users
 who don't plan to edit the skills. Once v0.1 publishes to PyPI, the
-clone step will become optional (`uv pip install agentic-scriptorium`
-+ `scriptorium install`).
+clone step will become optional (`uv pip install agentic-scriptorium`,
+then `scriptorium install`).
 
 ### Verifying
 

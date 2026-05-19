@@ -117,6 +117,26 @@ contributions beyond what skills currently cite, Codex/Gemini
 adapters. These earn their way in once the v0.1 skills have been used
 on real manuscripts.
 
+## Companion tools
+
+Scriptorium is the editorial layer; these tools are useful neighbors
+for the rest of the scholarly-writing workflow:
+
+- **[Semantic Scholar MCP](https://github.com/zongmin-yu/semantic-scholar-fastmcp-mcp-server)**
+  and **[PubMed MCP](https://github.com/JackKuo666/PubMed-MCP-Server)**
+  — bibliographic lookup and full-text retrieval as MCP servers,
+  consumable by Claude Code (and any MCP-aware agent). Pair well with
+  `scriptorium:citation-audit` when claims need to be checked against
+  primary literature.
+- **[quartobot](https://github.com/seandavi/quartobot)** — resolves
+  persistent-identifier cite keys (`@pmid:`, `@doi:`) in Quarto
+  documents before citeproc renders them. Used inside the scriptorium
+  docs build for the `knowledge/` evidence base; useful standalone for
+  any Quarto-based scholarly writing.
+
+These are external projects, not bundled with scriptorium. Install
+them separately following each project's own instructions.
+
 ## Design principles
 
 The system separates:
