@@ -256,9 +256,7 @@ def _extract_invocations(
         yield _finalize(current)
 
 
-def _build_trace_record(
-    invocation: dict[str, Any], *, tier: str
-) -> dict[str, Any]:
+def _build_trace_record(invocation: dict[str, Any], *, tier: str) -> dict[str, Any]:
     """Build a trace record from a raw invocation summary, applying the tier."""
     model_name = invocation.get("model_name")
     provider = "unknown"
@@ -673,9 +671,7 @@ def trace(
                 continue
         if since_dt is not None:
             try:
-                mtime = datetime.fromtimestamp(
-                    transcript_path.stat().st_mtime, tz=timezone.utc
-                )
+                mtime = datetime.fromtimestamp(transcript_path.stat().st_mtime, tz=timezone.utc)
             except OSError:
                 continue
             if mtime < since_dt:
@@ -691,8 +687,7 @@ def trace(
             if errors:
                 invalid_records += 1
                 click.echo(
-                    f"warning: invalid record from {transcript_path}: "
-                    f"{errors[0].message}",
+                    f"warning: invalid record from {transcript_path}: {errors[0].message}",
                     err=True,
                 )
                 continue

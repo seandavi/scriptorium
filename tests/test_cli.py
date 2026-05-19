@@ -735,9 +735,7 @@ def test_detect_invocation_assistant_tool_use() -> None:
 def test_detect_invocation_ignores_non_scriptorium_skill() -> None:
     msg = {
         "role": "assistant",
-        "content": [
-            {"type": "tool_use", "name": "Skill", "input": {"skill": "other-plugin:foo"}}
-        ],
+        "content": [{"type": "tool_use", "name": "Skill", "input": {"skill": "other-plugin:foo"}}],
     }
     assert cli._detect_invocation(msg) is None
 
