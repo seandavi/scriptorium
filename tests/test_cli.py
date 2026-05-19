@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from typing import Any
 
@@ -414,3 +415,338 @@ def test_iter_skills_skill_md_without_prompt(
     skills: list[dict[str, Any]] = cli._iter_skills()
     assert skills[0]["prompt"] is None
     assert skills[0]["grounding"] == []
+
+
+# ---------------------------------------------------------------------------
+# trace subcommand
+
+
+TRANSCRIPTS_DIR = FIXTURES / "transcripts"
+
+
+def _trace_records_from_output(out: str) -> list[dict[str, Any]]:
+    """Parse stdout from `trace` (jsonl form) into a list of dicts."""
+    records: list[dict[str, Any]] = []
+    for line in out.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        records.append(json.loads(line))
+    return records
+
+
+def test_trace_extracts_user_slash_invocation(runner: CliRunner) -> None:
+    result = runner.invoke(
+        cli.main,
+        ["trace", "--projects-dir", str(TRANSCRIPTS_DIR), "--project", "-tmp-project-a"],
+    )
+    assert result.exit_code == 0, _combined_output(result)
+    records = _trace_records_from_output(result.output)
+    # project-a has two sessions: one slash + one tool-use; both should be picked up
+    skill_names = sorted(r["skill"]["name"] for r in records)
+    assert "citation-audit" in skill_names
+    assert "reviewer-simulation" in skill_names
+
+
+def test_trace_extracts_tool_use_invocation(runner: CliRunner) -> None:
+    result = runner.invoke(
+        cli.main,
+        [
+            "trace",
+            "--projects-dir",
+            str(TRANSCRIPTS_DIR),
+            "--skill",
+            "reviewer-simulation",
+        ],
+    )
+    assert result.exit_code == 0, _combined_output(result)
+    records = _trace_records_from_output(result.output)
+    assert len(records) == 1
+    rec = records[0]
+    assert rec["skill"]["name"] == "reviewer-simulation"
+    assert rec["skill"]["invocation_surface"] == "claude-code"
+    assert rec["model"]["provider"] == "anthropic"
+    assert rec["model"]["name"] == "claude-opus-4-7"
+    assert rec["provenance"]["source"] == "claude-code-transcript"
+
+
+def test_trace_multi_invocation_session(runner: CliRunner) -> None:
+    result = runner.invoke(
+        cli.main,
+        [
+            "trace",
+            "--projects-dir",
+            str(TRANSCRIPTS_DIR),
+            "--skill",
+            "argumentative-flow",
+        ],
+    )
+    assert result.exit_code == 0, _combined_output(result)
+    records = _trace_records_from_output(result.output)
+    # argumentative-flow appears in both the multi-session and the thinking-session
+    assert len(records) == 2
+
+
+def test_trace_records_thinking_used_but_no_text(runner: CliRunner) -> None:
+    result = runner.invoke(
+        cli.main,
+        [
+            "trace",
+            "--projects-dir",
+            str(TRANSCRIPTS_DIR),
+            "--project",
+            "-tmp-project-b",
+            "--tier",
+            "output-text",
+        ],
+    )
+    assert result.exit_code == 0, _combined_output(result)
+    records = _trace_records_from_output(result.output)
+    # Find the record from the thinking session
+    thinking_records = [r for r in records if r["model"].get("thinking_used")]
+    assert len(thinking_records) >= 1
+    for rec in thinking_records:
+        # Thinking text is never captured from transcripts
+        assert rec["model"]["thinking_text_captured"] is False
+        # Even at output-text tier, thinking text must not leak in as output text
+        text = rec.get("skill_output", {}).get("text", "")
+        assert "thinking" not in text.lower() or "argumentative" in text.lower()
+
+
+def test_trace_malformed_lines_skipped(runner: CliRunner) -> None:
+    result = runner.invoke(
+        cli.main,
+        [
+            "trace",
+            "--projects-dir",
+            str(TRANSCRIPTS_DIR),
+        ],
+    )
+    assert result.exit_code == 0, _combined_output(result)
+    records = _trace_records_from_output(result.output)
+    # The malformed-line transcript still contributes its single invocation
+    sessions = {r["provenance"].get("session_id") for r in records}
+    assert "00000000-1111-2222-3333-eeeeeeeeeeee" in sessions
+
+
+def test_trace_default_tier_excludes_text(runner: CliRunner) -> None:
+    result = runner.invoke(
+        cli.main,
+        [
+            "trace",
+            "--projects-dir",
+            str(TRANSCRIPTS_DIR),
+        ],
+    )
+    assert result.exit_code == 0, _combined_output(result)
+    records = _trace_records_from_output(result.output)
+    assert records, "expected records to be emitted"
+    for rec in records:
+        assert rec["consent_tier"] == "structured-only"
+        assert "manuscript_chunk" not in rec
+        skill_output = rec.get("skill_output", {})
+        assert "text" not in skill_output
+
+
+def test_trace_output_text_tier_includes_text(runner: CliRunner) -> None:
+    result = runner.invoke(
+        cli.main,
+        [
+            "trace",
+            "--projects-dir",
+            str(TRANSCRIPTS_DIR),
+            "--tier",
+            "output-text",
+        ],
+    )
+    assert result.exit_code == 0, _combined_output(result)
+    records = _trace_records_from_output(result.output)
+    with_text = [r for r in records if r.get("skill_output", {}).get("text")]
+    assert with_text, "expected at least one record with skill_output.text at output-text tier"
+    for rec in records:
+        assert rec["consent_tier"] == "output-text"
+        assert "manuscript_chunk" not in rec
+
+
+def test_trace_emits_records_that_match_schema(runner: CliRunner) -> None:
+    result = runner.invoke(
+        cli.main,
+        [
+            "trace",
+            "--projects-dir",
+            str(TRANSCRIPTS_DIR),
+        ],
+    )
+    assert result.exit_code == 0, _combined_output(result)
+    records = _trace_records_from_output(result.output)
+    schema = cli._load_trace_schema()
+    from jsonschema import Draft202012Validator
+
+    validator = Draft202012Validator(schema)
+    for rec in records:
+        errors = list(validator.iter_errors(rec))
+        assert not errors, f"record failed schema: {errors}"
+
+
+def test_trace_json_format(runner: CliRunner) -> None:
+    result = runner.invoke(
+        cli.main,
+        [
+            "trace",
+            "--projects-dir",
+            str(TRANSCRIPTS_DIR),
+            "--format",
+            "json",
+        ],
+    )
+    assert result.exit_code == 0, _combined_output(result)
+    parsed = json.loads(result.output)
+    assert isinstance(parsed, list)
+    assert all(isinstance(r, dict) for r in parsed)
+
+
+def test_trace_skill_filter(runner: CliRunner) -> None:
+    result = runner.invoke(
+        cli.main,
+        [
+            "trace",
+            "--projects-dir",
+            str(TRANSCRIPTS_DIR),
+            "--skill",
+            "citation-audit",
+        ],
+    )
+    assert result.exit_code == 0, _combined_output(result)
+    records = _trace_records_from_output(result.output)
+    assert records, "expected at least one citation-audit record"
+    assert all(r["skill"]["name"] == "citation-audit" for r in records)
+
+
+def test_trace_project_filter_decoded_path(runner: CliRunner) -> None:
+    # The decoded directory name should match the --project value too.
+    result = runner.invoke(
+        cli.main,
+        [
+            "trace",
+            "--projects-dir",
+            str(TRANSCRIPTS_DIR),
+            "--project",
+            "/tmp/project/a",
+        ],
+    )
+    assert result.exit_code == 0, _combined_output(result)
+    records = _trace_records_from_output(result.output)
+    # All records should come from project-a sessions
+    session_ids = {r["provenance"].get("session_id") for r in records}
+    assert session_ids <= {
+        "00000000-1111-2222-3333-aaaaaaaaaaaa",
+        "00000000-1111-2222-3333-bbbbbbbbbbbb",
+    }
+
+
+def test_trace_missing_projects_dir_errors(runner: CliRunner, tmp_path: Path) -> None:
+    missing = tmp_path / "does-not-exist"
+    result = runner.invoke(cli.main, ["trace", "--projects-dir", str(missing)])
+    assert result.exit_code != 0
+    assert "not found" in _combined_output(result).lower()
+
+
+def test_trace_writes_to_output_file(runner: CliRunner, tmp_path: Path) -> None:
+    out = tmp_path / "traces.jsonl"
+    result = runner.invoke(
+        cli.main,
+        [
+            "trace",
+            "--projects-dir",
+            str(TRANSCRIPTS_DIR),
+            "--output",
+            str(out),
+        ],
+    )
+    assert result.exit_code == 0, _combined_output(result)
+    assert out.exists()
+    lines = [line for line in out.read_text().splitlines() if line.strip()]
+    assert lines, "expected at least one record written"
+    for line in lines:
+        rec = json.loads(line)
+        assert "skill" in rec
+
+
+def test_trace_parse_since_iso_date() -> None:
+    parsed = cli._parse_since("2026-05-17")
+    assert parsed.year == 2026 and parsed.month == 5 and parsed.day == 17
+
+
+def test_trace_parse_since_iso_datetime() -> None:
+    parsed = cli._parse_since("2026-05-17T14:30:00Z")
+    assert parsed.year == 2026 and parsed.hour == 14
+
+
+def test_trace_parse_since_invalid_raises() -> None:
+    with pytest.raises(click.BadParameter):
+        cli._parse_since("not-a-date")
+
+
+def test_decode_project_dir_name_round_trip() -> None:
+    assert (
+        cli._decode_project_dir_name("-Users-davsean-Documents-git-scriptorium")
+        == "/Users/davsean/Documents/git/scriptorium"
+    )
+    # No leading hyphen → returned as-is
+    assert cli._decode_project_dir_name("plain") == "plain"
+
+
+def test_detect_invocation_user_slash() -> None:
+    msg = {
+        "role": "user",
+        "content": [
+            {"type": "text", "text": "<command-name>/scriptorium:citation-audit</command-name>"}
+        ],
+    }
+    result = cli._detect_invocation(msg)
+    assert result == ("citation-audit", "user-slash")
+
+
+def test_detect_invocation_string_content() -> None:
+    # Some transcript variants use string content instead of a list
+    msg = {
+        "role": "user",
+        "content": "<command-name>/scriptorium:reviewer-simulation</command-name>",
+    }
+    result = cli._detect_invocation(msg)
+    assert result == ("reviewer-simulation", "user-slash")
+
+
+def test_detect_invocation_assistant_tool_use() -> None:
+    msg = {
+        "role": "assistant",
+        "content": [
+            {
+                "type": "tool_use",
+                "name": "Skill",
+                "input": {"skill": "scriptorium:argumentative-flow"},
+            }
+        ],
+    }
+    result = cli._detect_invocation(msg)
+    assert result == ("argumentative-flow", "assistant-tool")
+
+
+def test_detect_invocation_ignores_non_scriptorium_skill() -> None:
+    msg = {
+        "role": "assistant",
+        "content": [{"type": "tool_use", "name": "Skill", "input": {"skill": "other-plugin:foo"}}],
+    }
+    assert cli._detect_invocation(msg) is None
+
+
+def test_detect_invocation_returns_none_for_plain_text() -> None:
+    msg = {"role": "user", "content": [{"type": "text", "text": "hi there"}]}
+    assert cli._detect_invocation(msg) is None
+
+
+def test_load_trace_schema_errors_when_unbundled(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(cli, "_bundled_dir", lambda pkg, repo: None)
+    with pytest.raises(click.ClickException) as exc_info:
+        cli._load_trace_schema()
+    assert "Trace schema" in str(exc_info.value.message)

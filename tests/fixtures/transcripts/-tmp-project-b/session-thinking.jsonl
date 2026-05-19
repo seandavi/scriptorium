@@ -1,0 +1,3 @@
+{"type":"summary","customTitle":"Thinking","sessionId":"00000000-1111-2222-3333-dddddddddddd"}
+{"sessionId":"00000000-1111-2222-3333-dddddddddddd","timestamp":"2026-05-17T13:00:00Z","message":{"role":"user","content":[{"type":"text","text":"<command-name>/scriptorium:argumentative-flow</command-name>"}]}}
+{"sessionId":"00000000-1111-2222-3333-dddddddddddd","timestamp":"2026-05-17T13:00:05Z","message":{"role":"assistant","model":"claude-opus-4-7","content":[{"type":"thinking","thinking":"","signature":"sig-xyz"},{"type":"text","text":"# Argumentative flow\n\nThe argument arcs cleanly through the introduction but loses thread mid-discussion."}]}}

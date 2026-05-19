@@ -1,18 +1,24 @@
 """Command-line interface for scriptorium.
 
-The CLI exposes five subcommands:
+The CLI exposes six subcommands:
 
 * ``install`` — copy or link the plugin into a Claude Code plugins dir.
 * ``validate`` — lint a ``MANUSCRIPT_STATE.yaml`` against the JSON Schema.
 * ``prompt-pack`` — concatenate bundled skill prompts for platform-neutral use.
 * ``list`` — list bundled skills with descriptions and grounding references.
 * ``init`` — scaffold a starter ``MANUSCRIPT_STATE.yaml`` in a directory.
+* ``trace`` — extract scriptorium skill invocations from Claude Code
+  transcripts as structured trace records (see ``schemas/trace.schema.json``).
 """
 
 from __future__ import annotations
 
 import json
+import re
 import shutil
+import uuid
+from collections.abc import Iterator
+from datetime import datetime, timezone
 from importlib import resources
 from importlib.abc import Traversable
 from pathlib import Path
@@ -30,9 +36,18 @@ PLUGIN_SUBDIR = "_claude_plugin"
 TEMPLATES_SUBDIR = "_templates"
 SKILLS_SUBDIR = "_skills"
 SCHEMA_FILENAME = "manuscript-state.schema.json"
+TRACE_SCHEMA_FILENAME = "trace.schema.json"
+TRACE_SCHEMA_VERSION = 1
+SCRIPTORIUM_SKILL_PREFIX = "scriptorium:"
+TIER_STRUCTURED_ONLY = "structured-only"
+TIER_OUTPUT_TEXT = "output-text"
+TIER_MANUSCRIPT_CHUNK = "manuscript-chunk"
+CONSENT_TIERS = (TIER_STRUCTURED_ONLY, TIER_OUTPUT_TEXT, TIER_MANUSCRIPT_CHUNK)
+DEFAULT_PROJECTS_DIR = Path.home() / ".claude" / "projects"
 TEMPLATE_FILENAME = "MANUSCRIPT_STATE.yaml"
 EXAMPLE_TEMPLATE_FILENAME = "MANUSCRIPT_STATE.example.yaml"
 DEFAULT_INSTALL_TARGET = Path.home() / ".claude" / "plugins" / "scriptorium"
+COMMAND_NAME_RE = re.compile(r"<command-name>/scriptorium:([\w-]+)</command-name>")
 
 
 def _package_root() -> Traversable:
@@ -80,6 +95,233 @@ def _load_schema() -> dict[str, Any]:
     text = schemas_dir.joinpath(SCHEMA_FILENAME).read_text(encoding="utf-8")
     parsed: dict[str, Any] = json.loads(text)
     return parsed
+
+
+def _load_trace_schema() -> dict[str, Any]:
+    schemas_dir = _bundled_dir(SCHEMA_SUBDIR, "schemas")
+    if schemas_dir is None:
+        raise click.ClickException("Trace schema is not bundled in this build.")
+    text = schemas_dir.joinpath(TRACE_SCHEMA_FILENAME).read_text(encoding="utf-8")
+    parsed: dict[str, Any] = json.loads(text)
+    return parsed
+
+
+def _now_iso() -> str:
+    """Return the current time as an ISO 8601 string with Z suffix."""
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _decode_project_dir_name(encoded: str) -> str:
+    """Convert Claude Code's encoded-cwd directory name back into a path.
+
+    Claude Code stores transcripts under ``~/.claude/projects/<encoded>/``
+    where ``<encoded>`` replaces path separators with hyphens. For example
+    ``-Users-davsean-Documents-git-scriptorium`` decodes to
+    ``/Users/davsean/Documents/git/scriptorium``. The encoding is lossy
+    (hyphens in real path components are indistinguishable from separators),
+    so this is best-effort, used only for the ``--project`` filter.
+    """
+    if not encoded.startswith("-"):
+        return encoded
+    return "/" + encoded[1:].replace("-", "/")
+
+
+def _detect_invocation(message: dict[str, Any]) -> tuple[str, str] | None:
+    """Detect a scriptorium skill invocation in a single message.
+
+    Returns ``(skill_name, source_kind)`` where ``source_kind`` is one of
+    ``"user-slash"`` (the user typed ``/scriptorium:foo`` and Claude Code
+    wrapped it in a ``<command-name>`` tag) or ``"assistant-tool"`` (the
+    assistant called the ``Skill`` tool with a ``scriptorium:`` skill).
+    Returns ``None`` if the message is not a skill invocation.
+    """
+    role = message.get("role")
+    content = message.get("content")
+
+    if role == "user":
+        text_blocks: list[str] = []
+        if isinstance(content, list):
+            for c in content:
+                if isinstance(c, dict) and c.get("type") == "text":
+                    text_blocks.append(str(c.get("text", "")))
+        elif isinstance(content, str):
+            text_blocks.append(content)
+        for text in text_blocks:
+            match = COMMAND_NAME_RE.search(text)
+            if match:
+                return match.group(1), "user-slash"
+
+    if role == "assistant" and isinstance(content, list):
+        for c in content:
+            if not isinstance(c, dict):
+                continue
+            if c.get("type") == "tool_use" and c.get("name") == "Skill":
+                skill_id = str(c.get("input", {}).get("skill", ""))
+                if skill_id.startswith(SCRIPTORIUM_SKILL_PREFIX):
+                    return skill_id[len(SCRIPTORIUM_SKILL_PREFIX) :], "assistant-tool"
+
+    return None
+
+
+def _extract_invocations(
+    transcript_path: Path,
+) -> Iterator[dict[str, Any]]:
+    """Walk a JSONL transcript and yield raw invocation summaries.
+
+    Each yielded dict carries:
+      - ``skill_name``, ``source_kind``
+      - ``session_id`` (from the transcript header, may be None)
+      - ``invoked_at`` (timestamp string from the invocation line, may be None)
+      - ``model_name`` (assistant ``message.model`` field, may be None)
+      - ``thinking_used`` (bool: was a ``type=thinking`` block seen during
+        the response window)
+      - ``output_chunks`` (list of assistant text-block strings from the
+        response window — used to populate ``skill_output.text`` at tiers
+        that permit it; never includes thinking text)
+      - ``transcript_path`` (the file the invocation was read from)
+    """
+    session_id: str | None = None
+    current: dict[str, Any] | None = None
+    text: str
+    try:
+        text = transcript_path.read_text(encoding="utf-8")
+    except OSError:
+        return
+
+    def _finalize(c: dict[str, Any]) -> dict[str, Any]:
+        c["session_id"] = session_id
+        c["transcript_path"] = str(transcript_path)
+        return c
+
+    for raw_line in text.splitlines():
+        if not raw_line.strip():
+            continue
+        try:
+            d = json.loads(raw_line)
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(d, dict):
+            continue
+
+        if session_id is None:
+            session_id = d.get("sessionId") or None
+
+        msg = d.get("message")
+        if not isinstance(msg, dict):
+            continue
+
+        invocation = _detect_invocation(msg)
+        if invocation is not None:
+            if current is not None:
+                yield _finalize(current)
+            current = {
+                "skill_name": invocation[0],
+                "source_kind": invocation[1],
+                "invoked_at": d.get("timestamp"),
+                "model_name": None,
+                "thinking_used": False,
+                "output_chunks": [],
+            }
+            continue
+
+        if current is None:
+            continue
+
+        role = msg.get("role")
+        if role == "user":
+            # User turn ends the response window for the current invocation.
+            yield _finalize(current)
+            current = None
+            continue
+
+        if role == "assistant":
+            if current["model_name"] is None:
+                model = msg.get("model")
+                if isinstance(model, str):
+                    current["model_name"] = model
+            content = msg.get("content")
+            if isinstance(content, list):
+                for c in content:
+                    if not isinstance(c, dict):
+                        continue
+                    block_type = c.get("type")
+                    if block_type == "thinking":
+                        current["thinking_used"] = True
+                    elif block_type == "text":
+                        chunk = c.get("text")
+                        if isinstance(chunk, str) and chunk:
+                            current["output_chunks"].append(chunk)
+
+    if current is not None:
+        yield _finalize(current)
+
+
+def _build_trace_record(invocation: dict[str, Any], *, tier: str) -> dict[str, Any]:
+    """Build a trace record from a raw invocation summary, applying the tier."""
+    model_name = invocation.get("model_name")
+    provider = "unknown"
+    if isinstance(model_name, str) and "claude" in model_name.lower():
+        provider = "anthropic"
+
+    record: dict[str, Any] = {
+        "trace_schema_version": TRACE_SCHEMA_VERSION,
+        "submission_id": str(uuid.uuid4()),
+        "submitted_at": _now_iso(),
+        "scriptorium_version": __version__,
+        "consent_tier": tier,
+        "provenance": {
+            "source": "claude-code-transcript",
+            "transcript_path": invocation.get("transcript_path", ""),
+        },
+        "skill": {
+            "name": invocation["skill_name"],
+            "invocation_surface": "claude-code",
+        },
+        "model": {
+            "provider": provider,
+            "thinking_used": bool(invocation.get("thinking_used")),
+            "thinking_text_captured": False,
+        },
+    }
+    if isinstance(model_name, str):
+        record["model"]["name"] = model_name
+    session_id = invocation.get("session_id")
+    if isinstance(session_id, str) and session_id:
+        record["provenance"]["session_id"] = session_id
+
+    if tier in (TIER_OUTPUT_TEXT, TIER_MANUSCRIPT_CHUNK):
+        chunks = invocation.get("output_chunks") or []
+        text = "\n\n".join(chunks).strip()
+        if text:
+            record["skill_output"] = {"text": text}
+
+    return record
+
+
+def _iter_transcripts(projects_dir: Path) -> Iterator[Path]:
+    """Yield JSONL transcript files under ``projects_dir``."""
+    if not projects_dir.is_dir():
+        return
+    for project_dir in sorted(projects_dir.iterdir()):
+        if not project_dir.is_dir():
+            continue
+        yield from sorted(project_dir.glob("*.jsonl"))
+
+
+def _parse_since(value: str) -> datetime:
+    """Parse a ``--since`` value as an ISO 8601 date or datetime."""
+    candidates = (value, value + "T00:00:00", value + "T00:00:00+00:00")
+    for candidate in candidates:
+        try:
+            parsed = datetime.fromisoformat(candidate.replace("Z", "+00:00"))
+            if parsed.tzinfo is None:
+                parsed = parsed.replace(tzinfo=timezone.utc)
+            return parsed
+        except ValueError:
+            continue
+    raise click.BadParameter(
+        f"--since must be ISO 8601 (e.g. 2026-05-17 or 2026-05-17T14:30:00Z); got {value!r}"
+    )
 
 
 def _load_template(*, example: bool = False) -> str:
@@ -324,6 +566,157 @@ def init(manuscript_dir: Path, force: bool, use_example: bool) -> None:
     dest.write_text(_load_template(example=use_example), encoding="utf-8")
     flavor = "example" if use_example else "blank"
     click.echo(f"Wrote {dest} ({flavor})")
+
+
+@main.command()
+@click.option(
+    "--projects-dir",
+    type=click.Path(file_okay=False, path_type=Path),
+    default=None,
+    help=(
+        "Directory of Claude Code transcripts (default: ~/.claude/projects). "
+        "Each subdirectory contains JSONL session files."
+    ),
+)
+@click.option(
+    "--skill",
+    "skill_filter",
+    default=None,
+    help="Only emit records for invocations of this skill name.",
+)
+@click.option(
+    "--since",
+    default=None,
+    help="Only emit records for invocations on or after this ISO 8601 date / datetime.",
+)
+@click.option(
+    "--project",
+    "project_filter",
+    default=None,
+    help=(
+        "Only emit records from transcripts of the project at this path. "
+        "Matched against the decoded directory name under projects-dir."
+    ),
+)
+@click.option(
+    "--tier",
+    type=click.Choice(CONSENT_TIERS),
+    default=TIER_STRUCTURED_ONLY,
+    show_default=True,
+    help=(
+        "Consent tier to apply. structured-only (default) emits counts and "
+        "metadata only. output-text adds skill output text. manuscript-chunk "
+        "adds the manuscript chunk the skill ran on (not yet inferrable from "
+        "transcripts, so currently equivalent to output-text)."
+    ),
+)
+@click.option(
+    "--output",
+    "-o",
+    type=click.Path(path_type=Path, dir_okay=False),
+    default=None,
+    help="Write trace records to a file instead of stdout.",
+)
+@click.option(
+    "--format",
+    "output_format",
+    type=click.Choice(["jsonl", "json"]),
+    default="jsonl",
+    show_default=True,
+    help="Output format: jsonl (one record per line) or json (one array).",
+)
+def trace(
+    projects_dir: Path | None,
+    skill_filter: str | None,
+    since: str | None,
+    project_filter: str | None,
+    tier: str,
+    output: Path | None,
+    output_format: str,
+) -> None:
+    """Extract scriptorium skill invocations from Claude Code transcripts.
+
+    Reads JSONL transcripts under the projects directory, finds skill
+    invocations (user-typed /scriptorium:foo slash commands and assistant
+    Skill tool calls targeting scriptorium:*), and emits trace records
+    conforming to schemas/trace.schema.json.
+
+    Local-only: this command reads transcripts and writes records to your
+    disk. No network calls. No transcript files are modified.
+
+    Note on thinking: Claude Code transcripts persist thinking-block
+    structure but not thinking text content. Records record whether
+    thinking was used (model.thinking_used) but never include the thinking
+    text itself; model.thinking_text_captured is always false for records
+    from this command.
+    """
+    src_dir = projects_dir if projects_dir is not None else DEFAULT_PROJECTS_DIR
+    if not src_dir.is_dir():
+        raise click.ClickException(f"Projects directory not found: {src_dir}")
+
+    since_dt = _parse_since(since) if since else None
+    schema = _load_trace_schema()
+    validator = Draft202012Validator(schema)
+
+    records: list[dict[str, Any]] = []
+    transcripts_seen = 0
+    invocations_seen = 0
+    invalid_records = 0
+
+    for transcript_path in _iter_transcripts(src_dir):
+        if project_filter is not None:
+            decoded = _decode_project_dir_name(transcript_path.parent.name)
+            raw_name = transcript_path.parent.name
+            if decoded != str(project_filter) and raw_name != str(project_filter):
+                continue
+        if since_dt is not None:
+            try:
+                mtime = datetime.fromtimestamp(transcript_path.stat().st_mtime, tz=timezone.utc)
+            except OSError:
+                continue
+            if mtime < since_dt:
+                continue
+        transcripts_seen += 1
+
+        for invocation in _extract_invocations(transcript_path):
+            invocations_seen += 1
+            if skill_filter is not None and invocation["skill_name"] != skill_filter:
+                continue
+            record = _build_trace_record(invocation, tier=tier)
+            errors = sorted(validator.iter_errors(record), key=lambda e: list(e.absolute_path))
+            if errors:
+                invalid_records += 1
+                click.echo(
+                    f"warning: invalid record from {transcript_path}: {errors[0].message}",
+                    err=True,
+                )
+                continue
+            records.append(record)
+
+    if output_format == "jsonl":
+        text = "\n".join(json.dumps(r, sort_keys=True) for r in records)
+        if records:
+            text += "\n"
+    else:
+        text = json.dumps(records, indent=2, sort_keys=True)
+        if not text.endswith("\n"):
+            text += "\n"
+
+    if output is not None:
+        output.write_text(text, encoding="utf-8")
+        click.echo(
+            f"Wrote {len(records)} record(s) to {output} "
+            f"(scanned {transcripts_seen} transcript(s), "
+            f"found {invocations_seen} invocation(s)).",
+            err=True,
+        )
+    else:
+        click.echo(text, nl=False)
+        if invalid_records:
+            click.echo(
+                f"({invalid_records} record(s) skipped as invalid)",
+                err=True,
+            )
 
 
 if __name__ == "__main__":  # pragma: no cover
