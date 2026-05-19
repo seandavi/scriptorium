@@ -1,0 +1,93 @@
+name: Release
+
+# Trigger: pushed tag matching `v*` (e.g., v0.1.0.dev0, v0.1.0).
+# Pre-release tags (`v*.devN`, `v*.aN`, `v*.bN`, `v*.rcN`) and full
+# releases all run the same publish pipeline.
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build sdist + wheel
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - name: Build distributions
+        run: uv build
+      - name: Inspect distribution metadata
+        run: |
+          uv tool install twine
+          uv tool run twine check dist/*
+      - name: Verify tag matches package version
+        run: |
+          TAG="${GITHUB_REF##*/}"
+          PKG_VERSION="$(uv run --no-project python -c \
+            "import tomllib, pathlib; \
+             print(tomllib.loads(pathlib.Path('pyproject.toml').read_text())['project']['version'])")"
+          EXPECTED="v${PKG_VERSION}"
+          if [ "$TAG" != "$EXPECTED" ]; then
+            echo "::error::Tag $TAG does not match pyproject.toml version (expected $EXPECTED)"
+            exit 1
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          if-no-files-found: error
+
+  publish-pypi:
+    name: Publish to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    # Restrict who/what can publish — gate behind the `pypi` environment
+    # so the trusted-publisher rule on PyPI side matches a specific
+    # environment, not any workflow run.
+    environment:
+      name: pypi
+      url: https://pypi.org/project/agentic-scriptorium/
+    permissions:
+      id-token: write   # PyPI trusted publishing via OIDC
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - name: Publish via OIDC trusted publishing
+        uses: pypa/gh-action-pypi-publish@release/v1
+
+  github-release:
+    name: Create GitHub release
+    needs: publish-pypi
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # Create release + upload artifacts
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - name: Create GitHub release
+        # `--generate-notes` derives release notes from the merged PRs
+        # since the previous tag. Pair with CHANGELOG.md for the
+        # curated narrative.
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${GITHUB_REF##*/}"
+          PRERELEASE_FLAG=""
+          case "$TAG" in
+            *dev*|*a*|*b*|*rc*) PRERELEASE_FLAG="--prerelease" ;;
+          esac
+          gh release create "$TAG" \
+            --title "$TAG" \
+            --generate-notes \
+            $PRERELEASE_FLAG \
+            dist/*
