@@ -1,254 +1,43 @@
 ---
 title: Scriptorium
-description: An agentic operating system for scholarly writing — small inspectable skills share a single editorial state and ground their critique in peer-reviewed evidence.
-template: splash
-hero:
-  tagline: An agentic operating system for scholarly writing. Small inspectable skills share a single editorial state and ground their critique in peer-reviewed evidence.
-  image:
-    file: ../../assets/scriptorium-hero.webp
-    alt: A leather-bound book with a gold illuminated initial 'S' against a starfield, evoking a medieval scriptorium in deep space.
-  actions:
-    - text: Get started
-      link: ./how-to/install/
-      icon: right-arrow
-    - text: Read the design
-      link: ./concepts/design/
-      icon: open-book
-      variant: minimal
-    - text: GitHub
-      link: https://github.com/seandavi/scriptorium
-      icon: external
-      variant: minimal
+description: AI-assisted skills for scholarly writing — citation audit, simulated peer review, argumentative-flow analysis — that read from a shared editorial state file and ground their critique in a curated, peer-reviewed evidence base.
 ---
 
-import { Card, CardGrid, Aside } from '@astrojs/starlight/components';
+import { Aside } from '@astrojs/starlight/components';
 
-<p class="hero-audience">For researchers who want AI help on their manuscript — without rewrites they can't audit.</p>
+A collection of AI-assisted skills for scholarly writing — citation
+audit, simulated peer review, argumentative-flow analysis — that read
+from a shared editorial state file (`MANUSCRIPT_STATE.yaml`) and
+ground their critique in a curated, peer-reviewed evidence base.
 
-<div class="transform-strip">
-  <div>
-    <p class="transform-strip__label">What you give scriptorium</p>
+<Aside type="note" title="Pre-release">
+v0.1.0.dev0 is on PyPI. Skills, CLI surface, and the shared-state
+schema may change before v0.1.
+</Aside>
 
-```markdown
-TOX expression marks a transcriptionally stable
-exhausted state in CD8+ T cells that does not
-revert under standard immune-checkpoint blockade
-(Khan et al. 2019).
-```
-
-  </div>
-  <div class="transform-strip__arrow" aria-hidden="true">→</div>
-  <div>
-    <p class="transform-strip__label">What citation-audit returns</p>
-
-```yaml
-claim: >-
-  TOX marks a stable exhausted state unresponsive
-  to ICB in CD8+ T cells.
-citation: Khan et al. 2019, Nature
-evidence_strength: moderate
-assessment: >-
-  Original work shows TOX is necessary for
-  exhaustion but tests ICB response in mouse
-  models, not human cohorts.
-recommendation: >-
-  Soften "does not revert" to "shows limited
-  reversal in preclinical models"; add a
-  human-cohort citation for the clinical claim.
-```
-
-  </div>
-</div>
-
-Skills are conservative by design: they identify, assess, and recommend.
-They do not rewrite prose unless that is their explicit job, and when
-they do, the diff is structural and inspectable.
+## Install
 
 ```bash
 uv pip install --pre agentic-scriptorium
-scriptorium install            # adds skills to Claude Code
-scriptorium init ./my-paper    # scaffolds MANUSCRIPT_STATE.yaml
+scriptorium install            # Claude Code plugin
+scriptorium init ./my-paper    # scaffold MANUSCRIPT_STATE.yaml
 ```
 
-Then [install →](./how-to/install/) walks the full setup for Claude
-Code, other agents, or manual use.
+The [install guide](./how-to/install/) covers the Claude Code, other-agent, and manual paths.
 
----
+## Documentation
 
-Three pieces, used together or alone.
+- [Tutorials](./tutorials/) — learning-oriented walkthroughs.
+- [How-to guides](./how-to/) — task-oriented recipes.
+- [Reference](./reference/cli/) — CLI, manuscript-state schema, plugin manifest.
+- [Concepts](./concepts/design/) — design philosophy and architecture decisions.
+- [Knowledge layer](./concepts/knowledge/) — the peer-reviewed evidence base that grounds the skills, rendered with persistent-identifier citation resolution via [quartobot](https://github.com/seandavi/quartobot).
+- [Roadmap](./roadmap/) — what ships when.
 
-<div class="feature-band">
-  <div class="feature-band__body">
-    <p class="feature-band__layer">Layer 1 · the skills</p>
-    <h2 class="feature-band__title">Critique that doesn't rewrite</h2>
-    <p class="feature-band__audience">If you want AI feedback on a draft and you'd rather see a structured assessment than a wholesale rewrite.</p>
-    <p>
-      Four bundled skills, each single-purpose and inspectable:
-      <strong>citation-audit</strong> evaluates evidence strength
-      claim-by-claim; <strong>reviewer-simulation</strong> runs four
-      reviewer lenses (methodological, domain, translational,
-      statistical) over the manuscript; <strong>argumentative-flow</strong>
-      improves logical coherence while preserving citations, statistics,
-      and terminology; <strong>init</strong> walks you through populating
-      the editorial state file. Each runs as a Claude Code skill or as
-      a platform-neutral prompt.
-    </p>
-    <div class="feature-band__callout">
-      <strong>Structured outputs, not opinions.</strong> Every skill
-      emits a table or schema you can diff, version, and audit. The
-      reviewer-simulation lenses are grounded in the low
-      inter-reviewer-agreement literature (Bornmann κ≈0.17), not
-      anthropomorphized "personas".
-    </div>
-    <p class="feature-band__cta">
-      <a href="https://github.com/seandavi/scriptorium/tree/main/skills">Browse the bundled skills →</a>
-    </p>
-  </div>
-  <div class="feature-band__code">
+## Source
 
-```text
-$ /scriptorium:citation-audit
-
-CLAIM 1  TOX marks a stable exhausted state…
-  citation:      Khan et al. 2019
-  strength:      moderate
-  recommendation: soften wording; add
-                  human-cohort citation
-
-CLAIM 2  Four-gene signature predicts non-
-         response with AUC=0.82…
-  citation:      (this paper, Fig 4B)
-  strength:      strong
-  recommendation: report 95% CI; describe
-                  validation cohort
-```
-
-  </div>
-</div>
-
-<div class="feature-band feature-band--reverse">
-  <div class="feature-band__body">
-    <p class="feature-band__layer">Layer 2 · the editorial state</p>
-    <h2 class="feature-band__title">One file every skill reads</h2>
-    <p class="feature-band__audience">If you've had AI tools forget your project's claims, audience, or tone between sessions.</p>
-    <p>
-      <code>MANUSCRIPT_STATE.yaml</code> is the shared editorial truth:
-      core claims, known weaknesses, target audience, voice and tone,
-      controlled terminology, document phase. Every skill reads it
-      before acting; the schema is JSON-Schema-validated
-      (<code>scriptorium validate</code>) so a typo in
-      <code>core_claims</code> becomes an error, not a silent drift in
-      what the skills are working from.
-    </p>
-    <p class="feature-band__cta">
-      <a href="./reference/manuscript-state-schema/">Schema reference →</a>
-    </p>
-  </div>
-  <div class="feature-band__code">
-
-```yaml
-project:
-  title: "CD8+ T cell exhaustion in PDAC"
-  target_venue: "Nature Cancer"
-  source_format: quarto
-
-document_phase:
-  current: revision
-
-core_claims:
-  - "TOX expression marks a transcriptionally
-     stable exhausted state…"
-  - "Four-gene signature predicts non-response
-     to anti-PD-1 with AUC=0.82…"
-
-known_weaknesses:
-  - "Validation cohort is single-center."
-
-audience:
-  primary: cancer immunologists
-  tone: cautious, mechanism-forward
-```
-
-  </div>
-</div>
-
-<div class="feature-band">
-  <div class="feature-band__body">
-    <p class="feature-band__layer">Layer 3 · the evidence</p>
-    <h2 class="feature-band__title">Grounded in published literature</h2>
-    <p class="feature-band__audience">If you've been burned by AI tools that sound authoritative and cite nothing.</p>
-    <p>
-      Every skill's prompt is grounded in a curated, peer-reviewed
-      evidence base under <code>knowledge/</code>: citation accuracy,
-      peer-review reliability, scientific writing, critique technique,
-      grants, prior art, reproducibility, and author-roles literature.
-      The knowledge layer is rendered into the docs site via a Quarto
-      pipeline (<a href="https://github.com/seandavi/quartobot">quartobot</a>)
-      that resolves persistent-identifier cite keys at build time, so
-      every citation in the grounding is anchored to a real DOI or
-      PubMed ID.
-    </p>
-    <div class="feature-band__callout">
-      <strong>The knowledge layer is the moat.</strong> Skills are
-      narrow and replaceable; the evidence base they ground in is
-      what makes their critique calibrated rather than confident.
-    </div>
-    <p class="feature-band__cta">
-      <a href="./concepts/knowledge/">Browse the knowledge layer →</a>
-    </p>
-  </div>
-  <div class="feature-band__code">
-
-```text
-knowledge/
-├── citations/           ← grounds citation-audit
-├── peer-review/         ← grounds reviewer-simulation
-├── critique-techniques/ ← grounds argumentative-flow
-├── scientific-writing/
-├── editing/
-├── grants/
-├── prior-art/
-├── reproducibility/
-└── author-roles/        ← career-stage + EAL evidence
-```
-
-  </div>
-</div>
-
-## Where to go next
-
-<CardGrid>
-  <Card title="New here?" icon="rocket">
-    [How-to: install](./how-to/install/) walks the three install paths
-    (Claude Code plugin, other agents via prompt-pack, manual use).
-    The tutorial that runs scriptorium end-to-end on a real
-    manuscript is in flight.
-  </Card>
-  <Card title="Just need a recipe" icon="seti:plan">
-    [How-to guides](./how-to/) are task-oriented and short. Install,
-    convert manuscript formats, validate state.
-  </Card>
-  <Card title="Looking up an exact behavior" icon="document">
-    [Reference](./reference/cli/) covers the CLI, the
-    `MANUSCRIPT_STATE.yaml` schema, and the plugin manifest. Precise
-    and complete; minimal narration.
-  </Card>
-  <Card title="Want the rationale" icon="puzzle">
-    [Concepts](./concepts/design/) collects design philosophy,
-    architecture decisions, and the knowledge layer that grounds every
-    skill. Read this if a design choice surprises you.
-  </Card>
-</CardGrid>
-
----
+[github.com/seandavi/scriptorium](https://github.com/seandavi/scriptorium).
+Code: [MIT](https://github.com/seandavi/scriptorium/blob/main/LICENSE).
+Documentation and knowledge layer: [CC BY 4.0](./about/license/).
 
 Maintained by [Sean Davis](https://github.com/seandavi).
-Contributions welcome — [open an issue](https://github.com/seandavi/scriptorium/issues/new)
-or [browse open PRs](https://github.com/seandavi/scriptorium/pulls).
-Every docs page has an "Edit page" link at the bottom for typo-grade fixes.
-
-*Scriptorium is an independent project. It composes with Claude Code,
-[quartobot](https://github.com/seandavi/quartobot), and the
-[Semantic Scholar](https://github.com/zongmin-yu/semantic-scholar-fastmcp-mcp-server) /
-[PubMed](https://github.com/JackKuo666/PubMed-MCP-Server) MCP servers, but is not
-affiliated with or endorsed by their authors.*

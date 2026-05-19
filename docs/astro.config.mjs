@@ -10,13 +10,12 @@ export default defineConfig({
     starlight({
       title: "Scriptorium",
       description:
-        "An agentic operating system for scholarly writing — coordinated AI capabilities for manuscripts, grants, and reviews.",
+        "AI-assisted skills for scholarly writing — citation audit, simulated peer review, argumentative-flow analysis — sharing one editorial state file and grounded in a peer-reviewed evidence base.",
       logo: {
         src: "./src/assets/scriptorium-mark.png",
         alt: "Scriptorium",
         replacesTitle: false,
       },
-      customCss: ["./src/styles/landing.css"],
       social: [
         {
           icon: "github",
