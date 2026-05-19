@@ -12,10 +12,11 @@ export default defineConfig({
       description:
         "An agentic operating system for scholarly writing — coordinated AI capabilities for manuscripts, grants, and reviews.",
       logo: {
-        src: "./src/assets/scriptorium-hero.svg",
+        src: "./src/assets/scriptorium-mark.png",
         alt: "Scriptorium",
         replacesTitle: false,
       },
+      customCss: ["./src/styles/landing.css"],
       social: [
         {
           icon: "github",
