@@ -67,9 +67,7 @@ def test_skill_md_inventories_hedging_in_protocol() -> None:
     # The inventory step lives under "Inventory before transforming."
     # If a future refactor moves the heading, update this anchor too.
     inventory_anchor = "Inventory before transforming"
-    assert inventory_anchor in text, (
-        f"SKILL.md missing inventory step anchor {inventory_anchor!r}"
-    )
+    assert inventory_anchor in text, f"SKILL.md missing inventory step anchor {inventory_anchor!r}"
     # Cheap content check: the hedging vocabulary must appear in the
     # inventory step. Using "epistemic" as the anchor — it is specific
     # enough that an accidental removal will surface here.
