@@ -18,6 +18,17 @@ produces:
 modifies:
   - manuscript_state_yaml    # single, named file at the manuscript root
 
+# document_phase values the skill is designed to operate on. init
+# is the bootstrap step; it runs at any phase (and even before the
+# state file exists at all).
+# Consumed by docs build (reference/skills page generator).
+lifecycle_phases:
+  - outline
+  - draft
+  - review
+  - revision
+  - submission
+
 # Explicit invocation. The skill never auto-invokes, never runs as a
 # follow-up to another skill without the user asking. Convention-set
 # alignment: CLI subcommand and skill share the name \`init\`, mirroring

@@ -26,6 +26,14 @@ produces:
 
 modifies: []
 
+# document_phase values the skill is designed to operate on. Refuses
+# on outline-phase manuscripts.
+# Consumed by docs build (reference/skills page generator).
+lifecycle_phases:
+  - review
+  - revision
+  - submission
+
 # Explicit invocation. Invoked when the applicable checklist is
 # known (declared in state, passed from reporting-guideline-fit,
 # or named in the invocation) and the manuscript is in draft,

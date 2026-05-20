@@ -1,11 +1,11 @@
 #!/usr/bin/env -S uv run --script
 # /// script
 # requires-python = ">=3.10"
-# dependencies = []
+# dependencies = ["pyyaml>=6.0"]
 # ///
 """Preprocess source markdown + Quarto into the Astro/Starlight content tree.
 
-Four things happen:
+Five things happen:
 
 1. Top-level repo docs (`DESIGN.md`, `docs/roadmap.md`) are copied into the
    site as standalone pages with appropriate frontmatter.
@@ -18,6 +18,11 @@ Four things happen:
    wikilink / frontmatter pass as the `.md` knowledge docs.
 4. Any `.qmd` files found under `docs/qmd/` (currently none) are
    rendered via the Quarto CLI directly into the content tree.
+5. The skills reference page (``docs/src/content/docs/reference/skills.md``)
+   is regenerated from each ``skills/<name>/manifest.yaml``. Categorisation,
+   lifecycle fit, modifies-or-suggests, author-side-only flag, and required
+   bibliography are all read from the manifests; the table cannot drift
+   from the manifests because the manifests are the source.
 
 Quartobot and Quarto are optional — if neither is installed and no `.qmd`
 files exist, the relevant steps no-op cleanly.
@@ -35,17 +40,22 @@ import subprocess
 import sys
 import tempfile
 from pathlib import Path
+from typing import Any
+
+import yaml
 
 DOCS_DIR = Path(__file__).resolve().parent.parent
 REPO_ROOT = DOCS_DIR.parent
 KNOWLEDGE_SRC = REPO_ROOT / "knowledge"
 DESIGN_SRC = REPO_ROOT / "DESIGN.md"
 ROADMAP_SRC = REPO_ROOT / "docs" / "roadmap.md"
+SKILLS_SRC = REPO_ROOT / "skills"
 
 CONTENT_ROOT = DOCS_DIR / "src" / "content" / "docs"
 KNOWLEDGE_OUT = CONTENT_ROOT / "concepts" / "knowledge"
 DESIGN_OUT = CONTENT_ROOT / "concepts" / "design.md"
 ROADMAP_OUT = CONTENT_ROOT / "roadmap.md"
+SKILLS_OUT = CONTENT_ROOT / "reference" / "skills.md"
 QMD_SRC = DOCS_DIR / "qmd"
 
 # Knowledge subdirectories rendered as sidebar sections — display name +
@@ -333,8 +343,7 @@ def process_root_docs() -> None:
             title=title,
             body=body,
             description=(
-                "The agentic-scriptorium thesis, design philosophy, and "
-                "the shared-state contract."
+                "The agentic-scriptorium thesis, design philosophy, and the shared-state contract."
             ),
             sidebar_order=0,
         )
@@ -396,19 +405,432 @@ def process_qmd() -> int:
     return count
 
 
+# ---------------------------------------------------------------------------
+# Skills reference page generator
+# ---------------------------------------------------------------------------
+#
+# Replaces the previously hand-maintained
+# ``docs/src/content/docs/reference/skills.md``. The page is regenerated
+# on every ``just preprocess`` from each ``skills/<name>/manifest.yaml``,
+# so the table cannot drift from what actually ships.
+#
+# Output shape matches the hand-maintained page that shipped in PR #101:
+# a top-level table, a per-category detail section with one table per
+# category, a lifecycle-fit summary, an author-side-only callout, and a
+# source-of-truth footer. The generator is deterministic — running it
+# twice on unchanged manifests produces byte-identical output.
+
+# Categories rendered in display order, with the short description used
+# under each per-category detail heading.
+_CATEGORY_ORDER: list[tuple[str, str, str]] = [
+    (
+        "critique",
+        "Critique",
+        "Critique skills assess existing prose and emit structured findings. "
+        "They do not modify the manuscript and they do not invent citations.",
+    ),
+    (
+        "validation",
+        "Validation",
+        "Validation skills check existing prose against an external standard "
+        "and emit structured findings. They do not modify the manuscript.",
+    ),
+    (
+        "normalization",
+        "Normalization",
+        "Normalization skills enforce author-declared style and terminology. "
+        "They emit a structured report plus a list of suggested edits. They "
+        "do not auto-apply edits to the manuscript file.",
+    ),
+    (
+        "transformation",
+        "Transformation",
+        "Transformation skills modify prose. Both shipped transformation "
+        "skills inherit the same preservation contract — citations, "
+        "statistics, declared terminology, declared core claims, and the "
+        "author's hedging stance are preserved or surfaced as per-edit notes. "
+        "Both are explicit-invocation only and operate on a single named "
+        "section at a time. The author reviews each diff and decides.",
+    ),
+    (
+        "meta",
+        "Meta",
+        "Meta skills orient new users and explain scriptorium itself. They "
+        "read no manuscript content and modify nothing.",
+    ),
+    (
+        "utility",
+        "Utility",
+        "Utility skills set up scriptorium state. They modify "
+        "`MANUSCRIPT_STATE.yaml` (and only that file) when the author confirms.",
+    ),
+]
+
+# Lifecycle phases declared in the JSON Schema, in render order.
+_PHASES_IN_ORDER: list[str] = ["outline", "draft", "review", "revision", "submission"]
+_ALL_PHASES_SET: frozenset[str] = frozenset(_PHASES_IN_ORDER)
+
+# Conventions docs are universal scaffolding rather than topical
+# grounding; they're filtered from the "Primary grounding" column so the
+# detail tables stay readable.
+_GROUNDING_FILTER_PREFIXES: tuple[str, ...] = (
+    "knowledge/conventions/",
+    "knowledge/README.md",
+    "schemas/",
+)
+
+
+def _load_manifests() -> list[dict[str, Any]]:
+    """Load every ``skills/<name>/manifest.yaml`` into a dict.
+
+    Sorted by skill name for deterministic output.
+    """
+    manifests: list[dict[str, Any]] = []
+    if not SKILLS_SRC.is_dir():
+        return manifests
+    for skill_dir in sorted(SKILLS_SRC.iterdir(), key=lambda p: p.name):
+        if not skill_dir.is_dir():
+            continue
+        manifest_path = skill_dir / "manifest.yaml"
+        if not manifest_path.is_file():
+            continue
+        with manifest_path.open("r", encoding="utf-8") as fh:
+            data = yaml.safe_load(fh) or {}
+        if not isinstance(data, dict):
+            continue
+        # Normalize: ensure required keys exist with sensible defaults so
+        # downstream code can avoid defensive .get() everywhere.
+        data.setdefault("name", skill_dir.name)
+        data.setdefault("category", "unknown")
+        data.setdefault("modifies", [])
+        data.setdefault("grounding", [])
+        data.setdefault("inputs", [])
+        data.setdefault("lifecycle_phases", [])
+        manifests.append(data)
+    return manifests
+
+
+def _normalise_description(raw: str) -> str:
+    """Collapse a YAML folded-scalar description into one line."""
+    return " ".join(str(raw).split()).strip()
+
+
+def _first_sentence(text: str) -> str:
+    """Return the first sentence of ``text``, preserving its terminator.
+
+    Cheap heuristic: scan for the first period/question/exclamation
+    followed by whitespace or end-of-string. Falls back to the whole
+    string on no terminator.
+    """
+    text = _normalise_description(text)
+    match = re.search(r"[.!?](\s|$)", text)
+    if match is None:
+        return text
+    return text[: match.start() + 1].strip()
+
+
+def _render_lifecycle(phases: list[str]) -> str:
+    """Render a list of phase strings for the main table.
+
+    All five canonical phases collapse to "any phase". Otherwise the
+    phases render in canonical order separated by "·".
+    """
+    phase_set = set(phases)
+    if phase_set >= _ALL_PHASES_SET:
+        return "any phase"
+    ordered = [p for p in _PHASES_IN_ORDER if p in phase_set]
+    if not ordered:
+        return "not declared"
+    return " · ".join(ordered)
+
+
+def _render_modifies(manifest: dict[str, Any]) -> str:
+    """Render the ``modifies`` column for the main table.
+
+    Categories drive most of the answer:
+      - ``transformation`` and ``normalization`` skills always render as
+        ``suggests`` — they propose edits but never auto-apply (their
+        manifest's ``modifies:`` field declares the *intended scope* of
+        the suggestion, not an auto-apply contract; see argumentative-flow
+        and compression for canonical examples).
+      - For other categories, the ``modifies:`` list drives the result:
+        - empty list → ``no``
+        - state-file-only target → ``state file only`` (or
+          ``state file only (opt-in)`` if the skill is critique-category
+          and the write is a documented side-effect, e.g. venue-fit).
+    """
+    category = manifest.get("category")
+    if category in {"transformation", "normalization"}:
+        return "suggests"
+    modifies = manifest.get("modifies") or []
+    if not modifies:
+        return "no"
+    targets = [str(t) for t in modifies]
+    state_only = all(
+        t.startswith("MANUSCRIPT_STATE") or t == "manuscript_state_yaml" for t in targets
+    )
+    if state_only:
+        if category == "critique":
+            return "state file only (opt-in)"
+        return "state file only"
+    return "suggests"
+
+
+def _render_author_side(manifest: dict[str, Any]) -> str:
+    return "**yes**" if manifest.get("positioning") == "author-side-only" else "no"
+
+
+def _render_reqs_bib(manifest: dict[str, Any]) -> str:
+    """Find the ``bibliography`` input and report whether it's required."""
+    inputs = manifest.get("inputs") or []
+    for entry in inputs:
+        if not isinstance(entry, dict):
+            continue
+        if entry.get("name") == "bibliography":
+            return "yes" if entry.get("required") else "optional"
+    return "no"
+
+
+def _topical_grounding(manifest: dict[str, Any], *, limit: int = 3) -> list[str]:
+    """Return up to ``limit`` non-conventions grounding paths."""
+    out: list[str] = []
+    for path in manifest.get("grounding") or []:
+        path_str = str(path)
+        if path_str.startswith(_GROUNDING_FILTER_PREFIXES):
+            continue
+        out.append(path_str)
+        if len(out) >= limit:
+            break
+    return out
+
+
+def _skill_repo_link(name: str) -> str:
+    return f"https://github.com/seandavi/scriptorium/blob/main/skills/{name}/README.md"
+
+
+def _grounding_repo_link(path: str) -> str:
+    """Render ``knowledge/foo/bar.md`` as a markdown link to the repo."""
+    slug = Path(path).stem
+    href = f"https://github.com/seandavi/scriptorium/blob/main/{path}"
+    return f"[`{slug}`]({href})"
+
+
+def _render_main_table(manifests: list[dict[str, Any]]) -> str:
+    rows = [
+        "| Skill | Category | Lifecycle fit | Modifies | Author-side only | Reqs bib |",
+        "|---|---|---|---|---|---|",
+    ]
+    for m in manifests:
+        name = m["name"]
+        rows.append(
+            "| "
+            + " | ".join(
+                [
+                    f"[`{name}`]({_skill_repo_link(name)})",
+                    str(m.get("category", "")),
+                    _render_lifecycle(m.get("lifecycle_phases") or []),
+                    _render_modifies(m),
+                    _render_author_side(m),
+                    _render_reqs_bib(m),
+                ]
+            )
+            + " |"
+        )
+    return "\n".join(rows)
+
+
+def _render_category_section(label: str, intro: str, manifests: list[dict[str, Any]]) -> str:
+    """Render one per-category detail section."""
+    body = [f"### {label}", "", intro, ""]
+    body.append("| Skill | One line | Primary grounding |")
+    body.append("|---|---|---|")
+    for m in manifests:
+        name = m["name"]
+        one_line = _first_sentence(m.get("description", ""))
+        grounding_links = ", ".join(_grounding_repo_link(g) for g in _topical_grounding(m)) or "—"
+        body.append(f"| `{name}` | {one_line} | {grounding_links} |")
+    return "\n".join(body)
+
+
+def _render_lifecycle_summary(manifests: list[dict[str, Any]]) -> str:
+    """Render the "Lifecycle fit, summarised" table.
+
+    Each canonical phase maps to the skills that declare it in
+    ``lifecycle_phases``. The result is bucketed for readability:
+    show the *new* skills at each phase, not the cumulative set, so
+    the table conveys what unlocks where.
+    """
+    by_phase: dict[str, list[str]] = {p: [] for p in _PHASES_IN_ORDER}
+    for m in manifests:
+        for phase in m.get("lifecycle_phases") or []:
+            if phase in by_phase:
+                by_phase[phase].append(m["name"])
+    # Cumulative: at each phase, list every skill that's invocable.
+    rows = ["| Phase | Skills invocable |", "|---|---|"]
+    for phase in _PHASES_IN_ORDER:
+        names = by_phase[phase]
+        if not names:
+            cell = "—"
+        else:
+            cell = ", ".join(f"`{n}`" for n in sorted(names))
+        rows.append(f"| `{phase}` | {cell} |")
+    return "\n".join(rows)
+
+
+def _render_author_side_list(manifests: list[dict[str, Any]]) -> str:
+    items = []
+    for m in manifests:
+        if m.get("positioning") == "author-side-only":
+            items.append(f"- `{m['name']}`")
+    if not items:
+        return "_(no author-side-only skills currently ship.)_"
+    return "\n".join(items)
+
+
+def _generate_skills_page(manifests: list[dict[str, Any]]) -> str:
+    """Return the full markdown for the regenerated skills page."""
+    by_category: dict[str, list[dict[str, Any]]] = {}
+    for m in manifests:
+        by_category.setdefault(m.get("category", "unknown"), []).append(m)
+
+    parts: list[str] = []
+    parts.append(
+        "---\n"
+        "title: Skills\n"
+        'description: "Every shipped scriptorium skill, organised by category and '
+        'lifecycle stage, with grounding pointers."\n'
+        "sidebar:\n"
+        "  order: 10\n"
+        "---\n"
+    )
+    parts.append(
+        "<!--\n"
+        "  GENERATED FILE — DO NOT EDIT BY HAND.\n"
+        "  Regenerated by docs/scripts/preprocess.py from every\n"
+        "  skills/<name>/manifest.yaml. Edit the manifest, not this file.\n"
+        "-->\n"
+    )
+    parts.append(
+        "Every scriptorium skill is single-responsibility, reads "
+        "`MANUSCRIPT_STATE.yaml`, and emits structured markdown. The table "
+        "below is generated from each skill's `manifest.yaml` at docs-build "
+        "time — `category`, lifecycle fit, modifies-manuscript, "
+        "author-side-only, and required bibliography all come straight from "
+        "the manifest fields.\n"
+    )
+    parts.append(
+        "Each row links to the skill's `README.md` in the repo, which is the "
+        "full operational contract (inputs, outputs, refusal behaviours, "
+        "output schema, complete grounding list).\n"
+    )
+    parts.append("## Categorisation axes\n")
+    parts.append(
+        "Three axes give you most of what you need to decide which skill to "
+        "run next:\n\n"
+        "- **Category** — what kind of operation the skill performs.\n"
+        "  - *critique* — assesses; does not modify the manuscript.\n"
+        "  - *validation* — checks against an external standard; does not modify.\n"
+        "  - *normalization* — enforces declared style; suggests edits, "
+        "never auto-applies.\n"
+        "  - *transformation* — modifies prose under a preservation contract.\n"
+        "  - *meta* — orientation or explanation; no manuscript modification.\n"
+        "  - *utility* — bootstrap; modifies only `MANUSCRIPT_STATE.yaml`.\n"
+        "- **Lifecycle stage** — which `document_phase` values the skill is "
+        "invokable in. Skills refuse cleanly on phases for which they do "
+        "not have enough declared state to ground against.\n"
+        "- **Modifies the manuscript?** — *no* (most critique skills), "
+        "*suggests* (normalization and transformation skills emit diffs the "
+        "author reviews and applies), or *state file only* (utility, or "
+        "opt-in for some critique skills).\n"
+    )
+    parts.append(
+        "Two additional flags some authors need:\n\n"
+        "- **Author-side only?** — *yes* for skills whose `manifest.yaml` "
+        "declares `positioning: author-side-only`. Editorial-side use "
+        "violates ICMJE / NIH / major-publisher policy and the skill itself "
+        "refuses to run on a manuscript the user did not author.\n"
+        "- **Requires bibliography?** — *yes* when the manifest's "
+        "`bibliography` input is `required: true`; *optional* when the "
+        "input is declared but not required; *no* when the manifest does "
+        "not declare a `bibliography` input at all.\n"
+    )
+    parts.append("## All shipped skills\n")
+    parts.append(_render_main_table(manifests) + "\n")
+    parts.append("## Per-category detail\n")
+    for cat_key, cat_label, cat_intro in _CATEGORY_ORDER:
+        cat_manifests = sorted(by_category.get(cat_key, []), key=lambda m: m["name"])
+        if not cat_manifests:
+            continue
+        parts.append(_render_category_section(cat_label, cat_intro, cat_manifests) + "\n")
+    parts.append("## Lifecycle fit, summarised\n")
+    parts.append(
+        "Skills declare which `document_phase` values they operate on in "
+        "their `manifest.yaml#lifecycle_phases`. They refuse cleanly on "
+        "phases for which they do not have enough declared state to ground "
+        "against. The phases listed under each row below are cumulative — "
+        "skills invocable at `draft` are also invocable at `review`, "
+        "`revision`, and `submission` (unless the skill explicitly narrows "
+        "to a later phase).\n"
+    )
+    parts.append(_render_lifecycle_summary(manifests) + "\n")
+    parts.append(
+        "`MANUSCRIPT_STATE.yaml#document_phase` is set by `scriptorium:init` "
+        "and is what the skills read.\n"
+    )
+    parts.append("## Author-side only\n")
+    parts.append(
+        "Skills whose `manifest.yaml` declares `positioning: author-side-only` "
+        "refuse to run on a manuscript the user did not author. Editorial-side "
+        "use violates ICMJE, NIH, and major-publisher peer-review policy.\n"
+    )
+    parts.append(_render_author_side_list(manifests) + "\n")
+    parts.append("## Source of truth\n")
+    parts.append(
+        "This page is generated at docs-build time by "
+        "`docs/scripts/preprocess.py` from every `skills/<name>/manifest.yaml`. "
+        "To change what appears here, edit the manifest. Editing this file "
+        "directly is wasted work — the next preprocess pass will overwrite it.\n"
+    )
+    return "\n".join(parts).rstrip() + "\n"
+
+
+def process_skills_reference() -> int:
+    """Regenerate the reference/skills.md page from skill manifests.
+
+    Returns the count of manifests read.
+    """
+    manifests = _load_manifests()
+    if not manifests:
+        print("  (no skills/ manifests found; skipping)")
+        return 0
+    text = _generate_skills_page(manifests)
+    SKILLS_OUT.parent.mkdir(parents=True, exist_ok=True)
+    SKILLS_OUT.write_text(text, encoding="utf-8")
+    try:
+        rel = SKILLS_OUT.relative_to(DOCS_DIR)
+    except ValueError:
+        rel = SKILLS_OUT
+    print(f"  wrote {rel}")
+    return len(manifests)
+
+
 def main() -> None:
     print("Preprocessing scriptorium docs site")
     print(f"  source: {REPO_ROOT}")
     print(f"  output: {DOCS_DIR / 'src/content/docs'}")
 
-    print("\n[1/3] Root docs")
+    print("\n[1/4] Root docs")
     process_root_docs()
 
-    print("\n[2/3] Knowledge layer")
+    print("\n[2/4] Knowledge layer")
     n_knowledge = process_knowledge()
     print(f"  processed {n_knowledge} markdown file(s)")
 
-    print("\n[3/3] Quarto sources")
+    print("\n[3/4] Skills reference page")
+    n_skills = process_skills_reference()
+    print(f"  generated reference page from {n_skills} manifest(s)")
+
+    print("\n[4/4] Quarto sources")
     n_qmd = process_qmd()
     if n_qmd == 0:
         print("  (no .qmd files under docs/qmd/; skipping)")

@@ -26,6 +26,15 @@ produces:
 # any edit to land.
 modifies: []
 
+# document_phase values the skill is designed to operate on. Author
+# consent gates any edit; the skill is invocable wherever declared
+# terminology exists alongside draft prose.
+# Consumed by docs build (reference/skills page generator).
+lifecycle_phases:
+  - draft
+  - review
+  - revision
+
 # Safe to suggest when the user asks for a terminology check, when
 # terminology preferences are declared and the document is in
 # draft/revision/submission phase, or as a follow-up verification

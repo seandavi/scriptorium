@@ -19,6 +19,16 @@ produces:
 
 modifies: []
 
+# document_phase values the skill is designed to operate on. tour
+# is meta and operates at any phase (including before init has run).
+# Consumed by docs build (reference/skills page generator).
+lifecycle_phases:
+  - outline
+  - draft
+  - review
+  - revision
+  - submission
+
 # Explicit invocation. The intended pattern is that a maintainer
 # points a new user at `/scriptorium:tour` as their first step,
 # rather than linking them to documentation.

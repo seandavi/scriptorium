@@ -72,6 +72,45 @@ This keeps skill design accountable to evidence rather than vibes.
 
 See `DESIGN.md` for the full design philosophy and what *not* to do.
 
+### Adding a new skill
+
+The docs site's skills reference page
+(`docs/src/content/docs/reference/skills.md`) is regenerated on every
+`just preprocess` from each skill's `manifest.yaml`. To make a new skill
+appear correctly there:
+
+1. Drop the manifest at `skills/<your-skill>/manifest.yaml` with at least
+   these fields populated:
+   - `name`, `version`, `category` — used for grouping and the main table.
+   - `description` — the first sentence becomes the "one line" column in
+     the per-category detail table; keep it self-contained.
+   - `modifies` — empty list, prose-shaped target, or
+     `MANUSCRIPT_STATE.yaml#...`. Transformation/normalization skills
+     always render as `suggests` regardless of the field; everything else
+     reads the list directly.
+   - `inputs[]` — declare a `bibliography` input (with `required:` set)
+     if the skill needs one; the "Reqs bib" column reads this directly.
+   - `grounding[]` — knowledge-layer paths. `knowledge/conventions/...`
+     and `schemas/...` entries are filtered out of the rendered table
+     (universal scaffolding); list topical grounding first.
+   - `lifecycle_phases:` — list the `document_phase` values the skill
+     operates on (e.g. `[draft, review, revision]`). All five canonical
+     phases collapse to "any phase" in the table.
+   - `positioning: author-side-only` — only if the skill must refuse on
+     manuscripts the user did not author (currently
+     `reviewer-simulation` and `desk-rejection-risk`).
+2. Preview the regenerated page locally:
+   ```bash
+   cd docs
+   just preprocess              # or: ./scripts/preprocess.py
+   ```
+   The file lands at `docs/src/content/docs/reference/skills.md`. It is
+   gitignored — do not commit it. Editing it directly is wasted work; the
+   next preprocess pass will overwrite the change. Edit the manifest.
+3. Run the test suite (`uv run pytest -x`) — the
+   `test_skills_reference_generator.py` tests will fail if your new
+   manifest is missing `lifecycle_phases` or declares an unknown phase.
+
 ## Knowledge layer contributions
 
 `knowledge/` is the evidence base scriptorium's skills ground in. New

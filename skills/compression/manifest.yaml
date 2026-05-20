@@ -35,6 +35,14 @@ produces:
 # suggest-don't-apply posture terminology-normalization uses.
 modifies: []
 
+# document_phase values the skill is designed to operate on.
+# Compression is page-limit-driven and applies once the prose is
+# mature enough that length reduction is meaningful.
+# Consumed by docs build (reference/skills page generator).
+lifecycle_phases:
+  - revision
+  - submission
+
 # Explicit invocation required. Compression is a transformation
 # and surprise length reductions on an author's prose are exactly
 # the failure mode this skill's discipline is designed to avoid.
