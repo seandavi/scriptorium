@@ -10,6 +10,27 @@ state schema may change between versions.
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-05-20
+
+The v0.2 release. Closes the marketplace install path, the
+guidance-level + declared-work-scope conventions, six new skills
+(`tour`, `explain`, `desk-rejection-risk`, `venue-fit`,
+`author-contribution-audit`, `reporting-guideline-fit`), the ESL-aware
+extension to `argumentative-flow`, and two v0.3-early bonus items
+(`terminology-normalization`, `gap-finder`). Knowledge layer grew by
+six new notes (`venue-selection`, `predatory-publishing`,
+`preprint-landscape`, `research-gap-detection`,
+`literature-search-strategies`, and two conventions —
+`guidance-level`, `declared-work-scope`).
+
+Test count: 114 (was ~20 at v0.1.0.dev0). Every conversation-bearing
+skill grounds in both project-wide conventions, enforced by
+parametrized tests.
+
+Not in v0.2: the `manuscript-pipeline` orchestrator. It was always
+framed as "built once the leaves are stable" and is held until the
+ten v0.1+v0.2 skills have been used on more real manuscripts.
+
 ### Changed
 
 - Roadmap cleanup under `declared-work-scope`. **v0.4 reframed
@@ -52,7 +73,7 @@ state schema may change between versions.
   `author-contribution-audit` and `reporting-guideline-fit` as
   landed; v0.3 table marks `terminology-normalization` and
   `gap-finder` as landed-early (during v0.2 ramp because their
-  grounding was ready), and notes that `reporting-compliance`
+  grounding was ready), and notes that `reporting-guideline-compliance`
   (the only remaining v0.3 generation/validation item upstream
   of which is reporting-guideline-fit) is the natural downstream
   follow-on.
@@ -128,7 +149,7 @@ state schema may change between versions.
   current versions (PRISMA 2020 over 2009; TRIPOD+AI 2024
   over TRIPOD 2015 for AI-based prediction models).
   Upstream inference for the planned v0.3
-  `reporting-compliance` skill — this skill stops at "which
+  `reporting-guideline-compliance` skill — this skill stops at "which
   checklist?"; the downstream skill runs the full checklist.
   Replaces the originally-planned `reporting_guidelines:`
   schema addition — declaring with confidence in state was
@@ -587,5 +608,6 @@ Dual-licensed by category:
   thinking-block text is not persisted to the transcript by Claude Code,
   so it cannot be recovered.
 
-[Unreleased]: https://github.com/seandavi/scriptorium/compare/v0.1.0.dev0...HEAD
+[Unreleased]: https://github.com/seandavi/scriptorium/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/seandavi/scriptorium/releases/tag/v0.2.0
 [0.1.0.dev0]: https://github.com/seandavi/scriptorium/releases/tag/v0.1.0.dev0
