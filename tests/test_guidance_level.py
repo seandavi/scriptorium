@@ -38,6 +38,7 @@ SKILLS_THAT_ADAPT = (
     "desk-rejection-risk",
     "terminology-normalization",
     "venue-fit",
+    "gap-finder",
 )
 
 
