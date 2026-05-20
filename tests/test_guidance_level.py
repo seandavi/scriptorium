@@ -39,6 +39,7 @@ SKILLS_THAT_ADAPT = (
     "terminology-normalization",
     "venue-fit",
     "gap-finder",
+    "author-contribution-audit",
 )
 
 
