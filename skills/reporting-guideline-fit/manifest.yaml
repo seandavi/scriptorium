@@ -1,0 +1,98 @@
+# scriptorium skill manifest
+# This file declares the skill's metadata, supported platforms,
+# tool requirements, and knowledge-layer grounding.
+
+name: reporting-guideline-fit
+version: 0.2.0
+category: critique          # critique | validation | normalization | transformation | generation | meta
+
+description: >
+  Read the manuscript's methods section and infer which EQUATOR
+  Network reporting guideline applies — CONSORT, STROBE, PRISMA,
+  ARRIVE, TRIPOD/TRIPOD+AI, STARD, CARE, COREQ, CHEERS, plus
+  AI-extensions where applicable. Outputs the inferred
+  guideline(s) with confidence levels and per-inference
+  rationale. Stops at the inference step; the downstream
+  checklist audit is a separate v0.3 skill.
+
+# Upstream inference in the reporting-guidelines workflow.
+# Critique-shaped output; modifies no manuscript content.
+produces:
+  - structured-markdown-report
+
+modifies: []
+
+# Explicit invocation. Invoked when the author asks "which
+# checklist applies?" or before running the v0.3
+# reporting-compliance skill.
+invocation: explicit
+
+# Platforms this skill ships for.
+platforms:
+  claude-code:
+    skill_file: SKILL.md
+  platform-neutral:
+    prompt_file: prompt.md
+
+# Inputs the skill needs to do its job.
+inputs:
+  - name: manuscript_state
+    required: true
+    description: >
+      MANUSCRIPT_STATE.yaml. Required: document_phase.current
+      (refuses on outline). Optional: project.target_type
+      (confirms primary-research applicability),
+      project.target_venue (venue-specific requirements),
+      core_claims (disambiguates adjacent designs).
+    schema: manuscript-state.schema.json
+  - name: methods_section
+    required: true
+    description: >
+      The manuscript's methods section. Load-bearing; refuses
+      without it. Title and abstract alone are insufficient to
+      discriminate between adjacent designs.
+  - name: title_and_abstract
+    required: true
+    description: >
+      Added context for disambiguation. Sometimes the abstract
+      names the design type explicitly ("randomised controlled
+      trial"; "systematic review").
+  - name: registration_metadata
+    required: false
+    description: >
+      Optional ClinicalTrials.gov / PROSPERO / OSF registration
+      identifiers. Strong signals about applicable checklists.
+
+# Knowledge-layer documents that ground this skill's design.
+grounding:
+  - knowledge/conventions/guidance-level.md
+  - knowledge/conventions/declared-work-scope.md
+  - knowledge/scientific-writing/reporting-guidelines.md
+
+# Hard rules the skill must honor.
+preservation_constraints:
+  - refuse_on_outline_phase
+  - never_declare_authoritatively   # recommendation only
+  - never_force_confident_answer    # low confidence is honest
+  - never_run_the_full_checklist    # separate v0.3 skill
+  - never_write_to_manuscript_state # schema doesn't carry this field
+  - prefer_current_versions         # PRISMA 2020 over 2009; TRIPOD+AI 2024 over TRIPOD 2015 for AI
+
+# What this skill explicitly is NOT.
+non_goals:
+  - Running the full reporting-compliance audit. Separate v0.3
+    skill; this is the upstream inference.
+  - Declaring a checklist as authoritatively applicable. The
+    skill recommends; the author confirms.
+  - Operating on outline-phase manuscripts.
+  - Forcing a confident answer when methods is too sketchy.
+    Low confidence is honest output, not a failure.
+  - Writing to MANUSCRIPT_STATE.yaml. Schema deliberately
+    doesn't carry a reporting_guidelines: field (authors
+    often don't know; declaring with confidence is the
+    wrong-data-confidently-declared failure mode).
+  - Critiquing study design. The skill infers from the methods
+    as written, not whether the design was the right choice.
+  - Editor-side enforcement. Author-side decision support.
+  - Recommending superseded checklist versions
+    (PRISMA 2009 when PRISMA 2020 is current).
