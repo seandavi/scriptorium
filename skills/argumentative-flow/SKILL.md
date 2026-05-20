@@ -2,6 +2,7 @@
 name: argumentative-flow
 description: Improve a manuscript section's logical and argumentative coherence while preserving every citation, statistic, and declared terminology choice. Produces a structural diagnosis, a proposed outline, the revised text with a diff against the source, and a preservation report. Invoke ONLY when the user explicitly asks for argumentative-flow improvement on a specific section.
 grounding:
+  - knowledge/conventions/guidance-level.md
   - knowledge/scientific-writing/reader-expectation-approach.md
   - knowledge/scientific-writing/narrative-frameworks.md
   - knowledge/critique-techniques/argument-mapping.md
@@ -106,6 +107,33 @@ These are the legitimate transformations:
   ESL-to-native idiom. Per [[esl-writers-swales-hyland]], hedging and
   stance patterns vary legitimately across linguistic backgrounds;
   do not "smooth out" hedging that's deliberate.
+
+## Conversational style
+
+Read `meta.guidance_level` from `MANUSCRIPT_STATE.yaml` (default
+`standard` if absent). Adapt framing — not the structural output or
+the preservation contract — per [[guidance-level]]:
+
+- `terse` — open with one line ("running argumentative-flow on
+  <section>"); emit the markdown report; no closing summary.
+- `standard` — open with the section's role in the manuscript and
+  what the structural diagnosis will check; close with a one-line
+  summary of the most material structural issue found.
+- `full` — open with what reader-expectation theory predicts about
+  how the section should be organised (topic position → subject →
+  stress position) and what [[narrative-frameworks]] adds; close
+  with which proposed changes are about logic vs. about flow. This
+  is the skill authors most often suspect of "AI editing" rather
+  than principled revision — the upfront explanation of the
+  underlying theory earns the trust the changes will need. If first
+  invocation this session, offer
+  `/scriptorium:explain argumentative-flow` so the author can learn
+  the design before reading the revised text.
+
+Run the signal-based check-in once if appropriate (see the
+convention note). The preservation contract — every citation,
+statistic, and declared terminology choice — is **never** relaxed
+based on guidance level.
 
 ## Operational protocol
 

@@ -2,6 +2,7 @@
 name: citation-audit
 description: Audit existing citations in a manuscript for claim-support alignment, primary-vs-review mismatch, causal overreach, and unsupported assertions. Reports findings as structured markdown. Does NOT add or invent citations.
 grounding:
+  - knowledge/conventions/guidance-level.md
   - knowledge/critique-techniques/citation-claim-alignment.md
   - knowledge/citations/citation-accuracy-evidence.md
   - knowledge/citations/citation-overreach-research.md
@@ -50,6 +51,29 @@ The user will provide, or you should ask for:
 
 If `MANUSCRIPT_STATE.yaml` is missing, proceed with reduced context
 but note in the output that the audit was un-grounded by the state file.
+
+## Conversational style
+
+Read `meta.guidance_level` from `MANUSCRIPT_STATE.yaml` (default
+`standard` if absent). Adapt framing — not the structured output —
+per [[guidance-level]]:
+
+- `terse` — open with a one-line "running citation audit"; emit the
+  markdown report; no closing summary.
+- `standard` — open with a sentence naming the manuscript and the
+  number of citations to be audited; close with a one-line summary
+  of the findings.
+- `full` — open with what this skill produces (claim-level alignment
+  classifications, pattern-level smells) and how to read it
+  (per-claim, then patterns); close with which findings to act on
+  first and which are informational. If running for the first time
+  in this session, also offer `/scriptorium:explain citation-audit`
+  so the author can learn the skill's design before reading its
+  output.
+
+Run the signal-based check-in once if appropriate (see the
+convention note). The structured output itself is unchanged across
+levels — what changes is only the framing around it.
 
 ## Operational protocol
 

@@ -84,13 +84,24 @@ publishes to PyPI, the clone step will become optional
 
 Restart Claude Code, then in any session:
 
-```
+```text
 /help
 ```
 
-You should see entries like `scriptorium:init`,
+You should see entries like `scriptorium:tour`, `scriptorium:init`,
 `scriptorium:citation-audit`, `scriptorium:reviewer-simulation`,
-`scriptorium:argumentative-flow`.
+`scriptorium:argumentative-flow`, `scriptorium:explain`.
+
+Then run:
+
+```text
+/scriptorium:tour
+```
+
+A short three-or-four-turn walk-through that orients you to
+scriptorium and ends with one concrete next command. No file
+writes, no skill invocation. The recommended first step for any
+new user.
 
 ## Other agents (Codex, Gemini, Hermes, ChatGPT, …)
 
