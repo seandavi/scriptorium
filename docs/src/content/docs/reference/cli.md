@@ -21,7 +21,7 @@ Commands:
   init         Scaffold a starter MANUSCRIPT_STATE.yaml in a manuscript dir.
   install      Install scriptorium into the Claude Code plugins directory.
   list         List bundled skills with descriptions and grounding refs.
-  prompt-pack  Concatenate bundled skill prompts into one platform-neutral file.
+  prompt-pack  Emit bundled skill prompts as per-skill files or one concatenated file.
   validate     Validate a MANUSCRIPT_STATE.yaml file against the JSON Schema.
 ```
 
@@ -51,13 +51,22 @@ scriptorium validate MANUSCRIPT_STATE.yaml
 
 ## `scriptorium prompt-pack`
 
-Concatenate all bundled skill prompts into one platform-neutral markdown file. Drop the result into any LLM's context to use scriptorium skills outside Claude Code.
+Emit the bundled skill prompts so non-Claude-Code agents can use them. The default is one file per skill plus a `README.md` manifest, written to a directory; `--single-file` preserves the older single-document behavior. See [the how-to](/how-to/install/#other-agents-codex-gemini-hermes-chatgpt) for the recommended flow.
 
 ```text
 Usage: scriptorium prompt-pack [OPTIONS]
 
 Options:
-  -o, --output PATH  Write the prompt pack to a file instead of stdout.
+  -o, --output PATH  Write the prompt pack to this path. If the path is (or
+                     looks like) a directory, one file per skill plus a
+                     README.md manifest is written there. Otherwise a single
+                     concatenated file is written. Defaults to stdout when
+                     omitted.
+  --single-file      Force single-file concatenated output even when --output
+                     looks like a directory.
+  --prefix TEXT      Prefix prepended to each per-skill filename (e.g.
+                     --prefix scriptorium- emits scriptorium-citation-audit.md).
+                     Default: empty. Has no effect with --single-file.
 ```
 
 ## `scriptorium list`

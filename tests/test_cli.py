@@ -202,11 +202,96 @@ def test_prompt_pack_to_stdout(runner: CliRunner) -> None:
 
 
 def test_prompt_pack_to_file(runner: CliRunner, tmp_path: Path) -> None:
+    """`-o pack.md` writes a single concatenated file (extension triggers file mode)."""
     out = tmp_path / "pack.md"
     result = runner.invoke(cli.main, ["prompt-pack", "--output", str(out)])
     assert result.exit_code == 0
     assert out.is_file()
     assert "scriptorium prompt pack" in out.read_text(encoding="utf-8")
+
+
+def test_prompt_pack_single_file_flag(runner: CliRunner, tmp_path: Path) -> None:
+    """`--single-file` writes a concatenated file even with a directory-looking path."""
+    out = tmp_path / "all-skills.md"
+    result = runner.invoke(cli.main, ["prompt-pack", "--single-file", "--output", str(out)])
+    assert result.exit_code == 0, _combined_output(result)
+    assert out.is_file()
+    text = out.read_text(encoding="utf-8")
+    assert "scriptorium prompt pack" in text
+    assert "## Skill: citation-audit" in text
+
+
+def test_prompt_pack_directory_default(runner: CliRunner, tmp_path: Path) -> None:
+    """`-o prompts/` writes per-skill files plus a README.md manifest."""
+    out = tmp_path / "prompts"
+    result = runner.invoke(cli.main, ["prompt-pack", "--output", str(out) + "/"])
+    assert result.exit_code == 0, _combined_output(result)
+    assert out.is_dir()
+    readme = out / "README.md"
+    assert readme.is_file()
+    citation = out / "citation-audit.md"
+    assert citation.is_file()
+    # Per-skill file body is the existing platform-neutral prompt.
+    assert "Citation audit (platform-neutral prompt)" in citation.read_text(encoding="utf-8")
+    # README links the per-skill file and surfaces its category.
+    readme_text = readme.read_text(encoding="utf-8")
+    assert "[`citation-audit.md`]" in readme_text
+    assert "critique" in readme_text
+
+
+def test_prompt_pack_directory_no_colon_in_filenames(runner: CliRunner, tmp_path: Path) -> None:
+    """No file in the output directory may contain `:` — NTFS forbids it."""
+    out = tmp_path / "prompts"
+    result = runner.invoke(cli.main, ["prompt-pack", "--output", str(out) + "/"])
+    assert result.exit_code == 0
+    for child in out.iterdir():
+        assert ":" not in child.name, f"unexpected colon in filename: {child.name}"
+
+
+def test_prompt_pack_directory_prefix(runner: CliRunner, tmp_path: Path) -> None:
+    """`--prefix scriptorium-` emits scriptorium-<skill>.md per file."""
+    out = tmp_path / "prompts"
+    result = runner.invoke(
+        cli.main,
+        ["prompt-pack", "--prefix", "scriptorium-", "--output", str(out) + "/"],
+    )
+    assert result.exit_code == 0, _combined_output(result)
+    assert (out / "scriptorium-citation-audit.md").is_file()
+    assert (out / "README.md").is_file()
+    # README points at the prefixed filenames.
+    assert "scriptorium-citation-audit.md" in (out / "README.md").read_text(encoding="utf-8")
+
+
+def test_prompt_pack_directory_existing_directory(runner: CliRunner, tmp_path: Path) -> None:
+    """An existing directory (without trailing slash) still triggers dir mode."""
+    out = tmp_path / "prompts"
+    out.mkdir()
+    result = runner.invoke(cli.main, ["prompt-pack", "--output", str(out)])
+    assert result.exit_code == 0, _combined_output(result)
+    assert (out / "README.md").is_file()
+    assert (out / "citation-audit.md").is_file()
+
+
+def test_prompt_pack_directory_creates_missing_extensionless_path(
+    runner: CliRunner, tmp_path: Path
+) -> None:
+    """A nonexistent extension-less path is created as a directory."""
+    out = tmp_path / "prompts-new"
+    result = runner.invoke(cli.main, ["prompt-pack", "--output", str(out)])
+    assert result.exit_code == 0, _combined_output(result)
+    assert out.is_dir()
+    assert (out / "README.md").is_file()
+
+
+def test_prompt_pack_single_file_rejects_directory_target(
+    runner: CliRunner, tmp_path: Path
+) -> None:
+    """`--single-file -o <existing-dir>` errors instead of silently misplacing."""
+    out = tmp_path / "prompts"
+    out.mkdir()
+    result = runner.invoke(cli.main, ["prompt-pack", "--single-file", "--output", str(out)])
+    assert result.exit_code != 0
+    assert "directory" in _combined_output(result).lower()
 
 
 def test_prompt_pack_with_bundled_skills(
@@ -218,12 +303,14 @@ def test_prompt_pack_with_bundled_skills(
             "description": "Does A.",
             "grounding": [],
             "prompt": "Prompt for A.",
+            "category": "critique",
         },
         {
             "name": "skill-b",
             "description": None,
             "grounding": [],
             "prompt": None,
+            "category": None,
         },
     ]
     monkeypatch.setattr(cli, "_iter_skills", lambda: fake)
@@ -232,6 +319,39 @@ def test_prompt_pack_with_bundled_skills(
     assert "## Skill: skill-a" in result.output
     assert "Prompt for A." in result.output
     assert "## Skill: skill-b" not in result.output
+
+
+def test_prompt_pack_directory_with_bundled_skills(
+    runner: CliRunner, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """Directory mode honours the mocked skill list and skips prompt-less skills."""
+    fake = [
+        {
+            "name": "skill-a",
+            "description": "Does A.",
+            "grounding": [],
+            "prompt": "Prompt for A.\n",
+            "category": "critique",
+        },
+        {
+            "name": "skill-b",
+            "description": None,
+            "grounding": [],
+            "prompt": None,
+            "category": None,
+        },
+    ]
+    monkeypatch.setattr(cli, "_iter_skills", lambda: fake)
+    out = tmp_path / "prompts"
+    result = runner.invoke(cli.main, ["prompt-pack", "--output", str(out) + "/"])
+    assert result.exit_code == 0, _combined_output(result)
+    assert (out / "skill-a.md").is_file()
+    assert (out / "skill-a.md").read_text(encoding="utf-8") == "Prompt for A.\n"
+    # skill-b has no prompt, so it must not produce a file.
+    assert not (out / "skill-b.md").exists()
+    readme_text = (out / "README.md").read_text(encoding="utf-8")
+    assert "[`skill-a.md`]" in readme_text
+    assert "skill-b" not in readme_text
 
 
 def test_install_copy_into_tmpdir(runner: CliRunner, tmp_path: Path) -> None:
@@ -362,6 +482,10 @@ def test_iter_skills_reads_bundled_layout(tmp_path: Path, monkeypatch: pytest.Mo
         "---\nname: skill-a\ndescription: A.\ngrounding:\n  - docs/a.md\n---\nbody\n",
         encoding="utf-8",
     )
+    (skill_a / "manifest.yaml").write_text(
+        "name: skill-a\ncategory: critique\ndescription: >\n  A from manifest.\n",
+        encoding="utf-8",
+    )
     (skill_a / "prompt.md").write_text("Prompt A.\n", encoding="utf-8")
     # A non-directory entry should be ignored.
     (skills_root / "stray.txt").write_text("ignore me", encoding="utf-8")
@@ -373,9 +497,39 @@ def test_iter_skills_reads_bundled_layout(tmp_path: Path, monkeypatch: pytest.Mo
     skills = cli._iter_skills()
     assert len(skills) == 1
     assert skills[0]["name"] == "skill-a"
-    assert skills[0]["description"] == "A."
+    # manifest.yaml description takes precedence over the SKILL.md frontmatter
+    # because it's the source of truth consumed by the docs build.
+    assert skills[0]["description"] == "A from manifest."
     assert skills[0]["grounding"] == ["docs/a.md"]
     assert skills[0]["prompt"] == "Prompt A.\n"
+    assert skills[0]["category"] == "critique"
+
+
+def test_iter_skills_falls_back_to_skill_md_description(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """If manifest.yaml lacks a description, SKILL.md frontmatter wins."""
+    skills_root = tmp_path / "skills"
+    skill = skills_root / "skill-b"
+    skill.mkdir(parents=True)
+    (skill / "SKILL.md").write_text(
+        "---\nname: skill-b\ndescription: From SKILL.\n---\nbody\n",
+        encoding="utf-8",
+    )
+    (skill / "manifest.yaml").write_text(
+        "name: skill-b\ncategory: meta\n",
+        encoding="utf-8",
+    )
+    (skill / "prompt.md").write_text("Prompt B.\n", encoding="utf-8")
+
+    monkeypatch.setattr(
+        cli,
+        "_bundled_dir",
+        lambda pkg, repo: skills_root if repo == "skills" else None,
+    )
+    skills = cli._iter_skills()
+    assert skills[0]["description"] == "From SKILL."
+    assert skills[0]["category"] == "meta"
 
 
 def test_iter_skills_returns_empty_when_unbundled(
