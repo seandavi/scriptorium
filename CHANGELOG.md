@@ -608,5 +608,6 @@ Dual-licensed by category:
   thinking-block text is not persisted to the transcript by Claude Code,
   so it cannot be recovered.
 
-[Unreleased]: https://github.com/seandavi/scriptorium/compare/v0.1.0.dev0...HEAD
+[Unreleased]: https://github.com/seandavi/scriptorium/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/seandavi/scriptorium/releases/tag/v0.2.0
 [0.1.0.dev0]: https://github.com/seandavi/scriptorium/releases/tag/v0.1.0.dev0
