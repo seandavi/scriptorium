@@ -26,8 +26,11 @@ SKILLS_DIR = REPO_ROOT / "skills"
 # Skills whose SKILL.md must reference the guidance-level convention.
 # Pure CLI commands (validate, prompt-pack, list, trace) don't have a
 # conversation to adapt; they are intentionally excluded.
+# `tour` is included because it introduces the three levels to new
+# users even though it always runs at the `full` level itself.
 SKILLS_THAT_ADAPT = (
     "init",
+    "tour",
     "citation-audit",
     "reviewer-simulation",
     "argumentative-flow",

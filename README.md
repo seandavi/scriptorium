@@ -46,9 +46,22 @@ Easiest install — no Python toolchain needed:
 
 (`seandavi/scriptorium` is the GitHub `owner/repo` shorthand for
 <https://github.com/seandavi/scriptorium>. Append `@v0.1.0` or any
-ref to pin.) Skills appear as `scriptorium:init`,
-`scriptorium:citation-audit`, `scriptorium:reviewer-simulation`,
-`scriptorium:argumentative-flow`.
+ref to pin.) Skills appear as `scriptorium:tour`,
+`scriptorium:init`, `scriptorium:citation-audit`,
+`scriptorium:reviewer-simulation`, `scriptorium:argumentative-flow`,
+`scriptorium:explain`.
+
+Once installed, run:
+
+```text
+/scriptorium:tour
+```
+
+This is a short conversational walk-through — three or four turns —
+that orients you to scriptorium and ends with one concrete next
+command. It writes nothing and invokes no other skill; it's the
+single entry point we recommend pointing new users at instead of
+linking them to documentation.
 
 Updates: `/plugin marketplace update` then
 `/plugin update scriptorium@scriptorium`.

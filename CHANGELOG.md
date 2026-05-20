@@ -35,14 +35,27 @@ state schema may change between versions.
   once-per-session check-in protocol so the level can be
   recalibrated without nagging.
 
+- `scriptorium:tour` skill. Conversational onboarding for new
+  users: three or four turns, greets, asks what the user is
+  working on, walks them through the relevant subset of
+  scriptorium, shows a concrete `MANUSCRIPT_STATE.yaml` excerpt,
+  ends with one concrete next command (usually
+  `/scriptorium:init <dir>`). Strictly read-only; never
+  auto-invokes another skill. Designed as the single entry point
+  to point new users at instead of linking them to documentation.
+  README.md and INSTALL.md updated to surface
+  `/scriptorium:tour` as the recommended first step after install.
+
 - `scriptorium:explain` skill. Read-only meta-skill that
-  synthesises a one-screenful tour of scriptorium (no arg), a named
-  skill (`/scriptorium:explain citation-audit`), a
+  synthesises a one-screenful overview of scriptorium (no arg), a
+  named skill (`/scriptorium:explain citation-audit`), a
   `MANUSCRIPT_STATE.yaml` field
   (`/scriptorium:explain meta.guidance_level`), or a knowledge note
   by slug. Reads the plugin tree only; consumes no manuscript
-  content. Users at the `full` guidance level are nudged toward
-  this skill from the leaf skills.
+  content. `tour` and `explain` are complementary — `tour` is
+  interactive and ends with a next move; `explain` is a reference
+  lookup. Users at the `full` guidance level are nudged toward
+  `explain` from the leaf skills.
 
 - `scriptorium:init` now opens with a short orientation turn and
   elicits `meta.guidance_level` as its first question (with the

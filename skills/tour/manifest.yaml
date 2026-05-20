@@ -1,0 +1,64 @@
+# scriptorium skill manifest
+# This file declares the skill's metadata, supported platforms,
+# tool requirements, and knowledge-layer grounding.
+
+name: tour
+version: 0.1.0
+category: meta              # critique | validation | normalization | transformation | generation | meta
+
+description: >
+  Conversational onboarding for new users. Three or four turns:
+  greets, asks what the user is working on, walks through the
+  relevant subset of scriptorium, shows an example
+  MANUSCRIPT_STATE.yaml, ends with one concrete next move.
+  Strictly read-only; never auto-invokes another skill.
+
+# Read-only relative to the user's project.
+produces:
+  - markdown-conversation
+
+modifies: []
+
+# Explicit invocation. The intended pattern is that a maintainer
+# points a new user at `/scriptorium:tour` as their first step,
+# rather than linking them to documentation.
+invocation: explicit
+
+# Platforms this skill ships for.
+platforms:
+  claude-code:
+    skill_file: SKILL.md
+  platform-neutral:
+    prompt_file: prompt.md
+
+# Inputs the skill needs to do its job.
+inputs:
+  - name: cwd
+    required: true
+    description: >
+      The user's current working directory, so the skill can detect
+      whether MANUSCRIPT_STATE.yaml already exists (returning user)
+      and what kind of project it represents.
+  - name: plugin_tree
+    required: false
+    description: >
+      The scriptorium plugin tree (skills/, schemas/, knowledge/,
+      templates/). Used to show a concrete MANUSCRIPT_STATE.yaml
+      excerpt; the skill can fall back to a synthesised excerpt if
+      unavailable.
+
+# Knowledge-layer documents that ground this skill's design decisions.
+grounding:
+  - knowledge/conventions/guidance-level.md
+  - knowledge/README.md
+
+# What this skill explicitly is NOT.
+non_goals:
+  - Writing MANUSCRIPT_STATE.yaml or any other file.
+  - Auto-invoking init / citation-audit / reviewer-simulation /
+    argumentative-flow / explain at the end of the conversation.
+  - Reading manuscript prose, bibliography, or any file other than
+    MANUSCRIPT_STATE.yaml (for situation detection only).
+  - Replacing INSTALL.md or DESIGN.md as reference documentation.
+  - Listing every skill at equal weight; tour picks the loop the
+    stated user context needs.
