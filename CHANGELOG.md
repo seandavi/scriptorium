@@ -12,6 +12,51 @@ state schema may change between versions.
 
 ### Changed
 
+- Roadmap cleanup under `declared-work-scope`. **v0.4 reframed
+  from "Generation skills" to "Grant-specific skills and
+  bounded transformations".** Generating prose from blankness
+  is out of scope; generation that *transforms declared
+  scaffolding* is in scope, and the unifying frame for v0.4 is
+  the grant-writing workflow (where the author has typically
+  done substantial proposer-side work via mentor discussion
+  before invoking). Specific changes to v0.4:
+
+  - **Kept and reframed:** `specific-aims` (transforms declared
+    significance + hypotheses + methods into NIH-aims prose;
+    grant-specific; NIH 2025 Simplified Review Framework as
+    the target structure) and `lay-summary` (translation of
+    declared manuscript or grant prose to plain-language form
+    against funder-specific requirements — strongly
+    transformative since both source and target style are
+    declared).
+
+  - **Added:** `aims-significance-coherence` (critique skill —
+    audits whether declared significance is coherent with
+    stated aims; cross-section consistency check for grants;
+    pairs with `reviewer-simulation`'s grant-archetype variant).
+
+  - **Dropped:** `discussion-drafting` (the discussion section
+    involves substantial proposer judgment — what does this
+    mean? what should be emphasized? — incompatible with
+    declared-work-scope; covered on the audit side by
+    `argumentative-flow` + `gap-finder` for an existing
+    discussion) and `results-narrative` (the data is declared
+    but "results narrative" risks slipping claims that go
+    beyond the data; the consistency-audit angle is covered by
+    the v0.3 `figure-text-alignment` skill).
+
+  Also added a new entry to the **Explicit non-goals** section
+  making blank-slate prose generation a named non-goal, with
+  pointer to `declared-work-scope` and the dropped v0.4 skills
+  as the worked example. v0.2 table now marks
+  `author-contribution-audit` and `reporting-guideline-fit` as
+  landed; v0.3 table marks `terminology-normalization` and
+  `gap-finder` as landed-early (during v0.2 ramp because their
+  grounding was ready), and notes that `reporting-compliance`
+  (the only remaining v0.3 generation/validation item upstream
+  of which is reporting-guideline-fit) is the natural downstream
+  follow-on.
+
 - Propagated the `declared-work-scope` convention across all
   user-facing surfaces. Every conversation-bearing skill's
   `grounding:` list now declares it (init, tour, citation-audit,
