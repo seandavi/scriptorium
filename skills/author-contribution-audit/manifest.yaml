@@ -1,0 +1,108 @@
+# scriptorium skill manifest
+# This file declares the skill's metadata, supported platforms,
+# tool requirements, and knowledge-layer grounding.
+
+name: author-contribution-audit
+version: 0.3.0
+category: critique          # critique | validation | normalization | transformation | generation | meta
+
+description: >
+  Audit the manuscript's Author Contributions section against
+  ICMJE's four authorship criteria and CRediT's 14 contributor
+  roles. Per-author analysis, journal-specific variant check
+  when target_venue is set, LLM-as-author hard refusal.
+  Soft recommendations; never auto-writes the section, never
+  adjudicates authorship disputes, never duplicates authorship
+  data in MANUSCRIPT_STATE.yaml.
+
+# Author-side decision support. Critique-shaped — produces a
+# structured report; modifies no manuscript content.
+produces:
+  - structured-markdown-report
+
+modifies: []
+
+# Explicit invocation only. The skill is invoked when the author
+# asks for a contributions check, is preparing for submission, or
+# wants to verify the section meets a venue's requirements.
+invocation: explicit
+
+# Platforms this skill ships for.
+platforms:
+  claude-code:
+    skill_file: SKILL.md
+  platform-neutral:
+    prompt_file: prompt.md
+
+# Inputs the skill needs to do its job.
+inputs:
+  - name: manuscript_state
+    required: true
+    description: >
+      MANUSCRIPT_STATE.yaml. Required: document_phase.current
+      (refuses on outline); project.target_type (signals field
+      convention for author-order norms). Optional:
+      project.target_venue (journal-specific variant check);
+      terminology.preferred.
+    schema: manuscript-state.schema.json
+  - name: manuscript_byline
+    required: true
+    description: >
+      The author list with affiliations. The skill needs to know
+      who is expected to have contributions documented.
+  - name: author_contributions_section
+    required: false
+    description: >
+      The Author Contributions section from the manuscript, if it
+      exists. Absence is itself a finding the skill flags.
+  - name: acknowledgements_section
+    required: false
+    description: >
+      Optional. Used for ghost-authorship signal detection
+      (acknowledgement-listed contributors whose declared work
+      would meet ICMJE criteria).
+  - name: who_did_what
+    required: false
+    description: >
+      Optional author-supplied who-did-what list when the
+      contributions section is absent or sketchy. The skill maps
+      to CRediT roles as a draft for the author to refine;
+      never fabricates a mapping without input.
+
+# Knowledge-layer documents that ground this skill's design.
+grounding:
+  - knowledge/conventions/guidance-level.md
+  - knowledge/conventions/declared-work-scope.md
+  - knowledge/peer-review/credit-taxonomy-authorship.md
+
+# Hard rules the skill must honor.
+preservation_constraints:
+  - never_auto_write_contributions_section
+  - never_fabricate_credit_mappings
+  - never_adjudicate_authorship_disputes
+  - never_list_llm_as_author
+  - refuse_on_outline_phase
+  - per_author_anchored_findings  # never global "section is weak"
+
+# What this skill explicitly is NOT.
+non_goals:
+  - Adjudicating authorship disputes. ICMJE criteria are the
+    framework; whether to add or remove an author is the
+    author team's decision.
+  - Auto-writing the Author Contributions section. Soft
+    recommendations only.
+  - Fabricating CRediT mappings. Without author input, the
+    skill asks rather than guesses.
+  - Duplicating authorship data in MANUSCRIPT_STATE.yaml. The
+    schema does not carry a `contributors:` field — declared
+    prose lives in the manuscript.
+  - Listing LLMs / chatbots / AI tools as authors. Per ICMJE
+    2023 and aligned policies at Nature, Science, JAMA, Cell
+    Press journals — categorical refusal.
+  - Operating on outline-phase manuscripts.
+  - Editorial-side use. This is author-side decision support
+    only; running it on someone else's manuscript violates
+    author-side scope.
+  - Verifying contribution accuracy. The skill audits how
+    contributions are documented, not whether they're truthful
+    — the author team owns ground truth.

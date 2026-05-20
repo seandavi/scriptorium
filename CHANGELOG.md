@@ -60,6 +60,36 @@ state schema may change between versions.
 
 ### Added
 
+- `scriptorium:author-contribution-audit` skill (v0.3). Audits
+  the manuscript's Author Contributions section against
+  **ICMJE's four authorship criteria** and **CRediT's 14
+  contributor roles**, with journal-specific variant checking
+  when `project.target_venue` is set (NEJM, Nature, JAMA, Cell
+  Press, PLOS, eLife each have small variants on top of the
+  baseline). Handles three section states: present (per-author
+  audit), absent (flags absence, suggests CRediT-shaped
+  skeleton), or sketchy/incomplete (per-author missing-language
+  audit, candidate-role suggestions phrased as "consider whether
+  X if Y"). Surfaces honorary-authorship signals (listed authors
+  whose role is limited to funding, supervision, or general
+  advice — which per ICMJE alone do not justify authorship) and
+  ghost-authorship signals (acknowledgement-listed contributors
+  whose declared work would meet ICMJE criteria). The
+  LLM-as-author check is hard and always present in output —
+  per ICMJE 2023 and aligned policies at *Nature*, *Science*,
+  *JAMA*, *Cell* Press, chatbots and LLMs cannot be listed as
+  authors; the skill flags violations categorically. Grounded in
+  `knowledge/peer-review/credit-taxonomy-authorship.md`
+  (Brand et al. 2015 on CRediT; ICMJE four criteria; Wislar et
+  al. 2011 *BMJ* finding 21% of papers at top medical journals
+  had honorary or ghost authorship). Replaces the originally-
+  planned `contributors:` schema addition — per
+  declared-work-scope, scriptorium operates on declared prose
+  where it lives rather than duplicating in state. Author-side
+  decision support only; does not adjudicate disputes, does not
+  auto-write the section, does not fabricate CRediT mappings
+  without author input. Closes #84.
+
 - `scriptorium:gap-finder` skill (v0.3). Identifies gaps in
   *existing draft prose* organised by a seven-category taxonomy
   (literature / evidence / methodological / population /
