@@ -52,6 +52,11 @@ The user will provide, or you should ask for:
 If `MANUSCRIPT_STATE.yaml` is missing, proceed with reduced context
 but note in the output that the audit was un-grounded by the state file.
 
+If bibliography keys are unresolved — e.g. Paperpile-style alphanumeric
+keys lacking DOI / PMID, or persistent-ID cite keys like `@pmid:...`
+— consider invoking quartobot before scoring alignment. See
+**Optional tooling** below.
+
 ## Conversational style
 
 Read `meta.guidance_level` from `MANUSCRIPT_STATE.yaml` (default
@@ -114,6 +119,57 @@ Beyond per-citation alignment, scan for these **pattern-level smells**:
 - **Possible amplification or invention** — a hedged hypothesis in the
   primary source presented without its hedges in the citing sentence
   (the Greenberg distortion pattern).
+
+## Optional tooling: quartobot resolve
+
+If [`quartobot`](https://github.com/seandavi/quartobot) is on PATH,
+prefer it for canonical bibliographic metadata. Quartobot resolves
+persistent-ID cite keys (`@pmid:12345`, `@doi:10.1234/...`) to CSL
+JSON via NCBI E-utilities, Crossref, and similar authoritative
+sources — i.e. the same lookup chain a careful reviewer would use.
+
+Detect availability with `which quartobot` (or attempt
+`quartobot --help`). When available, this is materially better than
+guessing from a sparse bibliography:
+
+- The output is normalised CSL JSON, which makes the `Identify` step
+  unambiguous and removes the burden of parsing BibTeX vagaries.
+- Author / title / journal / year come from the authoritative
+  source rather than the manuscript's local bib file, which catches
+  bibliography errors (typos in titles, wrong years, missing
+  authors) as a free side-effect.
+
+### When this earns its keep — the Paperpile pattern
+
+A pattern observed in real use: a manuscript exported from Paperpile
+arrives with alphanumeric cite keys (`smithBigQuestion2020`) and
+incomplete metadata (no PMID, no DOI on many entries). In that
+situation the productive flow is:
+
+1. **Title + author search first**, run by the LLM, to identify
+   which paper each Paperpile key actually refers to.
+2. **`quartobot resolve` second**, to convert the now-identified
+   papers into canonical CSL JSON with PMIDs / DOIs attached.
+
+Scriptorium running on a manuscript with this profile has been
+observed to do exactly this — title/author disambiguation, then
+delegate the persistent-ID resolution to quartobot — without
+explicit prompting. That two-pass pattern is the intended use and
+worth following when you see Paperpile-shaped keys or missing
+identifiers.
+
+### What you must not do with quartobot
+
+- Do not invent persistent IDs to feed it. If a paper's PMID is
+  unknown, do the title/author search first; let quartobot resolve
+  from there.
+- Do not let quartobot's resolution stand in for full-text
+  verification. CSL metadata tells you what the cited paper *is*,
+  not what it *says*. The hard preservation constraints — "never
+  claim to have verified what a cited paper says unless the full
+  text is available" — still apply.
+- Do not silently degrade if quartobot fails or is absent. Note in
+  the audit output that resolution fell back to local-bib-only.
 
 ## Output format
 

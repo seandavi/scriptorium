@@ -1,6 +1,5 @@
 {
   "name": "scriptorium",
-  "version": "0.1.0-dev",
   "description": "An agentic scriptorium for scholarly writing — coordinated AI capabilities (citation audit, reviewer simulation, structural analysis) around shared editorial state.",
   "author": {
     "name": "Sean Davis",

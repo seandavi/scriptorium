@@ -10,7 +10,6 @@
       "name": "scriptorium",
       "source": "./",
       "description": "Coordinated AI capabilities for manuscripts, grants, and reviews. Reads and writes a shared MANUSCRIPT_STATE.yaml so skills compose rather than each starting from scratch.",
-      "version": "0.1.0-dev",
       "author": {
         "name": "Sean Davis",
         "email": "seandavi@gmail.com"

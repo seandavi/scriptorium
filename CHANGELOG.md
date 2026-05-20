@@ -12,6 +12,29 @@ state schema may change between versions.
 
 ### Added
 
+- `scriptorium:citation-audit` now documents an **Optional tooling:
+  `quartobot resolve`** section. When
+  [quartobot](https://github.com/seandavi/quartobot) is on PATH, it
+  resolves persistent-ID cite keys (`@pmid:`, `@doi:`) to canonical
+  CSL JSON via NCBI E-utilities / Crossref. The note records the
+  observed Paperpile-shaped bibliography pattern: title/author search
+  first to identify each key, then `quartobot resolve` to attach
+  canonical PMIDs and DOIs. The hard rules (no invented persistent
+  IDs; CSL metadata is not full-text verification) still apply. Same
+  guidance mirrored in the platform-neutral `prompt.md`.
+
+### Changed
+
+- Plugin manifest (`.claude-plugin/plugin.json`) and the
+  marketplace entry (`.claude-plugin/marketplace.json`) no longer
+  declare a `version` field. Per the Claude Code plugin docs, while
+  scriptorium is actively pre-1.0, omitting `version` lets the
+  marketplace mechanism treat every commit on `main` as a new
+  version (SHA-based) — so `/plugin update scriptorium@scriptorium`
+  picks up changes without requiring a manual version bump. Two new
+  regression tests in `tests/test_marketplace.py` keep both files
+  in sync; update them deliberately when cutting a real release.
+
 - Self-hosted Claude Code plugin marketplace at
   `.claude-plugin/marketplace.json`. Users can now install scriptorium
   with `/plugin marketplace add seandavi/scriptorium` followed by

@@ -138,3 +138,36 @@ def test_plugin_version_matches_plugin_json_when_both_set(marketplace: dict) -> 
                 f"{plugin['version']!r} drifts from plugin.json version "
                 f"{pj_version!r}"
             )
+
+
+def test_plugin_json_omits_version_during_active_development() -> None:
+    """While scriptorium is pre-1.0, plugin.json intentionally omits
+    `version` so Claude Code's marketplace mechanism uses the git commit
+    SHA to detect updates. Setting `version` here pins the plugin and
+    silently breaks `/plugin update` for users until the field is bumped
+    — bad ergonomics for an actively-developed project. If you're about
+    to cut a real release, set both this and the marketplace entry to
+    the new version *together* and update this test accordingly."""
+    plugin_json = json.loads(
+        (REPO_ROOT / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8")
+    )
+    assert "version" not in plugin_json, (
+        "plugin.json declares `version`; while scriptorium is "
+        "pre-1.0 the field should be omitted so the marketplace "
+        "tracks git SHAs. Update this test when you cut a release."
+    )
+
+
+def test_marketplace_plugin_entry_omits_version(marketplace: dict) -> None:
+    """Mirror of the plugin.json check on the marketplace side. If
+    plugin.json has no version, the marketplace entry must not either —
+    otherwise the entry value would win at install but plugin.json's
+    absent value would dominate at update-detection, producing the
+    pinned-by-accident pathology the docs warn about."""
+    for plugin in marketplace["plugins"]:
+        if plugin.get("source") == "./":
+            assert "version" not in plugin, (
+                f"marketplace plugin {plugin['name']!r} declares "
+                "`version` but plugin.json does not. Either set both "
+                "to the new release version, or omit both."
+            )
