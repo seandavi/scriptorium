@@ -40,6 +40,7 @@ SKILLS_THAT_ADAPT = (
     "venue-fit",
     "gap-finder",
     "author-contribution-audit",
+    "reporting-guideline-fit",
 )
 
 

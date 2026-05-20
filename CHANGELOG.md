@@ -60,6 +60,42 @@ state schema may change between versions.
 
 ### Added
 
+- `scriptorium:reporting-guideline-fit` skill (v0.2). Reads
+  the manuscript's methods section and infers which EQUATOR
+  Network reporting guideline applies — CONSORT 2010 for RCTs,
+  STROBE for observational, PRISMA 2020 for systematic
+  reviews, ARRIVE 2.0 for animal research, TRIPOD/TRIPOD+AI
+  2024 for prediction models, STARD 2015 for diagnostic
+  accuracy, CARE for case reports, COREQ for qualitative,
+  CHEERS 2022 for health-economic evaluations, plus
+  AI-extensions (CONSORT-AI, SPIRIT-AI, STARD-AI, TRIPOD+AI)
+  where applicable. Outputs the inferred guideline(s) with
+  confidence levels (high/moderate/low) and per-inference
+  rationale; explicit `Other guidelines considered` section
+  names checklists evaluated and rejected (important for edge
+  cases like non-randomised intervention studies on the
+  CONSORT/STROBE boundary). Surfaces multi-checklist
+  applicability explicitly (animal RCTs need ARRIVE + CONSORT;
+  AI-based diagnostic tools need STARD + STARD-AI). Honest
+  about confidence — `low confidence — methods section is too
+  sketchy to infer reliably` is the right output when the
+  design is unclear, not a confident wrong guess. Prefers
+  current versions (PRISMA 2020 over 2009; TRIPOD+AI 2024
+  over TRIPOD 2015 for AI-based prediction models).
+  Upstream inference for the planned v0.3
+  `reporting-compliance` skill — this skill stops at "which
+  checklist?"; the downstream skill runs the full checklist.
+  Replaces the originally-planned `reporting_guidelines:`
+  schema addition — declaring with confidence in state was
+  the wrong-data-confidently-declared failure mode for this
+  question, since authors often don't know which checklist
+  applies. Grounded in
+  `knowledge/scientific-writing/reporting-guidelines.md` (the
+  EQUATOR Network registry, design-specific checklists, and
+  AI-extension landscape). Refuses on outline phase; refuses
+  cleanly when methods is too sketchy; never writes to
+  MANUSCRIPT_STATE.yaml. Closes #85.
+
 - `scriptorium:author-contribution-audit` skill (v0.3). Audits
   the manuscript's Author Contributions section against
   **ICMJE's four authorship criteria** and **CRediT's 14
