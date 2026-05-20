@@ -8,10 +8,7 @@
     "url": "https://github.com/seandavi"
   },
   "homepage": "https://github.com/seandavi/scriptorium",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/seandavi/scriptorium"
-  },
+  "repository": "https://github.com/seandavi/scriptorium",
   "license": "MIT",
   "keywords": [
     "scholarly-writing",
