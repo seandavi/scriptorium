@@ -50,6 +50,25 @@ state schema may change between versions.
 
 ### Changed
 
+- `scriptorium:argumentative-flow` now performs an **active
+  ESL-aware preservation check** for hedging and stance markers.
+  Previously the skill listed "do not smooth out ESL hedging" as a
+  passive non-goal; the v0.2 enhancement promotes it to an active
+  inventory step in the operational protocol (alongside cite keys,
+  numbers, and declared terminology) and an explicit sub-section in
+  the preservation report enumerating hedges retained verbatim,
+  modified (with a logical-coherence justification), or dropped.
+  Hedging joins citations / statistics / declared terminology as a
+  fourth preserved category in the hard preservation contract. The
+  guidance-level interaction is load-bearing: at `full` the
+  preservation report surfaces in one or two sentences that
+  ESL-aware preservation ran (citing Swales/Hyland); at
+  `terse`/`standard` the audit fires silently and the table
+  speaks for itself — no lecturing. Grounded in
+  `knowledge/scientific-writing/esl-writers-swales-hyland.md`. Same
+  logic mirrored in `prompt.md` for the platform-neutral path.
+  Closes #75.
+
 - `scriptorium:tour` and `scriptorium:explain` now make the
   evidence-base posture an explicit, visible part of their output —
   not a footnote. Tour's turn-1 paragraph names that each skill

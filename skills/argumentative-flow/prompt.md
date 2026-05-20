@@ -33,6 +33,20 @@ conflict and stop rather than violate a constraint.
 5. **The set of claims is preserved.** You may reorder, re-emphasize,
    reframe. You may not add new claims, remove existing claims, or
    weaken a claim past what the source already weakened it to.
+6. **Hedging and stance markers are preserved.** Epistemic modals
+   ("may", "might", "could"), epistemic adverbs ("possibly",
+   "apparently"), approximators ("approximately", "about"),
+   attributive verbs ("we suggest", "we propose"), and indirect
+   attributions ("it has been suggested", "it is possible that") are
+   part of how the source calibrates the strength of its claims. The
+   Swales / Hyland tradition documents that these patterns vary
+   legitimately across linguistic backgrounds; hedging is *how
+   scientific claims are calibrated to evidence*, not stylistic noise
+   to smooth away. A revision that drops or weakens a hedge has
+   altered the author's voice and may have crossed a claim boundary.
+   Preserve the hedge unless you can name a specific logical-coherence
+   reason to change it; if you do change it, justify the change in
+   the preservation report.
 
 If preservation conflicts with a flow improvement, **preservation
 wins**. Document the conflict; do not silently violate.
@@ -69,7 +83,13 @@ If any input is missing, ask for it.
 - Add stylistic embellishment.
 - Rewrite methods (different problem; not in scope).
 - Compress length (different skill; not in scope).
-- "Smooth out" ESL hedging or stance patterns — they vary legitimately.
+- "Smooth out" ESL hedging or stance patterns — they vary
+  legitimately across linguistic backgrounds (Swales / Hyland). This
+  is enforced as an active inventory step (#2 of the operational
+  protocol) and audited in the preservation report, not just a
+  passive non-goal. The rule is *preserve hedging when hedging is
+  the mode* — not *refuse to revise anything that hedges*. Genuine
+  logical incoherence is still the target.
 
 ## Operational protocol
 
@@ -78,6 +98,17 @@ If any input is missing, ask for it.
    - Cite keys in the section (with their context).
    - Quantitative statements (numbers + their context).
    - Declared `terminology.preferred` and `forbidden` terms.
+   - Hedging and stance markers in the section: epistemic modals
+     ("may", "might", "could", "would"), epistemic adverbs
+     ("possibly", "perhaps", "apparently", "likely"), approximators
+     ("approximately", "about", "roughly"), attributive verbs ("we
+     suggest", "we propose"), and indirect attributions ("it has
+     been suggested that", "it is possible that"). Record each with
+     its sentence position. Before proposing any revision that would
+     alter the wording of a hedged sentence, flag whether the
+     revision drops, weakens, or strengthens the hedge — and if so,
+     whether you can name a logical-coherence reason for the change.
+     "Reads more naturally" is not such a reason.
 3. Diagnose structurally (which narrative framework — OCAR/LDR/IMRaD
    — is the section using or trying to use; where does it deviate).
 4. Diagnose argumentatively (for each load-bearing claim: is the
@@ -121,6 +152,22 @@ If any input is missing, ask for it.
 | Forbidden terminology absent | n/a | n/a | ✓ |
 | Voice | source | output | ✓ |
 | Tone targets | list | list | ✓ |
+| Hedging / stance markers | N | N | ✓ preserved (see breakdown) |
+
+### Hedging patterns retained vs. modified
+
+Enumerate every hedge from the inventory. Group as:
+
+- **Retained verbatim** — each hedge (with sentence position) kept
+  exactly as in the source. The expected case.
+- **Modified** — for each: source phrasing, revised phrasing, the
+  logical-coherence reason that justified the change. "Reads more
+  naturally" is **not** a valid reason; legitimate reasons are limited
+  to resolving a conflict with another preservation constraint or
+  fixing genuine argumentative incoherence the hedge was obscuring.
+- **Dropped** — each hedge whose force was removed. Higher bar than
+  modifying. Every entry needs an explicit justification or it
+  should be reverted.
 
 ## Remaining weaknesses
 (What this pass did not fix and why: content gaps, claims that may
@@ -145,6 +192,8 @@ handle better.)
 - Change numbers.
 - Introduce new claims.
 - Embellish style.
+- Drop, weaken, or strengthen a hedge without a logical-coherence
+  reason recorded in the preservation report.
 - Transform an entire manuscript at once.
 - Hide preservation violations behind a clean-looking report.
 
