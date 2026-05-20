@@ -58,7 +58,7 @@ Easiest install — no Python toolchain needed:
 ```
 
 (`seandavi/scriptorium` is the GitHub `owner/repo` shorthand for
-<https://github.com/seandavi/scriptorium>. Append `@v0.1.0` or any
+<https://github.com/seandavi/scriptorium>. Append `@v0.2.0` or any
 ref to pin.) Skills appear as `scriptorium:tour`,
 `scriptorium:init`, `scriptorium:citation-audit`,
 `scriptorium:reviewer-simulation`, `scriptorium:argumentative-flow`,
