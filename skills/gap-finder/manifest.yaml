@@ -1,0 +1,102 @@
+# scriptorium skill manifest
+# This file declares the skill's metadata, supported platforms,
+# tool requirements, and knowledge-layer grounding.
+
+name: gap-finder
+version: 0.3.0
+category: critique          # critique | validation | normalization | transformation | generation | meta
+
+description: >
+  Identify gaps in existing draft prose (claims under-supported,
+  premises missing, related work not engaged with, counterarguments
+  not addressed, internal-consistency mismatches across sections)
+  and suggest directions for filling them. Structured by a seven-
+  category gap taxonomy. Each finding anchors in a specific
+  manuscript passage. Suggested directions are pasteable search
+  strategies; never invented citations. Refuses cleanly on
+  outline-phase manuscripts and pre-declaration questions.
+
+# Read-only relative to the user's project. Critique-shape: produces
+# a structured report; does not modify the manuscript; does not
+# generate prose to fill any gap.
+produces:
+  - structured-markdown-report
+
+modifies: []
+
+# Explicit invocation. The skill is invoked when the author asks
+# "what's missing here?" with a manuscript section in mind. Not a
+# side-effect of any other skill.
+invocation: explicit
+
+# Platforms this skill ships for.
+platforms:
+  claude-code:
+    skill_file: SKILL.md
+  platform-neutral:
+    prompt_file: prompt.md
+
+# Inputs the skill needs to do its job.
+inputs:
+  - name: manuscript_state
+    required: true
+    description: >
+      MANUSCRIPT_STATE.yaml from the project root. Required:
+      document_phase.current (refuses on outline), core_claims
+      (anchors what's being argued), known_weaknesses (gaps already
+      named, not re-flagged). Optional: style.audience,
+      project.target_venue / candidate_venues, terminology.preferred.
+    schema: manuscript-state.schema.json
+  - name: manuscript_text
+    required: true
+    description: >
+      The section the author asked about (or the full prose if
+      cross-section internal-consistency gaps are in scope). The
+      section must have prose to anchor findings in; a stub is
+      sufficient but an empty section is not.
+  - name: focus_question
+    required: true
+    description: >
+      The question being answered. "What's missing in the
+      discussion?", "What related work haven't we engaged with?",
+      "What counterarguments to claim X aren't addressed?" If
+      not supplied at invocation, the skill asks for one before
+      scanning rather than producing exhaustive output.
+
+# Knowledge-layer documents that ground this skill's design.
+grounding:
+  - knowledge/conventions/guidance-level.md
+  - knowledge/conventions/declared-work-scope.md
+  - knowledge/critique-techniques/research-gap-detection.md
+  - knowledge/scientific-writing/literature-search-strategies.md
+  - knowledge/critique-techniques/argument-mapping.md
+  - knowledge/critique-techniques/logical-fallacy-detection.md
+  - knowledge/critique-techniques/internal-consistency.md
+  - knowledge/peer-review/common-critiques-taxonomy.md
+  - knowledge/citations/hallucination-in-llm-citations.md
+
+# Hard rules the skill must honor.
+preservation_constraints:
+  - never_invent_citations               # suggested directions are searches, not cites
+  - every_finding_anchors_in_declared_prose
+  - refuse_on_outline_phase
+  - refuse_on_pre_declaration_questions
+  - never_draft_prose_to_fill_gaps
+  - never_produce_critique_shaped_findings  # that's reviewer-simulation's job
+
+# What this skill explicitly is NOT.
+non_goals:
+  - Drafting prose to fill any gap. Suggests directions only.
+  - Inventing specific citations. "Suggested directions" output
+    is search strategies, never `cite this paper`.
+  - Operating on outline-phase manuscripts. Refuses cleanly.
+  - Operating on pre-declaration questions ("what should I write
+    about?"). Author owns the proposer step.
+  - Producing exhaustive output. Asks for a focus question if
+    one isn't supplied.
+  - Acting as a reviewer simulation. Reviewer-simulation is
+    adversarial; gap-finder is collaborative. Findings frame as
+    opportunities to strengthen, not deficiencies to defend.
+  - Editorial-side use. Author-side decision support only.
+  - Auto-invoking other skills. Suggests next steps;
+    never invokes.

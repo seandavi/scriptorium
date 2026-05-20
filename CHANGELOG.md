@@ -60,6 +60,37 @@ state schema may change between versions.
 
 ### Added
 
+- `scriptorium:gap-finder` skill (v0.3). Identifies gaps in
+  *existing draft prose* organised by a seven-category taxonomy
+  (literature / evidence / methodological / population /
+  translation / counterargument / internal-consistency), each
+  finding anchored to a specific manuscript passage, each
+  suggested direction shaped as a pasteable search strategy
+  rather than an invented citation. Collaborative critique shape
+  rather than adversarial — distinct from `reviewer-simulation`
+  and complementary to it (pairs naturally when gap-finder
+  surfaces counterargument gaps reviewers will also catch).
+  Refuses cleanly on outline-phase manuscripts (no declared
+  prose to anchor findings) and on pre-declaration questions
+  ("what should I write about?" — the author owns the proposer
+  step). Asks for a focus question when one isn't supplied
+  rather than producing exhaustive output. Closes #76.
+
+- Two new knowledge notes underwrite gap-finder:
+  `knowledge/critique-techniques/research-gap-detection.md`
+  (the seven-category taxonomy from Robinson 2011 *AHRQ*;
+  PRISMA-ScR PCC framing for methodological gaps;
+  realist-synthesis mechanism/context/outcome framing for
+  counterargument gaps; the LLM-specific failure modes —
+  hallucinated future literature, vague exhortation, critique
+  creep, gap-of-convenience — and their mitigations) and
+  `knowledge/scientific-writing/literature-search-strategies.md`
+  (boolean query construction per Cochrane Handbook; citation
+  chasing per Greenhalgh & Peacock 2005 *BMJ* and Wohlin 2014;
+  snowballing as iterative method; MeSH-vs-keyword
+  precision-recall trade-off; the LLM-assisted search-tool
+  landscape with caveats).
+
 - `scriptorium:venue-fit` skill (v0.2). Tiered venue
   recommendation (`Likely fit` / `Stretch` / `Probably
   premature`) with per-axis fit reasoning across scope,
