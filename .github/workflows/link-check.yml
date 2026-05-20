@@ -54,9 +54,14 @@ jobs:
             'docs/**/*.md'
             'knowledge/**/*.md'
             'skills/**/*.md'
-          fail: true
-          # Job summary gets the per-link table so a failed run is
-          # diagnosable from the Actions tab without re-running locally.
+          # Advisory, not blocking. Lychee cannot resolve Astro
+          # root-relative paths (e.g. `/how-to/install/`) from source
+          # markdown — those are checked at site build time by Astro
+          # itself. External-link rot is real but rarely urgent. We
+          # surface the findings via the job summary and let the
+          # weekly scheduled run be the recurring sweep; we don't
+          # block PR merges on a third-party network state.
+          fail: false
           jobSummary: true
           format: markdown
         env:
