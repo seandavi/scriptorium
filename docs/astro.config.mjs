@@ -16,6 +16,7 @@ export default defineConfig({
         alt: "Scriptorium",
         replacesTitle: false,
       },
+      customCss: ["./src/styles/landing.css"],
       social: [
         {
           icon: "github",
