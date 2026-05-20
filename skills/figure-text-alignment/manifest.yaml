@@ -1,0 +1,95 @@
+# scriptorium skill manifest
+# This file declares the skill's metadata, supported platforms,
+# tool requirements, and knowledge-layer grounding. It is consumed
+# by the scriptorium CLI (`list`, `prompt-pack`) and by future
+# orchestrators that compose skills.
+
+name: figure-text-alignment
+version: 0.1.0
+category: critique          # critique | validation | normalization | transformation | generation | meta
+
+description: >
+  Audit text-only alignment between figure captions and the body-text
+  sentences that reference them. For every figure, classify the
+  caption ↔ body-text-reference pair as aligned / partially aligned /
+  misaligned / cannot determine, and flag pattern-level issues
+  (orphan figure, phantom figure, panel mismatch, axis/units
+  divergence, direction divergence). Text-only subset of figure-text
+  alignment; multimodal counterpart (sub-skill B) is explicitly
+  deferred. Does not read figure images. Does not modify the
+  manuscript.
+
+# Critique skill — assesses; does not modify the manuscript and does
+# not invent figure content.
+produces:
+  - structured-markdown-report
+
+modifies: []                 # No file modifications.
+
+# Explicit invocation. The skill is invoked when the author asks for
+# a figure-text alignment check (typically pre-submission or during
+# revision). Not a silent side-effect of any other skill.
+invocation: explicit
+
+# Platforms this skill ships for.
+platforms:
+  claude-code:
+    skill_file: SKILL.md
+  platform-neutral:
+    prompt_file: prompt.md
+
+# Inputs the skill needs to do its job.
+inputs:
+  - name: manuscript_text
+    required: true
+    description: >
+      Full manuscript prose, including figure captions and the
+      body-text sentences that reference figures. For multi-file
+      manuscripts (e.g. Quarto includes declared under `sections`),
+      every section file is read so cross-section figure references
+      can be inventoried.
+  - name: manuscript_state
+    required: false
+    description: >
+      MANUSCRIPT_STATE.yaml from the project root, when present.
+      Useful fields: document_phase.current (refuses on outline),
+      meta.guidance_level (framing), core_claims (context for which
+      figures are load-bearing). Figure locations are typically NOT
+      declared here — the skill discovers figures from the
+      manuscript text. If the state file is missing the skill
+      proceeds and notes the reduced grounding in the output.
+    schema: manuscript-state.schema.json
+
+# Knowledge-layer documents that ground this skill's design decisions.
+grounding:
+  - knowledge/conventions/guidance-level.md
+  - knowledge/conventions/declared-work-scope.md
+  - knowledge/scientific-writing/visualization-figures.md
+  - knowledge/critique-techniques/internal-consistency.md
+  - knowledge/critique-techniques/forensic-methodology.md
+
+# What this skill explicitly is NOT.
+non_goals:
+  - >
+    Does not read figure images. Multimodal alignment (axis-label
+    match, plot-type match, colour-channel description,
+    pattern-claim verification) is sub-skill B, deferred until
+    LLM-vision reliability for scientific figures is validated
+    against a known-mismatch test set. See issue #14 and the v0.3
+    roadmap deferred section.
+  - >
+    Does not perform image-integrity checks (duplication,
+    manipulation, splicing). That is a different problem with
+    different methodology and belongs to Proofig / ImageTwin /
+    human inspection — see knowledge/critique-techniques/forensic-methodology.md.
+  - Does not modify the manuscript, captions, or figure files.
+  - Does not invent figure content the caption did not state.
+  - Does not suggest specific rewrites of captions or body-text
+    references. Flags misalignments; the author decides.
+  - Does not score the manuscript on a quality scale.
+  - Does not verify sample-size consistency across sections
+    (Methods N vs. Results N vs. caption n=). Closer to a future
+    statistics-consistency skill.
+  - Does not operate on outline-phase manuscripts. Refuses cleanly.
+  - Does not generate captions for figures that lack them, or
+    body-text references for orphan figures.
