@@ -221,10 +221,15 @@ quantification (see [[quantitative-quality-measures]]).
 - The 2012 Hayes architecture has not been operationalised
   computationally in any reference implementation — it remains a
   descriptive model, not a generative one.
-- The expertise-reversal effect implies that
-  `target_reader_expertise` matters, but published validation of
-  this effect on scientific writing specifically (versus instructional
-  materials) is `[TODO verify]`.
+- The expertise-reversal effect is well-established for instructional
+  materials (Kalyuga and colleagues, Nückles et al. on writing-to-
+  learn journals); the *direct* extension to expert/novice reading of
+  published research articles is plausible but, in our search, not
+  pinned to a single empirical validation paper specific to scientific-
+  article reading. The skill should treat `target_reader_expertise`
+  as a design-motivated parameter grounded in the instructional-design
+  literature rather than as a claim with direct empirical validation
+  in research-article comprehension.
 
 ## References
 

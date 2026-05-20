@@ -68,8 +68,10 @@ BibLaTeX as a first-class input.
 **DOIs and CrossRef.** The Digital Object Identifier system, operated
 for scholarly content primarily by CrossRef and DataCite, is the most
 widely deployed persistent identifier for academic works. CrossRef
-holds metadata for over 140 million scholarly works (current
-estimate; `[TODO verify]` exact figure) and exposes structured
+holds metadata for ~175 million scholarly works as of the
+October 2025 public data file (https://www.crossref.org/blog/2025-public-data-file-now-available/;
+the corpus continues to grow at ~5M records/year, with the 2026
+public data file reporting ~180M records) and exposes structured
 metadata via a public REST API. CrossRef's metadata records
 increasingly carry references *to* other works, ORCID author
 identifiers, and ROR institutional identifiers — turning the citation

@@ -146,9 +146,11 @@ Quantitative corpus work on figure-text misalignment specifically
 is sparse. The closest adjacent corpus work is in image-forensics
 ([[forensic-methodology]]), which catalogues duplication and
 manipulation but not text-misalignment, and in caption-quality
-studies (largely informal commentary). `[TODO verify]` whether
-formal figure-text-alignment corpora exist beyond informal
-analyses.
+studies (largely informal commentary). No formal figure-text-
+alignment corpus or prevalence study was located during this sweep;
+the absence is itself worth noting — practitioners assert these
+errors are common but, to our knowledge, no peer-reviewed prevalence
+estimate exists.
 
 ### Image forensics overlap
 
@@ -287,7 +289,10 @@ v0.3 but should not ship before its capability limits are honest.
 - Formal corpus data on figure-text misalignment prevalence is
   sparse. Anecdotal evidence is strong but a peer-reviewed
   estimate of "what fraction of submissions have misaligned
-  figure references" appears to be missing. `[TODO verify]`.
+  figure references" appears to be missing. *What would close
+  this gap: a corpus study analogous to Bik et al. (2016) for
+  image duplication, but targeting caption-vs-body and
+  axis-label-vs-body alignment.*
 - Multimodal LLM accuracy on scientific figures is improving
   rapidly but is not benchmarked specifically for the
   text-alignment task scriptorium would deploy. Internal

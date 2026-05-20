@@ -72,11 +72,11 @@ panel discussion *may* improve calibration somewhat, but the
 underlying noise is high.
 
 **Anchoring and panel effects.** Social-pressure effects in panel
-deliberation have been documented. One PMC-indexed study,
-*Laughter and the Chair* (Hosseini et al., 2019), examined social
+deliberation have been documented. *Laughter and the Chair*
+(Pier, Raclaw, Carnes, Ford & Kaatz, 2019) examined social
 pressures during grant peer-review meetings and identified
 identifiable patterns of conformity, anchoring to the chair, and
-deference to the primary reviewer. `[TODO verify]` full citation.[^2]
+deference to the primary reviewer.[^2]
 
 ### NSF panel dynamics
 
@@ -211,10 +211,11 @@ manuscripts.
     NIAID. NIH Peer Review Process and Triage.
     https://www.niaid.nih.gov/grants-contracts/peer-review .
 
-[^2]: Hosseini M, Eckmann P, Bierer BE. Laughter and the chair:
-    Social pressures influencing scoring during grant peer review
-    meetings. *PMC6445833* (2019). `[TODO verify]` exact journal /
-    DOI from PMC entry.
+[^2]: Pier EL, Raclaw J, Carnes M, Ford CE, Kaatz A. Laughter and
+    the Chair: Social Pressures Influencing Scoring During Grant
+    Peer Review Meetings. *Journal of General Internal Medicine*.
+    2019;34(4):513–514. doi:10.1007/s11606-018-4751-9. PMID:
+    30604119. PMC: PMC6445833.
 
 [^3]: NSF. How We Make Funding Decisions — Merit Review.
     https://www.nsf.gov/funding/merit-review . NSF Proposal & Award

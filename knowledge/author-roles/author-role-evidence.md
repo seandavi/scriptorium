@@ -84,7 +84,7 @@ This evidence base grounds the author-persona work proposed in #42, #43, #44 in 
 
 - **The "curse of knowledge in scholarly writing" extrapolation is plausible but not directly measured.** Camerer et al. (1989) is experimental in economic settings; the extension to senior-PI revision blindness in academic writing rests on theory plus consistency with Geisler (1994). Treat similarly to the risk-aversion finding above.
 
-- **Several attributions are flagged `[TODO verify]`** for exact wording: Paré's "supervisors are writing teachers" formulation; Kamler & Thomson's exact phrasing on "new ways with words"; Bazerman's exact wording on socialization-into-scientific-activity. The substance is correct; only verbatim phrasing needs confirmation before being put in scriptorium's voice.
+- **Verbatim phrasing for several attributions is not pinned to a page-level citation** — Paré's "supervisors are writing teachers" formulation; Kamler & Thomson's exact phrasing on "new ways with words"; Bazerman's exact wording on socialization-into-scientific-activity. The substance of these is correct and supported by the references list, but exact quoted wording should be checked against the source page if scriptorium prose ever quotes them directly. Until then, these are treated as paraphrase-grade attributions, not quoted attributions.
 
 - **Cultural/disciplinary scope is narrower than ideal.** The foundational sources are Anglophone composition studies (Sommers), US academic philosophy (Geisler), and broadly Anglophone EAP (Swales, Hyland). Cross-cultural generalization beyond these contexts is plausible but not directly established. EAL scholar experience is treated separately in [[eal-academic-writing-evidence]].
 
