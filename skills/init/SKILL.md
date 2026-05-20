@@ -4,6 +4,7 @@ description: Conversationally bootstrap MANUSCRIPT_STATE.yaml for a new or exist
 grounding:
   - schemas/manuscript-state.schema.json
   - knowledge/conventions/guidance-level.md
+  - knowledge/conventions/declared-work-scope.md
   - knowledge/peer-review/common-critiques-taxonomy.md
 ---
 
@@ -64,9 +65,13 @@ happen. This is one turn, not a wall of text. Something like:
 > `MANUSCRIPT_STATE.yaml` — that every later skill reads. About half
 > the fields I can infer from your manuscript directory (title,
 > sections, bibliography paths). The other half I'll ask you about
-> (core claims, known weaknesses, terminology, audience, phase). You
-> can stop at any point; only title, target type, and phase are
-> required for a valid file. Ready?"
+> (core claims, known weaknesses, terminology, audience, phase).
+> What we're really doing in this step is turning your manuscript
+> into *declared work* — the prose and scaffolding scriptorium
+> operates on. The later skills critique, audit, and refine; none
+> of them generate from blankness. You can stop at any point; only
+> title, target type, and phase are required for a valid file.
+> Ready?"
 
 After the author confirms, ask the guidance-level question (next
 step). Don't proceed to discovery until both are settled.

@@ -3,6 +3,7 @@ name: explain
 description: Explain scriptorium itself, a named skill, or a named MANUSCRIPT_STATE field. With no argument, gives a whole-system overview (what scriptorium is, what each skill does, how the shared state ties them together). With an argument, drills into that skill or field — what it does, what it consumes, what it produces, and the grounding notes behind its design. Reads SKILL.md frontmatter and the referenced grounding files; no manuscript content is consumed. Use when the user wants to understand scriptorium before invoking it, or when a leaf skill has prompted them with "want a tour of <skill> before you run it?"
 grounding:
   - knowledge/conventions/guidance-level.md
+  - knowledge/conventions/declared-work-scope.md
   - knowledge/README.md
 ---
 
@@ -164,6 +165,20 @@ skill's design choice back to a paper.>
 <2-3 sentences on MANUSCRIPT_STATE.yaml; required fields; that every
 skill reads it>
 
+## Scope — what scriptorium does and does not operate on
+
+<3-4 sentences. Lead with: scriptorium operates on prose the author
+has written or scaffolding the author has declared; it does not
+produce prose from blankness. Cite the
+[[declared-work-scope]] convention and the Hayes 2012
+proposer/translator/evaluator framing. Name one concrete
+implication (e.g., "gap-finder names missing sections as gaps but
+doesn't draft them"; "no skill helps figure out what to study
+before there's a draft"). Close by saying generation skills like
+the planned v0.4 specific-aims are in scope because they transform
+declared scaffolding — the cut is generation-from-blankness, not
+generation-as-such.>
+
 ## How scriptorium talks to you
 
 <2-3 sentences on `meta.guidance_level` and the three modes>
@@ -181,6 +196,7 @@ skill reads it>
 - `skills/*/SKILL.md`
 - `knowledge/README.md`
 - `knowledge/conventions/guidance-level.md`
+- `knowledge/conventions/declared-work-scope.md`
 ```
 
 ### B. Skill explanation

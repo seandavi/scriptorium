@@ -3,6 +3,7 @@ name: terminology-normalization
 description: Detect terminology drift across a manuscript and enforce the preferred / forbidden / synonyms lists declared in MANUSCRIPT_STATE.yaml. Reports inconsistencies with exact occurrence locations and suggests normalizations. Does NOT modify the manuscript without explicit author consent.
 grounding:
   - knowledge/conventions/guidance-level.md
+  - knowledge/conventions/declared-work-scope.md
   - knowledge/critique-techniques/internal-consistency.md
   - knowledge/scientific-writing/style-guides.md
 ---

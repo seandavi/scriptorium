@@ -28,6 +28,19 @@ Scriptorium puts the agentic-AI layer *inside* the workflow:
   unconstrained rewriting; preserved citations and statistics by
   default; no hidden state.
 
+**A deliberate scope.** Scriptorium operates on prose the author has
+written or scaffolding the author has declared. It does not produce
+prose from blankness — pre-draft ideation, "help me figure out what
+to study", or section-from-scratch generation sit outside what
+scriptorium does. That cut is structural, not aspirational: it's
+what the existing skills already enforce (citation-audit refuses to
+invent citations; argumentative-flow refuses to add claims; venue-fit
+refuses to recommend without declared content), and it's what keeps
+behaviours auditable rather than vibes-based. The full rationale,
+grounded in Hayes' 2012 writing-process model and the AI-writing
+failure-modes literature, lives in
+[`knowledge/conventions/declared-work-scope.md`](knowledge/conventions/declared-work-scope.md).
+
 The medieval scriptorium had an operating model. The agentic one is
 just now being built.
 

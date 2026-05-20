@@ -10,6 +10,54 @@ state schema may change between versions.
 
 ## [Unreleased]
 
+### Changed
+
+- Propagated the `declared-work-scope` convention across all
+  user-facing surfaces. Every conversation-bearing skill's
+  `grounding:` list now declares it (init, tour, citation-audit,
+  reviewer-simulation, argumentative-flow, desk-rejection-risk,
+  terminology-normalization, explain, venue-fit). README's "Why
+  this exists" section names the scope explicitly with a pointer
+  to the convention note. DESIGN.md "Scope" section now opens
+  with a "Workflow scope — declared work, not blank slate"
+  subsection citing Hayes' 2012 proposer/translator/evaluator
+  framing. INSTALL.md "Requirements" section names declared work
+  as the first item — before the install paths, so users
+  encounter the cut before they install. Tour's turn-1
+  orientation paragraph now states the scope explicitly. Explain's
+  system-overview output template gains a `## Scope` section.
+  Init's orientation turn names what's being declared. A new
+  parametrized test (`test_skill_grounds_in_declared_work_scope`)
+  in `tests/test_guidance_level.py` enforces the grounding
+  requirement for all conversation-bearing skills (9 cases,
+  bringing the convention-grounding test count to 18 across
+  both project-wide conventions). The skill-proposal issue
+  template now lists declared-work-scope alongside guidance-level
+  as required grounding for any new skill proposal, and adds
+  declared-work-scope as a third enforced commitment in the
+  "Before you start" framing. Closes #80.
+
+- Roadmap v0.2 table updated: `desk-rejection-risk`, `venue-fit`,
+  and ESL-in-argumentative-flow marked landed. The two
+  originally-planned schema additions (`contributors:` and
+  `reporting_guidelines:`) are dropped, replaced by the
+  `author-contribution-audit` (#84) and `reporting-guideline-fit`
+  (#85) skills. Rationale: per declared-work-scope, scriptorium
+  operates on declared prose where it lives, not on duplicated
+  state. Authors often don't know which EQUATOR checklist applies
+  either, so declaring it in state is wrong-data-confidently-
+  declared in the failure mode.
+
+- Issue #76 (`gap-finder`) updated with the explicit scoping
+  tightening: hard refusal on outline-phase manuscripts and on
+  pre-declaration questions; "Suggested directions" tightened to
+  search terms and angles anchored to existing passages, never
+  prose-for-empty-sections; declared-work-scope added to the
+  required grounding. Issue remains `needs-grounding` because
+  the two proposed knowledge notes
+  (`research-gap-detection.md`, `literature-search-strategies.md`)
+  are still to be written.
+
 ### Added
 
 - `scriptorium:venue-fit` skill (v0.2). Tiered venue
@@ -138,8 +186,6 @@ state schema may change between versions.
   canonical PMIDs and DOIs. The hard rules (no invented persistent
   IDs; CSL metadata is not full-text verification) still apply. Same
   guidance mirrored in the platform-neutral `prompt.md`.
-
-### Changed
 
 - `scriptorium:argumentative-flow` now performs an **active
   ESL-aware preservation check** for hedging and stance markers.

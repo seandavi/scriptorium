@@ -3,6 +3,7 @@ name: citation-audit
 description: Audit existing citations in a manuscript for claim-support alignment, primary-vs-review mismatch, causal overreach, and unsupported assertions. Reports findings as structured markdown. Does NOT add or invent citations.
 grounding:
   - knowledge/conventions/guidance-level.md
+  - knowledge/conventions/declared-work-scope.md
   - knowledge/critique-techniques/citation-claim-alignment.md
   - knowledge/citations/citation-accuracy-evidence.md
   - knowledge/citations/citation-overreach-research.md

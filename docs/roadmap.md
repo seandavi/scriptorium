@@ -38,13 +38,14 @@ After v0.1 has been used on real manuscripts and the structured-output
 discipline is proven, the next priorities are coordination and the two
 highest-ROI critique additions identified in research.
 
-| Component | Justification |
+| Component | Status / Justification |
 |---|---|
 | `manuscript-pipeline` orchestrator | Sequences leaf skills; consumes structured outputs. Spec ready; built once the leaves are stable. |
-| `desk-rejection-risk` skill | [`editorial-decision-making`](../knowledge/peer-review/editorial-decision-making.md) — 70–90% desk-rejection rates at top journals; scriptorium's value proposition includes catching what would trigger desk rejection. |
-| `MANUSCRIPT_STATE.yaml` schema: add `contributors:` field | [`credit-taxonomy-authorship`](../knowledge/peer-review/credit-taxonomy-authorship.md) — CRediT 14 roles is the established standard; embed ICMJE authorship checks in `reviewer-simulation`. |
-| `MANUSCRIPT_STATE.yaml` schema: add `reporting_guidelines:` field | [`reporting-guidelines`](../knowledge/scientific-writing/reporting-guidelines.md) — saves every skill from re-detecting which checklist applies. |
-| ESL-aware checks embedded in `argumentative-flow` | [`esl-writers-swales-hyland`](../knowledge/scientific-writing/esl-writers-swales-hyland.md) — large non-native-English audience; Paperpal/Trinka territory. |
+| `desk-rejection-risk` skill | **Landed.** [`editorial-decision-making`](../knowledge/peer-review/editorial-decision-making.md) — 70–90% desk-rejection rates at top journals; scriptorium's value proposition includes catching what would trigger desk rejection. |
+| `venue-fit` skill | **Landed.** Tiered venue recommendation with predatory refusal, opt-in preprint mode (PCI, Review Commons, F1000Research, eLife post-2022), and bias-managed pub-history calibration. Grounded in three new knowledge notes: [`venue-selection`](../knowledge/peer-review/venue-selection.md), [`predatory-publishing`](../knowledge/peer-review/predatory-publishing.md), [`preprint-landscape`](../knowledge/peer-review/preprint-landscape.md). |
+| ESL-aware checks embedded in `argumentative-flow` | **Landed.** [`esl-writers-swales-hyland`](../knowledge/scientific-writing/esl-writers-swales-hyland.md). |
+| `author-contribution-audit` skill | **Replaces** the originally-planned `contributors:` schema addition. Duplicating contributions data in `MANUSCRIPT_STATE.yaml` would have created a sync problem; per [`declared-work-scope`](../knowledge/conventions/declared-work-scope.md), scriptorium operates on declared prose where it lives. The skill audits the Author Contributions section against ICMJE's four authorship criteria and CRediT's 14 contributor roles. Grounded in [`credit-taxonomy-authorship`](../knowledge/peer-review/credit-taxonomy-authorship.md). Tracked as issue #84. |
+| `reporting-guideline-fit` skill | **Replaces** the originally-planned `reporting_guidelines:` schema addition. Authors often don't know which EQUATOR checklist applies to their study design, so declaring it in state was wrong-data-confidently-declared in the failure mode. The skill infers from the manuscript methods; the author confirms. Grounded in [`reporting-guidelines`](../knowledge/scientific-writing/reporting-guidelines.md). Tracked as issue #85. |
 
 ## v0.3 — Validation skills + reporting compliance
 
