@@ -86,6 +86,42 @@ The `Implementation priority` section is load-bearing — it states
 whether a finding becomes a skill (and if so, in what phase) or
 remains framing-only context.
 
+## Skill citation discipline
+
+Scriptorium is **citation-resolver-agnostic**. Manuscripts authored in
+BibTeX, CSL-JSON, Pandoc-style cite keys, raw DOI-as-URL, or any other
+system all work — the skills operate on the resolved citation set, not
+on a particular resolver's encoding.
+
+That has two consequences for skill authors:
+
+1. **In skill bodies, cite external work using plain markdown.** Use
+   `[Greenberg 2009 BMJ](https://doi.org/10.1136/bmj.b2680)` or
+   `DOI: [10.1136/bmj.b2680](https://doi.org/10.1136/bmj.b2680)` —
+   forms that render correctly anywhere a Markdown file is read
+   (GitHub, Starlight, Claude Code, plain editors). Do **not** use
+   manubot / quartobot cite-key syntax (`@doi:...`, `@pmid:...`,
+   `[@doi:...]`) in `SKILL.md`, `prompt.md`, or skill `README.md` —
+   those formats require a specific build pipeline to resolve, and
+   skills are meant to load anywhere a plain Markdown reader can read
+   them.
+
+2. **Internal wiki-links stay.** `[[knowledge-doc-name]]` references
+   into the `knowledge/` tree are scriptorium-internal cross-links,
+   not citations. They are not affected by this discipline.
+
+Knowledge-layer documents (`knowledge/**/*.md`, `knowledge/**/*.qmd`)
+are scriptorium-internal evidence base, not skill bodies, and **may**
+use manubot / quartobot cite keys — the docs site has a quartobot
+preprocess step (see the *Docs site* section above) that resolves
+those keys at build time. The constraint above applies specifically
+to skill bodies that ship outside the docs build.
+
+Rationale: scriptorium's value proposition is that any author with
+any toolchain can adopt it. Tying skill prose to a particular
+resolver's syntax silently couples scriptorium to that resolver and
+breaks the promise.
+
 ## Filing issues
 
 For **new skill proposals**, use the *Skill proposal* issue template
