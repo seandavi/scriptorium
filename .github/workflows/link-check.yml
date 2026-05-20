@@ -1,0 +1,63 @@
+# Source-side link check across project markdown.
+#
+# Runs lychee against the prose surfaces that are read directly (README,
+# DESIGN/CONTRIBUTING, knowledge/, skills/, docs/) to catch broken external
+# and cross-file references before they ship. The Astro docs site has its
+# own rendered-HTML link check in CI (see #56); this workflow is the
+# complementary source-level guard.
+name: link-check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Weekly Monday 06:00 UTC — catches external rot independent of activity.
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  lychee:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Restore lychee cache
+        uses: actions/cache@v4
+        with:
+          path: .lycheecache
+          key: cache-lychee-${{ github.sha }}
+          restore-keys: cache-lychee-
+
+      - name: Run lychee
+        id: lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          # Honour `.lycheeignore` and `lychee.toml` from the repo root.
+          # Globs cover the prose surfaces called out in #56 plus the
+          # top-level README / CHANGELOG.
+          args: >-
+            --config lychee.toml
+            --cache
+            --max-cache-age 7d
+            --no-progress
+            README.md
+            CHANGELOG.md
+            CONTRIBUTING.md
+            DESIGN.md
+            INSTALL.md
+            'docs/**/*.md'
+            'knowledge/**/*.md'
+            'skills/**/*.md'
+          fail: true
+          # Job summary gets the per-link table so a failed run is
+          # diagnosable from the Actions tab without re-running locally.
+          jobSummary: true
+          format: markdown
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
