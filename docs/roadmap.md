@@ -47,7 +47,7 @@ highest-ROI critique additions identified in research.
 | `author-contribution-audit` skill | **Landed.** Replaces the originally-planned `contributors:` schema addition. Per [`declared-work-scope`](../knowledge/conventions/declared-work-scope.md), scriptorium operates on declared prose where it lives — duplicating contributions in `MANUSCRIPT_STATE.yaml` would have created a sync problem. The skill audits the Author Contributions section against ICMJE's four authorship criteria and CRediT's 14 contributor roles. Grounded in [`credit-taxonomy-authorship`](../knowledge/peer-review/credit-taxonomy-authorship.md). |
 | `reporting-guideline-fit` skill | **Landed.** Replaces the originally-planned `reporting_guidelines:` schema addition. Authors often don't know which EQUATOR checklist applies — declaring it in state was the wrong-data-confidently-declared failure mode. The skill infers from the manuscript methods; the author confirms. Grounded in [`reporting-guidelines`](../knowledge/scientific-writing/reporting-guidelines.md). |
 
-## v0.3 — Validation skills + reporting compliance
+## v0.3 — Validation skills + reporting-guideline compliance
 
 Once the structured-output pattern handles critique and transformation
 reliably, validation skills become the next leverage point. Most need
@@ -55,12 +55,14 @@ deterministic scripts called out from skills, not LLM arithmetic.
 
 | Component | Status / Justification |
 |---|---|
-| `statistics-consistency` skill | [`statistical-inconsistency`](../knowledge/critique-techniques/statistical-inconsistency.md) — Statcheck/GRIM/GRIMMER/SPRITE/Carlisle. Skill orchestrates external scripts; does not pretend to recompute in-band. |
+| `statistics-consistency` skill | [`statistical-inconsistency`](../knowledge/critique-techniques/statistical-inconsistency.md) — Statcheck/GRIM/GRIMMER/SPRITE/Carlisle. Skill orchestrates external scripts; does not pretend to recompute in-band. Design memo: [`docs/design/v0.3-statistics-consistency.md`](design/v0.3-statistics-consistency.md). |
 | `figure-text-alignment` skill | [`internal-consistency`](../knowledge/critique-techniques/internal-consistency.md), [`visualization-figures`](../knowledge/scientific-writing/visualization-figures.md) (when research completes). LLM vision is improving but unreliable for scientific figures; skill flags possible mismatches for human review. |
 | `terminology-normalization` skill | **Landed (early).** [`internal-consistency`](../knowledge/critique-techniques/internal-consistency.md), [`style-guides`](../knowledge/scientific-writing/style-guides.md) — terminology drift detection; preferred-term enforcement from `MANUSCRIPT_STATE.yaml`. Shipped during v0.2 ramp because the grounding notes existed and the schema fields (`terminology.preferred` / `forbidden` / `synonyms`) were already in place. |
 | `gap-finder` skill | **Landed (early).** Identifies gaps in declared draft prose, organised by a seven-category taxonomy. Each finding anchors in a specific manuscript passage; suggested directions are pasteable search strategies, never invented citations. Grounded in two new knowledge notes: [`research-gap-detection`](../knowledge/critique-techniques/research-gap-detection.md), [`literature-search-strategies`](../knowledge/scientific-writing/literature-search-strategies.md). |
-| `reporting-compliance` skill | [`reporting-guidelines`](../knowledge/scientific-writing/reporting-guidelines.md) — maps manuscript sections to CONSORT/STROBE/PRISMA/etc. checklist items; per-item present/partial/missing/N-A. Downstream of v0.2's `reporting-guideline-fit` (which infers which checklist applies; this skill runs it). |
+| `reporting-guideline-compliance` skill | [`reporting-guidelines`](../knowledge/scientific-writing/reporting-guidelines.md) — maps manuscript sections to CONSORT/STROBE/PRISMA/etc. checklist items; per-item present/partial/missing/N-A. Downstream of v0.2's `reporting-guideline-fit` (which infers which checklist applies; this skill runs it). |
 | `compression` skill | [`narrative-frameworks`](../knowledge/scientific-writing/narrative-frameworks.md) — page-limit driven; preserves citations, statistics, and core claims. |
+| `voice-profile` skill | [`corpus-based-stylometry`](../knowledge/scientific-writing/corpus-based-stylometry.md), [`author-role-evidence`](../knowledge/author-roles/author-role-evidence.md) — extract author writing patterns from a small single-author corpus. Design memo: [`docs/design/v0.3-voice-profile.md`](design/v0.3-voice-profile.md). |
+| `persona-calibration` skill | [`author-role-evidence`](../knowledge/author-roles/author-role-evidence.md), [`ai-peer-review-research`](../knowledge/peer-review/ai-peer-review-research.md) — checkpoint synthetic feedback against the real author. Design memo: [`docs/design/v0.3-persona-calibration.md`](design/v0.3-persona-calibration.md). |
 
 ## v0.4 — Grant-specific skills and bounded transformations
 

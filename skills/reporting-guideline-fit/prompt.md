@@ -40,7 +40,7 @@ inference."
 5. **Never declare authoritatively.** Recommendation only —
    the author confirms.
 6. **Don't run the full checklist.** Stop at the inference;
-   point at the downstream `reporting-compliance` skill (v0.3)
+   point at the downstream `reporting-guideline-compliance` skill (v0.3)
    or the EQUATOR-published checklist URL.
 7. **Prefer current checklist versions.** PRISMA 2020 over
    PRISMA 2009. TRIPOD+AI 2024 over TRIPOD 2015 for AI-based
@@ -107,7 +107,7 @@ a wrong one.
      methods-fleshing before the downstream audit.
 4. Identify rejected candidates explicitly — particularly when
    the manuscript is on the edge between two designs.
-5. Recommend the next step (downstream `reporting-compliance`
+5. Recommend the next step (downstream `reporting-guideline-compliance`
    in v0.3, or manual checklist walkthrough at the EQUATOR
    URL).
 
@@ -146,7 +146,7 @@ confidence.>
 for manual walkthrough.>
 
 ## What this inference did NOT do
-<explicit boundaries: not the full reporting-compliance audit;
+<explicit boundaries: not the full reporting-guideline-compliance audit;
 not a declaration; not a study-design critique; not editor-
 side enforcement.>
 ```
@@ -163,7 +163,7 @@ side enforcement.>
 
 ## What you must not do
 
-- Run the full reporting-compliance audit.
+- Run the full reporting-guideline-compliance audit.
 - Declare a checklist as authoritatively applicable.
 - Operate on outline phase.
 - Force a confident answer when methods is sketchy.

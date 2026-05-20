@@ -7,10 +7,9 @@ Several install paths depending on the agent you use.
 Scriptorium ships as a Claude Code plugin via a self-hosted plugin
 marketplace at `seandavi/scriptorium`. Pick one of three paths:
 
-Scriptorium is pre-release (`0.1.0.dev0`). The marketplace install
-path uses Claude Code's built-in plugin system and needs no Python.
-The CLI install paths go through a source checkout. A PyPI
-publication will land at v0.1 release.
+The marketplace install path uses Claude Code's built-in plugin
+system and needs no Python. The CLI install paths require a
+Python toolchain; `agentic-scriptorium` is on PyPI as of v0.2.0.
 
 ### Plugin marketplace from GitHub (easiest, no Python required)
 
@@ -30,7 +29,7 @@ and installs the `scriptorium` plugin from it. The skills appear as
 To pin to a specific tag or commit, append `@ref` to the shorthand:
 
 ```text
-/plugin marketplace add seandavi/scriptorium@v0.1.0
+/plugin marketplace add seandavi/scriptorium@v0.2.0
 ```
 
 The non-interactive equivalent (from a shell) is:
@@ -47,8 +46,8 @@ installed plugin. Uninstall: `/plugin uninstall scriptorium@scriptorium`.
 This path does not install the `scriptorium` Python CLI. If you also
 want the CLI (for `scriptorium validate`, `scriptorium init`,
 `scriptorium trace`, `scriptorium prompt-pack`), combine this path
-with `uv pip install agentic-scriptorium` once v0.1 publishes, or
-use one of the CLI install paths below.
+with `uv pip install agentic-scriptorium`, or use one of the CLI
+install paths below.
 
 ### Live-linked (personal / development use)
 
@@ -76,9 +75,10 @@ scriptorium install
 
 This copies the bundled plugin into `~/.claude/plugins/scriptorium/`.
 Updates require re-running `scriptorium install`. Cleaner for users
-who want the Python CLI but not the marketplace mechanism. Once v0.1
-publishes to PyPI, the clone step will become optional
-(`uv pip install agentic-scriptorium`, then `scriptorium install`).
+who want the Python CLI but not the marketplace mechanism. The clone
+step is also optional: `uv pip install agentic-scriptorium` (from
+PyPI, as of v0.2.0) followed by `scriptorium install` works the
+same way.
 
 ### Verifying
 
@@ -144,9 +144,9 @@ checklist. The skills double as editorial guidance.
   study" sit outside its scope (see
   [`knowledge/conventions/declared-work-scope.md`](knowledge/conventions/declared-work-scope.md)).
 - **Claude Code path:** Claude Code installed and on PATH.
-- **CLI path:** Python 3.10+. Install with `uv pip install -e .` from
-  a source checkout (or `uv pip install agentic-scriptorium` once
-  v0.1 is published). The CLI's dependencies (`click`, `pyyaml`,
+- **CLI path:** Python 3.10+. Install with `uv pip install
+  agentic-scriptorium` (PyPI, as of v0.2.0) or `uv pip install -e .`
+  from a source checkout. The CLI's dependencies (`click`, `pyyaml`,
   `jsonschema`) come along automatically.
 - **Manual / no-agent path:** No tooling — the `prompt.md` files
   under `skills/` are human-readable.

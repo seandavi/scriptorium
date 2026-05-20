@@ -24,7 +24,7 @@ modifies: []
 
 # Explicit invocation. Invoked when the author asks "which
 # checklist applies?" or before running the v0.3
-# reporting-compliance skill.
+# reporting-guideline-compliance skill.
 invocation: explicit
 
 # Platforms this skill ships for.
@@ -80,7 +80,7 @@ preservation_constraints:
 
 # What this skill explicitly is NOT.
 non_goals:
-  - Running the full reporting-compliance audit. Separate v0.3
+  - Running the full reporting-guideline-compliance audit. Separate v0.3
     skill; this is the upstream inference.
   - Declaring a checklist as authoritatively applicable. The
     skill recommends; the author confirms.

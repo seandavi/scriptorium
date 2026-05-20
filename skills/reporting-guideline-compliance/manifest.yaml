@@ -1,0 +1,115 @@
+# scriptorium skill manifest
+# This file declares the skill's metadata, supported platforms,
+# tool requirements, and knowledge-layer grounding. It is consumed
+# by the scriptorium CLI (`list`, `prompt-pack`) and by future
+# orchestrators that compose skills.
+
+name: reporting-guideline-compliance
+version: 0.1.0
+category: validation        # critique | validation | normalization | transformation | generation | meta
+
+description: >
+  Run an EQUATOR Network reporting-guideline checklist (CONSORT,
+  STROBE, PRISMA, ARRIVE, STARD, TRIPOD/TRIPOD+AI, CARE, COREQ,
+  CHEERS, plus AI extensions) against a manuscript. Classifies
+  each checklist item as present / partial / missing /
+  not-applicable, with a quoted manuscript excerpt as the anchor
+  or an explicit gap statement. Downstream of v0.2's
+  reporting-guideline-fit (which infers which checklist applies).
+  Validation skill — surfaces gaps for the author to address;
+  does not modify the manuscript and does not invent prose.
+
+# Validation skills emit structured findings; they do not modify
+# the manuscript and do not propose replacement prose.
+produces:
+  - structured-markdown-report
+
+modifies: []
+
+# Explicit invocation. Invoked when the applicable checklist is
+# known (declared in state, passed from reporting-guideline-fit,
+# or named in the invocation) and the manuscript is in draft,
+# revision, or submission phase.
+invocation: explicit
+
+# Platforms this skill ships for.
+platforms:
+  claude-code:
+    skill_file: SKILL.md
+  platform-neutral:
+    prompt_file: prompt.md
+
+# Inputs the skill needs to do its job.
+inputs:
+  - name: manuscript_text
+    required: true
+    description: >
+      Full manuscript prose. File path(s) or pasted text. For
+      multi-file projects, every file declared under `sections`
+      or `supplements` is read. Title, abstract, methods,
+      results, discussion, and any flow diagram are load-bearing
+      for an EQUATOR-checklist audit.
+  - name: manuscript_state
+    required: true
+    description: >
+      MANUSCRIPT_STATE.yaml from the project root. Required:
+      document_phase.current (refuses on outline). Optional:
+      project.target_venue (venue-specific layered requirements),
+      core_claims (intent disambiguation), known_weaknesses
+      (acknowledged-but-unaddressed cross-reference),
+      meta.guidance_level (framing only).
+    schema: manuscript-state.schema.json
+  - name: reporting_guideline_fit_output
+    required: false
+    description: >
+      Output payload from a prior reporting-guideline-fit run.
+      When present, the high-confidence inferred guideline(s)
+      drive the audit. Alternative inputs: an explicit checklist
+      named in the invocation, or (when the schema carries it)
+      MANUSCRIPT_STATE.yaml#reporting_guideline. If none of
+      these is present, the skill refuses and points the author
+      at reporting-guideline-fit.
+
+# Knowledge-layer documents that ground this skill's design.
+grounding:
+  - knowledge/conventions/guidance-level.md
+  - knowledge/conventions/declared-work-scope.md
+  - knowledge/scientific-writing/reporting-guidelines.md
+  - knowledge/critique-techniques/internal-consistency.md
+
+# Hard rules the skill must honor.
+preservation_constraints:
+  - never_invent_prose             # surface gaps; do not write fill-text
+  - never_modify_manuscript        # validation skill, no transformation
+  - refuse_on_outline_phase
+  - refuse_when_checklist_unknown  # point at reporting-guideline-fit
+  - walk_every_checklist_item      # coverage is the point
+  - anchor_present_and_partial     # quoted excerpt required
+  - prefer_current_versions        # PRISMA 2020 over 2009; TRIPOD+AI 2024 over TRIPOD 2015
+  - never_write_to_manuscript_state
+
+# What this skill explicitly is NOT.
+non_goals:
+  - Inferring which EQUATOR checklist applies. That is the
+    v0.2 reporting-guideline-fit skill's job; this skill audits
+    the checklist it is given.
+  - Inventing prose to fill missing items. Validation skill —
+    the author owns the fix.
+  - Modifying the manuscript. No transformation.
+  - Critiquing study design. The audit assesses what is
+    reported, not whether the design was the right choice.
+  - Auditing quantitative internal consistency (Table 1 N vs.
+    methods N; abstract percentages vs. figure percentages).
+    Planned statistics-consistency skill.
+  - Auditing figure / text alignment. Planned
+    figure-text-alignment skill.
+  - Auditing citation accuracy. citation-audit's job.
+  - Operating on outline-phase manuscripts.
+  - Forcing a confident present / missing on ambiguous
+    items. `partial` and `not-applicable` are first-class
+    outcomes.
+  - Auditing against a superseded checklist version when a
+    current version applies (PRISMA 2009 when 2020 is
+    current; TRIPOD 2015 when TRIPOD+AI 2024 is current for
+    AI-based prediction models).
+  - Editor-side enforcement. Author-side decision support.
