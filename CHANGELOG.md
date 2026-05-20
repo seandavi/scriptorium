@@ -12,6 +12,21 @@ state schema may change between versions.
 
 ### Added
 
+- New convention note `knowledge/conventions/declared-work-scope.md`
+  documenting scriptorium's project-wide scope: *we operate on prose
+  the author has written or scaffolding the author has declared; we
+  do not produce prose from blankness.* Grounded in Hayes' 2012
+  writing-process model (proposer / translator / transcriber /
+  evaluator — scriptorium occupies the translator and evaluator
+  roles, never the proposer), the AI-writing-failure-modes literature
+  (hallucinated citations and voice loss are blank-slate generation
+  failures the scope structurally defends against), and the existing
+  end-to-end-generation survey (Sakana AI Scientist as the negative
+  exemplar, GeneAgent's verify-before-emit pattern as the positive
+  one). The convention sits alongside `guidance-level.md` as a
+  sister structural commitment; alignment across docs and intro
+  skills is tracked in #80.
+
 - `scriptorium:desk-rejection-risk` skill. Author-side pre-submission
   audit that flags triggers likely to result in desk rejection before
   peer review: scope/audience mismatch, format and length issues,
