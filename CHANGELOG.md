@@ -10,6 +10,70 @@ state schema may change between versions.
 
 ## [Unreleased]
 
+### Added
+
+#### v0.3 skills
+
+Three v0.3 skills land in this cycle (alongside `terminology-normalization`,
+`gap-finder`, and `author-contribution-audit`, which shipped early during the
+v0.2 ramp):
+
+- **`reporting-guideline-compliance`** (#92) — walks an EQUATOR Network
+  reporting-guideline checklist (CONSORT, STROBE, PRISMA, ARRIVE, STARD,
+  TRIPOD/TRIPOD+AI, CARE, COREQ, CHEERS, plus AI-extensions) against a
+  manuscript and classifies every checklist item as
+  `present` / `partial` / `missing` / `not-applicable`, with a quoted
+  manuscript excerpt as the anchor or an explicit gap statement.
+  Downstream of v0.2's `reporting-guideline-fit` (which infers which
+  checklist applies; this skill runs it). Validation skill — surfaces
+  gaps for the author to address; does not modify the manuscript and
+  does not invent prose. Renamed from `reporting-compliance` to share
+  the prefix with `reporting-guideline-fit`.
+- **`figure-text-alignment`** (#93) — sub-skill A (text-only) of the
+  planned figure-text-alignment pair. Classifies caption ↔
+  body-text-reference pairs as `aligned` / `partially aligned` /
+  `misaligned` / `cannot determine`, plus pattern flags for orphan
+  figures, phantom references, panel mismatches, axis/units divergence,
+  and direction divergence. Pure text-vs-text — no image reading.
+  Sub-skill B (multimodal / LLM-vision) remains deferred until
+  reliability is validated against a known-mismatch test set.
+- **`compression`** (#94) — page-limit-driven section compression that
+  preserves every citation, statistic, declared `core_claim`,
+  terminology choice, and hedging stack. Per-edit suggestions with
+  preservation report; never auto-applies. Sits one editorial level
+  below `argumentative-flow`. New grounding test file
+  (`tests/test_compression_grounding.py`, 20 cases) enforces the
+  preservation contract.
+
+#### v0.3 design memos and grounding
+
+Three design memos landed for the remaining v0.3 skills so they can be
+picked up later with minimal re-research (#95):
+
+- `docs/design/v0.3-statistics-consistency.md` — Statcheck/GRIM/SPRITE
+  orchestration; rpy2 vs. vendored re-implementation as the load-bearing
+  decision.
+- `docs/design/v0.3-voice-profile.md` — corpus-based authorial-style
+  extraction; schema-embedded vs. sidecar `author_voice` slot as the
+  load-bearing decision.
+- `docs/design/v0.3-persona-calibration.md` — synthetic-feedback drift
+  mitigation; dependency on `voice-profile` as the load-bearing
+  decision.
+
+A new knowledge note —
+`knowledge/scientific-writing/corpus-based-stylometry.md` — grounds the
+voice-profile memo in the established stylometry literature (Burrows,
+Hoover, Argamon, Stamatatos, Mosteller-Wallace) and bounds what is and
+isn't defensible at small-corpus sizes.
+
+### Changed
+
+- Renamed `reporting-compliance` → `reporting-guideline-compliance` for
+  symmetry with `reporting-guideline-fit`. The original rename
+  (commit `b9d0a32`) had not fully propagated; this cycle completes the
+  propagation across roadmap, CHANGELOG, knowledge notes, the sibling
+  skill's references, and the new skill itself.
+
 ## [0.2.0] - 2026-05-20
 
 The v0.2 release. Closes the marketplace install path, the
