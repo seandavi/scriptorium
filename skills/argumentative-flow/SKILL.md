@@ -64,6 +64,20 @@ conflict and stop rather than violate a constraint.
    weakened it to. If a claim genuinely should be cut, surface the
    recommendation in the Remaining weaknesses section rather than
    cutting it yourself.
+6. **Hedging and stance markers are preserved.** Epistemic modals
+   ("may", "might", "could"), epistemic adverbs ("possibly",
+   "apparently"), approximators ("approximately", "about"), attributive
+   verbs ("we suggest", "we propose"), and indirect attributions
+   ("it has been suggested", "it is possible that") are part of how
+   the source calibrates the strength of its claims. Per
+   [[esl-writers-swales-hyland]], these patterns vary legitimately
+   across linguistic backgrounds; hedging is *how scientific claims
+   are calibrated to evidence*, not stylistic noise to smooth away.
+   A revision that drops or strengthens a hedge has weakened the
+   author's voice and may have crossed a claim boundary. Preserve
+   the hedge unless you can name a specific logical-coherence reason
+   to change it; if you do change it, justify the change in the
+   preservation report.
 
 If preservation conflicts with a flow improvement, **preservation
 wins** every time. Document the conflict; do not silently violate.
@@ -106,7 +120,12 @@ These are the legitimate transformations:
 - Translate between English varieties (US/UK), academic registers, or
   ESL-to-native idiom. Per [[esl-writers-swales-hyland]], hedging and
   stance patterns vary legitimately across linguistic backgrounds;
-  do not "smooth out" hedging that's deliberate.
+  do not "smooth out" hedging that's deliberate. This is enforced as
+  an active check during the inventory step (#2 of the operational
+  protocol) and audited in the preservation report, not just a
+  passive non-goal. The rule is *preserve hedging when hedging is
+  the mode* — not *refuse to revise anything that hedges*. Genuine
+  logical incoherence is still the target.
 
 ## Conversational style
 
@@ -122,18 +141,30 @@ the preservation contract — per [[guidance-level]]:
 - `full` — open with what reader-expectation theory predicts about
   how the section should be organised (topic position → subject →
   stress position) and what [[narrative-frameworks]] adds; close
-  with which proposed changes are about logic vs. about flow. This
-  is the skill authors most often suspect of "AI editing" rather
-  than principled revision — the upfront explanation of the
-  underlying theory earns the trust the changes will need. If first
-  invocation this session, offer
+  with which proposed changes are about logic vs. about flow.
+  Within the preservation report, surface in one or two sentences
+  that ESL-aware hedging preservation is happening — naming, where
+  relevant, that a specific hedge was retained because under
+  [[esl-writers-swales-hyland]] it is a legitimate stance choice,
+  not imprecision. This is the skill authors most often suspect of
+  "AI editing" rather than principled revision — the upfront
+  explanation of the underlying theory, and the explicit ESL-aware
+  framing in the preservation report, earn the trust the changes
+  will need. If first invocation this session, offer
   `/scriptorium:explain argumentative-flow` so the author can learn
   the design before reading the revised text.
 
+At `terse` and `standard`, the ESL-aware hedging check still runs —
+the inventory captures hedges and the preservation report still
+reports on them — but the skill does not narrate the framework. At
+`full`, the framework is surfaced briefly so the author sees why a
+hedge was kept. The audit fires at every level; only the framing
+varies.
+
 Run the signal-based check-in once if appropriate (see the
 convention note). The preservation contract — every citation,
-statistic, and declared terminology choice — is **never** relaxed
-based on guidance level.
+statistic, declared terminology choice, and hedging marker — is
+**never** relaxed based on guidance level.
 
 ## Operational protocol
 
@@ -146,6 +177,20 @@ Work in this order:
    - The list of cite keys in the section, with their context.
    - The list of quantitative statements (numbers + their context).
    - The list of declared `terminology.preferred` and `forbidden` terms.
+   - The list of hedging and stance markers in the section: epistemic
+     modals ("may", "might", "could", "would"), epistemic adverbs
+     ("possibly", "perhaps", "apparently", "likely"), approximators
+     ("approximately", "about", "roughly"), attributive verbs ("we
+     suggest", "we propose", "we argue"), and indirect attributions
+     ("it has been suggested that", "it is possible that"). Record
+     each with its sentence position. This is the
+     [[esl-writers-swales-hyland]] check: hedging force is how the
+     author calibrates a claim against the evidence, and it varies
+     legitimately across linguistic backgrounds. Before proposing any
+     revision that would alter the wording of a hedged sentence, flag
+     whether the revision drops, weakens, or strengthens the hedge —
+     and if so, whether you can name a *logical-coherence* reason for
+     the change. "Reads more naturally" is not such a reason.
    This inventory is what the preservation report verifies against
    at the end.
 3. **Diagnose structurally** ([[narrative-frameworks]]). What
@@ -224,6 +269,31 @@ references.)
 | Forbidden terminology absent | n/a | n/a | ✓ |
 | Voice (active/passive/mixed) | source | output | ✓ |
 | Tone targets | list from state | list reflected | ✓ |
+| Hedging / stance markers | N | N | ✓ preserved (see breakdown below) |
+
+### Hedging patterns retained vs. modified
+
+Enumerate every hedge from the inventory in step 2 of the protocol.
+Group as:
+
+- **Retained verbatim** — list each hedge (with sentence position) that
+  was kept exactly as in the source. This is the expected case.
+- **Modified** — list each hedge whose surface form changed. For each,
+  give: (a) source phrasing, (b) revised phrasing, (c) the
+  logical-coherence reason that justified the change. Per
+  [[esl-writers-swales-hyland]], "reads more naturally" is **not** a
+  valid reason; legitimate reasons are limited to resolving a
+  conflict with another preservation constraint or fixing genuine
+  argumentative incoherence the hedge was obscuring.
+- **Dropped** — list each hedge whose force was removed. Dropping a
+  hedge is a higher bar than modifying one. Every entry here needs an
+  explicit justification or it should be reverted.
+
+At `full` guidance level, add one or two sentences naming that
+ESL-aware preservation ran and what it caught (e.g., "retained the
+hedge in sentence 3; per Swales/Hyland this is a legitimate stance
+choice, not imprecision"). At `terse`/`standard`, the table and
+breakdown above stand on their own — do not narrate further.
 
 (If any row is anything other than ✓, the revision is incomplete.
 Surface the conflict explicitly rather than shipping a violation.)
@@ -260,6 +330,8 @@ human + statcheck). Be specific.)
 - Change numbers.
 - Introduce new claims.
 - Embellish style.
+- Drop, weaken, or strengthen a hedge without a logical-coherence
+  reason recorded in the preservation report.
 - Run without an explicit user invocation on a specific section.
 - Transform an entire manuscript at once.
 - Hide a preservation violation behind a clean-looking report.
@@ -284,6 +356,8 @@ This skill is grounded in scriptorium's knowledge layer:
   serving *structural* goals.
 - [[esl-writers-swales-hyland]] — hedging and stance patterns vary
   legitimately; this skill must not "smooth out" deliberate hedging.
+  Enforced as an active check during the inventory step and audited
+  in the preservation report — not just a passive non-goal.
 
 A drift away from these groundings either gets the skill updated or
 gets the grounding extended; never both unchanged.

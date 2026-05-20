@@ -39,6 +39,31 @@ state schema may change between versions.
   other conversation-bearing skills; structured output unchanged
   across levels. Mirrored in the platform-neutral `prompt.md`.
 
+- `scriptorium:terminology-normalization` (new v0.3 skill) detects
+  terminology drift across the manuscript and enforces the
+  `terminology.preferred` / `terminology.forbidden` /
+  `terminology.synonyms` lists declared in `MANUSCRIPT_STATE.yaml`.
+  Reports inconsistencies with exact occurrence locations and
+  suggests concrete one-pass normalizations. Categorised as
+  **normalization** in DESIGN.md's taxonomy — the skill *may*
+  surface concrete edits but does **not** auto-apply them; the
+  author applies the edits or invokes a follow-up. Operational
+  protocol reads `bibliography.paths` files BEFORE flagging tokens,
+  so cited author names and paper titles are never false-positively
+  flagged as drift (the load-bearing failure mode named in the
+  issue spec). Inflection differences (cell/cells, gene/genes) are
+  ignored by default; quoted contexts and term-as-subject passages
+  are excluded from forbidden-term enforcement. Pairs with
+  `argumentative-flow` as the first verification pass that a
+  transformation preserved declared terminology. Grounded in
+  `knowledge/critique-techniques/internal-consistency.md` (drift as
+  an internal-consistency failure; surface candidate-synonym
+  clusters as questions, not decisions) and
+  `knowledge/scientific-writing/style-guides.md` (preferred-term
+  enforcement as a venue-dependent style-guide function — project
+  state, not the skill, decides what's preferred). Same guidance
+  mirrored in the platform-neutral `prompt.md`. Closes #74.
+
 - `scriptorium:citation-audit` now documents an **Optional tooling:
   `quartobot resolve`** section. When
   [quartobot](https://github.com/seandavi/quartobot) is on PATH, it
@@ -51,6 +76,25 @@ state schema may change between versions.
   guidance mirrored in the platform-neutral `prompt.md`.
 
 ### Changed
+
+- `scriptorium:argumentative-flow` now performs an **active
+  ESL-aware preservation check** for hedging and stance markers.
+  Previously the skill listed "do not smooth out ESL hedging" as a
+  passive non-goal; the v0.2 enhancement promotes it to an active
+  inventory step in the operational protocol (alongside cite keys,
+  numbers, and declared terminology) and an explicit sub-section in
+  the preservation report enumerating hedges retained verbatim,
+  modified (with a logical-coherence justification), or dropped.
+  Hedging joins citations / statistics / declared terminology as a
+  fourth preserved category in the hard preservation contract. The
+  guidance-level interaction is load-bearing: at `full` the
+  preservation report surfaces in one or two sentences that
+  ESL-aware preservation ran (citing Swales/Hyland); at
+  `terse`/`standard` the audit fires silently and the table
+  speaks for itself — no lecturing. Grounded in
+  `knowledge/scientific-writing/esl-writers-swales-hyland.md`. Same
+  logic mirrored in `prompt.md` for the platform-neutral path.
+  Closes #75.
 
 - `scriptorium:tour` and `scriptorium:explain` now make the
   evidence-base posture an explicit, visible part of their output —

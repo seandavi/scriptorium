@@ -36,6 +36,7 @@ SKILLS_THAT_ADAPT = (
     "argumentative-flow",
     "explain",
     "desk-rejection-risk",
+    "terminology-normalization",
 )
 
 
