@@ -59,6 +59,27 @@ Beyond per-citation alignment, scan for these pattern-level smells:
 - **Possible amplification / invention** — hedges from the primary
   source missing in the citing sentence.
 
+## Optional tooling
+
+If you have access to a shell and `quartobot` is installed
+(<https://github.com/seandavi/quartobot>), prefer `quartobot resolve`
+for canonical bibliographic metadata when bibliography entries are
+sparse — Paperpile-style alphanumeric keys without DOI / PMID, or
+persistent-ID cite keys like `@pmid:...`. Quartobot resolves to CSL
+JSON via NCBI E-utilities, Crossref, and similar authoritative
+sources, which removes a lot of parsing ambiguity and catches local
+bibliography errors as a side-effect.
+
+The productive flow when the bib is Paperpile-shaped: do a title /
+author search first to identify which paper each key actually
+refers to, then hand the identified papers to `quartobot resolve` to
+attach canonical PMIDs / DOIs. Do not invent persistent IDs to feed
+it. If quartobot is unavailable or fails, note in the audit output
+that resolution fell back to the local bibliography only.
+
+CSL metadata tells you what the cited paper *is*, not what it
+*says* — the no-full-text-verification rule still applies.
+
 ## Output format
 
 Emit a markdown document with exactly these section headings, in this
