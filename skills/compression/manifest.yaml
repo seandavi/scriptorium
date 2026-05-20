@@ -1,0 +1,128 @@
+# scriptorium skill manifest
+# This file declares the skill's metadata, supported platforms,
+# tool requirements, and knowledge-layer grounding. It is consumed
+# by the scriptorium CLI (`list`, `prompt-pack`) and by future
+# orchestrators that compose skills.
+
+name: compression
+version: 0.1.0
+category: transformation      # critique | validation | normalization | transformation | generation
+
+description: >
+  Propose page-limit-driven length reductions on a manuscript
+  section while preserving every citation, every declared statistic,
+  every declared core claim, and every declared terminology choice.
+  Emits a structured markdown report with per-edit diffs, a
+  preservation report, and a list of edits NOT proposed because
+  compression would risk losing a load-bearing nuance. Suggests
+  edits; never auto-applies.
+
+# Transformation-category skill that suggests but does not apply
+# edits. Sister to argumentative-flow — both inherit the same
+# preservation contract (citations, statistics, terminology,
+# voice, claim set, hedging) and both ship structured per-edit
+# output the author reviews and applies (or rejects) themselves.
+# compression sits one level closer to copyediting than
+# argumentative-flow does (line editing vs. developmental editing
+# under Mossop / Einsohn / CSE).
+produces:
+  - structured-markdown-report
+  - suggested-edits
+  - per-edit-diff
+
+# No file modification. The skill emits a report; the author
+# applies edits or invokes a follow-up edit pass. The same
+# suggest-don't-apply posture terminology-normalization uses.
+modifies: []
+
+# Explicit invocation required. Compression is a transformation
+# and surprise length reductions on an author's prose are exactly
+# the failure mode this skill's discipline is designed to avoid.
+# Never auto-invoke; never run as a follow-up to another skill's
+# output without the user re-asking.
+invocation: explicit
+
+# Hard preservation constraints. Violating any of these is a
+# contract breach, not a judgment call. Mirrored from
+# argumentative-flow with one addition (core_claims) and one
+# specialization (claim_granularity = no fusion of distinct claims).
+preservation_constraints:
+  - citations         # every cite key in source present in output
+  - quantitative      # numbers, units, p-values, CIs preserved verbatim
+  - core_claims       # every declared core_claim preserved
+  - claim_granularity # distinct claims may not be merged
+  - terminology       # MANUSCRIPT_STATE.terminology honored
+  - voice             # active/passive matches source
+  - tone              # style.tone targets respected
+  - hedging           # epistemic modals, adverbs, approximators,
+                      # attributive verbs, indirect attributions —
+                      # Swales/Hyland stance markers preserved;
+                      # only hedging stacks may be reduced
+
+# Platforms this skill ships for.
+platforms:
+  claude-code:
+    skill_file: SKILL.md
+  platform-neutral:
+    prompt_file: prompt.md
+
+# Inputs the skill needs to do its job.
+inputs:
+  - name: manuscript_text
+    required: true
+    description: >
+      A single named section (introduction, abstract, results,
+      discussion, methods, or a named subsection). Not the whole
+      manuscript at once — single-section scope is what makes the
+      per-edit diff reviewable.
+  - name: manuscript_state
+    required: true
+    description: >
+      MANUSCRIPT_STATE.yaml from the project root. The
+      `core_claims`, `terminology`, `style.voice`, `style.tone`,
+      and `constraints.max_word_count` fields are load-bearing.
+    schema: manuscript-state.schema.json
+  - name: bibliography
+    required: true
+    description: >
+      Bibliography entries for cite keys appearing in the section,
+      so the pass can verify each cite key is preserved across
+      proposed edits.
+  - name: length_target
+    required: true
+    description: >
+      The target length the compression is reducing toward. Read
+      from `MANUSCRIPT_STATE.yaml#constraints.max_word_count` by
+      default; the user may supply a different target at invocation
+      (e.g., for a stricter target than the declared cap). Refuse to
+      run without a target — a target-less compression is an
+      opinion about the author's prose, not a service. Units are
+      words by default; pages and characters are also supported
+      when declared.
+
+# Knowledge-layer documents that ground this skill's design decisions.
+grounding:
+  - knowledge/scientific-writing/narrative-frameworks.md
+  - knowledge/editing/semantic-preservation.md
+  - knowledge/editing/copyediting-vs-developmental.md
+  - knowledge/editing/revision-research.md
+  - knowledge/scientific-writing/reader-expectation-approach.md
+  - knowledge/scientific-writing/hayes-flower-writing-model.md
+  - knowledge/scientific-writing/esl-writers-swales-hyland.md
+  - knowledge/prior-art/ai-writing-failure-modes.md
+
+# What this skill explicitly is NOT.
+non_goals:
+  - Applying any proposed edit to the manuscript without explicit author action.
+  - Removing or renaming a citation even when the carrier sentence is cut.
+  - Rounding, re-expressing, or substituting a quantitative value.
+  - Re-scoping, weakening, or dropping a declared core_claim.
+  - Combining two distinct claims into one (granularity loss).
+  - Substituting terminology not licensed by the state file.
+  - Introducing AI-writing tells (em-dash overuse, rule-of-three, inflated symbolism, elevated synonyms).
+  - Smoothing out ESL hedging or stance patterns — only hedging stacks are legitimate targets.
+  - Cosmetic sentence-level rewrites that do not net-reduce length.
+  - Structural reorganization (paragraph reordering, section restructuring) — that is argumentative-flow's territory.
+  - Compressing an entire manuscript at once.
+  - Running without a declared or supplied length target.
+  - Auto-invocation as a follow-up to another skill.

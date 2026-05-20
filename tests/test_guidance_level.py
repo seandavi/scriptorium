@@ -43,6 +43,7 @@ SKILLS_THAT_ADAPT = (
     "reporting-guideline-fit",
     "reporting-guideline-compliance",
     "figure-text-alignment",
+    "compression",
 )
 
 
