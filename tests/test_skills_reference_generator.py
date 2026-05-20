@@ -160,3 +160,177 @@ def test_process_skills_reference_writes_file(  # type: ignore[no-untyped-def]
     assert out.is_file()
     text = out.read_text(encoding="utf-8")
     assert "## All shipped skills" in text
+
+
+# ---------------------------------------------------------------------------
+# Sentinel-block helper
+# ---------------------------------------------------------------------------
+
+
+def test_replace_sentinel_block_substitutes_between_markers(  # type: ignore[no-untyped-def]
+    preprocess_module,
+) -> None:
+    """The helper must replace content between markers exactly once."""
+    text = (
+        "preamble\n"
+        "<!-- GENERATED:demo:start -->\n"
+        "OLD BODY\n"
+        "<!-- GENERATED:demo:end -->\n"
+        "trailer\n"
+    )
+    updated, replaced = preprocess_module._replace_sentinel_block(text, "demo", "NEW BODY")
+    assert replaced is True
+    assert "OLD BODY" not in updated
+    assert "NEW BODY" in updated
+    assert updated.startswith("preamble\n")
+    assert updated.rstrip("\n").endswith("trailer")
+
+
+def test_replace_sentinel_block_returns_false_when_markers_missing(  # type: ignore[no-untyped-def]
+    preprocess_module,
+) -> None:
+    text = "no markers here\n"
+    updated, replaced = preprocess_module._replace_sentinel_block(text, "demo", "NEW")
+    assert replaced is False
+    assert updated == text
+
+
+def test_replace_sentinel_block_handles_empty_initial_block(  # type: ignore[no-untyped-def]
+    preprocess_module,
+) -> None:
+    """Markers placed back-to-back (no body) must still be filled."""
+    text = "<!-- GENERATED:demo:start -->\n<!-- GENERATED:demo:end -->\n"
+    updated, replaced = preprocess_module._replace_sentinel_block(text, "demo", "NEW")
+    assert replaced is True
+    assert "NEW" in updated
+
+
+# ---------------------------------------------------------------------------
+# Workflow-stage concept page generator
+# ---------------------------------------------------------------------------
+
+
+def test_workflow_stage_table_includes_every_skill(preprocess_module) -> None:  # type: ignore[no-untyped-def]
+    manifests = preprocess_module._load_manifests()
+    table = preprocess_module._render_workflow_stage_table(manifests)
+    for name in _shipped_skill_names():
+        assert f"`{name}`" in table, f"Skill {name} missing from workflow-stage table"
+
+
+def test_workflow_stage_table_renders_yes_for_declared_phases(  # type: ignore[no-untyped-def]
+    preprocess_module,
+) -> None:
+    """Spot-check that the table cells match each manifest's declaration."""
+    manifests = {m["name"]: m for m in preprocess_module._load_manifests()}
+    table = preprocess_module._render_workflow_stage_table(list(manifests.values()))
+    # init runs everywhere
+    init_row = next(line for line in table.splitlines() if line.startswith("| `init`"))
+    assert init_row.count(" yes ") == 5
+    # desk-rejection-risk runs only at revision + submission
+    drr_row = next(line for line in table.splitlines() if line.startswith("| `desk-rejection-risk`"))
+    assert drr_row.count(" yes ") == 2
+
+
+def test_workflow_stage_columns_are_canonical(preprocess_module) -> None:  # type: ignore[no-untyped-def]
+    manifests = preprocess_module._load_manifests()
+    header = preprocess_module._render_workflow_stage_table(manifests).splitlines()[0]
+    for label in ("Outline", "Draft", "Review", "Revision", "Submission"):
+        assert label in header
+
+
+def test_process_workflow_stage_concept_replaces_block(  # type: ignore[no-untyped-def]
+    preprocess_module, tmp_path, monkeypatch
+) -> None:
+    """``process_workflow_stage_concept`` must replace only the sentinel block."""
+    page = tmp_path / "workflow-stage.md"
+    page.write_text(
+        "prose above\n"
+        "<!-- GENERATED:workflow-stage-table:start -->\n"
+        "stale\n"
+        "<!-- GENERATED:workflow-stage-table:end -->\n"
+        "prose below\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(preprocess_module, "WORKFLOW_STAGE_OUT", page)
+    assert preprocess_module.process_workflow_stage_concept() is True
+    text = page.read_text(encoding="utf-8")
+    assert "prose above" in text
+    assert "prose below" in text
+    assert "stale" not in text
+    assert "| Skill | Outline | Draft | Review | Revision | Submission |" in text
+
+
+# ---------------------------------------------------------------------------
+# Guidance-level concept page generator
+# ---------------------------------------------------------------------------
+
+
+def test_every_manifest_declares_guidance_level_behavior(  # type: ignore[no-untyped-def]
+    preprocess_module,
+) -> None:
+    """Every shipped skill must declare per-level framing in its manifest."""
+    manifests = preprocess_module._load_manifests()
+    missing: list[str] = []
+    incomplete: list[str] = []
+    for m in manifests:
+        behavior = m.get("guidance_level_behavior")
+        if not behavior:
+            missing.append(m["name"])
+            continue
+        if not all(k in behavior for k in ("terse", "standard", "full")):
+            incomplete.append(m["name"])
+    assert not missing, f"Skills missing guidance_level_behavior: {missing}"
+    assert not incomplete, f"Skills missing terse/standard/full keys: {incomplete}"
+
+
+def test_guidance_level_block_includes_every_skill(preprocess_module) -> None:  # type: ignore[no-untyped-def]
+    manifests = preprocess_module._load_manifests()
+    block = preprocess_module._render_guidance_level_block(manifests)
+    for name in _shipped_skill_names():
+        assert f"**`{name}`**" in block, f"Skill {name} missing from guidance-level block"
+
+
+def test_guidance_level_block_renders_three_levels_per_skill(  # type: ignore[no-untyped-def]
+    preprocess_module,
+) -> None:
+    manifests = preprocess_module._load_manifests()
+    block = preprocess_module._render_guidance_level_block(manifests)
+    for level in ("terse", "standard", "full"):
+        # Every shipped skill should produce one nested bullet per level.
+        assert block.count(f"  - `{level}` —") == len(_shipped_skill_names())
+
+
+def test_process_guidance_level_concept_replaces_block(  # type: ignore[no-untyped-def]
+    preprocess_module, tmp_path, monkeypatch
+) -> None:
+    """``process_guidance_level_concept`` must replace only the sentinel block."""
+    page = tmp_path / "guidance-level.md"
+    page.write_text(
+        "prose above\n"
+        "<!-- GENERATED:guidance-level-skills:start -->\n"
+        "stale\n"
+        "<!-- GENERATED:guidance-level-skills:end -->\n"
+        "prose below\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(preprocess_module, "GUIDANCE_LEVEL_OUT", page)
+    assert preprocess_module.process_guidance_level_concept() is True
+    text = page.read_text(encoding="utf-8")
+    assert "prose above" in text
+    assert "prose below" in text
+    assert "stale" not in text
+    assert "**`init`**" in text
+
+
+def test_process_guidance_level_concept_warns_on_missing_sentinel(  # type: ignore[no-untyped-def]
+    preprocess_module, tmp_path, monkeypatch, capsys
+) -> None:
+    """A page without the sentinel pair must be left untouched."""
+    page = tmp_path / "guidance-level.md"
+    original = "hand-written page with no sentinels\n"
+    page.write_text(original, encoding="utf-8")
+    monkeypatch.setattr(preprocess_module, "GUIDANCE_LEVEL_OUT", page)
+    assert preprocess_module.process_guidance_level_concept() is False
+    assert page.read_text(encoding="utf-8") == original
+    captured = capsys.readouterr().out
+    assert "missing the GENERATED:guidance-level-skills sentinel" in captured

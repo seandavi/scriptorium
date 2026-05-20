@@ -24,6 +24,26 @@ lifecycle_phases:
   - revision
   - submission
 
+# How this skill frames its output at each meta.guidance_level value.
+# Sourced from the conversational-style section of SKILL.md so the
+# concept page (concepts/guidance-level.md) renders from manifest.
+# Consumed by docs build (concepts/guidance-level page generator).
+guidance_level_behavior:
+  terse: >
+    Open with a one-line "running desk-rejection-risk audit against
+    {target_venue}"; emit the markdown report; no closing summary.
+  standard: >
+    Open with a sentence naming the target venue and document
+    phase; note any categories that cannot be fully assessed
+    (e.g. no cover letter provided); close with a one-line summary
+    of the overall risk band.
+  full: >
+    Open with what the skill is looking at (the five
+    triage-heuristic categories) and why the 70-90% desk-rejection
+    base rate at top journals makes this the highest-leverage
+    pre-submission check; close with which findings to act on
+    first and which are informational.
+
 # Explicit invocation. The skill must NOT be auto-invoked — it is a
 # pre-submission check the author chooses to run on their own work,
 # and it should not fire as a side-effect of another skill.
