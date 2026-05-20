@@ -88,7 +88,7 @@ non_goals:
   - Forcing a confident answer when methods is too sketchy.
     Low confidence is honest output, not a failure.
   - Writing to MANUSCRIPT_STATE.yaml. Schema deliberately
-    doesn't carry a reporting_guidelines: field (authors
+    doesn't carry a reporting-guidelines field (authors
     often don't know; declaring with confidence is the
     wrong-data-confidently-declared failure mode).
   - Critiquing study design. The skill infers from the methods
