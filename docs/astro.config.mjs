@@ -2,6 +2,28 @@
 import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
 
+// GA4 is injected only into production builds. `astro dev` sets
+// NODE_ENV=development, so local sessions and CI link-checks don't ship hits.
+// Override the ID with GA_MEASUREMENT_ID to point at a different property.
+const gaId = process.env.GA_MEASUREMENT_ID ?? "G-JR9V6X8Z8R";
+const analyticsHead =
+  process.env.NODE_ENV === "production"
+    ? [
+        {
+          tag: "script",
+          attrs: { async: true, src: `https://www.googletagmanager.com/gtag/js?id=${gaId}` },
+        },
+        {
+          tag: "script",
+          content:
+            `window.dataLayer = window.dataLayer || [];` +
+            `function gtag(){dataLayer.push(arguments);}` +
+            `gtag('js', new Date());` +
+            `gtag('config', '${gaId}');`,
+        },
+      ]
+    : [];
+
 export default defineConfig({
   // GitHub Pages target. Override BASE/SITE in CI when deploying elsewhere.
   site: process.env.SITE ?? "https://seandavi.github.io",
@@ -9,6 +31,7 @@ export default defineConfig({
   integrations: [
     starlight({
       title: "Scriptorium",
+      head: analyticsHead,
       description:
         "AI-assisted skills for scholarly writing — citation audit, simulated peer review, argumentative-flow analysis — sharing one editorial state file and grounded in a peer-reviewed evidence base.",
       logo: {
