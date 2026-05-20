@@ -10,6 +10,27 @@ state schema may change between versions.
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-05-20
+
+The v0.2 release. Closes the marketplace install path, the
+guidance-level + declared-work-scope conventions, six new skills
+(`tour`, `explain`, `desk-rejection-risk`, `venue-fit`,
+`author-contribution-audit`, `reporting-guideline-fit`), the ESL-aware
+extension to `argumentative-flow`, and two v0.3-early bonus items
+(`terminology-normalization`, `gap-finder`). Knowledge layer grew by
+six new notes (`venue-selection`, `predatory-publishing`,
+`preprint-landscape`, `research-gap-detection`,
+`literature-search-strategies`, and two conventions —
+`guidance-level`, `declared-work-scope`).
+
+Test count: 114 (was ~20 at v0.1.0.dev0). Every conversation-bearing
+skill grounds in both project-wide conventions, enforced by
+parametrized tests.
+
+Not in v0.2: the `manuscript-pipeline` orchestrator. It was always
+framed as "built once the leaves are stable" and is held until the
+ten v0.1+v0.2 skills have been used on more real manuscripts.
+
 ### Changed
 
 - Roadmap cleanup under `declared-work-scope`. **v0.4 reframed
