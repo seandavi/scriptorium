@@ -8,7 +8,7 @@
 #   scriptorium validate MANUSCRIPT_STATE.yaml
 
 meta:
-  guidance_level: teaching   # first scriptorium project for this author
+  guidance_level: full       # first scriptorium project for this author
 
 project:
   title: "Single-cell transcriptomic profiling of CD8+ T cell exhaustion in pancreatic ductal adenocarcinoma"

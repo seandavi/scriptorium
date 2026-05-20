@@ -124,12 +124,13 @@ per [[guidance-level]]:
 - `standard` — open with which `core_claims` will be pressure-tested
   and which `known_weaknesses` will be excluded from fatal-concern
   flagging; close with a one-line summary of acceptance risk.
-- `teaching` — open with what each lens is looking for and why
+- `full` — open with what each lens is looking for and why
   Bornmann's low inter-reviewer agreement motivates the multi-lens
   approach (this is the surprising design choice authors most often
   ask about); close with which critiques to address first and which
   are framing-only. If first invocation this session, offer
-  `/scriptorium:explain reviewer-simulation`.
+  `/scriptorium:explain reviewer-simulation` so the author can learn
+  the design before reading the critique.
 
 Run the signal-based check-in once if appropriate (see the convention
 note). The structured critique itself is unchanged across levels.

@@ -23,10 +23,13 @@ state schema may change between versions.
   resolve.
 
 - `meta.guidance_level` field on `MANUSCRIPT_STATE.yaml` (enum:
-  `terse | standard | teaching`, default `standard`). Persisted
-  user-side preference for how much each skill should teach vs.
-  just execute. Set by `scriptorium:init`; honored by every
-  conversation-bearing skill. The convention is documented at
+  `terse | standard | full`, default `standard`). Persisted
+  user-side preference for how much framing each skill should add
+  around its structured work. The `full` level is designed to teach
+  the workflow as the author uses it — upfront orientation,
+  per-field rationale, end-of-phase recaps. Set by
+  `scriptorium:init`; honored by every conversation-bearing skill.
+  The convention is documented at
   `knowledge/conventions/guidance-level.md` and grounded into
   every adapting skill's frontmatter, with a signal-based
   once-per-session check-in protocol so the level can be
@@ -38,8 +41,8 @@ state schema may change between versions.
   `MANUSCRIPT_STATE.yaml` field
   (`/scriptorium:explain meta.guidance_level`), or a knowledge note
   by slug. Reads the plugin tree only; consumes no manuscript
-  content. Teaching-mode users are nudged toward this skill from
-  the leaf skills.
+  content. Users at the `full` guidance level are nudged toward
+  this skill from the leaf skills.
 
 - `scriptorium:init` now opens with a short orientation turn and
   elicits `meta.guidance_level` as its first question (with the
@@ -47,7 +50,7 @@ state schema may change between versions.
   (`core_claims`, `known_weaknesses`, `terminology.*`,
   `style.tone`, `style.audience`, `document_phase.current`) now
   carries a 2-3 sentence "why this matters / how to think about
-  answering" preface. Init itself always runs in teaching mode
+  answering" preface. Init itself always runs at the `full` level
   regardless of saved preference, because that's where the
   preference is set.
 

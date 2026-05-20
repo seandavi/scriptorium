@@ -14,9 +14,9 @@
       "properties": {
         "guidance_level": {
           "type": "string",
-          "enum": ["terse", "standard", "teaching"],
+          "enum": ["terse", "standard", "full"],
           "default": "standard",
-          "description": "How much scriptorium should teach versus just execute. 'terse' = questions and confirmations only, no prose between turns. 'standard' = brief one-line 'why' before non-obvious questions. 'teaching' = upfront orientation, 2-3 sentence rationale before each elicited field, end-of-phase recaps. Set by scriptorium:init; respected by every skill. See knowledge/conventions/guidance-level.md."
+          "description": "How much framing each skill should add around its structured work. 'terse' = questions and confirmations only, no prose between turns; assumes the author already knows the workflow. 'standard' = brief one-line 'why' before non-obvious questions; assumes the author has used scriptorium before but appreciates anchoring. 'full' = the complete experience: upfront orientation, 2-3 sentence rationale before each elicited field, end-of-phase recaps. The 'full' level is designed for authors who want scriptorium to teach them how it works as they go — first-time use, or any time the user wants to learn the workflow alongside doing it. Set by scriptorium:init; respected by every conversation-bearing skill. See knowledge/conventions/guidance-level.md."
         }
       }
     },

@@ -119,15 +119,16 @@ the preservation contract — per [[guidance-level]]:
 - `standard` — open with the section's role in the manuscript and
   what the structural diagnosis will check; close with a one-line
   summary of the most material structural issue found.
-- `teaching` — open with what reader-expectation theory predicts
-  about how the section should be organised (topic position →
-  subject → stress position) and what
-  [[narrative-frameworks]] adds; close with which proposed changes
-  are about logic vs. about flow. This is the skill authors most
-  often suspect of "AI editing" rather than principled revision —
-  the teaching framing earns the trust the changes will need. If
-  first invocation this session, offer
-  `/scriptorium:explain argumentative-flow`.
+- `full` — open with what reader-expectation theory predicts about
+  how the section should be organised (topic position → subject →
+  stress position) and what [[narrative-frameworks]] adds; close
+  with which proposed changes are about logic vs. about flow. This
+  is the skill authors most often suspect of "AI editing" rather
+  than principled revision — the upfront explanation of the
+  underlying theory earns the trust the changes will need. If first
+  invocation this session, offer
+  `/scriptorium:explain argumentative-flow` so the author can learn
+  the design before reading the revised text.
 
 Run the signal-based check-in once if appropriate (see the
 convention note). The preservation contract — every citation,

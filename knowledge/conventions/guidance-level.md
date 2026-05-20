@@ -1,4 +1,4 @@
-# Guidance level: how skills calibrate their teaching to the author
+# Guidance level: how much framing each skill adds around its work
 
 *Last updated: 2026-05-20*
 
@@ -7,11 +7,12 @@
 Scriptorium's skills walk an author through structured editorial work
 — populating shared state, auditing citations, simulating reviewers,
 restructuring argument. A first-time user benefits from each skill
-explaining *why* it asks what it asks; a user on their fifth
-manuscript finds the same prose patronising and slow. The cost of
-guessing wrong is real in both directions: under-explained scriptorium
-feels like an interrogation, over-explained scriptorium feels like a
-seminar.
+explaining *why* it asks what it asks, so they learn the workflow as
+they go; a user on their fifth manuscript finds the same prose
+patronising and slow. The cost of guessing wrong is real in both
+directions: under-framed scriptorium feels like an interrogation,
+over-framed scriptorium feels like a seminar the user didn't sign up
+for.
 
 The convention is to let the author pick once, persist the choice in
 `MANUSCRIPT_STATE.yaml`, and let every skill read it. The author can
@@ -45,7 +46,7 @@ Skill:  core_claims — list them:
 
 Best for: authors on their second-or-later scriptorium project, or
 authors who prefer to read documentation themselves rather than have
-the tool teach them inline.
+each skill walk them through it inline.
 
 ### `standard` *(default when unset)*
 
@@ -63,11 +64,22 @@ Best for: returning users who don't need orientation but appreciate a
 short anchor when a question's purpose isn't self-evident. This is
 the safe default when `meta.guidance_level` is absent.
 
-### `teaching`
+### `full`
 
-Upfront orientation when the skill starts; 2-3 sentence "why this
-matters / how to think about answering" before each elicited field;
-end-of-phase recap so the author can see where they are in the arc.
+The complete experience. Upfront orientation when the skill starts;
+2-3 sentence "why this matters / how to think about answering" before
+each elicited field; end-of-phase recap so the author can see where
+they are in the arc.
+
+The framing is deliberately educational. The `full` level treats
+each skill invocation as an opportunity for the author to learn the
+workflow alongside doing it — not as a lecture, but as just-in-time
+context that builds a mental model of how scriptorium uses each
+field. By the end of a manuscript at `full`, an author has been
+taught what `core_claims` is for, why `known_weaknesses` matters at
+review time, how `reviewer-simulation` consumes the state, and so
+on. They've earned the right to drop to `standard` on their next
+project.
 
 ```text
 Skill:  Before we start, here's the plan. We'll populate one YAML
@@ -87,9 +99,13 @@ Skill:  core_claims — what is this paper arguing? Reviewer-simulation
 Author: ...
 ```
 
-Best for: first-time users; users wanting to understand how
-scriptorium *uses* what they tell it; users running an unfamiliar
-skill they haven't invoked before.
+Best for: first-time scriptorium users; authors who want to
+*learn* how scriptorium uses each field as they fill it in; users
+running an unfamiliar skill they haven't invoked before and who'd
+rather understand it than read the SKILL.md cold. Most users will
+spend their first manuscript here and drop to `standard` afterward;
+some will stay at `full` indefinitely because they like the
+just-in-time framing.
 
 ## The check-in protocol
 
@@ -99,7 +115,7 @@ session. The protocol:
 1. **At skill entry**, read `meta.guidance_level`. If absent, default
    to `standard`. Adapt the conversation accordingly.
 2. **Watch for signal during the session.**
-   - Toward `teaching`: the author asks "what does X mean?" or "why
+   - Toward `full`: the author asks "what does X mean?" or "why
      does this matter?" twice or more about scriptorium concepts they
      should already know.
    - Toward `terse`: the author says some variant of "skip the
@@ -108,10 +124,10 @@ session. The protocol:
      framing isn't earning its space.
 3. **Offer once at the first natural phase boundary** if a strong
    signal fired. *"You've asked a few clarifying questions — want me
-   to switch to teaching mode? It adds a short rationale before each
-   field."* Or: *"You're moving fast — want me to drop to terse? Just
-   the questions, no preface."* If accepted, update
-   `meta.guidance_level` in the YAML.
+   to switch to `full`? It adds a short rationale before each field
+   so the workflow gets explained as you go."* Or: *"You're moving
+   fast — want me to drop to `terse`? Just the questions, no
+   preface."* If accepted, update `meta.guidance_level` in the YAML.
 4. **Never repeat the offer in the same session.** If the author
    declines, respect that for the rest of the session.
 5. **A direct mid-flight command always wins.** *"Switch to terse"*
@@ -137,8 +153,10 @@ qualify — they have no conversation to adapt.
      confirmations.
    - `standard` → one-line context where the question isn't
      self-explanatory; otherwise terse.
-   - `teaching` → orientation turn, 2-3 sentence rationale per
-     elicited field, end-of-phase recap.
+   - `full` → orientation turn, 2-3 sentence rationale per elicited
+     field, end-of-phase recap. The framing is the level's *teaching
+     surface* — its job is to let the author learn the workflow
+     while doing it.
 3. Run the check-in protocol above.
 
 **What this is not:** This is not a verbosity slider. The
@@ -155,5 +173,6 @@ framing and explanatory prose around the structured work.
   can uncomment to set the preference manually.
 - `skills/init/SKILL.md` — the skill that elicits the preference on
   first run.
-- `skills/explain/SKILL.md` — companion skill teaching-mode users are
-  nudged toward.
+- `skills/explain/SKILL.md` — companion skill users at the `full`
+  level are nudged toward for any unfamiliar skill they're about to
+  invoke.

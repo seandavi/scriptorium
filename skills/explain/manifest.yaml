@@ -19,8 +19,9 @@ produces:
 
 modifies: []
 
-# Explicit invocation only. Leaf skills in teaching mode may suggest
-# `/scriptorium:explain <name>`, but the user always chooses to run it.
+# Explicit invocation only. Leaf skills running at the `full`
+# guidance level may suggest `/scriptorium:explain <name>`, but the
+# user always chooses to run it.
 invocation: explicit
 
 # Platforms this skill ships for.

@@ -22,10 +22,10 @@ content.
   `MANUSCRIPT_STATE.yaml` field.
 - `/scriptorium:explain <note>` — summarise a `knowledge/` note.
 
-A leaf skill running in `teaching` guidance level will sometimes
+A leaf skill running at the `full` guidance level will sometimes
 suggest the explain skill before its first invocation in a session
 ("want a tour of citation-audit before you run it?"). That's the
-intended path for new users.
+intended path for new users learning the workflow.
 
 ## What it explicitly will not do
 

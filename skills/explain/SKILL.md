@@ -27,8 +27,8 @@ Invoke this skill when:
   `argumentative-flow`, `explain` itself) or a `MANUSCRIPT_STATE.yaml`
   field (e.g. `core_claims`, `known_weaknesses`,
   `meta.guidance_level`).
-- A leaf skill in `teaching` mode has suggested the user might want
-  an explanation before invoking it.
+- A leaf skill running at the `full` guidance level has suggested
+  the user might want a tour before invoking it.
 
 Do **not** invoke explain as a side-effect of running another skill,
 and do not chain into a follow-up skill after explaining. Explanation
@@ -67,7 +67,7 @@ Read in this order, then synthesize a single markdown response:
 3. Each `skills/<name>/SKILL.md` frontmatter (`name`, `description`,
    `grounding`) for the per-skill summary.
 4. `knowledge/conventions/guidance-level.md` for the
-   teach-vs-execute convention every skill respects.
+   framing-vs-execute convention every skill respects.
 
 Produce the output described in **Output format → A. System
 overview** below. Aim for one screenful, not a manual.
@@ -118,7 +118,7 @@ overview** below. Aim for one screenful, not a manual.
 - **Honor `meta.guidance_level`** if `MANUSCRIPT_STATE.yaml` is in
   the current directory. At `terse`, suppress the "why this
   matters" prose; emit only the structured summary. At `standard`
-  and `teaching`, keep the framing.
+  and `full`, keep the framing.
 
 ## Output format
 
@@ -288,8 +288,8 @@ full note>
 This skill is grounded in:
 
 - [[guidance-level]] — the convention `explain` itself honors when
-  rendering its output, and the convention it teaches new users
-  about during a system overview.
+  rendering its output, and the convention it introduces to new
+  users during a system overview.
 - `knowledge/README.md` — the layout of the knowledge layer, so the
   skill can navigate when asked about a knowledge note by slug or
   topic.

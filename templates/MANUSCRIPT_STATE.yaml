@@ -11,11 +11,13 @@
 # Not editorial properties of the manuscript itself. Optional; defaults
 # to standard. scriptorium:init asks you to pick once on first run.
 # meta:
-#   guidance_level: standard  # one of: terse, standard, teaching
+#   guidance_level: standard  # one of: terse, standard, full
 #     # terse    — questions and confirmations only, no prose between turns
 #     # standard — brief one-line "why" before non-obvious questions
-#     # teaching — upfront orientation, 2-3 sentence rationale per field,
-#     #            end-of-phase recaps; best on first scriptorium project
+#     # full     — upfront orientation, 2-3 sentence rationale per field,
+#     #            end-of-phase recaps; the complete experience, designed
+#     #            so an author learns the workflow as they fill the YAML.
+#     #            Best on a first scriptorium project.
 
 project:
   title: "Working title goes here"

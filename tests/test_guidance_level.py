@@ -50,11 +50,11 @@ def test_schema_declares_meta_guidance_level(schema: dict) -> None:
     assert meta is not None, "schema is missing top-level `meta` property"
     guidance = meta["properties"].get("guidance_level")
     assert guidance is not None, "meta.guidance_level not declared"
-    assert guidance["enum"] == ["terse", "standard", "teaching"]
+    assert guidance["enum"] == ["terse", "standard", "full"]
     assert guidance["default"] == "standard"
 
 
-@pytest.mark.parametrize("level", ["terse", "standard", "teaching"])
+@pytest.mark.parametrize("level", ["terse", "standard", "full"])
 def test_schema_accepts_valid_guidance_levels(validator: Draft202012Validator, level: str) -> None:
     doc = {
         "meta": {"guidance_level": level},
@@ -77,7 +77,7 @@ def test_schema_rejects_invalid_guidance_level(validator: Draft202012Validator) 
 
 def test_schema_meta_disallows_unknown_properties(validator: Draft202012Validator) -> None:
     doc = {
-        "meta": {"guidance_level": "teaching", "extra_field": "nope"},
+        "meta": {"guidance_level": "full", "extra_field": "nope"},
         "project": {"title": "x", "target_type": "manuscript"},
         "document_phase": {"current": "draft"},
     }
@@ -93,7 +93,7 @@ def test_convention_note_exists() -> None:
     # gutted by a regression.
     assert "### `terse`" in text
     assert "### `standard`" in text
-    assert "### `teaching`" in text
+    assert "### `full`" in text
     assert "check-in protocol" in text.lower()
 
 
@@ -119,4 +119,4 @@ def test_example_template_includes_meta_block() -> None:
     example = REPO_ROOT / "templates" / "MANUSCRIPT_STATE.example.yaml"
     data = yaml.safe_load(example.read_text(encoding="utf-8"))
     assert "meta" in data
-    assert data["meta"]["guidance_level"] in {"terse", "standard", "teaching"}
+    assert data["meta"]["guidance_level"] in {"terse", "standard", "full"}

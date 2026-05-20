@@ -51,7 +51,7 @@ rather than re-asking everything.
 ## Operational protocol
 
 Work in this order. `init` is the user's first contact with
-scriptorium, so it **always teaches** regardless of any saved
+scriptorium, so it **always runs at `full`** regardless of any saved
 `meta.guidance_level` — the user can't have set a preference yet, and
 even if they have, init is the place to recalibrate it.
 
@@ -76,20 +76,22 @@ step). Don't proceed to discovery until both are settled.
 Ask once, here, with the three options spelled out. Use the framing
 from [[guidance-level]] but compact:
 
-> "Before we start: how much should I teach versus just execute? I
-> can be **terse** (questions and confirmations only — best if you've
-> used scriptorium before), **standard** (a one-line 'why' before
-> non-obvious questions — the default), or **teaching** (a short
-> rationale before each field plus end-of-phase recaps — best on a
-> first scriptorium project). I'll save your pick to the YAML and
+> "Before we start: how much framing should I add around the
+> structured work? I can be **terse** (questions and confirmations
+> only — best if you've used scriptorium before), **standard** (a
+> one-line 'why' before non-obvious questions — the default), or
+> **full** (the complete experience: a short rationale before each
+> field plus end-of-phase recaps — best on a first scriptorium
+> project, or any time you want to learn how scriptorium uses each
+> field as you fill it in). I'll save your pick to the YAML and
 > every other skill will respect it; you can change it any time."
 
 If `MANUSCRIPT_STATE.yaml` already exists and `meta.guidance_level`
-is set, **show the current value first**: *"Your file says `teaching`
+is set, **show the current value first**: *"Your file says `full`
 right now — keep that or switch?"* Whichever the author picks (or
 keeps), this goes into `meta.guidance_level` in the YAML. Init itself
-continues to run in teaching mode for the remainder of this session;
-later skills will honor the saved preference.
+continues to run at the `full` level for the remainder of this
+session; later skills will honor the saved preference.
 
 ### 3. Discover
 
@@ -130,16 +132,17 @@ accompli, always as a question:
 For each inferred field, the author gets to confirm, edit, or skip.
 Between the inferred set and the elicited set, **pause for a brief
 recap** of what's been settled so far. This is the end-of-phase
-moment the teaching level expects.
+moment the `full` level expects.
 
 ### 5. Elicit (the subjective fields)
 
 These cannot be inferred. Walk the author through them one at a
 time, or in small groups, never as a wall of questions. Before each
 field, give a 2-3 sentence "why this matters / how to think about
-answering" preface — this is what `teaching` mode delivers. (At
+answering" preface — this is what the `full` level delivers, and
+it's how the author learns the workflow alongside doing it. (At
 saved `standard` or `terse` levels later skills would compress or
-suppress these, but init always runs in teaching.)
+suppress these prefaces, but init always runs at `full`.)
 
 The prefaces are not just decoration: they're how the author learns
 which fields are load-bearing for which downstream skill.
@@ -257,7 +260,7 @@ Based on `document_phase.current`, suggest sensible follow-up skills:
   on the discussion section often catches structural issues a final
   reader will notice."*
 
-If `meta.guidance_level` is `teaching`, also offer:
+If `meta.guidance_level` is `full`, also offer:
 
 > "If you'd like a tour of any skill before you run it, try
 > `/scriptorium:explain <skill>` — it summarises what the skill does,
@@ -289,8 +292,8 @@ populated, Y left for later). Next: <suggested skill> when you're ready.
   decisions. The author always sees "here's what I think; OK?"
 - **Subjective fields are elicited one or two at a time**, never as
   a single intimidating questionnaire. Each elicited field carries a
-  short "why this matters" preface — that is the teaching mode's
-  point.
+  short "why this matters" preface — that's how the `full` level
+  lets the author learn the workflow as they go.
 - **Existing values are respected.** If a field already has content,
   the skill shows it before asking.
 - **Validation errors become conversational prompts**, never raw
@@ -320,9 +323,10 @@ This skill is grounded in:
 - `schemas/manuscript-state.schema.json` — the canonical field set
   and enum values the elicitation steers toward. Read at runtime so
   the skill stays in sync with schema evolution.
-- [[guidance-level]] — the three-level convention init both teaches
-  and writes to `meta.guidance_level`. Init always runs in teaching
-  mode itself; the level it sets controls every later skill.
+- [[guidance-level]] — the three-level convention init both
+  introduces to the author and writes to `meta.guidance_level`.
+  Init itself always runs at `full`; the level it sets controls
+  every later skill.
 - [[common-critiques-taxonomy]] — informs *why* certain fields
   matter for downstream skills. `known_weaknesses`, `target_venue`,
   and `core_claims` are the load-bearing inputs for

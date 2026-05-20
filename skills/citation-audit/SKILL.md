@@ -63,11 +63,13 @@ per [[guidance-level]]:
 - `standard` — open with a sentence naming the manuscript and the
   number of citations to be audited; close with a one-line summary
   of the findings.
-- `teaching` — open with what this skill produces (claim-level
-  alignment classifications, pattern-level smells) and how to read
-  it (per-claim, then patterns); close with which findings to act on
+- `full` — open with what this skill produces (claim-level alignment
+  classifications, pattern-level smells) and how to read it
+  (per-claim, then patterns); close with which findings to act on
   first and which are informational. If running for the first time
-  in this session, also offer `/scriptorium:explain citation-audit`.
+  in this session, also offer `/scriptorium:explain citation-audit`
+  so the author can learn the skill's design before reading its
+  output.
 
 Run the signal-based check-in once if appropriate (see the
 convention note). The structured output itself is unchanged across
