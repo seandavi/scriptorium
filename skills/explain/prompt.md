@@ -37,11 +37,16 @@ producing the explanation. Do not guess.
 ### Whole-system overview
 
 Read the plugin manifest, the schema, every `skills/*/SKILL.md`
-frontmatter, and `knowledge/conventions/guidance-level.md`.
-Synthesize one screenful: what scriptorium is, the
-MANUSCRIPT_STATE-plus-skills architecture, the five v0.1 skills (one
-line each), and the three guidance levels. Close with "where to go
-next" and a `Sources` list of the files you read.
+frontmatter, `knowledge/README.md`, and
+`knowledge/conventions/guidance-level.md`. Synthesize one screenful:
+what scriptorium is, the MANUSCRIPT_STATE-plus-skills architecture,
+the six v0.1 skills (one line each), the **evidence base** (every
+skill cites the published research it grounds in; name a few anchor
+citations across the corpus — Greenberg 2009 *BMJ* for
+citation-distortion, Bornmann's inter-reviewer agreement κ ≈ 0.17
+for the multi-lens reviewer design, Gopen & Swan reader-expectation
+theory for argumentative-flow), and the three guidance levels.
+Close with "where to go next" and a `Sources` list.
 
 ### Explain a named skill
 
@@ -49,8 +54,13 @@ Read the skill's `SKILL.md` (description, operational protocol,
 output format, non-goals) and every file in its `grounding:` list.
 Synthesize: what the skill does, when to use it, what it consumes
 from the manuscript and `MANUSCRIPT_STATE.yaml`, what it produces,
-how each grounding note informs a specific design choice, and what
-it explicitly will not do. Close with a `Sources` list.
+**how each grounding note informs a specific design choice** (lead
+with "this skill grounds in published research — behaviours trace
+back to papers, not LLM intuition alone"; where a load-bearing
+paper underlies the design — Greenberg 2009 *BMJ*, Bornmann's
+inter-reviewer agreement, Gopen & Swan — name the paper, not only
+the note), and what it explicitly will not do. Close with a
+`Sources` list.
 
 ### Explain a state field
 

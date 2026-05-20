@@ -39,6 +39,12 @@ One paragraph naming what scriptorium is, then a question:
 > a shared editorial state file so the AI work composes instead of
 > starting from scratch each time.
 >
+> Each skill grounds in published research synthesised under
+> `knowledge/` — peer-review literature, citation-accuracy studies,
+> reader-expectation theory. Behaviours trace back to specific
+> papers rather than LLM intuition alone; that's the project's
+> credibility model.
+>
 > Before I walk you through it, what brings you here? Drafting a
 > manuscript, revising one, writing a grant, or just exploring?
 
@@ -58,11 +64,16 @@ For a manuscript drafter / reviser:
 > The loop is: `init` populates `MANUSCRIPT_STATE.yaml`
 > (claims, weaknesses, terminology, audience). From there,
 > three skills work against that state: `citation-audit` (assess
-> alignment, do not invent citations), `reviewer-simulation`
-> (four reviewer lenses, surface critiques and risk),
-> `argumentative-flow` (improve coherence while preserving every
-> citation, statistic, and declared term). All three read the
-> shared state, so they share one view of your paper.
+> alignment, do not invent citations; grounds in Greenberg's 2009
+> *BMJ* citation-distortion network analysis),
+> `reviewer-simulation` (four reviewer lenses; motivated by
+> Bornmann's inter-reviewer agreement studies showing κ ≈ 0.17,
+> i.e. one reviewer is a sample of one), `argumentative-flow`
+> (improve coherence while preserving every citation, statistic,
+> and declared term; grounds in Gopen & Swan's reader-expectation
+> theory). All three read the shared state, and all three cite
+> their evidence base — browse `knowledge/` or ask
+> `/scriptorium:explain <skill>` for a synthesis.
 
 For a grant writer: same loop, mention grant-archetype variants
 of `reviewer-simulation`. For an explorer: offer

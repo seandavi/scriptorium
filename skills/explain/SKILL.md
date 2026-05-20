@@ -144,7 +144,20 @@ MANUSCRIPT_STATE.yaml as the editorial source of truth>
 - **`citation-audit`** — <one-sentence what + when>
 - **`reviewer-simulation`** — <one-sentence what + when>
 - **`argumentative-flow`** — <one-sentence what + when>
+- **`tour`** — <one-sentence what + when>
 - **`explain`** — <one-sentence what + when>
+
+## Evidence base
+
+<3-5 sentences. Lead with: every skill cites the published research
+it grounds in. Knowledge syntheses live under `knowledge/` (browse
+the README there for the layout). Name 2-3 anchor citations across
+the corpus — Greenberg 2009 BMJ for citation-distortion;
+Bornmann's inter-reviewer agreement κ ≈ 0.17 for the multi-lens
+reviewer design; Gopen & Swan reader-expectation theory for
+argumentative-flow. Close by saying this is what makes the
+behaviours auditable rather than vibes-based: any user can trace a
+skill's design choice back to a paper.>
 
 ## The shared state file
 
@@ -166,6 +179,7 @@ skill reads it>
 - `.claude-plugin/plugin.json`
 - `schemas/manuscript-state.schema.json`
 - `skills/*/SKILL.md`
+- `knowledge/README.md`
 - `knowledge/conventions/guidance-level.md`
 ```
 
@@ -194,8 +208,13 @@ write, etc. — with the section headings the output uses>
 
 ## How it's grounded
 
-<list each grounding entry with a one-sentence "this informs <which
-specific design choice>". Do not just restate the note's title.>
+<Lead with one sentence: this skill grounds in specific published
+research — its behaviours trace back to papers, not LLM intuition
+alone. Then list each grounding entry with a one-sentence "this
+informs <which specific design choice>". Do not just restate the
+note's title. Where a grounding note cites a load-bearing paper
+(e.g. Greenberg 2009 BMJ, Bornmann inter-reviewer agreement),
+name the paper, not only the note.>
 
 ## What it explicitly will not do
 
