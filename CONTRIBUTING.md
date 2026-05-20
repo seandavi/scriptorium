@@ -88,15 +88,29 @@ remains framing-only context.
 
 ## Filing issues
 
-Useful labels (we'll add more as patterns emerge):
+For **new skill proposals**, use the *Skill proposal* issue template
+(GitHub will surface it when you open a new issue). The template
+enforces grounding — every proposed skill must either cite existing
+`knowledge/` notes or propose new ones with a summary of what they
+would synthesise. Proposals without grounding get labelled
+`needs-grounding` and held until the evidence base catches up.
+
+For everything else (bugs, infrastructure, schema changes, knowledge
+additions), open a blank issue and label appropriately.
+
+Useful labels:
 
 - `infrastructure` — repo setup, tooling, CI, packaging.
-- `skill` — proposed new skill or change to existing one.
+- `skill` — proposed new skill or change to existing one (the
+  template applies this automatically).
+- `needs-grounding` — skill proposal whose knowledge notes don't
+  yet exist; held until they do.
 - `knowledge-layer` — research-doc additions or revisions.
 - `schema` — changes to `manuscript-state.schema.json` or other schemas.
 - `documentation` — docs site, READMEs, design docs.
 - `enhancement` — feature requests.
 - `bug` — broken behavior.
+- `v0.2`, `v0.3`, `v0.4` — roadmap targeting (milestones cover this too).
 
 Filing a "documentation idea" issue is encouraged whenever you notice
 a gap during implementation. Documentation debt compounds.
