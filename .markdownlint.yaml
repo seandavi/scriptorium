@@ -25,3 +25,9 @@ MD040: false
 # are valid Markdown and easier to read in many contexts; enforcing
 # whitespace style is cosmetic noise.
 MD060: false
+
+# Keep-a-Changelog repeats "### Added" / "### Changed" / "### Fixed"
+# under every release. Allow the duplication as long as the parent
+# heading (the release version) differs.
+MD024:
+  siblings_only: true
