@@ -38,6 +38,10 @@ preservation_constraints:
   - voice             # active/passive matches source
   - tone              # style.tone targets respected
   - claim_set         # no added/removed/weakened claims
+  - hedging           # epistemic modals, adverbs, approximators,
+                      # attributive verbs, indirect attributions —
+                      # Swales/Hyland stance markers preserved unless
+                      # a logical-coherence reason justifies the change
 
 platforms:
   claude-code:
