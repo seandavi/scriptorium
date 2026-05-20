@@ -24,15 +24,13 @@ export default defineConfig({
           href: "https://github.com/seandavi/scriptorium",
         },
       ],
-      // Diátaxis four-quadrant sidebar (see GitHub issue #21).
-      // Concepts is the largest section — the knowledge layer renders
-      // under it as auto-generated subsections from the preprocess step.
+      // Diátaxis-style sidebar (three quadrants). Tutorials was dropped —
+      // the user-facing docs are shaped how-to-first, with Concepts
+      // carrying the project's evidence-base mass. Concepts is the
+      // largest section — the knowledge layer renders under it as
+      // auto-generated subsections from the preprocess step.
       sidebar: [
         { label: "Roadmap", link: "/roadmap/" },
-        {
-          label: "Tutorials",
-          items: [{ autogenerate: { directory: "tutorials" } }],
-        },
         {
           label: "How-to guides",
           items: [{ autogenerate: { directory: "how-to" } }],

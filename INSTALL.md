@@ -127,7 +127,7 @@ context, then invoke skills by name.
 
 ### Per-platform integration
 
-Platform-specific adapters are not in v0.1. If you write one for
+Platform-specific adapters do not ship today. If you write one for
 Codex / Gemini / Hermes / etc., a PR is welcome.
 
 ## Without any agent — manual use

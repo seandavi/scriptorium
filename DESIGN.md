@@ -255,7 +255,7 @@ the original manuscript is the author's responsibility.
 
 For deeper format-specific integration — Quarto pre-render hooks,
 LaTeX `\cite{}` parsing, Word tracked-changes round-tripping — see the
-optional adapter packages (none ship with v0.1).
+optional adapter packages (none ship with scriptorium today).
 
 ### Tier structure
 
