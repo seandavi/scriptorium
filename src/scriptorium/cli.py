@@ -4,7 +4,8 @@ The CLI exposes six subcommands:
 
 * ``install`` — copy or link the plugin into a Claude Code plugins dir.
 * ``validate`` — lint a ``MANUSCRIPT_STATE.yaml`` against the JSON Schema.
-* ``prompt-pack`` — concatenate bundled skill prompts for platform-neutral use.
+* ``prompt-pack`` — emit bundled skill prompts as per-skill files or one
+  concatenated document (``--single-file``) for platform-neutral use.
 * ``list`` — list bundled skills with descriptions and grounding references.
 * ``init`` — scaffold a starter ``MANUSCRIPT_STATE.yaml`` in a directory.
 * ``trace`` — extract scriptorium skill invocations from Claude Code
@@ -365,6 +366,17 @@ def _parse_skill_metadata(skill_md_text: str) -> tuple[str | None, list[str]]:
     return (str(description) if description else None), grounding
 
 
+def _load_manifest(manifest_text: str) -> dict[str, Any]:
+    """Parse a ``manifest.yaml`` body into a dict. Empty / invalid returns {}."""
+    try:
+        parsed = yaml.safe_load(manifest_text)
+    except yaml.YAMLError:
+        return {}
+    if not isinstance(parsed, dict):
+        return {}
+    return parsed
+
+
 def _iter_skills() -> list[dict[str, Any]]:
     skills_root = _bundled_dir(SKILLS_SUBDIR, "skills")
     if skills_root is None:
@@ -376,9 +388,21 @@ def _iter_skills() -> list[dict[str, Any]]:
         description: str | None = None
         grounding: list[str] = []
         prompt: str | None = None
+        category: str | None = None
         skill_md = entry.joinpath("SKILL.md")
         if skill_md.is_file():
             description, grounding = _parse_skill_metadata(skill_md.read_text(encoding="utf-8"))
+        manifest_yaml = entry.joinpath("manifest.yaml")
+        if manifest_yaml.is_file():
+            manifest = _load_manifest(manifest_yaml.read_text(encoding="utf-8"))
+            raw_category = manifest.get("category")
+            if isinstance(raw_category, str) and raw_category.strip():
+                category = raw_category.strip()
+            raw_description = manifest.get("description")
+            if isinstance(raw_description, str) and raw_description.strip():
+                # manifest.yaml description is the source of truth for
+                # prompt-pack output; collapse YAML folded-scalar whitespace.
+                description = " ".join(raw_description.split()).strip()
         prompt_md = entry.joinpath("prompt.md")
         if prompt_md.is_file():
             prompt = prompt_md.read_text(encoding="utf-8")
@@ -388,6 +412,7 @@ def _iter_skills() -> list[dict[str, Any]]:
                 "description": description,
                 "grounding": grounding,
                 "prompt": prompt,
+                "category": category,
             }
         )
     return out
@@ -486,17 +511,8 @@ def validate(path: Path) -> None:
     click.echo(f"{path}: valid")
 
 
-@main.command(name="prompt-pack")
-@click.option(
-    "--output",
-    "-o",
-    type=click.Path(path_type=Path, dir_okay=False),
-    default=None,
-    help="Write the prompt pack to a file instead of stdout.",
-)
-def prompt_pack(output: Path | None) -> None:
-    """Concatenate bundled skill prompts into one platform-neutral file."""
-    skills = _iter_skills()
+def _render_single_file_pack(skills: list[dict[str, Any]]) -> tuple[str, int]:
+    """Render every skill prompt into one concatenated markdown document."""
     parts: list[str] = [
         "# scriptorium prompt pack",
         "",
@@ -520,12 +536,135 @@ def prompt_pack(output: Path | None) -> None:
     if included == 0:
         parts.append("_(no skills with prompt.md are bundled in this build)_")
         parts.append("")
-    text = "\n".join(parts)
-    if output is not None:
+    return "\n".join(parts), included
+
+
+def _render_manifest_readme(written_skills: list[dict[str, Any]], prefix: str) -> str:
+    """Render the per-directory README.md manifest listing each shipped skill."""
+    lines: list[str] = [
+        "# scriptorium prompt pack",
+        "",
+        f"_Generated from scriptorium v{__version__}._",
+        "",
+        (
+            "Each `.md` file in this directory is the platform-neutral prompt "
+            "for one scriptorium skill. Paste the relevant file into your "
+            "agent's context to invoke that skill."
+        ),
+        "",
+        "| Skill | Category | Description |",
+        "| --- | --- | --- |",
+    ]
+    for skill in written_skills:
+        name = skill["name"]
+        category = skill.get("category") or "—"
+        description = skill.get("description") or ""
+        # Single-line, pipe-safe rendering for the markdown table.
+        description = description.replace("|", "\\|").replace("\n", " ").strip()
+        filename = f"{prefix}{name}.md"
+        lines.append(f"| [`{filename}`]({filename}) | {category} | {description} |")
+    lines.append("")
+    return "\n".join(lines)
+
+
+def _looks_like_directory_path(path: Path) -> bool:
+    """Heuristic: should ``path`` be treated as a directory output target?
+
+    Treat as directory when:
+      * the original string ends with a path separator, or
+      * the path already exists and is a directory, or
+      * the path does not exist and has no file extension (we'll create it).
+
+    Otherwise treat as a single file path. This lets ``-o pack.md`` keep
+    working as a single-file shortcut even without ``--single-file``, while
+    ``-o prompts/`` and ``-o prompts`` (new dir, no extension) take the
+    directory path.
+    """
+    if str(path).endswith(("/", "\\")):
+        return True
+    if path.exists():
+        return path.is_dir()
+    return path.suffix == ""
+
+
+@main.command(name="prompt-pack")
+@click.option(
+    "--output",
+    "-o",
+    type=click.Path(path_type=Path),
+    default=None,
+    help=(
+        "Write the prompt pack to this path. If the path is (or looks like) "
+        "a directory, one file per skill plus a README.md manifest is written "
+        "there. Otherwise a single concatenated file is written. Defaults to "
+        "stdout when omitted."
+    ),
+)
+@click.option(
+    "--single-file",
+    is_flag=True,
+    help=(
+        "Force single-file concatenated output even when --output looks like "
+        "a directory. Preserves the pre-split behaviour for users who want "
+        "every prompt in one markdown document."
+    ),
+)
+@click.option(
+    "--prefix",
+    default="",
+    show_default=False,
+    help=(
+        "Prefix prepended to each per-skill filename (e.g. --prefix "
+        "scriptorium- emits scriptorium-citation-audit.md). Default: empty. "
+        "Has no effect with --single-file."
+    ),
+)
+def prompt_pack(output: Path | None, single_file: bool, prefix: str) -> None:
+    """Emit bundled skill prompts as per-skill files or one concatenated file.
+
+    Default behaviour: ``-o prompts/`` writes one ``.md`` per skill plus a
+    ``README.md`` manifest into ``prompts/``. ``-o pack.md`` writes a single
+    concatenated file. ``--single-file`` forces concatenated output.
+    """
+    skills = _iter_skills()
+
+    if output is None or single_file or not _looks_like_directory_path(output):
+        text, included = _render_single_file_pack(skills)
+        if output is None:
+            click.echo(text)
+            return
+        # Single-file mode: refuse to clobber a directory by accident.
+        if output.exists() and output.is_dir():
+            raise click.ClickException(
+                f"{output} is a directory; pass a file path or drop --single-file."
+            )
+        output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text(text, encoding="utf-8")
         click.echo(f"Wrote {output} ({included} skill(s)).")
-    else:
-        click.echo(text)
+        return
+
+    # Directory mode.
+    if output.exists() and not output.is_dir():
+        raise click.ClickException(
+            f"{output} exists and is not a directory; remove it or pass a different --output."
+        )
+    output.mkdir(parents=True, exist_ok=True)
+
+    written: list[dict[str, Any]] = []
+    for skill in skills:
+        prompt = skill["prompt"]
+        if not prompt:
+            continue
+        # NTFS forbids ':' in filenames and macOS Finder mangles it. The
+        # on-disk identifier is always hyphen-separated; the directory (or
+        # the optional --prefix) carries the namespace.
+        filename = f"{prefix}{skill['name']}.md"
+        (output / filename).write_text(prompt, encoding="utf-8")
+        written.append(skill)
+
+    readme = _render_manifest_readme(written, prefix=prefix)
+    (output / "README.md").write_text(readme, encoding="utf-8")
+    click.echo(f"Wrote {len(written)} skill file(s) + README.md to {output}.")
 
 
 @main.command(name="list")
