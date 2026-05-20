@@ -119,6 +119,27 @@ def test_skill_grounds_in_guidance_convention(skill_name: str) -> None:
     )
 
 
+@pytest.mark.parametrize("skill_name", SKILLS_THAT_ADAPT)
+def test_skill_grounds_in_declared_work_scope(skill_name: str) -> None:
+    """Every conversation-bearing skill must ground in the declared-work-scope
+    convention. The scope principle ("scriptorium operates on prose the author
+    has written or scaffolding the author has declared") is project-wide, and
+    each skill's specific refusal behaviour (no invented citations; no
+    drafting empty sections; etc.) is the principle at that skill's surface.
+    Missing grounding here means a skill could drift away from the convention
+    silently."""
+    skill_md = SKILLS_DIR / skill_name / "SKILL.md"
+    text = skill_md.read_text(encoding="utf-8")
+    assert text.startswith("---")
+    end = text.find("\n---", 3)
+    frontmatter = text[3:end]
+    parsed = yaml.safe_load(frontmatter)
+    grounding = parsed.get("grounding", [])
+    assert "knowledge/conventions/declared-work-scope.md" in grounding, (
+        f"skill {skill_name!r} does not ground in the declared-work-scope convention"
+    )
+
+
 def test_example_template_includes_meta_block() -> None:
     """The example template doubles as documentation — it should show the
     meta block so a reader copying it learns the field exists."""

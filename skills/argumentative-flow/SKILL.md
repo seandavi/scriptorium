@@ -3,6 +3,7 @@ name: argumentative-flow
 description: Improve a manuscript section's logical and argumentative coherence while preserving every citation, statistic, and declared terminology choice. Produces a structural diagnosis, a proposed outline, the revised text with a diff against the source, and a preservation report. Invoke ONLY when the user explicitly asks for argumentative-flow improvement on a specific section.
 grounding:
   - knowledge/conventions/guidance-level.md
+  - knowledge/conventions/declared-work-scope.md
   - knowledge/scientific-writing/reader-expectation-approach.md
   - knowledge/scientific-writing/narrative-frameworks.md
   - knowledge/critique-techniques/argument-mapping.md

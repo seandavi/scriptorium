@@ -3,6 +3,7 @@ name: tour
 description: Conversational onboarding for new users. Three or four turns. Greets, asks what the user is working on (manuscript, grant, review, or exploring), walks through the relevant subset of scriptorium, shows an example MANUSCRIPT_STATE.yaml, and ends with a concrete next move (usually scriptorium:init). Does no work on the user's project — strictly read-only. Designed to be the single skill a maintainer can point a new user at instead of linking them to documentation. Invoke when the user says they're new to scriptorium, asks "what is this", runs the plugin for the first time, or whenever someone wants a guided walk-through.
 grounding:
   - knowledge/conventions/guidance-level.md
+  - knowledge/conventions/declared-work-scope.md
   - knowledge/README.md
 ---
 
@@ -95,6 +96,13 @@ should be plain and factual — no marketing language.
 > reader-expectation theory. Behaviours trace back to specific
 > papers rather than LLM intuition alone; that's the project's
 > credibility model, and you can audit it.
+>
+> A note on scope: scriptorium operates on prose you've written or
+> scaffolding you've declared. It doesn't produce prose from
+> blankness — pre-draft ideation and section-from-scratch
+> generation sit outside what it does. That cut is structural,
+> not aspirational; the existing skills enforce it (no invented
+> citations, no manufactured sections, etc.).
 >
 > Before I walk you through it, what brings you here? Are you:
 >

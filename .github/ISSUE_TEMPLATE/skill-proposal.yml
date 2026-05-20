@@ -14,7 +14,7 @@ body:
         behaviours trace back to specific papers, not LLM intuition alone.
         That's the project's credibility model.
 
-        Two things this template enforces:
+        Three things this template enforces:
 
         1. **Grounding is required.** Every skill must either cite
            existing `knowledge/` notes, or propose new ones with a 1-2
@@ -25,11 +25,36 @@ body:
            `knowledge/README.md` for the layout and any existing folder
            that's close to your topic.
 
+           Every conversation-bearing skill must additionally ground in
+           the two project-wide conventions:
+           **`knowledge/conventions/guidance-level.md`** (how much each
+           skill teaches vs. just executes) and
+           **`knowledge/conventions/declared-work-scope.md`** (scriptorium
+           operates on prose the author has written or scaffolding the
+           author has declared; never produces prose from blankness).
+           These are project-wide structural commitments, not
+           skill-specific evidence — but every skill grounds in them so
+           the principles can't drift silently. Parametrized tests in
+           `tests/test_guidance_level.py` enforce this.
+
         2. **Non-goals are required.** Every skill must declare what it
            **will not** do. LLM-shaped tools fail by silently
            overreaching; naming the boundary up front is how we stop
            that. *"Does not invent citations"* and *"does not modify the
            manuscript"* are real examples from the v0.1 set.
+
+        3. **Operating-on-declared-work is a structural commitment, not
+           an aspiration.** If your skill's job description includes
+           "help the author figure out what to write" or "generate prose
+           from scratch", it likely sits outside scriptorium's scope.
+           See `knowledge/conventions/declared-work-scope.md` for the
+           full rule; in short, scriptorium operates on prose the
+           author has already written, or scaffolding the author has
+           declared in `MANUSCRIPT_STATE.yaml`. Generation skills *are*
+           in scope when they transform declared scaffolding (the v0.4
+           `specific-aims` skill transforms declared significance +
+           hypotheses + methods into aims prose); pre-declaration work
+           is not.
 
         For context on the existing skills, see `skills/*/SKILL.md` and
         `DESIGN.md`. For the planned roadmap, see `docs/roadmap.md`.
@@ -123,7 +148,7 @@ body:
     attributes:
       label: Grounding — required
       description: |
-        **This is the load-bearing field.** Every skill must ground in `knowledge/` notes. Either:
+        **This is the load-bearing field.** Every conversation-bearing skill must ground in BOTH project-wide conventions (`knowledge/conventions/guidance-level.md` and `knowledge/conventions/declared-work-scope.md`) AND its own evidence-base notes. Either:
 
         1. **Existing notes** — list the paths (e.g. `knowledge/peer-review/editorial-decision-making.md`) and, for each, one sentence on which specific design choice in the skill it informs.
 

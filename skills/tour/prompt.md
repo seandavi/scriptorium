@@ -45,6 +45,11 @@ One paragraph naming what scriptorium is, then a question:
 > papers rather than LLM intuition alone; that's the project's
 > credibility model.
 >
+> A note on scope: scriptorium operates on prose you've written or
+> scaffolding you've declared. It doesn't produce prose from
+> blankness — pre-draft ideation and section-from-scratch
+> generation sit outside what it does.
+>
 > Before I walk you through it, what brings you here? Drafting a
 > manuscript, revising one, writing a grant, or just exploring?
 

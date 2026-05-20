@@ -137,6 +137,12 @@ checklist. The skills double as editorial guidance.
 
 ## Requirements
 
+- **A manuscript or scaffolding to work on.** Scriptorium operates
+  on declared work — prose you've written or state you've committed
+  to in `MANUSCRIPT_STATE.yaml`. It does not produce prose from
+  blankness; pre-draft ideation and "help me figure out what to
+  study" sit outside its scope (see
+  [`knowledge/conventions/declared-work-scope.md`](knowledge/conventions/declared-work-scope.md)).
 - **Claude Code path:** Claude Code installed and on PATH.
 - **CLI path:** Python 3.10+. Install with `uv pip install -e .` from
   a source checkout (or `uv pip install agentic-scriptorium` once

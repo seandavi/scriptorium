@@ -3,6 +3,7 @@ name: desk-rejection-risk
 description: Author-side pre-submission audit that flags triggers likely to result in desk rejection before peer review — scope/audience mismatch, format and length issues, missing or weak required sections, weak significance framing, and presentation problems editors triage on. Outputs a structured markdown report with a qualitative risk band. NOT for editorial-side use — running this on someone else's manuscript violates ICMJE / NIH / Elsevier / Nature policy.
 grounding:
   - knowledge/conventions/guidance-level.md
+  - knowledge/conventions/declared-work-scope.md
   - knowledge/peer-review/editorial-decision-making.md
   - knowledge/scientific-writing/significance-positioning.md
   - knowledge/peer-review/common-critiques-taxonomy.md

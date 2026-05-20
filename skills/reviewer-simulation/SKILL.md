@@ -3,6 +3,7 @@ name: reviewer-simulation
 description: Author-side simulation of peer review across four attentional lenses (methodological skeptic, domain expert, translational/clinical, statistical). Surfaces likely major and minor critiques, fatal concerns, enthusiasm drivers, and concrete revision suggestions. Output is structured markdown. NOT for editorial-side use — running this on someone else's manuscript violates ICMJE / NIH / Elsevier / Nature policy.
 grounding:
   - knowledge/conventions/guidance-level.md
+  - knowledge/conventions/declared-work-scope.md
   - knowledge/peer-review/reviewer-archetypes-evidence.md
   - knowledge/peer-review/common-critiques-taxonomy.md
   - knowledge/peer-review/ai-peer-review-research.md

@@ -37,16 +37,20 @@ producing the explanation. Do not guess.
 ### Whole-system overview
 
 Read the plugin manifest, the schema, every `skills/*/SKILL.md`
-frontmatter, `knowledge/README.md`, and
-`knowledge/conventions/guidance-level.md`. Synthesize one screenful:
-what scriptorium is, the MANUSCRIPT_STATE-plus-skills architecture,
-the six v0.1 skills (one line each), the **evidence base** (every
-skill cites the published research it grounds in; name a few anchor
-citations across the corpus — Greenberg 2009 *BMJ* for
-citation-distortion, Bornmann's inter-reviewer agreement κ ≈ 0.17
-for the multi-lens reviewer design, Gopen & Swan reader-expectation
-theory for argumentative-flow), and the three guidance levels.
-Close with "where to go next" and a `Sources` list.
+frontmatter, `knowledge/README.md`,
+`knowledge/conventions/guidance-level.md`, and
+`knowledge/conventions/declared-work-scope.md`. Synthesize one
+screenful: what scriptorium is, the MANUSCRIPT_STATE-plus-skills
+architecture, the v0.1/v0.2 skills (one line each), the **evidence
+base** (every skill cites the published research it grounds in;
+name a few anchor citations — Greenberg 2009 *BMJ* for
+citation-distortion, Bornmann κ ≈ 0.17 for the multi-lens reviewer
+design, Gopen & Swan reader-expectation theory), the **scope cut**
+(scriptorium operates on declared work, not blank-slate
+generation — grounded in Hayes' 2012 proposer/translator/evaluator
+model and the AI-writing-failure-modes literature), and the three
+guidance levels. Close with "where to go next" and a `Sources`
+list.
 
 ### Explain a named skill
 

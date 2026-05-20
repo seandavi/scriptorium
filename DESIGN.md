@@ -189,6 +189,37 @@ their writing.
 
 ## Scope
 
+### Workflow scope — declared work, not blank slate
+
+Scriptorium operates on **declared work** — prose the author has
+written or scaffolding the author has committed to in
+`MANUSCRIPT_STATE.yaml`. It does not produce prose from blankness.
+The cut maps onto Hayes' 2012 cognitive-process model of writing
+(*proposer / translator / transcriber / evaluator*): scriptorium
+occupies the translator and evaluator roles when the author has
+proposed, and refuses to act as the proposer. The full rationale —
+grounded in the cognitive-process literature, the AI-writing
+failure-mode evidence (hallucinated citations and lexical
+homogenisation as blank-slate generation failures), and the
+end-to-end-generation survey (Sakana AI Scientist's documented
+failure modes as the negative exemplar) — lives in
+[`knowledge/conventions/declared-work-scope.md`](knowledge/conventions/declared-work-scope.md).
+
+Two corollaries:
+
+1. **Generation is not forbidden, but it must transform declared
+   inputs.** A v0.4 `specific-aims` skill that turns declared
+   significance + hypotheses + methods into aims prose is in scope.
+   A hypothetical "help me figure out what to study" skill is not.
+2. **Refusal is the right behaviour at the boundary** — never silent
+   best-effort degradation when asked to operate on prose that
+   doesn't exist yet.
+
+Every conversation-bearing skill grounds in this convention; a
+parametrized test in `tests/test_guidance_level.py` enforces it.
+
+### Field scope — biomedical/clinical default
+
 Scriptorium's evidence base is most thoroughly grounded in **biomedical
 and clinical reporting standards** — EQUATOR Network guidelines,
 CONSORT, STROBE, PRISMA, ARRIVE, STARD, TRIPOD+AI, CONSORT-AI/SPIRIT-AI.
