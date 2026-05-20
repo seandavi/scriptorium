@@ -109,6 +109,20 @@ def test_marketplace_name_not_reserved(marketplace: dict) -> None:
     )
 
 
+def test_plugin_json_repository_is_string() -> None:
+    """Claude Code's plugin manifest schema requires `repository` to be a
+    string URL, not an npm-style `{type, url}` object. Marketplace installs
+    fail validation if this drifts."""
+    plugin_json = json.loads(
+        (REPO_ROOT / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8")
+    )
+    if "repository" in plugin_json:
+        assert isinstance(plugin_json["repository"], str), (
+            f"plugin.json repository must be a string URL, got "
+            f"{type(plugin_json['repository']).__name__}"
+        )
+
+
 def test_plugin_version_matches_plugin_json_when_both_set(marketplace: dict) -> None:
     """Drift between plugin.json and marketplace entry versions silently
     breaks updates — plugin.json wins, so the marketplace entry can mask
