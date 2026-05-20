@@ -24,6 +24,14 @@ produces:
 
 modifies: []
 
+# document_phase values the skill is designed to operate on. Refuses
+# cleanly on outline-phase manuscripts (and pre-declaration questions).
+# Consumed by docs build (reference/skills page generator).
+lifecycle_phases:
+  - draft
+  - review
+  - revision
+
 # Explicit invocation. The skill is invoked when the author asks
 # "what's missing here?" with a manuscript section in mind. Not a
 # side-effect of any other skill.

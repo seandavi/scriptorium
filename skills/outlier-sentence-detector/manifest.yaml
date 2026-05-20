@@ -29,6 +29,16 @@ produces:
 # and decides what (if anything) to act on.
 modifies: []
 
+# document_phase values the skill is designed to operate on. Refuses
+# on outline-phase manuscripts (distributional statistics on stub
+# prose are noise).
+# Consumed by docs build (reference/skills page generator).
+lifecycle_phases:
+  - draft
+  - review
+  - revision
+  - submission
+
 # Explicit invocation. This is a late-stage line-editing diagnostic
 # the author asks for, not a precondition for another skill's output.
 # Surprise outlier passes that flood the conversation with flags are

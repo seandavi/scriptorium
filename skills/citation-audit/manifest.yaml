@@ -21,6 +21,16 @@ produces:
 
 modifies: []                 # No file modifications.
 
+# document_phase values the skill is designed to operate on. The
+# absence of a phase here means the skill declines on that phase
+# because it does not have enough declared state to ground against.
+# Consumed by docs build (reference/skills page generator).
+lifecycle_phases:
+  - draft
+  - review
+  - revision
+  - submission
+
 # The skill MUST be invoked explicitly. It is safe to suggest in contexts
 # where the user is reviewing citations, but it should never be auto-invoked
 # (e.g. in a pre-commit hook or implicitly inside another skill) without

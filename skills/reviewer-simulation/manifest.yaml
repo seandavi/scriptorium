@@ -15,6 +15,13 @@ produces:
 
 modifies: []
 
+# document_phase values the skill is designed to operate on.
+# Consumed by docs build (reference/skills page generator).
+lifecycle_phases:
+  - review
+  - revision
+  - submission
+
 # Explicit invocation. The skill must NOT be auto-invoked — it is a
 # pressure-test that the author chooses to run on their own work.
 invocation: explicit

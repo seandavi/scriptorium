@@ -23,6 +23,14 @@ produces:
 modifies:
   - MANUSCRIPT_STATE.yaml#project.candidate_venues   # only on explicit author consent
 
+# document_phase values the skill is designed to operate on. Refuses
+# on outline-phase manuscripts (insufficient declared state).
+# Consumed by docs build (reference/skills page generator).
+lifecycle_phases:
+  - review
+  - revision
+  - submission
+
 # Explicit invocation only. The skill is invoked when the author is
 # choosing a venue or pressure-testing a declared one. It is not a
 # side-effect of any other skill.

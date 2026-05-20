@@ -19,6 +19,16 @@ produces:
 
 modifies: []
 
+# document_phase values the skill is designed to operate on. explain
+# is meta and operates at any phase (it reads no manuscript content).
+# Consumed by docs build (reference/skills page generator).
+lifecycle_phases:
+  - outline
+  - draft
+  - review
+  - revision
+  - submission
+
 # Explicit invocation only. Leaf skills running at the `full`
 # guidance level may suggest `/scriptorium:explain <name>`, but the
 # user always chooses to run it.

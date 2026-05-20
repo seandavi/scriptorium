@@ -23,6 +23,15 @@ modifies:
   # Single named section at a time. Never the whole manuscript at once.
   - manuscript_section
 
+# document_phase values the skill is designed to operate on. The
+# transformation is per-section and reviewable; insufficient declared
+# prose at outline phase.
+# Consumed by docs build (reference/skills page generator).
+lifecycle_phases:
+  - draft
+  - review
+  - revision
+
 # Explicit invocation is hard-coded into the prompt. This skill must
 # NEVER auto-invoke or be invoked as a follow-up to another skill's
 # output without the user re-asking. The author owns their voice;
