@@ -1,0 +1,60 @@
+# scriptorium skill manifest
+# This file declares the skill's metadata, supported platforms,
+# tool requirements, and knowledge-layer grounding.
+
+name: explain
+version: 0.1.0
+category: meta              # critique | validation | normalization | transformation | generation | meta
+
+description: >
+  Explain scriptorium itself, a named skill, or a named
+  MANUSCRIPT_STATE field. Reads SKILL.md frontmatter, the referenced
+  grounding notes, and the JSON Schema; synthesizes a one-screenful
+  overview with sources. No manuscript content consumed.
+
+# Read-only relative to the user's project — explain produces a
+# markdown response but writes nothing and invokes nothing.
+produces:
+  - markdown-explanation
+
+modifies: []
+
+# Explicit invocation only. Leaf skills in teaching mode may suggest
+# `/scriptorium:explain <name>`, but the user always chooses to run it.
+invocation: explicit
+
+# Platforms this skill ships for.
+platforms:
+  claude-code:
+    skill_file: SKILL.md
+  platform-neutral:
+    prompt_file: prompt.md
+
+# Inputs the skill needs to do its job.
+inputs:
+  - name: argument
+    required: false
+    description: >
+      Optional name of a skill (e.g. citation-audit), a
+      MANUSCRIPT_STATE.yaml field (e.g. core_claims,
+      meta.guidance_level), or a knowledge-note slug. Omit for a
+      whole-system overview.
+  - name: plugin_tree
+    required: true
+    description: >
+      The scriptorium plugin tree itself (skills/, schemas/,
+      knowledge/, .claude-plugin/). Available wherever the plugin is
+      installed.
+
+# Knowledge-layer documents that ground this skill's design decisions.
+grounding:
+  - knowledge/conventions/guidance-level.md
+  - knowledge/README.md
+
+# What this skill explicitly is NOT.
+non_goals:
+  - Reading or summarising manuscript content.
+  - Auto-invoking another skill at the end of an explanation.
+  - Producing multi-screen output by default; aim for one screenful.
+  - Inventing grounding notes, skills, or schema fields that do not
+    exist in the plugin tree.

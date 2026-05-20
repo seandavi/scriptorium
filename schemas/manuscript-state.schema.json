@@ -7,6 +7,19 @@
   "required": ["project", "document_phase"],
   "additionalProperties": false,
   "properties": {
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Scriptorium-side preferences. These configure how scriptorium interacts with the author; they are not editorial properties of the manuscript.",
+      "properties": {
+        "guidance_level": {
+          "type": "string",
+          "enum": ["terse", "standard", "teaching"],
+          "default": "standard",
+          "description": "How much scriptorium should teach versus just execute. 'terse' = questions and confirmations only, no prose between turns. 'standard' = brief one-line 'why' before non-obvious questions. 'teaching' = upfront orientation, 2-3 sentence rationale before each elicited field, end-of-phase recaps. Set by scriptorium:init; respected by every skill. See knowledge/conventions/guidance-level.md."
+        }
+      }
+    },
     "project": {
       "type": "object",
       "required": ["title", "target_type"],

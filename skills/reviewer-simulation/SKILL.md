@@ -2,6 +2,7 @@
 name: reviewer-simulation
 description: Author-side simulation of peer review across four attentional lenses (methodological skeptic, domain expert, translational/clinical, statistical). Surfaces likely major and minor critiques, fatal concerns, enthusiasm drivers, and concrete revision suggestions. Output is structured markdown. NOT for editorial-side use — running this on someone else's manuscript violates ICMJE / NIH / Elsevier / Nature policy.
 grounding:
+  - knowledge/conventions/guidance-level.md
   - knowledge/peer-review/reviewer-archetypes-evidence.md
   - knowledge/peer-review/common-critiques-taxonomy.md
   - knowledge/peer-review/ai-peer-review-research.md
@@ -111,6 +112,27 @@ empirical taxonomy ([[common-critiques-taxonomy]]).
 - Whether reported numbers are internally consistent (rough checks
   only; statcheck-style precise verification is out of scope for an
   LLM).
+
+## Conversational style
+
+Read `meta.guidance_level` from `MANUSCRIPT_STATE.yaml` (default
+`standard` if absent). Adapt framing — not the structured critique —
+per [[guidance-level]]:
+
+- `terse` — open with one line ("running reviewer simulation across
+  four lenses"); emit the markdown report; no closing summary.
+- `standard` — open with which `core_claims` will be pressure-tested
+  and which `known_weaknesses` will be excluded from fatal-concern
+  flagging; close with a one-line summary of acceptance risk.
+- `teaching` — open with what each lens is looking for and why
+  Bornmann's low inter-reviewer agreement motivates the multi-lens
+  approach (this is the surprising design choice authors most often
+  ask about); close with which critiques to address first and which
+  are framing-only. If first invocation this session, offer
+  `/scriptorium:explain reviewer-simulation`.
+
+Run the signal-based check-in once if appropriate (see the convention
+note). The structured critique itself is unchanged across levels.
 
 ## Operational protocol
 

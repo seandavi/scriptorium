@@ -35,6 +35,7 @@ SCHEMA_SUBDIR = "_schemas"
 PLUGIN_SUBDIR = "_claude_plugin"
 TEMPLATES_SUBDIR = "_templates"
 SKILLS_SUBDIR = "_skills"
+KNOWLEDGE_SUBDIR = "_knowledge"
 SCHEMA_FILENAME = "manuscript-state.schema.json"
 TRACE_SCHEMA_FILENAME = "trace.schema.json"
 TRACE_SCHEMA_VERSION = 1
@@ -453,6 +454,9 @@ def install(mode: str, target: Path | None, force: bool) -> None:
     templates_src = _bundled_dir(TEMPLATES_SUBDIR, "templates")
     if templates_src is not None:
         _copy_traversable(templates_src, dest / "templates")
+    knowledge_src = _bundled_dir(KNOWLEDGE_SUBDIR, "knowledge")
+    if knowledge_src is not None:
+        _copy_traversable(knowledge_src, dest / "knowledge")
     click.echo(f"Installed scriptorium plugin at {dest}")
 
 

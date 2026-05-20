@@ -7,6 +7,16 @@
 # Only `project` and `document_phase` are required. Fill in the rest as
 # the manuscript matures.
 
+# Scriptorium-side preferences (how scriptorium talks to you).
+# Not editorial properties of the manuscript itself. Optional; defaults
+# to standard. scriptorium:init asks you to pick once on first run.
+# meta:
+#   guidance_level: standard  # one of: terse, standard, teaching
+#     # terse    — questions and confirmations only, no prose between turns
+#     # standard — brief one-line "why" before non-obvious questions
+#     # teaching — upfront orientation, 2-3 sentence rationale per field,
+#     #            end-of-phase recaps; best on first scriptorium project
+
 project:
   title: "Working title goes here"
   target_type: manuscript   # one of: manuscript, grant, review, preprint, book-chapter, thesis, white-paper, other

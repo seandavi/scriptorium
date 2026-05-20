@@ -240,6 +240,9 @@ def test_install_copy_into_tmpdir(runner: CliRunner, tmp_path: Path) -> None:
     assert result.exit_code == 0, result.output
     assert (target / ".claude-plugin" / "plugin.json").is_file()
     assert (target / "schemas" / cli.SCHEMA_FILENAME).is_file()
+    # knowledge/ must ship so skills can resolve their `grounding:` refs
+    # at runtime. README.md is the one file we know is always present.
+    assert (target / "knowledge" / "README.md").is_file()
 
 
 def test_install_refuses_to_overwrite_without_force(runner: CliRunner, tmp_path: Path) -> None:

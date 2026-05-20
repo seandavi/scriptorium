@@ -22,6 +22,45 @@ state schema may change between versions.
   validates the manifest shape and that declared plugin sources
   resolve.
 
+- `meta.guidance_level` field on `MANUSCRIPT_STATE.yaml` (enum:
+  `terse | standard | teaching`, default `standard`). Persisted
+  user-side preference for how much each skill should teach vs.
+  just execute. Set by `scriptorium:init`; honored by every
+  conversation-bearing skill. The convention is documented at
+  `knowledge/conventions/guidance-level.md` and grounded into
+  every adapting skill's frontmatter, with a signal-based
+  once-per-session check-in protocol so the level can be
+  recalibrated without nagging.
+
+- `scriptorium:explain` skill. Read-only meta-skill that
+  synthesises a one-screenful tour of scriptorium (no arg), a named
+  skill (`/scriptorium:explain citation-audit`), a
+  `MANUSCRIPT_STATE.yaml` field
+  (`/scriptorium:explain meta.guidance_level`), or a knowledge note
+  by slug. Reads the plugin tree only; consumes no manuscript
+  content. Teaching-mode users are nudged toward this skill from
+  the leaf skills.
+
+- `scriptorium:init` now opens with a short orientation turn and
+  elicits `meta.guidance_level` as its first question (with the
+  three options explained). Each subjective field
+  (`core_claims`, `known_weaknesses`, `terminology.*`,
+  `style.tone`, `style.audience`, `document_phase.current`) now
+  carries a 2-3 sentence "why this matters / how to think about
+  answering" preface. Init itself always runs in teaching mode
+  regardless of saved preference, because that's where the
+  preference is set.
+
+### Fixed
+
+- Knowledge layer is now packaged with the plugin. Wheel installs,
+  sdist, and `scriptorium install` (copy mode) previously did not
+  ship `knowledge/`, leaving skill `grounding:` references
+  unresolvable in CLI installs. The full knowledge tree now ships
+  alongside `schemas/`, `skills/`, and `templates/`. Marketplace
+  installs already shipped knowledge (they clone the whole repo),
+  so behaviour there is unchanged.
+
 ## [0.1.0.dev0] - 2026-05-19
 
 The first published dev pre-release. This is the "skills usable end-to-end
