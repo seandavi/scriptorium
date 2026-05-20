@@ -243,7 +243,7 @@ lives at
 
 ## What ships today
 
-Fourteen skills across critique, validation, normalization,
+Sixteen skills across critique, validation, normalization,
 transformation, meta, and utility categories. The full list,
 organised by category and lifecycle stage, is the
 [skills reference page](https://seandavi.github.io/scriptorium/reference/skills/).
@@ -251,7 +251,8 @@ A short summary:
 
 - **Critique** — `citation-audit`, `reviewer-simulation`,
   `gap-finder`, `figure-text-alignment`, `desk-rejection-risk`,
-  `venue-fit`, `author-contribution-audit`, `reporting-guideline-fit`.
+  `venue-fit`, `author-contribution-audit`, `reporting-guideline-fit`,
+  `outlier-sentence-detector`.
 - **Validation** — `reporting-guideline-compliance`.
 - **Normalization** — `terminology-normalization`.
 - **Transformation** — `argumentative-flow`, `compression`.
@@ -310,10 +311,13 @@ See [DESIGN.md](DESIGN.md) for the full design philosophy and the
 ## Status
 
 v0.2 shipped (CHANGELOG: [`[0.2.0]`](CHANGELOG.md#020---2026-05-20)).
-Fourteen skills, fifty-plus knowledge notes, the consolidated
-`scriptorium` CLI (six subcommands), the shared-state schema, the
-trace schema, the Venice example. 114 tests. Pre-1.0 shape: the
-skill catalog is growing; CLI surface and schema may still adjust.
+v0.3 work is substantively merged on `main` (no version tag yet):
+`compression`, `figure-text-alignment`, `reporting-guideline-compliance`,
+and `outlier-sentence-detector`. Sixteen skills total, fifty-plus
+knowledge notes, the consolidated `scriptorium` CLI (six subcommands),
+the shared-state schema, the trace schema, the Venice example. Pre-1.0
+shape: the skill catalog is growing; CLI surface and schema may still
+adjust.
 
 ## License
 
