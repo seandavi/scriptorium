@@ -1,0 +1,69 @@
+# scriptorium skill manifest
+
+name: desk-rejection-risk
+version: 0.1.0
+category: critique           # critique | validation | normalization | transformation | generation
+
+description: >
+  Author-side pre-submission audit that flags triggers likely to result
+  in desk rejection before peer review — scope/audience mismatch,
+  format and length issues, missing or weak required sections, weak
+  significance framing, and presentation patterns editors triage on.
+  Outputs a structured markdown report with a qualitative risk band.
+
+produces:
+  - structured-markdown-report
+
+modifies: []
+
+# Explicit invocation. The skill must NOT be auto-invoked — it is a
+# pre-submission check the author chooses to run on their own work,
+# and it should not fire as a side-effect of another skill.
+invocation: explicit
+
+# CRITICAL: author-side only. The skill must refuse to run on a
+# manuscript the user did not author. Editorial-side use (AI-triaging
+# someone else's submission) violates ICMJE, NIH, Elsevier, and Nature
+# peer-review policy — same posture as reviewer-simulation.
+positioning: author-side-only
+
+platforms:
+  claude-code:
+    skill_file: SKILL.md
+  platform-neutral:
+    prompt_file: prompt.md
+
+inputs:
+  - name: manuscript_text
+    required: true
+    description: >
+      Manuscript prose. Title, abstract, introduction-closer, figure
+      captions and methods abstract-paragraph are load-bearing;
+      partial drafts can still surface scope and structure risks.
+  - name: manuscript_state
+    required: true
+    description: >
+      MANUSCRIPT_STATE.yaml from the project root. project.target_venue
+      is mandatory — the skill refuses to run without it.
+    schema: manuscript-state.schema.json
+  - name: cover_letter
+    required: false
+    description: >
+      Cover letter, if drafted. Often signals scope misalignment more
+      directly than the manuscript itself. Absence is noted in the
+      output; the skill does not assume a cover letter exists.
+
+# Knowledge-layer documents that ground this skill's design decisions.
+grounding:
+  - knowledge/conventions/guidance-level.md
+  - knowledge/peer-review/editorial-decision-making.md
+  - knowledge/scientific-writing/significance-positioning.md
+  - knowledge/peer-review/common-critiques-taxonomy.md
+
+non_goals:
+  - Editorial-side triage of someone else's submission.
+  - Full reviewer simulation (that's reviewer-simulation's job).
+  - Citation-claim alignment audit (that's citation-audit's job).
+  - Modification of the manuscript or cover letter.
+  - Numeric probability estimates of desk rejection.
+  - Running without a declared target_venue.

@@ -12,6 +12,33 @@ state schema may change between versions.
 
 ### Added
 
+- `scriptorium:desk-rejection-risk` skill. Author-side pre-submission
+  audit that flags triggers likely to result in desk rejection before
+  peer review: scope/audience mismatch, format and length issues,
+  missing or weak required sections, weak significance framing, and
+  presentation patterns editors triage on. Outputs a structured
+  markdown report with a qualitative risk band
+  (`low / moderate / high`) and per-category severity flags;
+  `cannot-assess` is a first-class flag so silence on a category
+  never reads as "no risk there". The skill refuses to run without
+  `project.target_venue` — desk rejection is venue-conditional and a
+  generic audit produces platitudes. Grounded in
+  `knowledge/peer-review/editorial-decision-making.md` (70–90%
+  desk-rejection rates at top journals; Bornmann's
+  inter-reviewer-agreement κ ≈ 0.17 motivating why editorial
+  discretion at triage is load-bearing),
+  `knowledge/scientific-writing/significance-positioning.md` (Day &
+  Gastel pattern; Lin et al. 2022 *PNAS* novel-plus-conventional
+  finding; NIH Simplified Review Framework Factor 1), and
+  `knowledge/peer-review/common-critiques-taxonomy.md` (Bordage 2001
+  *Acad Med* top-10 reject reasons as the editor-detectable subset).
+  Same author-side-only, ICMJE/NIH/Elsevier/Nature-policy posture as
+  `reviewer-simulation`; pairs with it (`desk-rejection-risk` first
+  to clear the desk; `reviewer-simulation` second to pressure-test
+  the science). Same `meta.guidance_level` framing adaptation as the
+  other conversation-bearing skills; structured output unchanged
+  across levels. Mirrored in the platform-neutral `prompt.md`.
+
 - `scriptorium:terminology-normalization` (new v0.3 skill) detects
   terminology drift across the manuscript and enforces the
   `terminology.preferred` / `terminology.forbidden` /
