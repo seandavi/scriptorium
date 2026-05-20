@@ -14,6 +14,7 @@ project:
   title: "Single-cell transcriptomic profiling of CD8+ T cell exhaustion in pancreatic ductal adenocarcinoma"
   target_type: manuscript
   target_venue: "Nature Cancer"
+  candidate_venues: ["Nature Cancer", "Cancer Discovery", "Cell Reports Medicine"]
   source_format: quarto   # one of: quarto, latex, markdown, docx-via-pandoc, gdocs-export, other
 
 document_phase:

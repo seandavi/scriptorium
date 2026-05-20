@@ -36,7 +36,12 @@
         },
         "target_venue": {
           "type": "string",
-          "description": "Journal, funder, conference, or similar. Free text."
+          "description": "Primary submission target — journal, funder, conference, or similar. Free text. Set when the author has decided. Skills that need a single venue (e.g., desk-rejection-risk) consume this field. Use candidate_venues when the author is considering several; both may be set."
+        },
+        "candidate_venues": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Venues the author is considering but hasn't yet committed to. Set by venue-fit after a recommendation run, or by hand. Empty list (or absent) plus empty target_venue means undecided — venue-fit operates in open-recommendation mode in that state. When target_venue is set, candidate_venues may still record the broader consideration set for record-keeping."
         },
         "target_journal": {
           "type": "string",

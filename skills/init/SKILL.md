@@ -201,6 +201,32 @@ which fields are load-bearing for which downstream skill.
   one sentence; specific enough that you'd describe a typical reader
   of your target venue.
 
+- **`project.target_venue` and/or `project.candidate_venues`** —
+  *"Where are you thinking of submitting? Three states are fine:
+  decided (one venue you've committed to), considering some (a
+  short list you're choosing among), or not yet (you'll decide
+  once the draft is further along)."*
+
+  *Why this matters:* `desk-rejection-risk` requires a single
+  decided venue. `reviewer-simulation` uses venue tier to
+  calibrate the lenses. `venue-fit` (when you're ready) takes
+  whichever state you're in — undecided, considering, or decided
+  — and tiers candidates. *How to answer:*
+  - **Decided** → name the venue; goes in `target_venue`.
+  - **Considering some** → list the venues; goes in
+    `candidate_venues`. Often 2-4 entries.
+  - **Not yet** → skip both fields entirely; the file remains
+    valid. Drafting before deciding on a venue is the modal
+    author workflow, not a missing step. Once the draft has
+    structure, run `/scriptorium:venue-fit` to populate the
+    candidate list.
+
+  If both fields are left empty, note in the closing summary that
+  venue is undecided and `/scriptorium:venue-fit` is the natural
+  next step once the draft is substantive enough for fit
+  assessment (typically once the introduction and abstract are
+  written).
+
 - **`constraints.max_word_count`** — *"Does the venue have a word
   limit?"* Skip if unknown.
 
@@ -259,6 +285,18 @@ Based on `document_phase.current`, suggest sensible follow-up skills:
 - `submission` — *"Before submission, an `argumentative-flow` pass
   on the discussion section often catches structural issues a final
   reader will notice."*
+
+Independently of phase, if both `project.target_venue` and
+`project.candidate_venues` are empty, also suggest:
+
+> "Venue is undecided in your state file. When the draft is
+> substantive enough to assess fit (typically once the
+> introduction and abstract are written), run
+> `/scriptorium:venue-fit` to tier candidate venues."
+
+If `project.target_venue` is set, optionally suggest
+`/scriptorium:desk-rejection-risk` as the next step once the draft
+is at `submission` phase.
 
 If `meta.guidance_level` is `full`, also offer:
 
