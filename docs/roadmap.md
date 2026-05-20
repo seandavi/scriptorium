@@ -18,7 +18,7 @@ in evidence.
 
 | Component | Grounded in |
 |---|---|
-| `citation-audit` skill | [`citation-claim-alignment`](../knowledge/critique-techniques/citation-claim-alignment.md), [`citation-accuracy-evidence`](../knowledge/citations/citation-accuracy-evidence.md), [`citation-overreach-research`](../knowledge/citations/citation-overreach-research.md), [`hallucination-in-llm-citations`](../knowledge/citations/hallucination-in-llm-citations.md) |
+| `citation-audit` skill | [`citation-claim-alignment`](../knowledge/critique-techniques/citation-claim-alignment.md), [`citation-accuracy-evidence`](../knowledge/citations/citation-accuracy-evidence.qmd), [`citation-overreach-research`](../knowledge/citations/citation-overreach-research.md), [`hallucination-in-llm-citations`](../knowledge/citations/hallucination-in-llm-citations.md) |
 | `reviewer-simulation` skill | [`reviewer-archetypes-evidence`](../knowledge/peer-review/reviewer-archetypes-evidence.md), [`common-critiques-taxonomy`](../knowledge/peer-review/common-critiques-taxonomy.md), [`ai-peer-review-research`](../knowledge/peer-review/ai-peer-review-research.md), [`critique-quality-evidence`](../knowledge/peer-review/critique-quality-evidence.md) |
 | `argumentative-flow` skill | [`reader-expectation-approach`](../knowledge/scientific-writing/reader-expectation-approach.md), [`narrative-frameworks`](../knowledge/scientific-writing/narrative-frameworks.md), [`argument-mapping`](../knowledge/critique-techniques/argument-mapping.md), [`semantic-preservation`](../knowledge/editing/semantic-preservation.md) |
 | `MANUSCRIPT_STATE.yaml` schema + Venice example | All of the above |

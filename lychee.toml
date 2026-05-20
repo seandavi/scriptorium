@@ -38,6 +38,11 @@ exclude = [
   '^https?://(www\.)?x\.com/',
   '^https?://(www\.)?youtube\.com/',
   '^https?://youtu\.be/',
+  # Astro/Starlight root-relative internal links (e.g. /how-to/install/).
+  # These resolve to the deployed site by Astro; the docs-build job
+  # validates them. lychee's source-side check has no root-dir context
+  # for the Astro routing.
+  '^/[a-z][a-z0-9-]*(/.*)?$',
 ]
 
 # Treat these HTTP codes as success. 403 is what most rate-limited or
