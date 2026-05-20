@@ -375,7 +375,7 @@ the clinical-medicine specifics of preprint risk.)
 and history.)
 
 [6] Cold Spring Harbor Laboratory Press. (Ongoing.) About
-medRxiv. <https://www.medrxiv.org/about-medrxiv>. (medRxiv
+medRxiv. <https://www.medrxiv.org/about>. (medRxiv
 screening criteria, particularly the clinical-screen layer.)
 
 [7] Brierley, L., Nanni, F., Polka, J. K., Dey, G., Pálfy, M.,
@@ -393,8 +393,8 @@ scholarly-communication-Twitter from 2016-2017 but the
 peer-reviewed analysis is thinner.] (Documents the controversy
 around governance changes after the Elsevier acquisition.)
 
-[9] Peer Community In (PCI). (Ongoing.) <https://peercommunityin.
-org>. (Community-run discipline-specific preprint recommendation
+[9] Peer Community In (PCI). (Ongoing.)
+<https://peercommunityin.org>. (Community-run discipline-specific preprint recommendation
 system; founding paper is Casadevall & Fang 2014 on the
 peer-review economy, but PCI itself was founded 2016 by Dominique
 Bourgeon, Thomas Guillemaud, and Denis Bourguet at INRAE.)

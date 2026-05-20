@@ -1,0 +1,64 @@
+# lychee configuration for scriptorium's source-side link check.
+# Consumed by .github/workflows/link-check.yml.
+
+# Concurrency low enough to be a polite citizen against the rate-limited
+# academic services we link to (doi.org, pubmed, arxiv, crossref).
+max_concurrency = 4
+
+# Re-check transient network errors a couple of times before failing the run.
+max_retries = 3
+retry_wait_time = 2
+
+# Pretend to be a real browser. A non-trivial number of academic publishers
+# 403 on the default lychee user-agent.
+user_agent = "Mozilla/5.0 (compatible; lychee/0.x; +https://github.com/lycheeverse/lychee)"
+
+# Skip slow / interactive checks.
+include_mail = false
+include_fragments = false
+
+# Honour Markdown link reference labels; treat unresolved fragments as soft.
+no_progress = true
+
+# Hosts we have learned to allow-list:
+#   - localhost / 127.0.0.1: docs examples and dev-mode references
+#   - linkedin.com: blanket-403s headless clients
+#   - medium.com: aggressive rate-limit and Cloudflare interstitials
+#   - twitter.com / x.com: redirect-storms behind login walls
+#   - youtube.com: rate-limits unauthenticated bots
+#   - doi.org: occasional 504s under load; the schedule run usually catches the
+#     true breakage, so we tolerate one-off failures via accept = [...]
+exclude = [
+  '^https?://localhost(:\d+)?(/.*)?$',
+  '^https?://127\.0\.0\.1(:\d+)?(/.*)?$',
+  '^https?://(www\.)?linkedin\.com/',
+  '^https?://(www\.)?medium\.com/',
+  '^https?://([a-z0-9-]+\.)?medium\.com/',
+  '^https?://(www\.)?twitter\.com/',
+  '^https?://(www\.)?x\.com/',
+  '^https?://(www\.)?youtube\.com/',
+  '^https?://youtu\.be/',
+  # Astro/Starlight root-relative internal links (e.g. /how-to/install/).
+  # These resolve to the deployed site by Astro; the docs-build job
+  # validates them. lychee's source-side check has no root-dir context
+  # for the Astro routing.
+  '^/[a-z][a-z0-9-]*(/.*)?$',
+]
+
+# Treat these HTTP codes as success. 403 is what most rate-limited or
+# bot-hostile hosts return; the link is almost always live in a real browser.
+accept = [
+  "200",
+  "201",
+  "202",
+  "203",
+  "204",
+  "206",
+  "301",
+  "302",
+  "303",
+  "307",
+  "308",
+  "403",
+  "429",
+]

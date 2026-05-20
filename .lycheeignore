@@ -1,0 +1,7 @@
+# URLs to skip during link checks. One regex per line.
+# Hosts that are reliably bot-hostile live in lychee.toml `exclude`.
+# This file is for one-off URLs that are temporarily broken, archived, or
+# intentionally placeholder.
+
+# Example placeholders that should never be resolved:
+^https?://example\.(com|org|net)(/.*)?$

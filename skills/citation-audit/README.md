@@ -121,7 +121,7 @@ This skill is grounded in scriptorium's knowledge layer:
   — the operational four-step protocol; Greenberg 2009 BMJ distortion
   patterns; scite.ai's supporting / contrasting / mentioning
   classifier; manual journal-editorial protocols.
-- [`citation-accuracy-evidence`](../../knowledge/citations/citation-accuracy-evidence.md)
+- [`citation-accuracy-evidence`](../../knowledge/citations/citation-accuracy-evidence.qmd)
   — error-prevalence baselines from de Lacey 1985 onward (~20% median
   quotation error rate across replications).
 - [`citation-overreach-research`](../../knowledge/citations/citation-overreach-research.md)

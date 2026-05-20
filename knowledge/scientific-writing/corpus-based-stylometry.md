@@ -101,7 +101,7 @@ The implication: a voice profile is **information the author needs to be shown**
 
 [^7]: Hyland, K. (2005). Stance and engagement: a model of interaction in academic discourse. *Discourse Studies*, 7(2), 173–192. DOI: 10.1177/1461445605050365.
 
-[^8]: Hyland, K. (1999). Academic attribution: citation and the construction of disciplinary knowledge. *Applied Linguistics*, 20(3), 341–367. DOI: 10.1093/applij/20.3.341.
+[^8]: Hyland, K. (1999). Academic attribution: citation and the construction of disciplinary knowledge. *Applied Linguistics*, 20(3), 341–367. DOI: 10.1093/applin/20.3.341.
 
 [^9]: Camerer, C., Loewenstein, G., & Weber, M. (1989). The Curse of Knowledge in Economic Settings: An Experimental Analysis. *Journal of Political Economy*, 97(5), 1232–1254. DOI: 10.1086/261651.
 

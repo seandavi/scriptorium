@@ -108,7 +108,7 @@ This evidence base grounds the author-persona work proposed in #42, #43, #44 in 
 
 9. Paré, A. (2011). Speaking of Writing: Supervisory Feedback and the Dissertation. In L. McAlpine & C. Amundsen (Eds.), *Doctoral Education: Research-Based Strategies for Doctoral Students, Supervisors and Administrators*. Springer. DOI: [10.1007/978-94-007-0507-4_4](https://doi.org/10.1007/978-94-007-0507-4_4).
 
-10. Hyland, K. (1999). Academic attribution: citation and the construction of disciplinary knowledge. *Applied Linguistics*, 20(3), 341–367. DOI: [10.1093/applij/20.3.341](https://doi.org/10.1093/applij/20.3.341).
+10. Hyland, K. (1999). Academic attribution: citation and the construction of disciplinary knowledge. *Applied Linguistics*, 20(3), 341–367. DOI: [10.1093/applin/20.3.341](https://doi.org/10.1093/applin/20.3.341).
 
 11. Hyland, K. (2005). Stance and engagement: a model of interaction in academic discourse. *Discourse Studies*, 7(2), 173–192. DOI: [10.1177/1461445605050365](https://doi.org/10.1177/1461445605050365).
 

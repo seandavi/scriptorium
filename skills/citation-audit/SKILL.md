@@ -5,7 +5,7 @@ grounding:
   - knowledge/conventions/guidance-level.md
   - knowledge/conventions/declared-work-scope.md
   - knowledge/critique-techniques/citation-claim-alignment.md
-  - knowledge/citations/citation-accuracy-evidence.md
+  - knowledge/citations/citation-accuracy-evidence.qmd
   - knowledge/citations/citation-overreach-research.md
   - knowledge/citations/hallucination-in-llm-citations.md
 ---
