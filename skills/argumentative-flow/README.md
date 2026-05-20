@@ -50,7 +50,7 @@ terminology-normalization) inherit it.
   author decides.
 - **Rewrite the methods section.** Different problem; different skill
   (not in v0.1).
-- **Compress length.** Different skill (v0.2 candidate).
+- **Compress length.** Different skill ([`compression`](../compression/README.md)).
 - **"Smooth out" ESL hedging or stance patterns** — they vary
   legitimately across linguistic backgrounds and are often
   deliberate.

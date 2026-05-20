@@ -66,8 +66,8 @@ is known and the manuscript is in `draft` / `revision` /
 - **Audit quantitative internal consistency** (Table 1 N vs.
   methods N; abstract percentages vs. figure percentages) —
   that is the planned `statistics-consistency` skill's job.
-- **Audit figure / text alignment.** Planned
-  `figure-text-alignment` skill.
+- **Audit figure / text alignment.** That is the
+  `figure-text-alignment` skill's job.
 - **Audit citation accuracy.** That is `citation-audit`'s job.
 - **Operate on outline-phase manuscripts.** No substrate.
 - **Editor-side enforcement.** Author-side decision support

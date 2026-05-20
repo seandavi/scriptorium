@@ -29,16 +29,41 @@ produces three durable benefits:
 
 ```text
 knowledge/
-├── prior-art/                # similar tools, projects, lineage
-├── scientific-writing/       # methodology of good writing
-├── peer-review/              # evidence on review processes
-├── citations/                # citation practices and pitfalls
-├── editing/                  # editing methodology
-├── grants/                   # grant-writing evidence
-├── critique-techniques/      # how to find problems systematically
-├── reproducibility/          # the crisis context scriptorium responds to
-└── author-roles/             # career stage, role, and language behavioral evidence
+├── prior-art/                # similar tools, projects, lineage (6 notes)
+├── scientific-writing/       # methodology of good writing (13 notes)
+├── peer-review/              # evidence on review processes (9 notes)
+├── citations/                # citation practices and pitfalls (4 notes)
+├── editing/                  # editing methodology (3 notes)
+├── grants/                   # grant-writing evidence (3 notes)
+├── critique-techniques/      # how to find problems systematically (7 notes)
+├── reproducibility/          # the crisis context scriptorium responds to (1 note)
+├── author-roles/             # career stage, role, and language behavioral evidence (2 notes)
+└── conventions/              # the load-bearing conventions skills share (2 notes)
 ```
+
+Current size: 50 notes (49 markdown + 1 Quarto), grown from the
+first-pass batch of ~40. The most recent additions track v0.2 and
+v0.3 work:
+
+- `knowledge/scientific-writing/corpus-based-stylometry.md` — voice-profile design.
+- `knowledge/scientific-writing/literature-search-strategies.md` — gap-finder.
+- `knowledge/critique-techniques/research-gap-detection.md` — gap-finder.
+- `knowledge/peer-review/venue-selection.md` — venue-fit.
+- `knowledge/peer-review/predatory-publishing.md` — venue-fit refusal.
+- `knowledge/peer-review/preprint-landscape.md` — venue-fit opt-in mode.
+- `knowledge/author-roles/author-role-evidence.md` — persona / voice work.
+- `knowledge/conventions/declared-work-scope.md` — the project-wide refusal-on-blankness convention.
+- `knowledge/conventions/guidance-level.md` — the project-wide framing convention.
+
+The two `conventions/` notes are project-wide rather than topical:
+they define the [`declared-work-scope`](conventions/declared-work-scope.md)
+refusal posture every skill inherits, and the
+[`guidance-level`](conventions/guidance-level.md) framing every
+conversation-bearing skill respects. Each is reviewed user-side in
+its concept page (`docs/src/content/docs/concepts/declared-work-scope/`
+and `docs/src/content/docs/concepts/guidance-level/` — TODO link once
+concept pages land); the knowledge notes here are the underlying
+evidence record for those conventions.
 
 Each subdirectory has a consistent document structure:
 
