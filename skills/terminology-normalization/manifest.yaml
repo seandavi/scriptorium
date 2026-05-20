@@ -1,0 +1,79 @@
+# scriptorium skill manifest
+# This file declares the skill's metadata, supported platforms,
+# tool requirements, and knowledge-layer grounding. It is consumed
+# by the scriptorium CLI (`list`, `prompt-pack`) and by future
+# orchestrators that compose skills.
+
+name: terminology-normalization
+version: 0.1.0
+category: normalization      # critique | validation | normalization | transformation | generation
+
+description: >
+  Detect terminology drift across a manuscript and enforce the
+  preferred / forbidden / synonyms lists declared in
+  MANUSCRIPT_STATE.yaml. Reports inconsistencies with exact
+  occurrence locations and suggests concrete normalizations. Does
+  not modify the manuscript without explicit author consent.
+
+# Normalization skills MAY suggest concrete edits but MUST NOT
+# auto-apply them. The default output is a structured markdown
+# report; the author applies the edits or invokes a follow-up.
+produces:
+  - structured-markdown-report
+  - suggested-edits
+
+# No file modification by default. Author consent is required for
+# any edit to land.
+modifies: []
+
+# Safe to suggest when the user asks for a terminology check, when
+# terminology preferences are declared and the document is in
+# draft/revision/submission phase, or as a follow-up verification
+# after argumentative-flow. Should not auto-invoke as a silent
+# side-effect of another skill.
+invocation: explicit
+
+# Platforms this skill ships for.
+platforms:
+  claude-code:
+    skill_file: SKILL.md
+  platform-neutral:
+    prompt_file: prompt.md
+
+# Inputs the skill needs to do its job.
+inputs:
+  - name: manuscript_text
+    required: true
+    description: >
+      Manuscript prose. File path(s) or pasted text. For multi-file
+      projects, every file declared under `sections` is read.
+  - name: manuscript_state
+    required: true
+    description: >
+      MANUSCRIPT_STATE.yaml from the project root. The
+      `terminology.preferred`, `terminology.forbidden`,
+      `terminology.synonyms`, and `bibliography.paths` fields are
+      load-bearing.
+    schema: manuscript-state.schema.json
+  - name: bibliography
+    required: true
+    description: >
+      Bibliography file(s) listed in MANUSCRIPT_STATE.yaml under
+      `bibliography.paths`. Read BEFORE flagging tokens so cited
+      author names and titles are never false-positively flagged
+      as drift.
+
+# Knowledge-layer documents that ground this skill's design decisions.
+grounding:
+  - knowledge/critique-techniques/internal-consistency.md
+  - knowledge/scientific-writing/style-guides.md
+
+# What this skill explicitly is NOT.
+non_goals:
+  - Transformation — does not rewrite the manuscript without explicit consent.
+  - Stylistic-tone change (that is argumentative-flow's territory).
+  - Acronym expansion or first-use enforcement (separate utility, v0.3+).
+  - Bibliography normalization (separate utility).
+  - US/UK English variety translation (respects the manuscript's variety unless declared).
+  - Auto-merging of undeclared variants (surfaces them as questions).
+  - Auto-applying suggested normalizations without author consent.
