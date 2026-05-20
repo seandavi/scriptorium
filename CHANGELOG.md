@@ -25,6 +25,24 @@ state schema may change between versions.
 
 ### Changed
 
+- `scriptorium:tour` and `scriptorium:explain` now make the
+  evidence-base posture an explicit, visible part of their output —
+  not a footnote. Tour's turn-1 paragraph names that each skill
+  grounds in published research synthesised under `knowledge/`,
+  with the project's credibility model stated plainly; the
+  manuscript-drafter walk-through in turn 2 names the load-bearing
+  papers behind each leaf skill (Greenberg 2009 *BMJ* for
+  citation-distortion, Bornmann's inter-reviewer agreement κ ≈ 0.17
+  for the multi-lens reviewer design, Gopen & Swan reader-expectation
+  theory for argumentative-flow). Explain's system-overview template
+  gains an `## Evidence base` section; the per-skill template's
+  `## How it's grounded` section now leads with "this skill grounds
+  in published research — behaviours trace back to papers, not LLM
+  intuition alone" and names anchor citations where they exist.
+  `knowledge/README.md` added to explain's default `Sources` list.
+  Same framing mirrored in both `prompt.md` files for the
+  platform-neutral path.
+
 - Plugin manifest (`.claude-plugin/plugin.json`) and the
   marketplace entry (`.claude-plugin/marketplace.json`) no longer
   declare a `version` field. Per the Claude Code plugin docs, while

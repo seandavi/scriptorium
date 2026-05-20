@@ -90,6 +90,12 @@ should be plain and factual — no marketing language.
 > a shared editorial state file so that the AI work composes
 > instead of starting from scratch each time.
 >
+> Each skill grounds in published research synthesised under
+> `knowledge/` — peer-review literature, citation-accuracy studies,
+> reader-expectation theory. Behaviours trace back to specific
+> papers rather than LLM intuition alone; that's the project's
+> credibility model, and you can audit it.
+>
 > Before I walk you through it, what brings you here? Are you:
 >
 > - **Drafting a manuscript** you want pressure-tested before
@@ -123,16 +129,27 @@ that matter for their case. Do not list every skill at equal weight
 > - **`citation-audit`** assesses how well your existing citations
 >   support the claims they're attached to (alignment, overreach,
 >   primary-vs-review mismatch). It does not invent citations.
+>   Grounds in Greenberg's 2009 *BMJ* citation-distortion network
+>   analysis and the broader citation-accuracy literature.
 > - **`reviewer-simulation`** runs your manuscript past four
 >   reviewer lenses (methodological skeptic, domain expert,
 >   translational, statistical) and surfaces likely critiques,
->   fatal concerns, and enthusiasm drivers.
+>   fatal concerns, and enthusiasm drivers. The multi-lens design
+>   is motivated by Bornmann's inter-reviewer agreement studies
+>   (κ ≈ 0.17) — one reviewer is a sample of one, four lenses
+>   approximates a panel.
 > - **`argumentative-flow`** improves a section's logical
 >   coherence while preserving every citation, statistic, and
->   declared terminology choice.
+>   declared terminology choice. Grounds in Gopen & Swan's
+>   reader-expectation theory and the narrative-frameworks
+>   literature.
 >
 > All three read the shared state, so once you've set it up, every
 > skill knows about your claims, your audience, and your style.
+> And all three cite their evidence base — you can browse the
+> exact knowledge notes a skill grounds in (its `SKILL.md`
+> declares them) or ask `/scriptorium:explain <skill>` for a
+> synthesis.
 
 **Writing a grant:** same loop, but mention that `reviewer-simulation`
 has grant-archetype variants (study section roles), and that
