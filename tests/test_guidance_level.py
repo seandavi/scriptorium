@@ -37,6 +37,7 @@ SKILLS_THAT_ADAPT = (
     "explain",
     "desk-rejection-risk",
     "terminology-normalization",
+    "venue-fit",
 )
 
 

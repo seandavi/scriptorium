@@ -22,7 +22,8 @@
 project:
   title: "Working title goes here"
   target_type: manuscript   # one of: manuscript, grant, review, preprint, book-chapter, thesis, white-paper, other
-  target_venue: ""          # journal / funder / conference (free text)
+  target_venue: ""          # primary venue once you have one (journal / funder / conference); leave empty if undecided
+  # candidate_venues: []    # list of venues you're considering; set by /scriptorium:venue-fit or by hand
   # source_format: markdown # optional hint: quarto | latex | markdown | docx-via-pandoc | gdocs-export | other
 
 document_phase:

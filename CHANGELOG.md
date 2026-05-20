@@ -12,6 +12,55 @@ state schema may change between versions.
 
 ### Added
 
+- `scriptorium:venue-fit` skill (v0.2). Tiered venue
+  recommendation (`Likely fit` / `Stretch` / `Probably
+  premature`) with per-axis fit reasoning across scope,
+  audience, methodological, novelty, significance, and
+  open-access/cost/indexing (when constraints are declared).
+  Handles three author states — decided (`target_venue` set,
+  assesses + offers alternatives), considering
+  (`candidate_venues` non-empty, tiers each + suggests
+  additions), undecided (open recommendation, may write back to
+  `candidate_venues` with explicit consent). Includes opt-in
+  preprint mode that surfaces server recommendations
+  (bioRxiv/medRxiv/arXiv/ChemRxiv/SSRN/OSF) and a strategic-
+  choice sub-section on pre vs post-publication peer review
+  (PCI, Review Commons, F1000Research, eLife's post-2022
+  reviewed-preprint model). Predatory-venue refusal is
+  load-bearing — the output always includes a `## Predatory
+  signals detected` section whether or not flags fired (silence
+  is indistinguishable from "didn't check"); per-journal
+  judgments only, never per-publisher; defers to authoritative
+  human-curated sources (Think.Check.Submit, DOAJ, OASPA,
+  Cabell's, COPE). Optional bias-managed pub-history
+  calibration — history shifts which tier candidates fall into,
+  never sources the recommendation list. Outputs qualitative
+  tiers only (no per-venue acceptance probabilities; Bornmann
+  κ ≈ 0.17 makes that indefensible). Closes #82.
+
+- Three new knowledge notes anchor the skill:
+  `knowledge/peer-review/venue-selection.md` (multi-axis
+  journal-fit literature: Misra & Agarwal 2017, Solomon & Björk
+  2012, Calcagno et al. 2012 on submission trajectories),
+  `knowledge/peer-review/predatory-publishing.md` (Beall's
+  history, Cabell's, Think.Check.Submit, per-journal-not-per-
+  publisher principle with MDPI and Hindawi-Wiley case studies),
+  and `knowledge/peer-review/preprint-landscape.md` (preprint
+  ecosystem, pre/post-pub review platforms, funder requirements
+  driving preprint adoption).
+
+- `MANUSCRIPT_STATE.yaml` schema: new
+  `project.candidate_venues` field (array of strings, optional).
+  Models the actual author workflow — many authors draft before
+  deciding on a venue. Empty `target_venue` + empty
+  `candidate_venues` = undecided; populated `candidate_venues`
+  alone = considering; populated `target_venue` = decided.
+  Backward-compatible with existing `target_venue` consumers
+  (`desk-rejection-risk` etc.); `init` updated to elicit the
+  right field based on author state, with explicit support for
+  "drafting before deciding" as a first-class workflow rather
+  than a missing step.
+
 - New convention note `knowledge/conventions/declared-work-scope.md`
   documenting scriptorium's project-wide scope: *we operate on prose
   the author has written or scaffolding the author has declared; we

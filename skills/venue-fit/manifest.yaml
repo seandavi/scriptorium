@@ -1,0 +1,105 @@
+# scriptorium skill manifest
+# This file declares the skill's metadata, supported platforms,
+# tool requirements, and knowledge-layer grounding.
+
+name: venue-fit
+version: 0.2.0
+category: critique          # critique | validation | normalization | transformation | generation | meta
+
+description: >
+  Assess venue fit for a manuscript and return a tiered set of
+  candidate venues (likely fit / stretch / probably premature)
+  with per-axis rationale, explicit predatory-venue refusal, and
+  opt-in preprint server + pre/post-publication review platform
+  recommendations.
+
+# Author-side decision support. Critique-shaped — the skill produces
+# a structured assessment, modifies no manuscript content. It MAY
+# write to project.candidate_venues with explicit author consent;
+# default is suggest-only.
+produces:
+  - structured-markdown-report
+
+modifies:
+  - MANUSCRIPT_STATE.yaml#project.candidate_venues   # only on explicit author consent
+
+# Explicit invocation only. The skill is invoked when the author is
+# choosing a venue or pressure-testing a declared one. It is not a
+# side-effect of any other skill.
+invocation: explicit
+
+# Platforms this skill ships for.
+platforms:
+  claude-code:
+    skill_file: SKILL.md
+  platform-neutral:
+    prompt_file: prompt.md
+
+# Inputs the skill needs to do its job.
+inputs:
+  - name: manuscript_state
+    required: true
+    description: >
+      MANUSCRIPT_STATE.yaml from the project root. The skill reads
+      project.target_type (required), project.title, core_claims,
+      style.audience, document_phase.current (refuses on outline),
+      and one or both of project.target_venue / project.candidate_venues
+      to detect the author's decision state.
+    schema: manuscript-state.schema.json
+  - name: manuscript_text
+    required: true
+    description: >
+      Title and abstract at minimum. Introduction strengthens
+      assessment. Full prose is best but not required — an author
+      at draft phase should be able to invoke productively before
+      the discussion is written.
+  - name: pub_history
+    required: false
+    description: >
+      Optional author publication history. ORCID URL, Google
+      Scholar URL, or explicit list of past venues. Used as
+      calibration of feasibility (which tier each candidate falls
+      into), never as a source for the recommendation list itself.
+      Author can override with directives like "ignore my history"
+      or "be ambitious".
+  - name: venue_preferences
+    required: false
+    description: >
+      Optional declared constraints. Open-access required?
+      max_apc_usd? Indexing requirements (PubMed, Scopus, WoS)?
+      Preprint preference? Funder constraints (NIH, Wellcome,
+      cOAlition S, HHMI)? When declared, applied as hard filters
+      before tiering.
+
+# Knowledge-layer documents that ground this skill's design.
+grounding:
+  - knowledge/conventions/guidance-level.md
+  - knowledge/conventions/declared-work-scope.md
+  - knowledge/peer-review/venue-selection.md
+  - knowledge/peer-review/predatory-publishing.md
+  - knowledge/peer-review/preprint-landscape.md
+  - knowledge/peer-review/editorial-decision-making.md
+  - knowledge/scientific-writing/significance-positioning.md
+
+# Preservation constraints — what the skill must hold inviolate.
+preservation_constraints:
+  - never_invent_venue_policies       # caveat staleness; verify via SHERPA/RoMEO
+  - never_include_predatory_venues    # in any recommendation tier
+  - per_journal_judgments             # never per-publisher
+  - qualitative_tiers_only            # no acceptance probabilities
+  - history_as_calibration_not_source # if pub history provided
+
+# What this skill explicitly is NOT.
+non_goals:
+  - Predicting per-venue acceptance probabilities.
+  - Recommending predatory venues.
+  - Generating a cover letter (the reasoning is reusable source
+    material but the skill produces only the recommendation).
+  - Auto-submitting to any venue.
+  - Auto-writing MANUSCRIPT_STATE.yaml without explicit consent.
+  - Substituting for authoritative venue verification
+    (Think.Check.Submit, DOAJ, SHERPA/RoMEO remain the
+    references).
+  - Operating on outline-phase manuscripts.
+  - Editor-side or reviewer-side use; this is author-side
+    decision support only.
