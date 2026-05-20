@@ -42,6 +42,7 @@ SKILLS_THAT_ADAPT = (
     "author-contribution-audit",
     "reporting-guideline-fit",
     "reporting-guideline-compliance",
+    "figure-text-alignment",
 )
 
 
