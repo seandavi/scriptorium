@@ -100,10 +100,12 @@ appear correctly there:
      manuscripts the user did not author (currently
      `reviewer-simulation` and `desk-rejection-risk`).
 2. Preview the regenerated page locally:
+
    ```bash
    cd docs
    just preprocess              # or: ./scripts/preprocess.py
    ```
+
    The file lands at `docs/src/content/docs/reference/skills.md`. It is
    gitignored — do not commit it. Editing it directly is wasted work; the
    next preprocess pass will overwrite the change. Edit the manifest.
