@@ -35,23 +35,27 @@ just now being built.
 
 ### Claude Code (recommended)
 
-Pre-release; install from source until the first PyPI cut:
+Scriptorium hosts its own plugin marketplace at
+[`seandavi/scriptorium`](https://github.com/seandavi/scriptorium).
+Easiest install — no Python toolchain needed:
 
-```bash
-git clone https://github.com/seandavi/scriptorium
-cd scriptorium
-uv pip install -e .
-
-# Live-linked (edits propagate immediately — best for iterating)
-scriptorium install --mode dev-link
-
-# Or a copy install (stable snapshot, no live edits)
-scriptorium install
+```text
+/plugin marketplace add seandavi/scriptorium
+/plugin install scriptorium@scriptorium
 ```
 
-Restart Claude Code; the skills appear as `scriptorium:init`,
+(`seandavi/scriptorium` is the GitHub `owner/repo` shorthand for
+<https://github.com/seandavi/scriptorium>. Append `@v0.1.0` or any
+ref to pin.) Skills appear as `scriptorium:init`,
 `scriptorium:citation-audit`, `scriptorium:reviewer-simulation`,
 `scriptorium:argumentative-flow`.
+
+Updates: `/plugin marketplace update` then
+`/plugin update scriptorium@scriptorium`.
+
+If you also want the Python CLI (`scriptorium init`,
+`scriptorium validate`, `scriptorium trace`), or you want a
+live-linked dev install, see [INSTALL.md](INSTALL.md).
 
 ### Other agents (Codex, Gemini, Hermes, ChatGPT, …)
 
