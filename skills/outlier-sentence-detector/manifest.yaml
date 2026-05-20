@@ -1,0 +1,83 @@
+# scriptorium skill manifest
+# This file declares the skill's metadata, supported platforms,
+# tool requirements, and knowledge-layer grounding. It is consumed
+# by the scriptorium CLI (`list`, `prompt-pack`) and by future
+# orchestrators that compose skills.
+
+name: outlier-sentence-detector
+version: 0.1.0
+category: critique      # critique | validation | normalization | transformation | generation
+
+description: >
+  Flag sentences that are statistical outliers in the manuscript along
+  three narrow dimensions — length, syntactic complexity, and
+  nominalization density — for human review. Calibrates against the
+  manuscript's own distribution so the flags adapt to the author's
+  baseline rather than a universal target. Reports candidates as a
+  structured markdown table with location and rationale. Does not
+  produce a quality score, a grade, or a pass/fail. Does not edit the
+  manuscript.
+
+# Critique skill that emits a structured markdown report only.
+# Per the grounding note, no general-purpose writing-quality score —
+# narrow outlier detection is defensible exactly because it does not
+# claim to measure quality.
+produces:
+  - structured-markdown-report
+
+# No file modification. The skill emits a report; the author reads it
+# and decides what (if anything) to act on.
+modifies: []
+
+# Explicit invocation. This is a late-stage line-editing diagnostic
+# the author asks for, not a precondition for another skill's output.
+# Surprise outlier passes that flood the conversation with flags are
+# the exact failure mode the discipline avoids.
+invocation: explicit
+
+# Platforms this skill ships for.
+platforms:
+  claude-code:
+    skill_file: SKILL.md
+  platform-neutral:
+    prompt_file: prompt.md
+
+# Inputs the skill needs to do its job.
+inputs:
+  - name: manuscript_text
+    required: true
+    description: >
+      Manuscript prose. File path(s) or pasted text. For multi-file
+      projects, every file declared under `sections` is read so the
+      distributional statistics are over the manuscript as a whole.
+  - name: manuscript_state
+    required: false
+    description: >
+      MANUSCRIPT_STATE.yaml from the project root. The
+      `meta.guidance_level` field controls how many flags to surface
+      per dimension (terse=3, standard=7, full=15). The
+      `bibliography.paths` field is used to exclude bibliography
+      entries from the distributional statistics. The
+      `document_phase.current` field — if `outline` — declines the
+      run. The skill proceeds at standard density if the state file
+      is missing, noting the un-grounded run in the output.
+    schema: manuscript-state.schema.json
+
+# Knowledge-layer documents that ground this skill's design decisions.
+grounding:
+  - knowledge/conventions/guidance-level.md
+  - knowledge/conventions/declared-work-scope.md
+  - knowledge/scientific-writing/quantitative-quality-measures.md
+  - knowledge/editing/copyediting-vs-developmental.md
+
+# What this skill explicitly is NOT.
+non_goals:
+  - Does not produce an overall writing-quality score. The grounding note's load-bearing finding is that general-purpose quality scores for scientific text are theatre; this skill refuses to be one.
+  - Does not rate, grade, or pass/fail the manuscript.
+  - Does not auto-edit the manuscript. This is a critique skill; outputs are surfaced for review.
+  - Does not optimise toward Flesch-Kincaid, SMOG, Coleman-Liau, or any other universal-target readability index. Calibration is against the manuscript itself.
+  - Does not direct the author to specific rewrites. Each flag is "worth re-reading because X", never "rewrite to Y."
+  - Does not flag sentences in tables, figure captions, equations, or code blocks (excluded so their characteristics do not skew the statistics).
+  - Does not run at `outline` phase — distributional statistics on stub prose are noise.
+  - Does not invoke a full grammar parser. The complexity proxy (commas + subordinators + coordinated-conjunction stacks) is intentional; it is cheap, reliable, and enough to surface outliers.
+  - Does not check writing quality, readability, content correctness, or argument strength. Those are out of any single metric's reach for scientific text.
