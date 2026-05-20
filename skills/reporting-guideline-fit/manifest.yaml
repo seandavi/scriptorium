@@ -30,6 +30,28 @@ lifecycle_phases:
   - review
   - revision
 
+# How this skill frames its output at each meta.guidance_level value.
+# Sourced from the conversational-style section of SKILL.md so the
+# concept page (concepts/guidance-level.md) renders from manifest.
+# Consumed by docs build (concepts/guidance-level page generator).
+guidance_level_behavior:
+  terse: >
+    Open with one line ("running reporting-guideline-fit
+    inference"); emit the markdown report; no closing summary.
+  standard: >
+    Open with one sentence naming the methods-section signal
+    strength (clear / moderately clear / sketchy) and the count
+    of applicable checklists; close with the recommended next
+    step (the matching reporting-guideline-compliance run).
+  full: >
+    Open with what reporting guidelines do (standardise reporting
+    so reviewers and readers can evaluate methodology
+    consistently — the EQUATOR Network registry of ~500 active
+    guidelines), why the inference matters (authors often don't
+    know which checklist applies to their study design,
+    especially across the AI-extension landscape), and the major
+    design-to-checklist mapping.
+
 # Explicit invocation. Invoked when the author asks "which
 # checklist applies?" or before running the v0.3
 # reporting-guideline-compliance skill.

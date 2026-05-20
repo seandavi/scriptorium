@@ -31,6 +31,26 @@ lifecycle_phases:
   - revision
   - submission
 
+# How this skill frames its output at each meta.guidance_level value.
+# Sourced from the conversational-style section of SKILL.md so the
+# concept page (concepts/guidance-level.md) renders from manifest.
+# Consumed by docs build (concepts/guidance-level page generator).
+guidance_level_behavior:
+  terse: >
+    Open with one line ("running venue-fit"); emit the markdown
+    report; no closing summary beyond the report itself.
+  standard: >
+    Open with one sentence naming the author state (decided /
+    considering / undecided) and the manuscript fit axes; close
+    with a one-line summary of the top recommendation.
+  full: >
+    Open with what venue-fit is doing (scope / audience /
+    methodological / novelty / significance / OA assessment per
+    axis; not a probability estimate) and why the tier structure
+    matters (most authors over-aim; tiered output saves time);
+    close with which tier the author should consider first and
+    why.
+
 # Explicit invocation only. The skill is invoked when the author is
 # choosing a venue or pressure-testing a declared one. It is not a
 # side-effect of any other skill.

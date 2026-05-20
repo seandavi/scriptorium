@@ -5,7 +5,7 @@
 # ///
 """Preprocess source markdown + Quarto into the Astro/Starlight content tree.
 
-Five things happen:
+Six things happen:
 
 1. Top-level repo docs (`DESIGN.md`, `docs/roadmap.md`) are copied into the
    site as standalone pages with appropriate frontmatter.
@@ -23,6 +23,11 @@ Five things happen:
    lifecycle fit, modifies-or-suggests, author-side-only flag, and required
    bibliography are all read from the manifests; the table cannot drift
    from the manifests because the manifests are the source.
+6. Concept pages that mix hand-written prose with manifest-driven tables
+   (``concepts/workflow-stage.md`` skill-by-stage table,
+   ``concepts/guidance-level.md`` per-skill block) have their generated
+   blocks replaced in-place between sentinel comments. The surrounding
+   prose stays under version control; only the bracketed block changes.
 
 Quartobot and Quarto are optional — if neither is installed and no `.qmd`
 files exist, the relevant steps no-op cleanly.
@@ -56,6 +61,8 @@ KNOWLEDGE_OUT = CONTENT_ROOT / "concepts" / "knowledge"
 DESIGN_OUT = CONTENT_ROOT / "concepts" / "design.md"
 ROADMAP_OUT = CONTENT_ROOT / "roadmap.md"
 SKILLS_OUT = CONTENT_ROOT / "reference" / "skills.md"
+WORKFLOW_STAGE_OUT = CONTENT_ROOT / "concepts" / "workflow-stage.md"
+GUIDANCE_LEVEL_OUT = CONTENT_ROOT / "concepts" / "guidance-level.md"
 QMD_SRC = DOCS_DIR / "qmd"
 
 # Knowledge subdirectories rendered as sidebar sections — display name +
@@ -814,23 +821,221 @@ def process_skills_reference() -> int:
     return len(manifests)
 
 
+# ---------------------------------------------------------------------------
+# Sentinel-block substitution for partially-generated concept pages
+# ---------------------------------------------------------------------------
+#
+# The concept pages under ``docs/src/content/docs/concepts/`` keep their
+# hand-written prose under version control, but include generated
+# manifest-driven blocks (the skill-by-stage table, the per-skill
+# guidance-level behaviour list) that should never drift from
+# ``skills/<name>/manifest.yaml``.
+#
+# Sentinel pattern:
+#
+#     <!-- GENERATED:<id>:start -->
+#     ...content replaced on every preprocess pass...
+#     <!-- GENERATED:<id>:end -->
+#
+# The block (including the markers) is replaced wholesale by the
+# generator. If the page does not contain the sentinels, the preprocess
+# step prints a warning and leaves the file untouched — a missing
+# sentinel pair is a maintainer error, not a silent overwrite.
+
+
+def _replace_sentinel_block(text: str, block_id: str, new_body: str) -> tuple[str, bool]:
+    """Replace the body between ``GENERATED:<block_id>:start/end`` markers.
+
+    Returns ``(new_text, replaced)``. ``replaced`` is ``False`` when the
+    sentinel pair is absent — the caller should warn but not write.
+
+    ``new_body`` is inserted between the markers exactly as supplied
+    (with a single newline above and below). Leading/trailing blank
+    lines in ``new_body`` are stripped to keep output deterministic.
+    """
+    start_marker = f"<!-- GENERATED:{block_id}:start -->"
+    end_marker = f"<!-- GENERATED:{block_id}:end -->"
+    # Match the start marker, any content (including zero bytes — supports
+    # the bootstrap case where the page ships with just the two markers
+    # back-to-back), then the end marker.
+    pattern = re.compile(
+        re.escape(start_marker) + r"(?:\n.*?)?\n" + re.escape(end_marker),
+        re.DOTALL,
+    )
+    if not pattern.search(text):
+        return text, False
+    body = new_body.strip("\n")
+    replacement = f"{start_marker}\n{body}\n{end_marker}"
+    return pattern.sub(replacement, text), True
+
+
+# ---------------------------------------------------------------------------
+# Concept page: workflow-stage skill-by-stage table
+# ---------------------------------------------------------------------------
+#
+# The "How this shows up in skills" table on
+# ``concepts/workflow-stage.md`` is regenerated from each manifest's
+# ``lifecycle_phases:`` declaration. Surrounding prose (Hayes framing,
+# the notes on patterns at the bottom) stays hand-written.
+
+# Columns rendered in the skill-by-stage table, in display order.
+_WORKFLOW_STAGE_COLUMNS: list[str] = ["outline", "draft", "review", "revision", "submission"]
+
+
+def _render_workflow_stage_table(manifests: list[dict[str, Any]]) -> str:
+    """Render the skill-by-stage table for ``concepts/workflow-stage.md``.
+
+    Each row is a shipped skill; columns are the five canonical
+    pre-submission phases. A cell is ``yes`` if the manifest's
+    ``lifecycle_phases`` declares that phase. The omission case (``—``)
+    is the default; the further nuance ("refuses cleanly" vs "thin
+    output") lives in surrounding prose and in each skill's
+    ``manifest.yaml#refusal_behaviour`` once that field lands.
+    """
+    header_cells = ["Skill"] + [c.capitalize() for c in _WORKFLOW_STAGE_COLUMNS]
+    rows: list[str] = [
+        "| " + " | ".join(header_cells) + " |",
+        "|" + "|".join(["---"] * len(header_cells)) + "|",
+    ]
+    sorted_manifests = sorted(manifests, key=lambda m: m["name"])
+    for m in sorted_manifests:
+        declared = set(m.get("lifecycle_phases") or [])
+        name_cell = f"`{m['name']}`"
+        phase_cells = ["yes" if phase in declared else "—" for phase in _WORKFLOW_STAGE_COLUMNS]
+        rows.append("| " + " | ".join([name_cell, *phase_cells]) + " |")
+    return "\n".join(rows)
+
+
+def process_workflow_stage_concept() -> bool:
+    """Replace the generated skill-by-stage table inside the concept page.
+
+    Returns True if the table was written, False if the sentinel
+    markers are missing or the page itself does not exist.
+    """
+    if not WORKFLOW_STAGE_OUT.is_file():
+        print(f"  (no {WORKFLOW_STAGE_OUT.name}; skipping)")
+        return False
+    manifests = _load_manifests()
+    if not manifests:
+        print("  (no skills/ manifests found; skipping)")
+        return False
+    original = WORKFLOW_STAGE_OUT.read_text(encoding="utf-8")
+    table = _render_workflow_stage_table(manifests)
+    updated, replaced = _replace_sentinel_block(original, "workflow-stage-table", table)
+    if not replaced:
+        print(
+            f"  ! {WORKFLOW_STAGE_OUT.name} is missing the "
+            "GENERATED:workflow-stage-table sentinel block; skipping"
+        )
+        return False
+    if updated != original:
+        WORKFLOW_STAGE_OUT.write_text(updated, encoding="utf-8")
+        try:
+            rel = WORKFLOW_STAGE_OUT.relative_to(DOCS_DIR)
+        except ValueError:
+            rel = WORKFLOW_STAGE_OUT
+        print(f"  wrote {rel}")
+    else:
+        print(f"  ({WORKFLOW_STAGE_OUT.name} table already up to date)")
+    return True
+
+
+# ---------------------------------------------------------------------------
+# Concept page: per-skill guidance-level behaviour block
+# ---------------------------------------------------------------------------
+#
+# The "How this shows up in skills" list on
+# ``concepts/guidance-level.md`` is regenerated from each manifest's
+# ``guidance_level_behavior:`` mapping. The mapping has exactly three
+# string keys — ``terse``, ``standard``, ``full`` — each holding a
+# one-or-two-sentence factual description of how that skill behaves
+# at that level. Sourced from each ``skills/<name>/SKILL.md``;
+# encoded in the manifest so the concept page cannot drift from
+# what the skill actually does.
+
+_GUIDANCE_LEVELS: list[str] = ["terse", "standard", "full"]
+
+
+def _render_guidance_level_block(manifests: list[dict[str, Any]]) -> str:
+    """Render the per-skill guidance-level behaviour list.
+
+    Each shipped skill becomes a top-level bullet with three nested
+    bullets — one per level. Skills missing the manifest field are
+    surfaced inline so the omission is visible at docs-build time
+    rather than silently absent from the rendered page.
+    """
+    lines: list[str] = []
+    sorted_manifests = sorted(manifests, key=lambda m: m["name"])
+    for m in sorted_manifests:
+        name = m["name"]
+        behavior = m.get("guidance_level_behavior") or {}
+        if not isinstance(behavior, dict) or not all(k in behavior for k in _GUIDANCE_LEVELS):
+            lines.append(
+                f"- **`{name}`** — _missing `guidance_level_behavior` in `manifest.yaml`._"
+            )
+            continue
+        lines.append(f"- **`{name}`**")
+        for level in _GUIDANCE_LEVELS:
+            description = _normalise_description(str(behavior[level]))
+            lines.append(f"  - `{level}` — {description}")
+    return "\n".join(lines)
+
+
+def process_guidance_level_concept() -> bool:
+    """Replace the generated per-skill block inside the concept page.
+
+    Returns True if the block was written, False if the sentinel
+    markers are missing or the page itself does not exist.
+    """
+    if not GUIDANCE_LEVEL_OUT.is_file():
+        print(f"  (no {GUIDANCE_LEVEL_OUT.name}; skipping)")
+        return False
+    manifests = _load_manifests()
+    if not manifests:
+        print("  (no skills/ manifests found; skipping)")
+        return False
+    original = GUIDANCE_LEVEL_OUT.read_text(encoding="utf-8")
+    block = _render_guidance_level_block(manifests)
+    updated, replaced = _replace_sentinel_block(original, "guidance-level-skills", block)
+    if not replaced:
+        print(
+            f"  ! {GUIDANCE_LEVEL_OUT.name} is missing the "
+            "GENERATED:guidance-level-skills sentinel block; skipping"
+        )
+        return False
+    if updated != original:
+        GUIDANCE_LEVEL_OUT.write_text(updated, encoding="utf-8")
+        try:
+            rel = GUIDANCE_LEVEL_OUT.relative_to(DOCS_DIR)
+        except ValueError:
+            rel = GUIDANCE_LEVEL_OUT
+        print(f"  wrote {rel}")
+    else:
+        print(f"  ({GUIDANCE_LEVEL_OUT.name} block already up to date)")
+    return True
+
+
 def main() -> None:
     print("Preprocessing scriptorium docs site")
     print(f"  source: {REPO_ROOT}")
     print(f"  output: {DOCS_DIR / 'src/content/docs'}")
 
-    print("\n[1/4] Root docs")
+    print("\n[1/5] Root docs")
     process_root_docs()
 
-    print("\n[2/4] Knowledge layer")
+    print("\n[2/5] Knowledge layer")
     n_knowledge = process_knowledge()
     print(f"  processed {n_knowledge} markdown file(s)")
 
-    print("\n[3/4] Skills reference page")
+    print("\n[3/5] Skills reference page")
     n_skills = process_skills_reference()
     print(f"  generated reference page from {n_skills} manifest(s)")
 
-    print("\n[4/4] Quarto sources")
+    print("\n[4/5] Concept-page sentinel blocks")
+    process_workflow_stage_concept()
+    process_guidance_level_concept()
+
+    print("\n[5/5] Quarto sources")
     n_qmd = process_qmd()
     if n_qmd == 0:
         print("  (no .qmd files under docs/qmd/; skipping)")

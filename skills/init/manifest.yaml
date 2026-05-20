@@ -29,6 +29,32 @@ lifecycle_phases:
   - revision
   - submission
 
+# How this skill frames its output at each meta.guidance_level value.
+# init is the only skill that elicits the preference and writes it
+# to MANUSCRIPT_STATE.yaml; the skill itself always runs at `full`
+# regardless of the saved value (the user can't have set a
+# preference yet, and even if they have, init is the place to
+# recalibrate it). The descriptions below name what each saved
+# level controls for every other skill.
+# Consumed by docs build (concepts/guidance-level page generator).
+guidance_level_behavior:
+  terse: >
+    Saves the preference and runs init itself at full this
+    session; later invocations of other skills honor terse — purely
+    questions and confirmations, no framing prose between turns.
+  standard: >
+    Saves the preference and runs init itself at full this
+    session; later invocations honor standard — a one-line "why"
+    on non-obvious fields only, no upfront orientation, no
+    end-of-phase recap.
+  full: >
+    Saves the preference and runs init itself at full this
+    session; later invocations honor full — orientation up front,
+    per-field rationale, and an end-of-phase recap. init always
+    runs at full regardless of the saved value because it is the
+    user's first contact with scriptorium and the place to
+    recalibrate the preference.
+
 # Explicit invocation. The skill never auto-invokes, never runs as a
 # follow-up to another skill without the user asking. Convention-set
 # alignment: CLI subcommand and skill share the name \`init\`, mirroring

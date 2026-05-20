@@ -30,6 +30,26 @@ lifecycle_phases:
   - revision
   - submission
 
+# How this skill frames its output at each meta.guidance_level value.
+# Sourced from the conversational-style section of SKILL.md so the
+# concept page (concepts/guidance-level.md) renders from manifest.
+# Consumed by docs build (concepts/guidance-level page generator).
+guidance_level_behavior:
+  terse: >
+    Open with one line ("running author-contribution audit"); emit
+    the markdown report; no closing summary.
+  standard: >
+    Open with one sentence naming the state (present / absent /
+    sketchy) and the number of listed authors; close with a
+    one-line summary of the most material finding.
+  full: >
+    Open with what the audit does (ICMJE four criteria + CRediT 14
+    roles + journal-specific variants when target_venue is set) and
+    why it matters (Wislar et al. 2011 BMJ — 21% of papers at top
+    medical journals had honorary or ghost authorship; the CRediT
+    taxonomy is the field's structural response). The structured
+    output is unchanged across levels.
+
 # Explicit invocation only. The skill is invoked when the author
 # asks for a contributions check, is preparing for submission, or
 # wants to verify the section meets a venue's requirements.

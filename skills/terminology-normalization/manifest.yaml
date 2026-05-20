@@ -35,6 +35,26 @@ lifecycle_phases:
   - review
   - revision
 
+# How this skill frames its output at each meta.guidance_level value.
+# Sourced from the conversational-style section of SKILL.md so the
+# concept page (concepts/guidance-level.md) renders from manifest.
+# Consumed by docs build (concepts/guidance-level page generator).
+guidance_level_behavior:
+  terse: >
+    Open with a one-line "running terminology normalization"; emit
+    the markdown report; no closing summary.
+  standard: >
+    Open with a sentence naming the manuscript and the declared
+    terminology counts (e.g. "5 preferred terms, 3 forbidden, 2
+    synonym mappings"); close with a one-line summary of the
+    findings.
+  full: >
+    Open with what this skill produces (preferred-term drift,
+    forbidden-term occurrences, undeclared variants, suggested
+    normalizations) and how to read it (which sections are
+    enforcement, which are questions for the author); close with
+    which findings to act on first and which are informational.
+
 # Safe to suggest when the user asks for a terminology check, when
 # terminology preferences are declared and the document is in
 # draft/revision/submission phase, or as a follow-up verification
