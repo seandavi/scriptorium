@@ -261,11 +261,11 @@ optional adapter packages (none ship with scriptorium today).
 
 Three tiers, increasing in coupling to a specific source format:
 
-| Tier | What ships when | Scope |
+| Tier | Status | Scope |
 |---|---|---|
-| **Tier 1 — Format-neutral core** | v0.1 | Markdown-flavored text in, structured markdown reports out. Universal scope. No source-format awareness. |
-| **Tier 2 — Optional `source_format:` hint** | Schema lands v0.1; skills consume v0.2+ | `MANUSCRIPT_STATE.yaml` carries `project.source_format` (enum: `quarto \| latex \| markdown \| docx-via-pandoc \| gdocs-export \| other`). Skills *may* use the hint for smarter parsing; never required. |
-| **Tier 3 — Format-specific adapter packages** | Out of repo, out of v0.1 | Optional packages — quartobot integration, scriptorium-latex, scriptorium-docx, etc. Live as independent projects; depend on scriptorium's CLI / schema; ship their own knowledge layer extensions where needed. |
+| **Tier 1 — Format-neutral core** | Shipped | Markdown-flavored text in, structured markdown reports out. Universal scope. No source-format awareness. Every shipped skill operates at this tier. |
+| **Tier 2 — Optional `source_format:` hint** | Schema shipped; skill consumption opportunistic | `MANUSCRIPT_STATE.yaml` carries `project.source_format` (enum: `quarto \| latex \| markdown \| docx-via-pandoc \| gdocs-export \| other`). Skills *may* use the hint for smarter parsing; never required. |
+| **Tier 3 — Format-specific adapter packages** | Out of repo | Optional packages — quartobot integration, scriptorium-latex, scriptorium-docx, etc. Live as independent projects; depend on scriptorium's CLI / schema; ship their own knowledge layer extensions where needed. None ship with scriptorium today. |
 
 The reason "we strongly suggest" rather than "only works on": soft
 expandability. The framing doesn't box out future Tier 2/3 work, doesn't
@@ -280,56 +280,70 @@ might use `format: quarto` to look for `#| label:` cross-references.
 Until a skill *uses* the hint, it's metadata for the author and for
 future tooling, not behavior.
 
+## Conventions
+
+Two project-side conventions landed in v0.2 and now load-bear for
+every shipped skill. They live in
+[`knowledge/conventions/`](knowledge/conventions/) alongside the
+evidence-based notes, but they are not findings from the literature —
+they are scriptorium's own design commitments, documented so every
+skill grounds in the same rule.
+
+### `declared-work-scope`
+
+Scriptorium operates on prose the author has written or scaffolding
+the author has committed to in `MANUSCRIPT_STATE.yaml`. It does not
+produce prose from blankness. The full framing — the Hayes 2012
+proposer / translator / transcriber / evaluator cut, the
+hallucinated-citation and lexical-homogenisation failure modes it
+defends against, and the end-to-end-generation negative exemplar —
+is in the workflow-scope subsection above and in
+[`knowledge/conventions/declared-work-scope.md`](knowledge/conventions/declared-work-scope.md).
+The convention is what made it possible to drop the originally
+planned v0.4 `discussion-drafting` and `results-narrative` skills
+cleanly: they would have required substantial proposer judgment and
+sit outside the boundary. Every conversation-bearing skill grounds
+in this convention; a parametrized test in
+`tests/test_guidance_level.py` enforces it alongside the
+guidance-level grounding check.
+
+### `guidance-level`
+
+Skills walk an author through structured editorial work. A
+first-time user benefits from each skill explaining *why* it asks
+what it asks; a user on their fifth manuscript finds the same prose
+patronising. The convention is to let the author pick once
+(`meta.guidance_level` in `MANUSCRIPT_STATE.yaml`, three values:
+`terse` / `standard` / `full`), persist the choice in shared state,
+and let every multi-turn skill adapt its framing accordingly. The
+choice is not a verbosity slider — the *information density* of a
+skill's structured output does not change with level. What changes
+is the framing prose around the structured work: upfront
+orientation, per-field rationale, end-of-phase recap. Full
+specification, including the in-session check-in protocol, lives in
+[`knowledge/conventions/guidance-level.md`](knowledge/conventions/guidance-level.md).
+
 ## Roadmap
 
-### v0.1 (this release): the leaves
+The canonical release plan lives in
+[`docs/roadmap.md`](docs/roadmap.md) and is updated each release
+cycle. It records what shipped in v0.1 (the leaf-skill foundation),
+v0.2 (coordination plus the targeted critique additions —
+`desk-rejection-risk`, `venue-fit`, `author-contribution-audit`,
+`reporting-guideline-fit`, ESL-aware checks in `argumentative-flow`),
+and v0.3 (validation skills and the `reporting-guideline-compliance`
+walkthrough), as well as what's planned for v0.4 (grant-specific
+skills and bounded transformations under
+[`declared-work-scope`](knowledge/conventions/declared-work-scope.md))
+and v0.5+ (platform adapters and per-discipline knowledge layers).
+For the current shipped skill list see the [`skills/`](skills/)
+directory (one subdirectory per skill, each with a `manifest.yaml`);
+for the explicit non-goals (findings the research concluded should
+*not* become skills) see the same roadmap document.
 
-Three skills, schema, Venice example. Goal: prove the shared-state +
-structured-output pattern works on a real manuscript. If the three
-skills don't compose usefully on the Venice paper, the design is
-wrong and we revisit before building more.
-
-- `citation-audit` (critique)
-- `reviewer-simulation` (critique)
-- `argumentative-flow` (transformation)
-
-### v0.2 (next): coordination
-
-If v0.1 holds up, add the first orchestrator. The orchestrator's
-sole job is to sequence the leaves intelligently for a given
-document phase.
-
-- `manuscript-pipeline` (orchestrator)
-- `revision-summary` (utility)
-
-### v0.3: more leaves
-
-Once the orchestrator pattern works, add high-leverage additional
-leaves driven by what we needed and didn't have.
-
-Likely candidates: `compression`, `redundancy-removal`,
-`statistics-consistency`, `terminology-normalization`. Order
-determined by which gap bites first.
-
-### v0.4: drafting
-
-Generation skills are harder than critique skills — they're the most
-opinionated and the most likely to produce off-key prose. Defer until
-the critique/validation/normalization layers are mature enough to
-catch generation mistakes.
-
-Likely candidates: `specific-aims`, `results-narrative`,
-`discussion-drafting`.
-
-### v0.5+: knowledge layer + platform adapters
-
-Once skill content stabilizes:
-
-- A `knowledge/` directory of reusable editorial heuristics (journal
-  styles, grant-program patterns, reviewer-archetype tells) that
-  individual skills reference explicitly.
-- Adapters that compile SKILL.md down to platform-neutral prompts for
-  Codex / Gemini / ChatGPT / Hermes / etc.
+This DESIGN.md does not duplicate the roadmap — the roadmap drifts
+faster than design rationale, and a parallel sketch here would go
+stale between releases.
 
 ## Naming
 
@@ -351,9 +365,10 @@ the tagline does the brand work.
   bibliography the manuscript already uses.
 - **Replacing peer review.** Reviewer simulation is a sparring partner,
   not a substitute for real reviewers.
-- **Generating manuscripts from scratch.** This is intentionally not a
-  v0.1 goal. The harder design questions are about coordination, not
-  generation.
+- **Generating manuscripts from scratch.** Out of scope by design,
+  not by phase — see the declared-work-scope convention. The harder
+  design questions are about coordination and bounded transformation,
+  not blank-slate generation.
 
 ## Why this is open source
 
