@@ -178,8 +178,13 @@ machine-checkable subset of it.
 - Hedging-strength changes ("suggests" → "demonstrates") are the
   hardest category to detect automatically. A vocabulary of hedge
   markers (Hyland's hedging taxonomy, etc.) could feed a future
-  `hedging-preservation` check. `[TODO verify]` whether Hyland's
-  hedging-marker list is suitable as a checkable resource.
+  `hedging-preservation` check. Hyland's categories (modal verbs,
+  epistemic lexical verbs, epistemic adjectives, epistemic adverbs,
+  epistemic nouns; boosters: *demonstrate*, *prove*, *establish*,
+  *clearly*, *certainly*) are well-defined in the published work
+  and can be operationalised manually; no canonical openly-licensed
+  machine-readable list was located in this sweep, so any in-skill
+  list will be a project-compiled distillation.
 - Embedding-based metrics may be useful for *triage* — flagging
   paragraphs where similarity is unexpectedly low — even if they
   cannot serve as accept/reject criteria.
@@ -200,8 +205,12 @@ machine-checkable subset of it.
     Evaluating text generation with BERT. *International Conference
     on Learning Representations*. 2020. arXiv:1904.09675.
 
-[^4]: The "antonymy problem" is well-documented in the BERTScore
-    follow-on literature and in the broader sentence-embedding
-    evaluation literature; see e.g. discussions in the SemEval
-    semantic-textual-similarity tasks and in commentary on BERTScore
-    limitations (`[TODO verify]` specific citation).
+[^4]: The "antonymy problem" — contextual embeddings of antonyms
+    (e.g. "best"/"worst") remain neighbours in BERT space, yielding
+    high BERTScore similarity even when polarity has been flipped —
+    is widely discussed in the BERTScore follow-on literature and
+    in broader sentence-embedding evaluation work (e.g. SemEval
+    STS-task analyses; numerical-semantic-evaluation critiques such
+    as Sun et al., FinNuE, arXiv:2511.09997). It is not pinned to
+    a single canonical methodology paper; the original BERTScore
+    paper (entry [^3]) does not claim immunity to it.

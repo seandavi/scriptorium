@@ -96,7 +96,7 @@ This evidence base grounds the EAL author-persona work (#42, #43, #44):
 
 - **AI-use literature for EAL scholars (2023–2026) is mostly opinion/advocacy or small qualitative.** The Jiang & Hyland (2024) corpus finding on AI text flattening voice features is the strongest recent empirical anchor; the broader equity arguments are not yet supported by robust evidence on publication outcomes.
 
-- **Several pagination/volume details are flagged `[TODO verify]`** in the references — substance is correct; exact bibliographic details need confirmation before being cited in scriptorium's voice.
+- **A small number of pagination/volume details in the references list were not pinned at write-time;** the substance of those entries (authors, year, journal, argument) is correct, but exact page ranges should be verified at the source if scriptorium prose ever cites a specific page. Until then, these are treated as work-level rather than page-level citations.
 
 ## References
 

@@ -167,7 +167,11 @@ fabricated references through the reviewer voice.
     doi:10.7759/cureus.39238. PMID: 37337480.
 
 [^3]: Retrieval-augmented generation reductions are summarized across
-    multiple recent papers, including SELF-RAG (Asai et al. 2024)
-    and Hyper-RAG. Numbers cited are reported values; methodology and
-    benchmarks vary, so cross-paper comparisons are indicative
-    rather than authoritative. `[TODO verify]` specific DOIs.
+    multiple recent papers, including SELF-RAG (Asai et al. 2024,
+    ICLR; arXiv:2310.11511) and the broader RAG-evaluation literature.
+    Numbers cited are reported values; methodology and benchmarks
+    vary across papers, so cross-paper comparisons are indicative
+    rather than authoritative. Specific DOIs for each comparator are
+    not pinned here because the cited "RAG reduces hallucination"
+    pattern is a *survey-level* claim, not a single-study claim;
+    skills should not cite [^3] as a specific empirical number.

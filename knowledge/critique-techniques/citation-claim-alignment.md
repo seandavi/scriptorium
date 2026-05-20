@@ -249,9 +249,14 @@ LLM limits — be honest:
     using deep learning. *Quantitative Science Studies*. 2021;
     2(3):882–898. DOI: 10.1162/qss_a_00146.
 
-[TODO verify] Smith JFB, Banks MH. Reference inaccuracy in the *BMJ*
-or related title (1991). Several 1990–1992 BMJ citation-accuracy
-studies exist but the specific Smith & Banks 1991 BMJ paper could not
-be located through accessible sources; the de Lacey 1985 *BMJ* and the
-Eichorn & Yankauer 1987 *AJPH* papers are the foundational
-methodological references in this vein.
+**Research gap:** A "Smith & Banks 1991 *BMJ*" citation-accuracy
+paper appears in some bibliographies and was sketched here, but it
+could not be located in CrossRef, PubMed, or Google Scholar searches
+during the May 2026 knowledge-layer sweep. The closest foundational
+work in this vein is de Lacey, Record & Wade (1985) *BMJ* and
+Eichorn & Yankauer (1987) *AJPH* (entry [^2] above) — both are
+methodologically primary for this skill's grounding and the Smith &
+Banks reference is not load-bearing. The claim has been left here
+as a gap rather than fabricated. *What would verify it: locating the
+exact Smith & Banks 1991 paper (or confirming the citation was a
+secondary-source misattribution).*

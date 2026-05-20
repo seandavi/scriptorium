@@ -44,6 +44,7 @@ SKILLS_THAT_ADAPT = (
     "reporting-guideline-compliance",
     "figure-text-alignment",
     "compression",
+    "outlier-sentence-detector",
 )
 
 

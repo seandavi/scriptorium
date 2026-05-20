@@ -1,43 +1,413 @@
 ---
 title: Scriptorium
-description: AI-assisted skills for scholarly writing — citation audit, simulated peer review, argumentative-flow analysis — that read from a shared editorial state file and ground their critique in a curated, peer-reviewed evidence base.
+description: Single-responsibility AI skills that work on an author's declared draft prose, grounded in a curated, peer-reviewed evidence base.
+template: splash
+hero:
+  tagline: Single-responsibility AI skills that work on prose the author has written. Each skill reads a shared editorial state file and is grounded in a curated, peer-reviewed evidence base.
+  image:
+    file: ../../assets/scriptorium-mark.png
+  actions:
+    - text: First-time tour
+      link: https://github.com/seandavi/scriptorium#install
+      icon: right-arrow
+    - text: View on GitHub
+      link: https://github.com/seandavi/scriptorium
+      icon: external
+      variant: minimal
 ---
 
-import { Aside } from '@astrojs/starlight/components';
+import { Card, CardGrid, Aside } from '@astrojs/starlight/components';
 
-A collection of AI-assisted skills for scholarly writing — citation
-audit, simulated peer review, argumentative-flow analysis — that read
-from a shared editorial state file (`MANUSCRIPT_STATE.yaml`) and
-ground their critique in a curated, peer-reviewed evidence base.
+<p class="hero-audience">For authors revising their own manuscripts and grants who want structured, anchored critique on prose they wrote themselves — not blank-slate generation.</p>
 
 <Aside type="note" title="Pre-release">
-v0.1.0.dev0 is on PyPI. Skills, CLI surface, and the shared-state
-schema may change before v0.1.
+v0.2 shipped. Skills, CLI surface, and the shared-state schema may
+still change before v1.0. The shape below is stable; the leaf
+catalog is growing.
 </Aside>
 
-## Install
+<div class="transform-strip">
+  <div>
+    <p class="transform-strip__label">What you give scriptorium</p>
 
-```bash
-uv pip install --pre agentic-scriptorium
-scriptorium install            # Claude Code plugin
-scriptorium init ./my-paper    # scaffold MANUSCRIPT_STATE.yaml
+```markdown
+## Discussion (excerpt)
+
+Our findings extend the existing literature
+on bariatric-surgery outcomes [@thompson2021].
+The single most important predictor was
+diabetes duration, consistent with the
+hypothesis that β-cell reserve declines
+monotonically with disease duration.
 ```
 
-The [install guide](./how-to/install/) covers the Claude Code, other-agent, and manual paths.
+  </div>
+  <div class="transform-strip__arrow" aria-hidden="true">→</div>
+  <div>
+    <p class="transform-strip__label">What citation-audit emits</p>
 
-## Documentation
+```text
+| Claim         | Citation       | Strength | Note            |
+|---------------|----------------|----------|-----------------|
+| extend lit    | [@thompson2021]| Weak fit | review, not     |
+|               |                |          | primary cohort  |
+| β-cell reserve| (none)         | Unsupp.  | add primary     |
+|               |                |          | citation; relax |
+|               |                |          | "monotonically" |
+```
 
-- [Tutorials](./tutorials/) — learning-oriented walkthroughs.
-- [How-to guides](./how-to/) — task-oriented recipes.
-- [Reference](./reference/cli/) — CLI, manuscript-state schema, plugin manifest.
-- [Concepts](./concepts/design/) — design philosophy and architecture decisions.
-- [Knowledge layer](./concepts/knowledge/) — the peer-reviewed evidence base that grounds the skills, rendered with persistent-identifier citation resolution via [quartobot](https://github.com/seandavi/quartobot).
-- [Roadmap](./roadmap/) — what ships when.
+*Structured findings, one per claim, anchored to the source
+sentence. Author owns every edit. No citations invented.*
 
-## Source
+  </div>
+</div>
 
-[github.com/seandavi/scriptorium](https://github.com/seandavi/scriptorium).
+The skill modifies nothing. It surfaces what it sees. A full worked
+end-to-end run on this paragraph — citation-audit, reviewer-simulation,
+argumentative-flow before-and-after — lives at
+[Case study](./concepts/case-study/).
+
+```text
+/plugin marketplace add seandavi/scriptorium
+/plugin install scriptorium@scriptorium
+/scriptorium:tour
+```
+
+For the Python CLI (`scriptorium init`, `scriptorium validate`,
+`scriptorium trace`), see [Install](./how-to/install/).
+
+---
+
+## Where scriptorium fits in the writing workflow
+
+The seven shipped lifecycle stages in `MANUSCRIPT_STATE.yaml`
+(`outline` → `draft` → `review` → `revision` → `submission` →
+`post-submission` → `accepted`) map onto four roles in
+[Hayes' 2012 cognitive-process model](https://github.com/seandavi/scriptorium/blob/main/knowledge/scientific-writing/hayes-flower-writing-model.md):
+**proposer, translator, evaluator, transcriber**. Scriptorium occupies
+the *translator and evaluator* roles when the author has already
+proposed. It does not propose for the author.
+
+<div class="workflow-stages">
+  <div class="workflow-stages__card workflow-stages__card--out">
+    <h3>Outline · drafting</h3>
+    <p>The author owns hypothesis selection, framing, and the first prose pass.</p>
+    <p class="workflow-stages__skills">Not what scriptorium is for. See <a href="./concepts/design/#workflow-scope--declared-work-not-blank-slate">scope</a>.</p>
+  </div>
+  <div class="workflow-stages__card">
+    <h3>Revise · pressure-test</h3>
+    <p>The author has draft prose and wants it tightened. Most scriptorium skills land here.</p>
+    <p class="workflow-stages__skills">citation-audit, argumentative-flow, gap-finder, reviewer-simulation, terminology-normalization, figure-text-alignment</p>
+  </div>
+  <div class="workflow-stages__card">
+    <h3>Pre-submission</h3>
+    <p>Final compliance, venue fit, reviewer-anticipation checks.</p>
+    <p class="workflow-stages__skills">desk-rejection-risk, venue-fit, reporting-guideline-fit, reporting-guideline-compliance, author-contribution-audit, compression</p>
+  </div>
+</div>
+
+Skills do not auto-invoke. The author chooses which one to run and
+when. The [skill reference](./reference/skills/) lists every shipped
+skill with its category and the phases it expects.
+
+---
+
+## Four panels, one editorial layer
+
+<div class="feature-band">
+  <div class="feature-band__body">
+    <p class="feature-band__layer">Panel 1 · what each skill does</p>
+    <h2 class="feature-band__title">Structured, anchored findings</h2>
+    <p class="feature-band__audience">If you want concrete output you can act on — not a quality score.</p>
+    <p>
+      Every critique skill emits a fixed-shape structured report.
+      `reviewer-simulation` produces four lenses (methodological
+      skeptic, domain expert, translational/clinical, statistical),
+      each with Major Critiques / Minor Critiques / Fatal Concerns
+      / Enthusiasm Drivers / Suggested Revisions / Acceptance Risk.
+      Each finding is anchored to a specific sentence, paragraph, or
+      section. No letter grade. No overall pass/fail.
+    </p>
+    <div class="feature-band__callout">
+      <strong>If you've worried "AI critique" means crushing
+      framing attacks:</strong> scriptorium's reviewer-simulation is
+      grounded in <a href="https://github.com/seandavi/scriptorium/blob/main/knowledge/peer-review/common-critiques-taxonomy.md"><code>common-critiques-taxonomy</code></a>
+      and produces fixable bench/stats tasks like "report the 95%
+      CI for the AUC" or "Methods §2.3 omits the missing-data
+      handling." You set <code>meta.guidance_level</code> to
+      <code>terse</code>, <code>standard</code>, or <code>full</code>;
+      the structure of the output does not change, but the framing
+      around each elicited field does.
+    </div>
+    <p class="feature-band__cta">
+      <a href="./concepts/case-study/">See a worked reviewer-simulation run →</a>
+    </p>
+  </div>
+  <div class="feature-band__code">
+
+```text
+### Statistical lens
+
+Major critiques.
+- AUC=0.79 reported without
+  95% CI. Add the CI.
+- Internal validation missing
+  (bootstrap optimism / k-fold).
+  EPV is in range; the
+  calibration step is not.
+
+Minor critiques.
+- Diabetes duration p<0.001
+  reported without effect size.
+  Add OR with 95% CI.
+
+Fatal concerns. None.
+Acceptance risk. Moderate.
+```
+
+  </div>
+</div>
+
+<div class="feature-band feature-band--reverse">
+  <div class="feature-band__body">
+    <p class="feature-band__layer">Panel 2 · what gets preserved</p>
+    <h2 class="feature-band__title">A preservation contract, not a voice guarantee</h2>
+    <p class="feature-band__audience">If "AI flattens my prose" is your worry — read this section closely.</p>
+    <p>
+      Critique skills (<code>citation-audit</code>,
+      <code>reviewer-simulation</code>, <code>gap-finder</code>,
+      <code>desk-rejection-risk</code>) do not rewrite prose at all.
+      They emit structured reports. Your manuscript file is read,
+      not modified.
+    </p>
+    <p>
+      Transformation skills (<code>argumentative-flow</code>,
+      <code>compression</code>) operate under an explicit preservation
+      contract:
+    </p>
+    <ul>
+      <li><strong>Citations.</strong> Every key in the source is preserved; none are added.</li>
+      <li><strong>Statistics.</strong> Every numerical value, p-value, CI, and unit is preserved verbatim.</li>
+      <li><strong>Declared terminology.</strong> Whatever you put in <code>terminology.preferred</code> / <code>forbidden</code> / <code>synonyms</code> is respected.</li>
+      <li><strong>Hedging style and stance markers.</strong> The skill is required to report any shift in hedging strength as a per-edit note rather than absorbing it silently.</li>
+      <li><strong>Declared core claims.</strong> No claim is added; no declared claim is dropped.</li>
+    </ul>
+    <div class="feature-band__callout">
+      <strong>The honest caveat.</strong> Sentence-level "voice
+      preservation" is not a guarantee scriptorium makes. The
+      lexical-fingerprint evidence (Kobak et al. 2024) shows that
+      LLM-edited prose is detectable at corpus scale; correcting
+      it at sentence scale is not reliable. The preservation
+      contract above is what scriptorium <em>does</em> guarantee.
+      A general "this will sound like you" promise is what
+      scriptorium <em>does not</em>. See
+      <a href="https://github.com/seandavi/scriptorium/blob/main/knowledge/prior-art/ai-writing-failure-modes.md"><code>ai-writing-failure-modes</code></a>
+      for the underlying evidence.
+    </div>
+    <p class="feature-band__cta">
+      <a href="./concepts/design/#authorial-voice-loss--chatgpt-smell">Why scriptorium positions this way →</a>
+    </p>
+  </div>
+  <div class="feature-band__code">
+
+```yaml
+# MANUSCRIPT_STATE.yaml
+terminology:
+  preferred:
+    - "tumor-infiltrating
+       lymphocytes (TILs)"
+    - "anti-PD-1"
+  forbidden:
+    - "groundbreaking"
+    - "novel"
+
+constraints:
+  preserve_citations: true
+  preserve_statistics: true
+  avoid_hype: true
+
+style:
+  voice: active
+  tone:
+    - quantitative
+    - restrained
+```
+
+  </div>
+</div>
+
+<div class="feature-band">
+  <div class="feature-band__body">
+    <p class="feature-band__layer">Panel 3 · what the state file does</p>
+    <h2 class="feature-band__title">One file, every skill reads it</h2>
+    <p class="feature-band__audience">If you want to control what skills know about your work.</p>
+    <p>
+      <code>MANUSCRIPT_STATE.yaml</code> lives at the root of your
+      manuscript repository. Every scriptorium skill reads it. It
+      records what the manuscript is arguing
+      (<code>core_claims</code>), the limitations you have already
+      chosen to acknowledge (<code>known_weaknesses</code>; see
+      <a href="./reference/manuscript-state-schema/#a-note-on-known_weaknesses">naming note</a>),
+      preferred / forbidden terminology, declared style and audience,
+      and constraint flags.
+    </p>
+    <div class="feature-band__callout">
+      <strong>File scope.</strong> <code>MANUSCRIPT_STATE.yaml</code>
+      lives in your repository. It is not uploaded to scriptorium
+      and is not shared with anyone unless you commit it to a
+      shared branch. Whether to commit it (private fork; private
+      git remote; <code>.gitignore</code>) is your call. The
+      reviewer-simulation skill reads
+      <code>known_weaknesses</code> so it can <em>refrain</em> from
+      flagging items you have already acknowledged — the field is a
+      calibration input, not a disclosure target.
+    </div>
+    <p class="feature-band__cta">
+      <a href="./reference/manuscript-state-schema/">Schema reference →</a>
+      &nbsp;·&nbsp;
+      <a href="https://github.com/seandavi/scriptorium/blob/main/templates/MANUSCRIPT_STATE.example.yaml">Worked example →</a>
+    </p>
+  </div>
+  <div class="feature-band__code">
+
+```yaml
+project:
+  title: "..."
+  target_venue: "Nature Cancer"
+
+document_phase:
+  current: revision
+
+core_claims:
+  - "Shorter diabetes duration
+     and lower pre-op HbA1c
+     predict remission..."
+
+known_weaknesses:
+  - "Single-center retrospective
+     design."
+  - "No external validation
+     cohort."
+
+meta:
+  guidance_level: standard
+```
+
+  </div>
+</div>
+
+<div class="feature-band feature-band--reverse">
+  <div class="feature-band__body">
+    <p class="feature-band__layer">Panel 4 · where it grounds</p>
+    <h2 class="feature-band__title">Curated, peer-reviewed evidence</h2>
+    <p class="feature-band__audience">If you want to know what every design choice is based on.</p>
+    <p>
+      Every skill cites the knowledge notes its design decisions
+      come from. Fifty-plus notes cover citation accuracy,
+      hallucination evidence, reporting-guideline density (CONSORT,
+      STROBE, PRISMA, ARRIVE, TRIPOD+AI, CONSORT-AI / SPIRIT-AI),
+      reviewer-archetype research, plain-language summaries,
+      desk-rejection rates, and the AI-writing failure-mode
+      literature. The default field scope is biomedical/clinical
+      — that is where the reporting-guideline density is highest
+      and where the project's contributors work. Extensions to
+      other fields are welcome but not yet evidenced (PRs invited).
+    </p>
+    <p class="feature-band__cta">
+      <a href="./concepts/knowledge/">Browse the knowledge layer →</a>
+      &nbsp;·&nbsp;
+      <a href="./reference/skills/">All shipped skills →</a>
+    </p>
+  </div>
+  <div class="feature-band__code">
+
+```text
+skill: reviewer-simulation
+grounding:
+  - reviewer-archetypes-evidence
+  - common-critiques-taxonomy
+  - ai-peer-review-research
+  - critique-quality-evidence
+
+skill: citation-audit
+grounding:
+  - citation-claim-alignment
+  - citation-accuracy-evidence
+  - citation-overreach-research
+  - hallucination-in-llm-citations
+```
+
+  </div>
+</div>
+
+---
+
+## What scriptorium will not do
+
+A pre-submission tool earns trust by being explicit about its
+limits. These are not aspirations — they are the
+[explicit non-goals](https://github.com/seandavi/scriptorium/blob/main/docs/roadmap.md#explicit-non-goals)
+in the roadmap, each pointing at the evidence note that justifies it.
+
+<div class="limits-grid">
+  <div class="limits-grid__column">
+    <h3>Out of scope by design</h3>
+    <ul>
+      <li><strong>No blank-slate prose generation.</strong> Scriptorium does not draft sections from nothing. The proposer role (Hayes 2012) is yours. <a href="https://github.com/seandavi/scriptorium/blob/main/knowledge/conventions/declared-work-scope.md">declared-work-scope</a>.</li>
+      <li><strong>No autonomous reviewing.</strong> <code>reviewer-simulation</code> is author-side only. Editorial-side use violates ICMJE, NIH, and major-publisher policy.</li>
+      <li><strong>No overall quality score.</strong> No letter grade, no Flesch-Kincaid, no "writing quality" number. Those systematically misrate scientific prose.</li>
+      <li><strong>No reference-manager replacement.</strong> Citation audit works with the bibliography Zotero / Mendeley / BibTeX already produced. <a href="https://github.com/seandavi/scriptorium/blob/main/knowledge/prior-art/reference-managers.md">reference-managers</a>.</li>
+    </ul>
+  </div>
+  <div class="limits-grid__column">
+    <h3>Out of scope at this stage</h3>
+    <ul>
+      <li><strong>No image forensics.</strong> Bik-style figure-integrity review and tortured-phrase detection require domain experts. Scriptorium is a pre-submission first pass, not a sleuth.</li>
+      <li><strong>No discipline defaults outside biomedical / clinical (v0.1–v0.3).</strong> The evidence base is biomedical-coded. Physics, CS/ML, mathematics, humanities defaults need per-discipline knowledge layers that don't exist yet.</li>
+      <li><strong>No native .docx round-trip.</strong> Scriptorium operates on markdown-converted prose. Tracked changes and field codes are not preserved through the conversion.</li>
+      <li><strong>No skill-degradation defence.</strong> Whether extended use atrophies the author's underlying skill is plausible but under-evidenced. Author retains responsibility for their writing.</li>
+    </ul>
+  </div>
+</div>
+
+Skills also surface their own limits in the report itself —
+each output includes a "What this skill did NOT check" section so
+the limit is in front of the author at decision time, not buried
+in documentation.
+
+---
+
+## Where to go next
+
+<CardGrid>
+  <Card title="I'm new — show me what this is" icon="seti:plan">
+    [First-time tour](https://github.com/seandavi/scriptorium#install) — install
+    the plugin, run `/scriptorium:tour`, get a three-or-four-turn
+    walk-through that ends with one concrete next move.
+  </Card>
+  <Card title="I want to see real output" icon="open-book">
+    [Case study](./concepts/case-study/) walks a realistic
+    discussion paragraph through `citation-audit`,
+    `reviewer-simulation`, and `argumentative-flow` — before, the
+    structured output, and after.
+  </Card>
+  <Card title="Which skill do I want?" icon="list-format">
+    [Skills reference](./reference/skills/) — every shipped skill,
+    by category, with one-line descriptions and grounding pointers.
+    Includes the lifecycle stage each skill expects.
+  </Card>
+  <Card title="Why is it built this way?" icon="puzzle">
+    [Design](./concepts/design/) collects the architecture
+    decisions and the failure-mode literature each defensive choice
+    is grounded in — hallucinated citations, lexical homogenisation,
+    automation complacency, suggestion-acceptance bias.
+  </Card>
+</CardGrid>
+
+---
+
+Source: [github.com/seandavi/scriptorium](https://github.com/seandavi/scriptorium).
 Code: [MIT](https://github.com/seandavi/scriptorium/blob/main/LICENSE).
-Documentation and knowledge layer: [CC BY 4.0](./about/license/).
-
-Maintained by [Sean Davis](https://github.com/seandavi).
+Documentation and knowledge layer:
+[CC BY 4.0](./about/license/). Maintained by
+[Sean Davis](https://github.com/seandavi).

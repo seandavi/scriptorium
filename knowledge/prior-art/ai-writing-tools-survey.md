@@ -28,7 +28,7 @@ Scriptorium's contribution is orthogonal to this entire class of tools. It begin
 
 **Editorial philosophy.** "Discipline-aware editing"; trained on corrections by Cactus's editorial staff. Targets non-native English researchers in STM.
 
-**Effectiveness.** Cactus markets Paperpal as having "demonstrated significant editing coverage and a lower error rate compared to other tools" but no peer-reviewed validation has been located [TODO verify whether an academic study exists]. A Cactus survey of 1,440 academics reported that >50% of respondents worry AI tools "might compromise authenticity or alter their unique perspectives" [4]. The pre-submission **Paperpal Preflight** product is the journal-side compliance layer.
+**Effectiveness.** Cactus markets Paperpal as having "demonstrated significant editing coverage and a lower error rate compared to other tools" but no peer-reviewed validation has been located as of this sweep (May 2026); the marketing claim should be treated as vendor-reported rather than independently verified. A Cactus survey of 1,440 academics reported that >50% of respondents worry AI tools "might compromise authenticity or alter their unique perspectives" [4]. The pre-submission **Paperpal Preflight** product is the journal-side compliance layer.
 
 **Where it stops.** Like Grammarly, Paperpal is a sentence- and paragraph-level editor with citation lookup; it does not assess whether a citation actually supports a claim, and it does not simulate reviewer response.
 
@@ -40,7 +40,7 @@ Scriptorium's contribution is orthogonal to this entire class of tools. It begin
 
 **Editorial philosophy.** Trained on "billions of sentences from millions of journal articles," with explicit data-privacy guarantees. The TeXGPT product surfaces AI edits inside Overleaf for paraphrasing, splitting, joining, summarizing.
 
-**Effectiveness.** No peer-reviewed validation publicly identified [TODO verify]. Writefull publishes blog content on tool design but not benchmarks.
+**Effectiveness.** No peer-reviewed validation publicly identified as of this sweep (May 2026). Writefull publishes blog content on tool design but not benchmarks; treat effectiveness claims as vendor-reported.
 
 **Where it stops.** Same gap as Paperpal — no claim/citation linking, no reviewer simulation, no argument-level critique.
 
