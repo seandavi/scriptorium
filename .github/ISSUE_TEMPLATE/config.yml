@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: How scriptorium skills are designed
+    url: https://github.com/seandavi/scriptorium/blob/main/DESIGN.md
+    about: Read DESIGN.md before proposing a skill. Skills have hard structural commitments — single responsibility, structured output, preservation contracts — that are not negotiable per-skill.
+  - name: The knowledge layer (what grounds a skill)
+    url: https://github.com/seandavi/scriptorium/blob/main/knowledge/README.md
+    about: Every skill must cite the published research it grounds in. Browse the existing layout before opening a skill proposal — your skill's grounding may already be partly written.
+  - name: Roadmap (what's planned and why)
+    url: https://github.com/seandavi/scriptorium/blob/main/docs/roadmap.md
+    about: v0.2 / v0.3 / v0.4 priorities and the knowledge anchors that drive them. Use this to position your proposal.

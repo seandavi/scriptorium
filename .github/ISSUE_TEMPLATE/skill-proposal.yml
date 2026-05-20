@@ -1,0 +1,200 @@
+name: Skill proposal
+description: Propose a new scriptorium skill, or scope an existing roadmap item into something buildable.
+title: "[Skill] "
+labels: ["skill"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### Before you start
+
+        A scriptorium skill is a **conservative, single-responsibility unit
+        of editorial work** with a structured, inspectable output. Skills
+        ground in published research synthesised under `knowledge/` —
+        behaviours trace back to specific papers, not LLM intuition alone.
+        That's the project's credibility model.
+
+        Two things this template enforces:
+
+        1. **Grounding is required.** Every skill must either cite
+           existing `knowledge/` notes, or propose new ones with a 1-2
+           sentence summary of what those notes would synthesise. A skill
+           proposal without grounding cannot be accepted; it will be
+           labelled `needs-grounding` and held until the evidence base
+           catches up. If you're not sure what counts, browse
+           `knowledge/README.md` for the layout and any existing folder
+           that's close to your topic.
+
+        2. **Non-goals are required.** Every skill must declare what it
+           **will not** do. LLM-shaped tools fail by silently
+           overreaching; naming the boundary up front is how we stop
+           that. *"Does not invent citations"* and *"does not modify the
+           manuscript"* are real examples from the v0.1 set.
+
+        For context on the existing skills, see `skills/*/SKILL.md` and
+        `DESIGN.md`. For the planned roadmap, see `docs/roadmap.md`.
+
+  - type: input
+    id: skill-name
+    attributes:
+      label: Skill name
+      description: Kebab-case (e.g. `desk-rejection-risk`, `statistics-consistency`). This is what users will type after `/scriptorium:`.
+      placeholder: my-new-skill
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      description: |
+        Skills are classified by what they produce. Choose one; this constrains the
+        invariants the skill must honour.
+        - **critique** — assesses; emits a structured report; never modifies the manuscript (citation-audit, reviewer-simulation).
+        - **validation** — checks against an external standard; often orchestrates deterministic tools (statcheck, GRIM).
+        - **normalization** — enforces declared preferences (terminology, style); modifies in tightly bounded ways.
+        - **transformation** — rewrites prose; must preserve citations, statistics, and declared terminology (argumentative-flow).
+        - **generation** — produces new prose from scratch; the highest-failure-mode class.
+        - **meta** — operates on scriptorium itself, not on the user's project (tour, explain).
+      options:
+        - critique
+        - validation
+        - normalization
+        - transformation
+        - generation
+        - meta
+    validations:
+      required: true
+
+  - type: textarea
+    id: one-sentence
+    attributes:
+      label: One-sentence description
+      description: What does this skill do? Single sentence. This becomes the `description:` field in `SKILL.md` frontmatter — users see it in `/help`.
+      placeholder: |
+        Assess a manuscript for triggers likely to result in desk rejection before peer review — scope mismatch, format issues, missing required sections, weak significance framing.
+    validations:
+      required: true
+
+  - type: textarea
+    id: invocation
+    attributes:
+      label: Invocation discipline — when to invoke, when not
+      description: |
+        When should this skill run, and when must it not? Be specific about the document phase, prior skills, or user signals that gate invocation.
+      placeholder: |
+        Invoke when: author is preparing for submission (document_phase.current in {submission, revision}), user explicitly asks for desk-rejection assessment, or the manuscript appears submission-ready.
+
+        Do not invoke when: outline / early-draft phase (premature), as a side-effect of another skill, or for editorial-side use on someone else's manuscript (ICMJE caveat).
+    validations:
+      required: true
+
+  - type: textarea
+    id: inputs
+    attributes:
+      label: Inputs
+      description: |
+        What does the skill consume? Be explicit about which `MANUSCRIPT_STATE.yaml` fields are load-bearing, and what manuscript content is required vs. optional.
+      placeholder: |
+        From MANUSCRIPT_STATE.yaml: project.target_venue, project.target_type, document_phase.current, core_claims, constraints.max_word_count.
+
+        From the manuscript: full prose. Optional: cover letter if present (often signals scope misalignment).
+    validations:
+      required: true
+
+  - type: textarea
+    id: outputs
+    attributes:
+      label: Outputs
+      description: |
+        What does the skill produce? Skills produce structured markdown (critique, validation), diffs (transformation), conversations (meta), or — rarely — file writes (init). Name the shape; downstream skills and the future `manuscript-pipeline` orchestrator will consume by structure.
+      placeholder: |
+        Structured markdown report with sections:
+        - Summary (overall desk-rejection risk: low / moderate / high)
+        - Risk findings (per-category: scope, format, structure, significance, presentation)
+        - Recommended pre-submission actions
+
+        No file modification. No invocation of other skills.
+    validations:
+      required: true
+
+  - type: textarea
+    id: grounding
+    attributes:
+      label: Grounding — required
+      description: |
+        **This is the load-bearing field.** Every skill must ground in `knowledge/` notes. Either:
+
+        1. **Existing notes** — list the paths (e.g. `knowledge/peer-review/editorial-decision-making.md`) and, for each, one sentence on which specific design choice in the skill it informs.
+
+        2. **Proposed notes** — list the proposed path (e.g. `knowledge/critique-techniques/desk-rejection-patterns.md`) and a 1-2 sentence summary of what literature it would synthesise. Proposed notes are fine, but the skill cannot ship until the notes exist; the issue will be labelled `needs-grounding`.
+
+        Mix is fine. Don't list a note that doesn't address a specific design choice — generic "this is about peer review" handwaving doesn't count as grounding.
+      placeholder: |
+        Existing:
+        - `knowledge/peer-review/editorial-decision-making.md` — establishes the 70-90% desk-rejection rates at top journals and the typical reasons editors give. Informs the per-category risk taxonomy.
+        - `knowledge/scientific-writing/significance-positioning.md` — for the significance-framing risk category.
+        - `knowledge/peer-review/common-critiques-taxonomy.md` — for the recurring patterns reviewers flag that desk-editors also catch.
+
+        Proposed: (none)
+    validations:
+      required: true
+
+  - type: textarea
+    id: non-goals
+    attributes:
+      label: Non-goals — what this skill will NOT do
+      description: |
+        Required. LLMs fail by silently overreaching; naming the boundary stops that. Be specific about what this skill is *not* and what it must refuse to do even if asked.
+      placeholder: |
+        - Not a full reviewer simulation (that's `reviewer-simulation`'s job).
+        - Not a citation check (that's `citation-audit`).
+        - Not transformation — does not rewrite or edit the manuscript.
+        - Not editorial-side use — running this on someone else's manuscript violates ICMJE / NIH / publisher policy (same caveat as `reviewer-simulation`).
+        - Not a probability estimate — outputs are qualitative risk bands (low / moderate / high), not "70% chance of desk rejection".
+    validations:
+      required: true
+
+  - type: textarea
+    id: failure-modes
+    attributes:
+      label: Failure modes — what could go wrong
+      description: |
+        What is the LLM-failure-mode you are explicitly guarding against? Every skill in the v0.1 set names the specific overreach it can't be allowed to produce (citation-audit: invented citations; reviewer-simulation: editorial-side misuse; argumentative-flow: dropped statistics). What's yours?
+      placeholder: |
+        - False confidence: model claims "no desk-rejection risk" on a manuscript that has one. Guard: explicit per-category coverage; if a category can't be assessed, say so rather than mark it green.
+        - Generic advice: model produces platitudes ("strengthen your significance section") rather than venue-specific signals. Guard: require target_venue in MANUSCRIPT_STATE.yaml; refuse to run useful if absent.
+    validations:
+      required: true
+
+  - type: textarea
+    id: schema-changes
+    attributes:
+      label: Schema changes needed (if any)
+      description: |
+        Does the skill require new `MANUSCRIPT_STATE.yaml` fields or schema additions? Name them and explain why existing fields won't carry the weight. Schema additions get filed as separate issues with the `schema` label and need to land before the skill.
+      placeholder: |
+        None — `project.target_venue`, `project.target_type`, `document_phase.current`, `core_claims`, and `constraints.max_word_count` cover the inputs.
+
+        (Or: "Yes — needs `submission_target` block with venue-specific format requirements; will file separate schema issue.")
+
+  - type: dropdown
+    id: roadmap-alignment
+    attributes:
+      label: Roadmap alignment
+      description: |
+        Which release window does this target? See `docs/roadmap.md`. Pick `uncertain` if you don't know — that's a useful signal too.
+      options:
+        - v0.2
+        - v0.3
+        - v0.4
+        - v0.5+
+        - uncertain
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything else
+      description: Open-ended. Related skills, prior art, design questions, things you tried and rejected, links to literature you haven't synthesised yet.
