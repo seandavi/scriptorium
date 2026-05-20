@@ -73,7 +73,7 @@ ten v0.1+v0.2 skills have been used on more real manuscripts.
   `author-contribution-audit` and `reporting-guideline-fit` as
   landed; v0.3 table marks `terminology-normalization` and
   `gap-finder` as landed-early (during v0.2 ramp because their
-  grounding was ready), and notes that `reporting-compliance`
+  grounding was ready), and notes that `reporting-guideline-compliance`
   (the only remaining v0.3 generation/validation item upstream
   of which is reporting-guideline-fit) is the natural downstream
   follow-on.
@@ -149,7 +149,7 @@ ten v0.1+v0.2 skills have been used on more real manuscripts.
   current versions (PRISMA 2020 over 2009; TRIPOD+AI 2024
   over TRIPOD 2015 for AI-based prediction models).
   Upstream inference for the planned v0.3
-  `reporting-compliance` skill — this skill stops at "which
+  `reporting-guideline-compliance` skill — this skill stops at "which
   checklist?"; the downstream skill runs the full checklist.
   Replaces the originally-planned `reporting_guidelines:`
   schema addition — declaring with confidence in state was

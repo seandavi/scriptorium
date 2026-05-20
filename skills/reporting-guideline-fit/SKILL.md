@@ -1,6 +1,6 @@
 ---
 name: reporting-guideline-fit
-description: Read the manuscript's methods section (and abstract/title for context) and infer which EQUATOR Network reporting guideline applies — CONSORT for RCTs, STROBE for observational, PRISMA for systematic reviews, ARRIVE for animal research, TRIPOD/TRIPOD+AI for prediction models, STARD for diagnostic accuracy, CARE for case reports, COREQ for qualitative, with relevant AI-extensions (CONSORT-AI, SPIRIT-AI, TRIPOD+AI) when applicable. Outputs the inferred guideline(s) with confidence levels (high/moderate/low), the rationale per inference, and an explicit "other guidelines considered" section naming checklists evaluated and rejected. The author confirms or overrides; the skill never declares authoritatively. Upstream inference for the v0.3 reporting-compliance skill — this skill stops at "which checklist applies?"; running the full checklist against the manuscript is a separate skill. Refuses on outline phase; refuses cleanly when the methods section is too sketchy to infer reliably.
+description: Read the manuscript's methods section (and abstract/title for context) and infer which EQUATOR Network reporting guideline applies — CONSORT for RCTs, STROBE for observational, PRISMA for systematic reviews, ARRIVE for animal research, TRIPOD/TRIPOD+AI for prediction models, STARD for diagnostic accuracy, CARE for case reports, COREQ for qualitative, with relevant AI-extensions (CONSORT-AI, SPIRIT-AI, TRIPOD+AI) when applicable. Outputs the inferred guideline(s) with confidence levels (high/moderate/low), the rationale per inference, and an explicit "other guidelines considered" section naming checklists evaluated and rejected. The author confirms or overrides; the skill never declares authoritatively. Upstream inference for the v0.3 reporting-guideline-compliance skill — this skill stops at "which checklist applies?"; running the full checklist against the manuscript is a separate skill. Refuses on outline phase; refuses cleanly when the methods section is too sketchy to infer reliably.
 grounding:
   - knowledge/conventions/guidance-level.md
   - knowledge/conventions/declared-work-scope.md
@@ -14,7 +14,7 @@ Your job is to read the manuscript's methods section and infer
 which EQUATOR Network reporting guideline applies. The skill
 outputs the inferred guideline(s) with confidence levels and the
 rationale, then stops. Running the full checklist against the
-manuscript is a separate, downstream skill (`reporting-compliance`,
+manuscript is a separate, downstream skill (`reporting-guideline-compliance`,
 planned for v0.3).
 
 This is the **upstream inference** in the reporting-guidelines
@@ -41,7 +41,7 @@ authors uncertain about applicability can read the rationale and
 decide.
 
 The skill **does not run the checklist itself**. That's the
-`reporting-compliance` skill's job (planned for v0.3). Conflating
+`reporting-guideline-compliance` skill's job (planned for v0.3). Conflating
 the two would produce a single skill that's too long to be useful
 and that fails on the upstream "which checklist?" question
 silently when the inference is wrong. Keep the steps separate.
@@ -73,7 +73,7 @@ silently when the inference is wrong. Keep the steps separate.
    the inference as "the design as described points to X" rather
    than "this is a CONSORT manuscript".
 6. **Do not run the full checklist.** Stop at the inference
-   step. Point the author at `/scriptorium:reporting-compliance`
+   step. Point the author at `/scriptorium:reporting-guideline-compliance`
    (v0.3) as the next step for running the chosen checklist
    against the manuscript.
 7. **Never write to MANUSCRIPT_STATE.yaml.** The schema
@@ -222,7 +222,7 @@ Read `meta.guidance_level` from `MANUSCRIPT_STATE.yaml` (default
 - `standard` — open with one sentence naming the methods-section
   signal strength (clear / moderately clear / sketchy) and the
   count of applicable checklists; close with the recommended
-  next step (`/scriptorium:reporting-compliance` against the
+  next step (`/scriptorium:reporting-guideline-compliance` against the
   chosen checklist, planned v0.3).
 - `full` — open with what reporting guidelines do (standardise
   reporting so reviewers and readers can evaluate methodology
@@ -265,7 +265,7 @@ changes.
    - **Low confidence**: methods is sketchy or design genuinely
      unclear. Skill recommends the checklist but flags that the
      methods needs to be fleshed out before the
-     reporting-compliance step is useful.
+     reporting-guideline-compliance step is useful.
 5. **Surface rejected candidates explicitly.** The "Other
    guidelines considered" section names checklists the skill
    evaluated but rejected — particularly important when the
@@ -274,7 +274,7 @@ changes.
    CONSORT and STROBE; the skill names which and why one was
    chosen).
 6. **Recommend the next step.** Point the author at the v0.3
-   `reporting-compliance` skill (or, while that's not yet
+   `reporting-guideline-compliance` skill (or, while that's not yet
    built, at the EQUATOR-published checklist URL and a
    manual checklist walkthrough). Never run the checklist
    itself.
@@ -343,16 +343,16 @@ ambiguity.">
 ## Recommended next step
 
 <concrete: "Once you confirm the inference, run
-/scriptorium:reporting-compliance with [chosen guideline] to
+/scriptorium:reporting-guideline-compliance with [chosen guideline] to
 audit the manuscript against the checklist items. Until
-reporting-compliance lands in v0.3, the EQUATOR Network
+reporting-guideline-compliance lands in v0.3, the EQUATOR Network
 publishes the [checklist] at [URL]; a manual walkthrough is
 feasible for any of the v0.1 supported checklists." Concrete
 URLs where stable.>
 
 ## What this inference did NOT do
 
-<explicit boundaries: not the full reporting-compliance audit
+<explicit boundaries: not the full reporting-guideline-compliance audit
 (this skill stops at the inference); not a declaration of
 which guideline must be used (recommendation only — the
 author confirms); not a study-design critique (the skill
@@ -369,11 +369,11 @@ was the right choice); not editor-side enforcement.>
 - **Multi-checklist applicability surfaced explicitly**: when
   ARRIVE + CONSORT both apply, the Multi-checklist section names
   the combination and the author isn't surprised when the
-  reporting-compliance step runs against both.
+  reporting-guideline-compliance step runs against both.
 - **Low confidence is named cleanly**: "Methods section is too
   sketchy to discriminate between CONSORT (randomised) and
   STROBE (observational); flesh out the allocation method
-  before running the reporting-compliance step" is the honest
+  before running the reporting-guideline-compliance step" is the honest
   output when the design isn't clear.
 - **Rejected candidates have rationale**: not just "considered
   STROBE", but "considered STROBE because the prose used
@@ -389,7 +389,7 @@ was the right choice); not editor-side enforcement.>
 
 ## What you must not do
 
-- Run the full reporting-compliance audit (separate v0.3
+- Run the full reporting-guideline-compliance audit (separate v0.3
   skill).
 - Declare a checklist as authoritatively applicable. The skill
   recommends; the author confirms.
@@ -429,7 +429,7 @@ This skill is grounded in published research:
 - [[guidance-level]] — the framing-level convention.
 
 This skill is the **upstream inference** in the
-reporting-guidelines workflow; the v0.3 `reporting-compliance`
+reporting-guidelines workflow; the v0.3 `reporting-guideline-compliance`
 skill (planned) is the downstream checklist runner. The two are
 deliberately separate — conflating them produces a skill that's
 too long, and that fails silently on the inference step when
@@ -437,7 +437,7 @@ it's wrong.
 
 ## See also
 
-- `/scriptorium:reporting-compliance` (planned v0.3) — the
+- `/scriptorium:reporting-guideline-compliance` (planned v0.3) — the
   downstream skill that runs the inferred checklist against
   the manuscript. Natural follow-on.
 - `/scriptorium:reviewer-simulation` — pairs naturally before

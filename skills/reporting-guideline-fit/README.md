@@ -8,14 +8,14 @@ STARD-AI, TRIPOD+AI) where applicable.
 
 This is the **upstream inference** in the reporting-guidelines
 workflow. Stops at "which checklist?"; the downstream
-`reporting-compliance` skill (planned v0.3) runs the full
+`reporting-guideline-compliance` skill (planned v0.3) runs the full
 checklist against the manuscript.
 
 ## When to invoke
 
 - The author asks "which reporting checklist applies to my
   study?"
-- Before running the downstream `reporting-compliance` audit
+- Before running the downstream `reporting-guideline-compliance` audit
   (v0.3) and the right checklist isn't yet known.
 - The author is on the edge between two adjacent designs
   (non-randomised intervention → CONSORT or STROBE?) and wants
@@ -54,7 +54,7 @@ The skill takes a stand on three forms of honesty:
 
 ## What it explicitly will not do
 
-- Run the full reporting-compliance audit (that's the
+- Run the full reporting-guideline-compliance audit (that's the
   downstream v0.3 skill).
 - Declare a checklist as authoritatively applicable.
   Recommendation only — the author confirms.
@@ -83,7 +83,7 @@ matters.
   protocol, output template, hard constraints).
 - [`prompt.md`](prompt.md) — platform-neutral version.
 - [`manifest.yaml`](manifest.yaml) — machine-readable metadata.
-- `/scriptorium:reporting-compliance` (planned v0.3) — the
+- `/scriptorium:reporting-guideline-compliance` (planned v0.3) — the
   downstream skill that runs the chosen checklist against the
   manuscript.
 - `/scriptorium:reviewer-simulation` — pairs naturally before

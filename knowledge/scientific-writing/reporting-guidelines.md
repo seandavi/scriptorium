@@ -18,7 +18,7 @@ tell you whether a paper is *readable*, reporting guidelines tell you whether
 it is *evaluable*. A trial paper that omits randomization details is not
 recoverable by good prose. Several scriptorium skills planned for v0.3 — in
 particular `statistics-consistency`, `sample-size-validation`, and a future
-`reporting-compliance` skill — are grounded directly in these checklists.
+`reporting-guideline-compliance` skill — are grounded directly in these checklists.
 
 The major reporting guidelines have been published with explanation-and-
 elaboration companion documents that work as worked examples and are useful
@@ -173,7 +173,7 @@ Direct connections:
   justification is present (CONSORT 7a; ARRIVE Essential 10 item 2; STROBE
   item 10) and whether the justification names the assumed effect size,
   power, and alpha. The skill should not invent these — only flag absence.
-- **`reporting-compliance`** (proposed new skill). A direct mapping from
+- **`reporting-guideline-compliance`** (proposed new skill). A direct mapping from
   manuscript sections to checklist items. Output: per-item status (present /
   partial / missing / not-applicable) with a span pointer for each
   "present" claim. This is a critique skill, not transformative.

@@ -182,7 +182,7 @@ its em-dash style is wrong. But style is exactly where *normalization* and
   conversion among Vancouver, author–date, and superscript numeric forms.
   This is the easiest style work to automate — citation styles are
   formally specified — and it should not interact with prose.
-- **`reporting-compliance`** (proposed, see [[reporting-guidelines]]). Some
+- **`reporting-guideline-compliance`** (proposed, see [[reporting-guidelines]]). Some
   reporting-guideline items are also style items (e.g., AMA's statistical
   reporting conventions overlap with CONSORT and STROBE). The two
   validation layers should be kept distinct in output but routed
