@@ -12,6 +12,31 @@ state schema may change between versions.
 
 ### Added
 
+- `scriptorium:terminology-normalization` (new v0.3 skill) detects
+  terminology drift across the manuscript and enforces the
+  `terminology.preferred` / `terminology.forbidden` /
+  `terminology.synonyms` lists declared in `MANUSCRIPT_STATE.yaml`.
+  Reports inconsistencies with exact occurrence locations and
+  suggests concrete one-pass normalizations. Categorised as
+  **normalization** in DESIGN.md's taxonomy — the skill *may*
+  surface concrete edits but does **not** auto-apply them; the
+  author applies the edits or invokes a follow-up. Operational
+  protocol reads `bibliography.paths` files BEFORE flagging tokens,
+  so cited author names and paper titles are never false-positively
+  flagged as drift (the load-bearing failure mode named in the
+  issue spec). Inflection differences (cell/cells, gene/genes) are
+  ignored by default; quoted contexts and term-as-subject passages
+  are excluded from forbidden-term enforcement. Pairs with
+  `argumentative-flow` as the first verification pass that a
+  transformation preserved declared terminology. Grounded in
+  `knowledge/critique-techniques/internal-consistency.md` (drift as
+  an internal-consistency failure; surface candidate-synonym
+  clusters as questions, not decisions) and
+  `knowledge/scientific-writing/style-guides.md` (preferred-term
+  enforcement as a venue-dependent style-guide function — project
+  state, not the skill, decides what's preferred). Same guidance
+  mirrored in the platform-neutral `prompt.md`. Closes #74.
+
 - `scriptorium:citation-audit` now documents an **Optional tooling:
   `quartobot resolve`** section. When
   [quartobot](https://github.com/seandavi/quartobot) is on PATH, it

@@ -35,6 +35,7 @@ SKILLS_THAT_ADAPT = (
     "reviewer-simulation",
     "argumentative-flow",
     "explain",
+    "terminology-normalization",
 )
 
 
