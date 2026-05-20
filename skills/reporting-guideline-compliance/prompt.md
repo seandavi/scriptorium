@@ -1,6 +1,6 @@
-# Reporting compliance (platform-neutral prompt)
+# Reporting-guideline compliance (platform-neutral prompt)
 
-You are running a **reporting-compliance** audit on a scientific
+You are running a **reporting-guideline-compliance** audit on a scientific
 manuscript. Your job is to walk an EQUATOR Network reporting-
 guideline checklist (CONSORT, STROBE, PRISMA, ARRIVE, STARD,
 TRIPOD/TRIPOD+AI, CARE, COREQ, CHEERS, plus AI extensions where
@@ -99,7 +99,7 @@ Emit a markdown document with exactly these section headings,
 in order:
 
 ```markdown
-# Reporting compliance
+# Reporting-guideline compliance
 
 ## Summary
 - Checklist audited: <NAME VERSION>
@@ -162,7 +162,7 @@ desk-rejection risk. Do **not** propose prose; name the gap.)
 - Run other skills as side effects.
 
 This prompt is the platform-neutral form of scriptorium's
-`reporting-compliance` skill. The Claude Code form
+`reporting-guideline-compliance` skill. The Claude Code form
 (`SKILL.md`) and the human-facing README, plus the knowledge
 layer that grounds the design choices above, live at
-<https://github.com/seandavi/scriptorium/tree/main/skills/reporting-compliance>.
+<https://github.com/seandavi/scriptorium/tree/main/skills/reporting-guideline-compliance>.

@@ -1,5 +1,5 @@
 ---
-name: reporting-compliance
+name: reporting-guideline-compliance
 description: Run an EQUATOR Network reporting-guideline checklist (CONSORT, STROBE, PRISMA, ARRIVE, STARD, TRIPOD/TRIPOD+AI, CARE, COREQ, CHEERS, plus AI extensions) against a manuscript and classify every checklist item as present / partial / missing / not-applicable. For each item, anchors the classification in a quoted passage from the declared manuscript prose, or explicitly names the gap. Downstream of the v0.2 reporting-guideline-fit skill (which infers which checklist applies); this skill runs the checklist. Validation skill — surfaces gaps for the author to address; does not modify the manuscript and does not invent prose to fill missing items.
 grounding:
   - knowledge/conventions/guidance-level.md
@@ -8,9 +8,9 @@ grounding:
   - knowledge/critique-techniques/internal-consistency.md
 ---
 
-# Reporting compliance
+# Reporting-guideline compliance
 
-You are running scriptorium's **reporting-compliance** skill. Your
+You are running scriptorium's **reporting-guideline-compliance** skill. Your
 job is to walk an EQUATOR Network reporting-guideline checklist
 against the declared manuscript prose and classify each checklist
 item as `present`, `partial`, `missing`, or `not-applicable`, with
@@ -106,7 +106,7 @@ skill exists to avoid.
 - The applicable EQUATOR checklist is known — declared in
   `MANUSCRIPT_STATE.yaml#reporting_guideline`, passed as
   `reporting_guideline_fit_output`, or named explicitly in the
-  invocation (`/scriptorium:reporting-compliance with CONSORT
+  invocation (`/scriptorium:reporting-guideline-compliance with CONSORT
   2010`).
 - The manuscript is in `draft`, `revision`, or `submission`
   phase.
@@ -177,7 +177,7 @@ If none of these is present, refuse and point the author at
 Read `meta.guidance_level` from `MANUSCRIPT_STATE.yaml` (default
 `standard` if absent). Adapt framing per [[guidance-level]]:
 
-- `terse` — open with one line ("running reporting-compliance
+- `terse` — open with one line ("running reporting-guideline-compliance
   against <checklist> <version>"); emit the markdown report;
   no closing summary.
 - `standard` — open with a sentence naming the checklist and
@@ -193,7 +193,7 @@ Read `meta.guidance_level` from `MANUSCRIPT_STATE.yaml` (default
   `missing` first, then `partial`; `N/A` is not a gap; the
   audit does not invent prose to fill gaps). If first
   invocation this session, also offer
-  `/scriptorium:explain reporting-compliance`.
+  `/scriptorium:explain reporting-guideline-compliance`.
 
 Run the signal-based check-in once if appropriate. The
 structured output is unchanged across levels — only framing
@@ -260,7 +260,7 @@ Emit a markdown document with exactly these section headings,
 in order:
 
 ```markdown
-# Reporting compliance
+# Reporting-guideline compliance
 
 ## Summary
 
@@ -441,5 +441,5 @@ The two are deliberately separate.
 - `/scriptorium:citation-audit` — orthogonal: this skill
   audits what the prose reports; citation-audit audits what
   the prose cites. Both run cleanly side by side.
-- `/scriptorium:explain reporting-compliance` — full design
+- `/scriptorium:explain reporting-guideline-compliance` — full design
   tour.

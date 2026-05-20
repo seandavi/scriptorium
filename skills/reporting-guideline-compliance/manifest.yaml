@@ -4,7 +4,7 @@
 # by the scriptorium CLI (`list`, `prompt-pack`) and by future
 # orchestrators that compose skills.
 
-name: reporting-compliance
+name: reporting-guideline-compliance
 version: 0.1.0
 category: validation        # critique | validation | normalization | transformation | generation | meta
 

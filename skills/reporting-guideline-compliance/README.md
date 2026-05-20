@@ -1,4 +1,4 @@
-# reporting-compliance — audit a manuscript against its EQUATOR checklist
+# reporting-guideline-compliance — audit a manuscript against its EQUATOR checklist
 
 Walks an EQUATOR Network reporting-guideline checklist (CONSORT
 2010, STROBE, PRISMA 2020, ARRIVE 2.0, STARD 2015, TRIPOD 2015 /
@@ -97,7 +97,7 @@ and points the author at `reporting-guideline-fit`.
 ### Inside Claude Code
 
 ```text
-/scriptorium:reporting-compliance
+/scriptorium:reporting-guideline-compliance
 ```
 
 Then point Claude at the manuscript file(s) and ensure
@@ -111,18 +111,18 @@ scriptorium prompt-pack --output prompts.md
 ```
 
 Drop the prompt pack into your agent's context, then ask it to
-run `reporting-compliance` on your manuscript.
+run `reporting-guideline-compliance` on your manuscript.
 
 Or use this single skill's prompt directly:
 
 ```bash
-cat ~/.claude/plugins/scriptorium/skills/reporting-compliance/prompt.md
+cat ~/.claude/plugins/scriptorium/skills/reporting-guideline-compliance/prompt.md
 ```
 
 ## Output structure
 
 ```markdown
-# Reporting compliance
+# Reporting-guideline compliance
 
 ## Summary
 - Checklist audited: <NAME VERSION>
@@ -180,14 +180,14 @@ there.
 
 ## Sibling-skill relationship
 
-`reporting-compliance` is the **downstream audit** in a
+`reporting-guideline-compliance` is the **downstream audit** in a
 two-skill workflow:
 
 1. `reporting-guideline-fit` (v0.2) — **upstream inference**.
    Reads the methods section, infers which EQUATOR checklist
    applies (CONSORT? STROBE? PRISMA? ARRIVE? TRIPOD+AI?), with
    confidence levels. Stops at the recommendation.
-2. `reporting-compliance` (v0.3 — this skill) — **downstream
+2. `reporting-guideline-compliance` (v0.3 — this skill) — **downstream
    audit**. Walks the chosen checklist against the manuscript;
    classifies each item.
 
