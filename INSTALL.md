@@ -1,14 +1,54 @@
 # INSTALL
 
-Three install paths depending on the agent you use.
+Several install paths depending on the agent you use.
 
 ## Claude Code (recommended)
 
-Scriptorium ships as a Claude Code plugin. Two ways to install:
+Scriptorium ships as a Claude Code plugin via a self-hosted plugin
+marketplace at `seandavi/scriptorium`. Pick one of three paths:
 
-Scriptorium is pre-release (`0.1.0.dev0`). Both install paths
-currently go through a source checkout; a PyPI publication will
-land at v0.1 release.
+Scriptorium is pre-release (`0.1.0.dev0`). The marketplace install
+path uses Claude Code's built-in plugin system and needs no Python.
+The CLI install paths go through a source checkout. A PyPI
+publication will land at v0.1 release.
+
+### Plugin marketplace from GitHub (easiest, no Python required)
+
+Inside Claude Code:
+
+```text
+/plugin marketplace add seandavi/scriptorium
+/plugin install scriptorium@scriptorium
+```
+
+The `seandavi/scriptorium` argument is the `owner/repo` shorthand
+for <https://github.com/seandavi/scriptorium>. Claude Code clones
+the repo to its plugin cache, reads `.claude-plugin/marketplace.json`,
+and installs the `scriptorium` plugin from it. The skills appear as
+`scriptorium:init`, `scriptorium:citation-audit`, etc.
+
+To pin to a specific tag or commit, append `@ref` to the shorthand:
+
+```text
+/plugin marketplace add seandavi/scriptorium@v0.1.0
+```
+
+The non-interactive equivalent (from a shell) is:
+
+```bash
+claude plugin marketplace add seandavi/scriptorium
+claude plugin install scriptorium@scriptorium
+```
+
+Updates: `/plugin marketplace update scriptorium` refreshes the
+marketplace; `/plugin update scriptorium@scriptorium` updates the
+installed plugin. Uninstall: `/plugin uninstall scriptorium@scriptorium`.
+
+This path does not install the `scriptorium` Python CLI. If you also
+want the CLI (for `scriptorium validate`, `scriptorium init`,
+`scriptorium trace`, `scriptorium prompt-pack`), combine this path
+with `uv pip install agentic-scriptorium` once v0.1 publishes, or
+use one of the CLI install paths below.
 
 ### Live-linked (personal / development use)
 
@@ -21,9 +61,11 @@ scriptorium install --mode dev-link
 
 This symlinks the source repo into `~/.claude/plugins/scriptorium/`.
 Edits to the source propagate immediately. Best for the maintainer
-or anyone iterating on skills.
+or anyone iterating on skills. Skips the marketplace mechanism, so
+`/plugin update` will not touch this install — pulling the repo
+updates the plugin directly.
 
-### Copy-installed (clean / shared use)
+### Copy-installed (clean / shared use, no marketplace)
 
 ```bash
 git clone https://github.com/seandavi/scriptorium /tmp/scriptorium
@@ -34,9 +76,9 @@ scriptorium install
 
 This copies the bundled plugin into `~/.claude/plugins/scriptorium/`.
 Updates require re-running `scriptorium install`. Cleaner for users
-who don't plan to edit the skills. Once v0.1 publishes to PyPI, the
-clone step will become optional (`uv pip install agentic-scriptorium`,
-then `scriptorium install`).
+who want the Python CLI but not the marketplace mechanism. Once v0.1
+publishes to PyPI, the clone step will become optional
+(`uv pip install agentic-scriptorium`, then `scriptorium install`).
 
 ### Verifying
 
@@ -93,6 +135,15 @@ checklist. The skills double as editorial guidance.
   under `skills/` are human-readable.
 
 ## Uninstall
+
+For a marketplace install:
+
+```text
+/plugin uninstall scriptorium@scriptorium
+/plugin marketplace remove scriptorium
+```
+
+For a CLI install (dev-link or copy):
 
 ```bash
 rm -rf ~/.claude/plugins/scriptorium

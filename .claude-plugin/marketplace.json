@@ -1,0 +1,34 @@
+{
+  "name": "scriptorium",
+  "description": "Scriptorium: agentic operating system for scholarly writing. Citation audit, reviewer simulation, argumentative-flow analysis, manuscript-state initialization.",
+  "owner": {
+    "name": "Sean Davis",
+    "email": "seandavi@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "scriptorium",
+      "source": "./",
+      "description": "Coordinated AI capabilities for manuscripts, grants, and reviews. Reads and writes a shared MANUSCRIPT_STATE.yaml so skills compose rather than each starting from scratch.",
+      "version": "0.1.0-dev",
+      "author": {
+        "name": "Sean Davis",
+        "email": "seandavi@gmail.com"
+      },
+      "homepage": "https://github.com/seandavi/scriptorium",
+      "repository": "https://github.com/seandavi/scriptorium",
+      "license": "MIT",
+      "keywords": [
+        "scholarly-writing",
+        "scientific-writing",
+        "manuscripts",
+        "grants",
+        "peer-review",
+        "citation-audit",
+        "editorial",
+        "agentic"
+      ],
+      "category": "writing"
+    }
+  ]
+}

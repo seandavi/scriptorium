@@ -10,6 +10,18 @@ state schema may change between versions.
 
 ## [Unreleased]
 
+### Added
+
+- Self-hosted Claude Code plugin marketplace at
+  `.claude-plugin/marketplace.json`. Users can now install scriptorium
+  with `/plugin marketplace add seandavi/scriptorium` followed by
+  `/plugin install scriptorium@scriptorium`, with no Python toolchain
+  required. The existing `scriptorium install` CLI paths (dev-link,
+  copy) remain available for users who also want the Python CLI.
+  README.md and INSTALL.md updated; `tests/test_marketplace.py`
+  validates the manifest shape and that declared plugin sources
+  resolve.
+
 ## [0.1.0.dev0] - 2026-05-19
 
 The first published dev pre-release. This is the "skills usable end-to-end
