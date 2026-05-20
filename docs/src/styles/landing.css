@@ -1,0 +1,226 @@
+/* Landing-page custom styles.
+ *
+ * Mirrors the structural pattern used on the quartobot site:
+ *
+ * 1. `.hero-audience` — a one-line audience tag under the hero.
+ * 2. `.transform-strip` — the "before / after" demo block.
+ * 3. `.feature-band` — each of the alternating panel sections.
+ * 4. `.workflow-stages` — a 3-up grid showing where scriptorium fits.
+ * 5. `.limits-grid` — a 2-column grid of "what this does / does not do".
+ *
+ * Scoped class names so we don't leak into Starlight's built-in
+ * markdown rendering elsewhere on the site.
+ */
+
+/* ──────────────────────────────────────────── hero audience tag */
+
+.hero-audience {
+  margin: 0 0 1.5rem 0;
+  text-align: center;
+  font-size: 0.95rem;
+  font-style: italic;
+  color: var(--sl-color-gray-3);
+}
+
+/* ──────────────────────────────────────────── transform strip */
+
+.transform-strip {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  align-items: stretch;
+  margin: 2.5rem 0 3rem 0;
+  padding: 2rem;
+  background: var(--sl-color-gray-6);
+  border-radius: 0.5rem;
+}
+
+.transform-strip__label {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--sl-color-gray-3);
+}
+
+.transform-strip__arrow {
+  display: none;
+  align-self: center;
+  justify-self: center;
+  font-size: 1.5rem;
+  color: var(--sl-color-gray-3);
+}
+
+@media (min-width: 720px) {
+  .transform-strip {
+    grid-template-columns: 1fr auto 1fr;
+    gap: 2rem;
+  }
+
+  .transform-strip__arrow {
+    display: block;
+  }
+}
+
+/* ──────────────────────────────────────────── feature bands */
+
+.feature-band {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  align-items: center;
+  margin: 2.5rem 0;
+  padding-top: 2rem;
+  border-top: 1px solid var(--sl-color-hairline);
+}
+
+.feature-band:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+.feature-band__layer {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sl-color-text-accent);
+}
+
+.feature-band__title {
+  margin: 0.15rem 0 0.5rem 0;
+  font-size: 1.6rem;
+  line-height: 1.2;
+}
+
+.feature-band__audience {
+  margin: 0 0 0.75rem 0;
+  font-size: 0.9rem;
+  font-style: italic;
+  color: var(--sl-color-gray-3);
+}
+
+.feature-band__body p {
+  margin: 0 0 0.75rem 0;
+}
+
+.feature-band__callout {
+  margin: 0.75rem 0;
+  padding: 0.6rem 0.9rem;
+  border-left: 3px solid var(--sl-color-text-accent);
+  background: var(--sl-color-gray-6);
+  font-size: 0.95rem;
+}
+
+.feature-band__callout strong {
+  color: var(--sl-color-text-accent);
+}
+
+.feature-band__cta {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.feature-band__code pre {
+  margin: 0;
+}
+
+@media (min-width: 800px) {
+  .feature-band {
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin: 4rem 0;
+    padding-top: 3rem;
+  }
+
+  .feature-band--reverse .feature-band__code {
+    order: -1;
+  }
+}
+
+/* ──────────────────────────────────────────── workflow stages 3-up */
+
+.workflow-stages {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin: 2rem 0 3rem 0;
+}
+
+.workflow-stages__card {
+  padding: 1.1rem 1.2rem;
+  background: var(--sl-color-gray-6);
+  border-radius: 0.5rem;
+  border-left: 3px solid var(--sl-color-text-accent);
+}
+
+.workflow-stages__card h3 {
+  margin: 0 0 0.4rem 0;
+  font-size: 1.05rem;
+}
+
+.workflow-stages__card p {
+  margin: 0 0 0.4rem 0;
+  font-size: 0.92rem;
+}
+
+.workflow-stages__card .workflow-stages__skills {
+  font-size: 0.85rem;
+  color: var(--sl-color-gray-3);
+  font-style: italic;
+}
+
+.workflow-stages__card--out {
+  background: transparent;
+  border-left-color: var(--sl-color-gray-4);
+  border: 1px dashed var(--sl-color-hairline);
+}
+
+.workflow-stages__card--out h3 {
+  color: var(--sl-color-gray-3);
+}
+
+@media (min-width: 760px) {
+  .workflow-stages {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ──────────────────────────────────────────── limits grid */
+
+.limits-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  margin: 2rem 0 3rem 0;
+}
+
+.limits-grid__column {
+  padding: 1.1rem 1.25rem;
+  background: var(--sl-color-gray-6);
+  border-radius: 0.5rem;
+}
+
+.limits-grid__column h3 {
+  margin: 0 0 0.6rem 0;
+  font-size: 1.05rem;
+}
+
+.limits-grid__column ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.limits-grid__column li {
+  margin-bottom: 0.45rem;
+  font-size: 0.93rem;
+}
+
+@media (min-width: 800px) {
+  .limits-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+}
