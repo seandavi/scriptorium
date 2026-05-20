@@ -211,5 +211,11 @@ provenance.
 
 [^6]: NIH RePORT. Success rates statistics.
     https://report.nih.gov/funding/nih-budget-and-spending-data-past-fiscal-years/success-rates .
-    Recent ESI trend data summarized in practitioner reports;
-    `[TODO verify]` institute-specific figures cited in body.
+    Institute-specific ESI paylines are published on each institute's
+    funding page (e.g., NHLBI, NIDDK, NCI, NINDS); recent trend data
+    aggregated by practitioner trackers including the WriteDIT NIH
+    Paylines & Resources page (https://writedit.wordpress.com/nih-paylines-resources/).
+    The ~30% → ~18% ESI two-year trend referenced in the body is
+    consistent with FY2023–FY2025 figures reported in those sources
+    but specific institute attribution should be checked against the
+    institute's own current page at time of skill execution.

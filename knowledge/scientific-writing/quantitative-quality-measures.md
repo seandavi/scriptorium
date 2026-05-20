@@ -144,10 +144,13 @@ catalogued vocabularies of hedging markers (modal verbs *may*,
 *might*, *could*; epistemic verbs *suggest*, *appear*, *seem*;
 adverbs *possibly*, *probably*; nouns *possibility*, *suggestion*)
 and boosters (*demonstrate*, *prove*, *establish*, *clearly*,
-*certainly*). [Hyland's hedging-marker list referenced in
-[[semantic-preservation]] as a candidate resource for
-hedging-preservation checks; `[TODO verify]` the canonical
-machine-readable form.]
+*certainly*). The lists exist in Hyland's published monographs
+and corpus articles, but no openly-licensed canonical machine-
+readable distribution was located during this sweep — research-
+practice typically extracts the categories manually from the
+published taxonomy. Scriptorium would need to compile its own list
+from the published categories rather than depend on an upstream
+canonical file.
 
 The diagnostic use is not "this paper has too many hedges" but
 "this revision pass removed N hedges without recording a
@@ -308,13 +311,21 @@ is a defensible thought-leadership position.
   commentary suggests. The strongest specific critique is in the
   technical-writing and information-design literature; the
   scientific-writing literature relies more on commentary than on
-  controlled experiments. `[TODO verify]` a specific empirical
-  validation paper for "Flesch-Kincaid mis-scores scientific text."
-- The Hyland hedging-marker list exists in published form but
-  whether a clean, machine-readable, openly licensed version is
-  available for scriptorium to bundle is `[TODO verify]`.
-- Coh-Metrix and LIWC are research tools; their licensing for
-  inclusion in a deployed tool needs `[TODO verify]`.
+  controlled experiments. One adjacent result: Tanprasert & Kauchak
+  (2021) "Flesch-Kincaid is Not a Text Simplification Evaluation
+  Metric" (GEM workshop) shows Flesch-Kincaid is not a valid
+  *evaluation* metric for simplification; the analogous study
+  specifically validating "Flesch-Kincaid mis-scores scientific
+  research articles" was not located in this sweep.
+- A clean, openly-licensed machine-readable Hyland hedging-marker
+  list was not located during this sweep; scriptorium would need to
+  compile its own from the published taxonomy.
+- LIWC requires a paid license (academic licenses sold by Receptiviti;
+  commercial use requires a separate commercial license). This
+  precludes bundling LIWC in scriptorium without licensing. Coh-
+  Metrix is distributed by the Arizona State SoLET lab under
+  research-use terms; redistribution as part of a deployed tool
+  requires direct contact with the maintainers.
 - The boundary between "outlier" and "stylistically unusual but
   correct" is empirical. The skill should be honest that it
   produces candidates, not verdicts.
