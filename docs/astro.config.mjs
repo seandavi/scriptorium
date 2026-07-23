@@ -5,7 +5,7 @@ import starlight from "@astrojs/starlight";
 // GA4 is injected only into production builds. `astro dev` sets
 // NODE_ENV=development, so local sessions and CI link-checks don't ship hits.
 // Override the ID with GA_MEASUREMENT_ID to point at a different property.
-const gaId = process.env.GA_MEASUREMENT_ID ?? "G-JR9V6X8Z8R";
+const gaId = process.env.GA_MEASUREMENT_ID ?? "G-SWLJ3Z90W9";
 const analyticsHead =
   process.env.NODE_ENV === "production"
     ? [
