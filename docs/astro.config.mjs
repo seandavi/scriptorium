@@ -4,22 +4,22 @@ import starlight from "@astrojs/starlight";
 
 // GA4 is injected only into production builds. `astro dev` sets
 // NODE_ENV=development, so local sessions and CI link-checks don't ship hits.
-// Override the ID with GA_MEASUREMENT_ID to point at a different property.
-const gaId = process.env.GA_MEASUREMENT_ID ?? "G-JR9V6X8Z8R";
+// Consolidated "Sean Davis — web" property; skipped on non-production hosts.
+const gaId = "G-KLLV1GCF4E";
 const analyticsHead =
   process.env.NODE_ENV === "production"
     ? [
         {
           tag: "script",
-          attrs: { async: true, src: `https://www.googletagmanager.com/gtag/js?id=${gaId}` },
-        },
-        {
-          tag: "script",
           content:
+            `(function(){var h=location.hostname;` +
+            `if(h==='localhost'||h==='127.0.0.1'||/\\.(workers\\.dev|netlify\\.app|ts\\.net)$/.test(h)||/^[0-9.]+$/.test(h)||h.indexOf(':')>=0)return;` +
+            `var s=document.createElement('script');s.async=true;` +
+            `s.src='https://www.googletagmanager.com/gtag/js?id=${gaId}';document.head.appendChild(s);` +
             `window.dataLayer = window.dataLayer || [];` +
-            `function gtag(){dataLayer.push(arguments);}` +
+            `function gtag(){dataLayer.push(arguments);}window.gtag=gtag;` +
             `gtag('js', new Date());` +
-            `gtag('config', '${gaId}');`,
+            `gtag('config', '${gaId}', { content_group: 'scriptorium' });})();`,
         },
       ]
     : [];
