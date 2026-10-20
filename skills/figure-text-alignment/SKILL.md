@@ -330,7 +330,14 @@ This skill is grounded in scriptorium's knowledge layer:
   panel-letter, and counter-drift checks are text-tractable;
   axis-label match and plot-type match are not, and are deferred
   to sub-skill B until LLM-vision reliability on scientific
-  figures is validated.
+  figures is validated. The 2025–2026 benchmarks put numbers on
+  that deferral: on PRISMM-Bench, 21 large multimodal models
+  scored 27.8–53.9% on real reviewer-flagged inconsistencies,
+  and on MuSciClaims (a preprint) the best figure-claim
+  verification result was 0.72 F1, with models biased toward judging claims as
+  supported — the failure that would let an image-reading
+  sub-skill miss real misalignments while appearing to pass
+  them.
 - [[internal-consistency]] — frames figure-text alignment as a
   class of internal-consistency failure (alongside terminology
   drift, numerical-claim consistency, methods–results–discussion
@@ -344,6 +351,15 @@ This skill is grounded in scriptorium's knowledge layer:
   emphatically out of scope for scriptorium. Naming the boundary
   in *What this skill did NOT check* prevents authors from
   mistaking a text-only alignment audit for an integrity audit.
+  The 2025–2026 evidence strengthens the exclusion: PhD-level
+  reviewers spotted AI-forged western blots and tumour images at
+  chance (50.5%), and the best commercial detector reached AUC
+  0.79. Even sub-skill B, when it ships, should not take on
+  image-integrity claims. When pointing authors to ImageTwin,
+  note that in ASM's 2023–24 pilot it flagged problems only in
+  halftone images (blots, micrographs, photographs), not graphs
+  or line art. No source states Proofig's image-type coverage,
+  so do not extend that limit to Proofig.
 - [[guidance-level]] — scriptorium-wide convention controlling
   how much framing the skill adds around its structured output.
 - [[declared-work-scope]] — scriptorium-wide convention. This
