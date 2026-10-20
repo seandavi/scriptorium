@@ -22,6 +22,29 @@ lifecycle_phases:
   - revision
   - submission
 
+# How this skill frames its output at each meta.guidance_level value.
+# Sourced from the conversational-style section of SKILL.md so the
+# concept page (concepts/guidance-level.md) renders from manifest.
+# Consumed by docs build (concepts/guidance-level page generator).
+guidance_level_behavior:
+  terse: >
+    Open with one line ("running reviewer simulation across four
+    lenses"); emit the markdown report; no closing summary.
+    Returns one or two critiques per lens.
+  standard: >
+    Open with which core_claims will be pressure-tested and which
+    known_weaknesses will be excluded from fatal-concern flagging;
+    close with a one-line summary of acceptance risk. The full
+    six-section per-lens output (Major / Minor / Fatal / Enthusiasm
+    / Suggested Revisions / Acceptance Risk).
+  full: >
+    Open with what each lens is looking for and why Bornmann's
+    low inter-reviewer agreement motivates the multi-lens approach
+    (the surprising design choice authors most often ask about);
+    close with which critiques to address first and which are
+    framing-only. Adds per-critique rationale and
+    reviewer-archetype grounding.
+
 # Explicit invocation. The skill must NOT be auto-invoked — it is a
 # pressure-test that the author chooses to run on their own work.
 invocation: explicit

@@ -34,6 +34,26 @@ lifecycle_phases:
   - review
   - revision
 
+# How this skill frames its output at each meta.guidance_level value.
+# Sourced from the conversational-style section of SKILL.md so the
+# concept page (concepts/guidance-level.md) renders from manifest.
+# Consumed by docs build (concepts/guidance-level page generator).
+guidance_level_behavior:
+  terse: >
+    Open with a one-line "running figure-text alignment
+    (text-only)"; emit the markdown report; no closing summary.
+  standard: >
+    Open with a sentence naming the manuscript and the number of
+    figures discovered; close with a one-line summary of the
+    findings.
+  full: >
+    Open with what this skill produces (per-figure
+    caption-vs-body-text alignment classification + pattern-level
+    flags) and what it explicitly does not do (read figure
+    images); close with which findings to act on first and which
+    are informational. The no-image-reading posture is never
+    relaxed based on guidance level.
+
 # Explicit invocation. The skill is invoked when the author asks for
 # a figure-text alignment check (typically pre-submission or during
 # revision). Not a silent side-effect of any other skill.

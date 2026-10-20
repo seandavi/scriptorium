@@ -29,6 +29,22 @@ lifecycle_phases:
   - revision
   - submission
 
+# How this skill frames its output at each meta.guidance_level value.
+# Sourced from the cross-cutting rules section of SKILL.md so the
+# concept page (concepts/guidance-level.md) renders from manifest.
+# Consumed by docs build (concepts/guidance-level page generator).
+guidance_level_behavior:
+  terse: >
+    Suppress the "why this matters" prose; emit only the
+    structured summary.
+  standard: >
+    Keep the framing around the structured summary; one-screenful
+    target with sources cited at the end.
+  full: >
+    Keep the framing and the rationale; the synthesis aims for one
+    screenful regardless of level — what changes is whether
+    background prose accompanies the structured summary.
+
 # Explicit invocation only. Leaf skills running at the `full`
 # guidance level may suggest `/scriptorium:explain <name>`, but the
 # user always chooses to run it.

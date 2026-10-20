@@ -29,6 +29,29 @@ lifecycle_phases:
   - revision
   - submission
 
+# How this skill frames its output at each meta.guidance_level value.
+# tour always runs at `full` regardless of the saved preference
+# because the skill IS orientation; truncating it defeats the
+# point. Detection of a returning user is the right knob, not
+# guidance level. The descriptions below explain the constant
+# behaviour.
+# Consumed by docs build (concepts/guidance-level page generator).
+guidance_level_behavior:
+  terse: >
+    tour ignores the saved level and always runs at full;
+    truncating an onboarding tour defeats its purpose. A returning
+    user is detected from MANUSCRIPT_STATE.yaml presence and tour
+    skips to the relevant subset rather than truncating prose.
+  standard: >
+    Same as terse — tour always runs at full regardless of the
+    saved level. The level still gets mentioned to the user as
+    one of the things scriptorium will ask about during init.
+  full: >
+    tour's native level. Three or four turns: greet, ask what the
+    user is working on, walk through the relevant subset of
+    scriptorium, show an example MANUSCRIPT_STATE.yaml, end with
+    one concrete next move (usually scriptorium:init).
+
 # Explicit invocation. The intended pattern is that a maintainer
 # points a new user at `/scriptorium:tour` as their first step,
 # rather than linking them to documentation.

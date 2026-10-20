@@ -39,6 +39,29 @@ lifecycle_phases:
   - revision
   - submission
 
+# How this skill frames its output at each meta.guidance_level value.
+# Sourced from the conversational-style section of SKILL.md so the
+# concept page (concepts/guidance-level.md) renders from manifest.
+# On this skill the level also controls how many flags are
+# surfaced; the no-quality-score posture is never relaxed.
+# Consumed by docs build (concepts/guidance-level page generator).
+guidance_level_behavior:
+  terse: >
+    Open with a one-line "running outlier-sentence detector"; emit
+    the markdown report; surface up to ~3 flags per dimension; no
+    closing summary.
+  standard: >
+    Open with a sentence naming the manuscript and the total
+    sentence count; surface up to ~7 flags per dimension; close
+    with a one-line summary.
+  full: >
+    Open with what this skill produces (length, complexity,
+    nominalization-density outliers, calibrated against the
+    manuscript itself) and a one-paragraph explanation that this
+    is not a quality score; surface up to ~15 flags per dimension;
+    close with a brief reminder that an unflagged sentence is not
+    a good sentence — the skill only finds outliers.
+
 # Explicit invocation. This is a late-stage line-editing diagnostic
 # the author asks for, not a precondition for another skill's output.
 # Surprise outlier passes that flood the conversation with flags are

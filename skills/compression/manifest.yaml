@@ -43,6 +43,27 @@ lifecycle_phases:
   - revision
   - submission
 
+# How this skill frames its output at each meta.guidance_level value.
+# Sourced from the conversational-style section of SKILL.md so the
+# concept page (concepts/guidance-level.md) renders from manifest.
+# Consumed by docs build (concepts/guidance-level page generator).
+guidance_level_behavior:
+  terse: >
+    Open with one line ("running compression on <section>, target
+    <N> words"); emit the markdown report; no closing summary.
+  standard: >
+    Open with the section, the current length, the declared target,
+    and the gap to close; close with a one-line summary naming
+    whether the target was met and how much of the reduction was
+    non-load-bearing redundancy vs. structural reduction.
+  full: >
+    Open with what compression-as-copyediting means (line editing,
+    one step below argumentative-flow's developmental scope) and
+    what the extraneous-vs-germane-load distinction predicts; close
+    by naming which proposed edits cleared filler and which
+    approached the germane-load boundary and should be reviewed
+    carefully.
+
 # Explicit invocation required. Compression is a transformation
 # and surprise length reductions on an author's prose are exactly
 # the failure mode this skill's discipline is designed to avoid.
