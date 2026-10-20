@@ -10,6 +10,61 @@ state schema may change between versions.
 
 ## [Unreleased]
 
+### Author authority
+
+The author now decides what skills may do and where they apply (#156).
+Skill refusals are declared guards of three kinds. Policy guards
+(funder and publisher rules) and scope guards (the declared-work
+boundary) are defaults the author can override. Accuracy guards (no
+citations from model memory, no altered statistics, no inference the
+input can't support) are fixed. The defaults are unchanged: skills
+still decline blank-slate generation unless the author overrides it.
+
+- **Mechanism** (#157, PR #160) — the
+  `knowledge/conventions/author-authority.md` convention; a `guards:`
+  list in skill manifests (`id`, `kind`, `summary`, `source`,
+  `default` of `ask` or `refuse`); `meta.overrides` in
+  `MANUSCRIPT_STATE.yaml`; and `scriptorium validate` cross-checks
+  that reject an unknown guard id, an override of an accuracy guard,
+  or a skill that doesn't declare the guard. A per-run answer takes
+  precedence over `meta.overrides`, which takes precedence over the
+  default. Scope and accuracy guards must default to `refuse`
+  (enforced by `tests/test_manifest_guards.py`).
+- **Skill conversion** (#158, PRs #161–#166) — 31 guards (2 policy,
+  15 scope, 14 accuracy) declared across 13 skills. Each skill states
+  a guard's concern and source in one line at every guidance level,
+  says how to override when it declines, and names accuracy guards as
+  fixed. `explain`, `init` and `tour` declare no guards but describe
+  the mechanism; `init` offers `meta.overrides` as an opt-in field.
+- **"Overrides applied" output line** — a skill that proceeds past any
+  guard, through a per-run answer or `meta.overrides`, lists the guard
+  ids on one line under its report title, including an `ask` guard the
+  author answered yes to. The line is omitted otherwise.
+- **Editorial-side use asks instead of refusing** —
+  `reviewer-simulation`, `desk-rejection-risk`, `venue-fit` and
+  `author-contribution-audit` share the `editorial-side-use` policy
+  guard (`default: ask`). It fires when the user is reviewing or
+  editing a submitted manuscript, and names NIH's outright ban.
+- **New opt-in capabilities**, each an overridable scope guard that
+  defaults to `refuse`:
+  - verified citation suggestions in `citation-audit` and `gap-finder`
+    (`citation-recommendations`): only works resolved against
+    Crossref or PubMed in the same session are named;
+  - labelled image reading in `figure-text-alignment`
+    (`figure-image-reading`): every image-derived finding is labelled
+    "unvalidated vision", and image-integrity claims stay barred;
+  - rewrite suggestions in `figure-text-alignment` and
+    `outlier-sentence-detector` (`critique-rewrite-suggestions`): one
+    labelled suggestion per flagged item.
+- **Docs** (#159) — a new Author authority concept page with a guard
+  table generated from the manifests; `meta.overrides` in the schema
+  reference; glossary entries for guard, override and accuracy guard;
+  the declared-work-scope page, DESIGN.md, README and landing page
+  describe the defaults and author authority. The roadmap resolves the
+  `specific-aims` decision: NIH application prose is allowed behind
+  the `nih-application-prose` policy guard (`default: ask`, NIH
+  NOT-OD-25-132).
+
 ### Knowledge refresh (October 2026)
 
 Every note in `knowledge/` was re-verified against its sources (#125).
