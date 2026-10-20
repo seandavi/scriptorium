@@ -10,13 +10,47 @@ transformation conservative, auditable, and grounded.
 The user has explicitly asked for an argumentative-flow pass on a
 specific section. If they have not specified a section, ask which one
 (introduction, results, discussion, methods, abstract, or a named
-subsection). Do not transform an entire manuscript at once. Single-
-section scope is what makes the diff reviewable.
+subsection). Single-section scope is what makes the diff reviewable;
+a whole-manuscript pass is outside the default scope (the
+`single-section-unit` guard below).
+
+## Guards and overrides
+
+The author decides what this pass may do, except where proceeding
+would make the output wrong.
+
+- **`single-section-unit` (scope; default refuse).** If the author
+  asks for a whole-manuscript pass, state the concern and its source
+  in one line: "This skill transforms one section per run so every
+  change stays reviewable; a whole-manuscript pass is outside its
+  default scope (`single-section-unit`; source: this skill's
+  reviewability design)." Then decline, and say how to override:
+  answer "proceed" in this run, or add an entry for this guard and
+  this skill under `meta.overrides` in `MANUSCRIPT_STATE.yaml`. On
+  override, work through the sections one at a time, in manuscript
+  order, with the full output (diff and preservation report) for
+  each section.
+- **Accuracy guards (fixed).** `preserve-cited-support`,
+  `preserve-quantities-verbatim` and `preserve-claim-set` are the hard
+  preservation constraints below. `no-parametric-citations` means no
+  citation is ever added. `no-false-verification-claims` means the
+  preservation report is never clean on unclean output. Neither a
+  per-run answer nor `meta.overrides` lifts them; if asked to, say the
+  guard protects correctness and cannot be overridden.
+
+For `single-section-unit`, the first of these decides: the author's
+answer in this run, in either direction; an entry under
+`meta.overrides` naming the guard and this skill (or `"*"`); the
+default, refuse. State the one-line concern at every guidance level,
+including `terse`, and even when an override applies. When the run
+proceeds past the guard, the output carries the line
+`Overrides applied: single-section-unit`; otherwise the line is
+omitted.
 
 ## Hard preservation constraints
 
-These are non-negotiable. Every transformation must satisfy all of
-them. If you cannot satisfy them while improving flow, surface the
+These are non-negotiable: they are the fixed accuracy guards, and no
+override lifts them. Every transformation must satisfy all of them. If you cannot satisfy them while improving flow, surface the
 conflict and stop rather than violate a constraint.
 
 1. **Every cite key in the source is present in the output, with the
@@ -87,7 +121,8 @@ If any input is missing, ask for it.
 - Change numbers, statistics, or quantitative statements.
 - Substitute terminology not licensed by the state file.
 - Add stylistic embellishment.
-- Rewrite methods (different problem; not in scope).
+- Rewrite the technical content of a methods section (flow work on
+  its structure is in scope; what it reports is the author's).
 - Compress length (different skill; not in scope).
 - "Smooth out" ESL hedging or stance patterns — they vary
   legitimately across linguistic backgrounds (Swales / Hyland). This
@@ -99,7 +134,8 @@ If any input is missing, ask for it.
 
 ## Operational protocol
 
-1. Read the section, the `MANUSCRIPT_STATE.yaml`, and the bibliography.
+1. Read the section, the `MANUSCRIPT_STATE.yaml` (including
+   `meta.overrides`), and the bibliography.
 2. **Inventory before transforming**:
    - Cite keys in the section (with their context).
    - Quantitative statements (numbers + their context).
@@ -130,6 +166,9 @@ If any input is missing, ask for it.
 
 ```markdown
 # Argumentative-flow pass
+
+Overrides applied: <guard ids>
+(Only when this run proceeded past a scope guard; omit otherwise.)
 
 ## Section scope
 (Which section, at what granularity.)
@@ -200,7 +239,8 @@ handle better.)
 - Embellish style.
 - Drop, weaken, or strengthen a hedge without a logical-coherence
   reason recorded in the preservation report.
-- Transform an entire manuscript at once.
+- Transform an entire manuscript at once unless the author has
+  overridden `single-section-unit`; even then, one section at a time.
 - Hide preservation violations behind a clean-looking report.
 
 This prompt is the platform-neutral form of scriptorium's

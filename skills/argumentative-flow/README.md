@@ -50,14 +50,16 @@ terminology-normalization) inherit it.
   Add or cut — no. If a claim genuinely should be cut, the pass
   recommends cutting it in the Remaining weaknesses section; the
   author decides.
-- **Rewrite the methods section.** Different problem; different skill
-  (not in v0.1).
+- **Rewrite the technical content of a methods section.** Flow work
+  on a methods section's structure is in scope, as for any section;
+  what it reports is the author's to change.
 - **Compress length.** Different skill ([`compression`](../compression/README.md)).
 - **"Smooth out" ESL hedging or stance patterns** — they vary
   legitimately across linguistic backgrounds and are often
   deliberate.
-- **Transform the whole manuscript at once.** Single-section scope is
-  what makes the diff reviewable.
+- **Transform the whole manuscript at once**, by default.
+  Single-section scope is what makes the diff reviewable. The author
+  can override this (see [Guards and overrides](#guards-and-overrides)).
 
 ## Hard preservation constraints
 
@@ -72,7 +74,8 @@ terminology-normalization) inherit it.
 
 If preservation conflicts with a proposed improvement, **preservation
 wins**. The pass surfaces the conflict in Remaining weaknesses rather
-than silently violating.
+than silently violating. These constraints are fixed accuracy guards;
+no override lifts them.
 
 BERTScore and similar metrics are insensitive to negation and to
 numerical changes ([`semantic-preservation`](../../knowledge/editing/semantic-preservation.md)),
@@ -80,6 +83,25 @@ so embedding similarity is **not** a safe automated guard against
 meaning flips. The skill reads the revised text against the source for
 semantic preservation; it does not delegate that check to an
 automated similarity metric.
+
+## Guards and overrides
+
+The guards are declared in [`manifest.yaml`](manifest.yaml) and follow
+[`author-authority`](../../knowledge/conventions/author-authority.md).
+
+| Guard | Kind | Default | Author can override? |
+|---|---|---|---|
+| `single-section-unit` | scope | refuse | Yes: answer "proceed" in the run, or list it under `meta.overrides` |
+| `preserve-cited-support`, `preserve-quantities-verbatim`, `preserve-claim-set` | accuracy | refuse | No |
+| `no-parametric-citations`, `no-false-verification-claims` | accuracy | refuse | No |
+
+Asked for a whole-manuscript pass, the skill states the concern in one
+line and declines unless the author overrides `single-section-unit`.
+With the override it works through the sections one at a time, each
+with its own diff and preservation report, and the output carries an
+`Overrides applied: single-section-unit` line. That line is the
+skill's one output addition under author authority; it is absent when
+no override was applied.
 
 ## Inputs
 
@@ -94,6 +116,8 @@ automated similarity metric.
 
 ```markdown
 # Argumentative-flow pass
+
+Overrides applied: <guard ids>   (only when an override was applied)
 
 ## Section scope
 ## Structural diagnosis
@@ -174,6 +198,11 @@ This skill is grounded in scriptorium's knowledge layer:
   are field-specific (interactional metadiscourse rose in the
   sciences; Hyland & Jiang 2018). The skill must not "smooth out"
   deliberate ESL hedging.
+- [`hallucination-in-llm-citations`](../../knowledge/citations/hallucination-in-llm-citations.md)
+  — LLMs fabricate references; the reason the skill never adds a
+  citation.
+- [`author-authority`](../../knowledge/conventions/author-authority.md)
+  — which guards the author can override and how.
 
 A drift away from these groundings either gets the skill updated or
 gets the grounding extended; never both unchanged.
@@ -187,8 +216,9 @@ gets the grounding extended; never both unchanged.
   can be caught mechanically rather than relying on the model's
   recall of what was originally there.
 - **Single-section scope.** Reviewable diffs require small surface
-  area. A "transform the whole manuscript" mode is implicitly
-  declined — splitting into per-section passes is the design.
+  area. A "transform the whole manuscript" request is declined by
+  default (`single-section-unit`); with the author's override it
+  still runs as per-section passes, which is the design.
 - **Explicit-only invocation, hard-coded.** The description does not
   telegraph "automatically use this when…". The constraint lives in
   prompt text, manifest metadata, and README.

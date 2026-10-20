@@ -4,12 +4,14 @@ description: Improve a manuscript section's logical and argumentative coherence 
 grounding:
   - knowledge/conventions/guidance-level.md
   - knowledge/conventions/declared-work-scope.md
+  - knowledge/conventions/author-authority.md
   - knowledge/scientific-writing/reader-expectation-approach.md
   - knowledge/scientific-writing/narrative-frameworks.md
   - knowledge/critique-techniques/argument-mapping.md
   - knowledge/editing/semantic-preservation.md
   - knowledge/editing/revision-research.md
   - knowledge/scientific-writing/esl-writers-swales-hyland.md
+  - knowledge/citations/hallucination-in-llm-citations.md
 ---
 
 # Argumentative-flow pass
@@ -30,14 +32,50 @@ or a reviewer simulation and you can see argumentative-flow problems
 in the text, *say so* in the audit output but do not transform the
 text.
 
-If the user has not specified a section, ask. Do not transform an
-entire manuscript at once — the unit of work is one section at a time
-(introduction, results, discussion, methods, abstract, or a named
-subsection). Single-section scope is what makes the diff reviewable.
+If the user has not specified a section, ask. The unit of work is one
+section at a time (introduction, results, discussion, methods,
+abstract, or a named subsection). Single-section scope is what makes
+the diff reviewable; a whole-manuscript pass is outside the default
+scope (the `single-section-unit` guard below).
+
+## Guards and overrides
+
+This skill's guards are declared in `manifest.yaml` and follow
+[[author-authority]]: the author decides what the skill may do, except
+where proceeding would make the output wrong.
+
+- **`single-section-unit` (scope; default refuse).** If the author
+  asks for a whole-manuscript pass, state the concern and its source
+  in one line: "This skill transforms one section per run so every
+  change stays reviewable; a whole-manuscript pass is outside its
+  default scope (`single-section-unit`; source: this skill's
+  reviewability design)." Then decline, and say how to override:
+  answer "proceed" in this run, or add an entry for this guard and
+  this skill under `meta.overrides` in `MANUSCRIPT_STATE.yaml`. On
+  override, work through the sections one at a time, in manuscript
+  order, with the full output (diff and preservation report) for
+  each section.
+- **Accuracy guards (fixed).** `preserve-cited-support`,
+  `preserve-quantities-verbatim` and `preserve-claim-set` are the hard
+  preservation constraints below. `no-parametric-citations` means no
+  citation is ever added. `no-false-verification-claims` means the
+  preservation report is never clean on unclean output. Neither a
+  per-run answer nor `meta.overrides` lifts them; if asked to, say the
+  guard protects correctness and cannot be overridden.
+
+Read `meta.overrides` with the rest of `MANUSCRIPT_STATE.yaml`. For
+`single-section-unit`, the first of these decides: the author's answer
+in this run, in either direction; an entry under `meta.overrides`
+naming the guard and this skill (or `"*"`); the default, refuse. State
+the one-line concern at every guidance level, including `terse`, and
+even when an override applies. When the run proceeds past the guard,
+the output carries the line `Overrides applied: single-section-unit`
+(see Output format); otherwise the line is omitted.
 
 ## Hard preservation constraints
 
-These are non-negotiable. Every transformation must satisfy all of
+These are non-negotiable: they are the skill's fixed accuracy guards,
+and no override lifts them. Every transformation must satisfy all of
 them. If you cannot satisfy them while improving flow, surface the
 conflict and stop rather than violate a constraint.
 
@@ -123,8 +161,10 @@ These are the legitimate transformations:
 - Change numbers, statistics, or quantitative statements.
 - Substitute terminology not licensed by the state file.
 - Add stylistic embellishment.
-- Rewrite the methods section (different problem — different skill,
-  not in v0.1).
+- Rewrite the technical content of a methods section (protocols,
+  parameters, analysis choices). Improving a methods section's
+  structure and flow is in scope, as for any other section; changing
+  what it reports is the author's job.
 - "Improve" length. If the user wants the section shorter, that's a
   different skill (compression, v0.2).
 - Translate between English varieties (US/UK), academic registers, or
@@ -186,7 +226,8 @@ Work in this order:
 
 1. **Read the section, `MANUSCRIPT_STATE.yaml`, and the bibliography.**
    You need the bibliography to verify citation preservation; you need
-   the state file for terminology, voice, and tone targets.
+   the state file for terminology, voice, and tone targets, and for
+   `meta.overrides` (see Guards and overrides).
 2. **Inventory before transforming.** Extract:
    - The list of cite keys in the section, with their context.
    - The list of quantitative statements (numbers + their context).
@@ -236,6 +277,11 @@ order:
 
 ```markdown
 # Argumentative-flow pass
+
+Overrides applied: <guard ids>
+
+(Only when this run proceeded past a scope guard, through a per-run
+answer or `meta.overrides`. Omit the line otherwise.)
 
 ## Section scope
 
@@ -349,7 +395,8 @@ human + statcheck). Be specific.)
 - Drop, weaken, or strengthen a hedge without a logical-coherence
   reason recorded in the preservation report.
 - Run without an explicit user invocation on a specific section.
-- Transform an entire manuscript at once.
+- Transform an entire manuscript at once unless the author has
+  overridden `single-section-unit`; even then, one section at a time.
 - Hide a preservation violation behind a clean-looking report.
 
 ## Grounding
@@ -380,6 +427,12 @@ This skill is grounded in scriptorium's knowledge layer:
   skill must not "smooth out" deliberate hedging.
   Enforced as an active check during the inventory step and audited
   in the preservation report — not just a passive non-goal.
+- [[hallucination-in-llm-citations]] — LLMs fabricate references;
+  the reason this skill never adds a citation
+  (`no-parametric-citations`).
+- [[author-authority]] — which guards the author can override and
+  how; the preservation constraints are accuracy guards and stay
+  fixed.
 
 A drift away from these groundings either gets the skill updated or
 gets the grounding extended; never both unchanged.

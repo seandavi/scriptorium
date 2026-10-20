@@ -20,7 +20,8 @@ produces:
   - diff-against-source
 
 modifies:
-  # Single named section at a time. Never the whole manuscript at once.
+  # Single named section at a time. A whole-manuscript pass is outside
+  # the default scope (scope guard single-section-unit).
   - manuscript_section
 
 # document_phase values the skill is designed to operate on. The
@@ -97,14 +98,48 @@ grounding:
   - knowledge/editing/semantic-preservation.md
   - knowledge/editing/revision-research.md
   - knowledge/scientific-writing/esl-writers-swales-hyland.md
+  - knowledge/citations/hallucination-in-llm-citations.md
 
 non_goals:
   - Adding or removing citations.
   - Changing numbers or quantitative statements.
   - Substituting terminology not licensed by the state file.
   - Adding stylistic embellishment.
-  - Rewriting the methods section (different problem; out of v0.1).
+  - Rewriting the technical content of a methods section (flow work on its structure is in scope).
   - Compressing length (different skill; v0.2 candidate).
   - Smoothing out ESL hedging or stance patterns.
-  - Transforming an entire manuscript at once.
+  - Transforming an entire manuscript at once by default (scope guard single-section-unit).
   - Auto-invocation as a follow-up to another skill.
+
+# Guards this skill applies (knowledge/conventions/author-authority.md).
+# Policy and scope guards are defaults the author can override, per run
+# or under MANUSCRIPT_STATE.yaml#meta.overrides; accuracy guards are fixed.
+guards:
+  - id: single-section-unit
+    kind: scope
+    summary: "This skill transforms one section per run so every change stays reviewable; a whole-manuscript pass is outside its default scope."
+    default: refuse
+  - id: no-parametric-citations
+    kind: accuracy
+    summary: "Citations never come from model memory: only works in the manuscript's bibliography, or ones verified against an authoritative record in this session, are named."
+    source: "knowledge/citations/hallucination-in-llm-citations.md"
+    default: refuse
+  - id: no-false-verification-claims
+    kind: accuracy
+    summary: "The skill never reports a check as done or passed when it was not (full-text support, a clean preservation report, a figure it did not see)."
+    default: refuse
+  - id: preserve-cited-support
+    kind: accuracy
+    summary: "Every cite key in the source stays attached to the claim it supports; none is removed, renamed or detached by the transformation."
+    source: "knowledge/editing/semantic-preservation.md"
+    default: refuse
+  - id: preserve-quantities-verbatim
+    kind: accuracy
+    summary: "Numbers, units and statistics are carried over verbatim; none is rounded, re-expressed or replaced with words."
+    source: "knowledge/editing/semantic-preservation.md"
+    default: refuse
+  - id: preserve-claim-set
+    kind: accuracy
+    summary: "The transformation adds, removes, merges, re-scopes or re-weights no claim (including by changing a hedge) without recording the change and its reason."
+    source: "knowledge/editing/semantic-preservation.md"
+    default: refuse
