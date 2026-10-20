@@ -22,9 +22,9 @@ the manuscript's prose. Per the grounding note
 [`quantitative-quality-measures`](../../knowledge/scientific-writing/quantitative-quality-measures.md):
 
 > "There is no single number that captures [writing quality], and
-> any tool that produces one is throwing information away. The useful
-> operations are outlier flagging."
+> any tool that produces one is throwing information away."
 
+The first useful operation the note lists is outlier flagging.
 Outlier flagging is what this skill does. Quality scoring is not.
 
 The grounding note's verdict is **Selective Yes**: general-purpose
@@ -56,9 +56,12 @@ properties and surfaces outliers in each dimension:
   `-ment`, `-sion`, `-ance`, `-ence`), with a deny-list of
   high-frequency false positives (`function`, `evidence`,
   `experience`, `reference`, `sequence`, `instance`, `presence`,
-  `absence`, `variance`, `distance`, …). Per the grounding note,
-  nominalization density is one of the more reliable correlates
-  of unclear scientific prose.
+  `absence`, `variance`, `distance`, …). The grounding note does
+  not evaluate nominalization density; the dimension is a project
+  choice (nominalisation in the Joseph Williams / Helen Sword
+  sense). The note's warning that readability formulas penalise
+  legitimate nominalisation is why this dimension only flags
+  candidates, calibrated against the manuscript.
 
 Each flag is **"worth re-reading because X"** — never "this
 sentence is bad" or "rewrite to Y." The author decides.
@@ -197,8 +200,8 @@ This skill is grounded in scriptorium's knowledge layer:
 - [`copyediting-vs-developmental`](../../knowledge/editing/copyediting-vs-developmental.md)
   — situates the skill on the editorial gradient. Outlier flagging
   is a copyediting / line-editing diagnostic; the descriptive
-  (not directive) posture comes from Einsohn's "copyeditors query,
-  they do not silently fix" principle.
+  (not directive) posture comes from Einsohn's principle that
+  copyeditors query the author rather than silently fix.
 - [`guidance-level`](../../knowledge/conventions/guidance-level.md)
   — controls framing *and* the per-dimension flag cap. Both
   behaviours follow the convention's principle that the structured
@@ -223,11 +226,12 @@ gets the grounding extended; never both unchanged.
   useful than a comprehensive list. If every sentence is flagged,
   the report has failed; the caps make the output a workable
   re-reading list.
-- **Three dimensions, not thirty.** Per the grounding note, adding
-  dimensions is a non-trivial design decision — most measures
-  available (lexical diversity, type-token ratio, hedging density)
-  are noise for any specific judgement. The three chosen are
-  defensible and bounded.
+- **Three dimensions, not thirty.** Adding dimensions is a
+  non-trivial design decision. Per the grounding note, most of
+  Coh-Metrix's 200+ measures are noise for any specific judgement,
+  lexical diversity is at best weakly diagnostic for scientific
+  writing, and hedging vocabularies are invariants to preserve, not
+  quality scores. The three chosen are defensible and bounded.
 - **No full grammar parser.** The complexity proxy is intentionally
   cheap: commas + subordinators + coordinated-conjunction stacks.
   This is enough to find outliers and reliable across English

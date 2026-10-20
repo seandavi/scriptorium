@@ -26,8 +26,8 @@ it does not fix.
    pass/fail verdict, or any number that purports to summarise the
    manuscript's writing quality. Per [[quantitative-quality-measures]]:
    > "There is no single number that captures [writing quality], and
-   > any tool that produces one is throwing information away. The
-   > useful operations are outlier flagging."
+   > any tool that produces one is throwing information away."
+   The first useful operation the note lists is outlier flagging.
    Outlier flagging is what this skill does. Quality scoring is not.
 2. **Thresholds are author-tunable via `meta.guidance_level`.** At
    `light` ("terse" in scriptorium's scheme), report only the top ~3
@@ -150,9 +150,9 @@ have to be computed before any sentence can be called an outlier.
      `unless`, `when`, `where`, `which`, `who`, `that`, `whether`,
      `before`, `after`) plus coordinated-conjunction stacks (two or
      more `and` / `or` in the same sentence count as a stack).
-     This is a defensible proxy, not a grammar parse. Per the
-     grounding note, do not invoke a full parser — the proxy is
-     enough to find outliers and cheap enough to be reliable.
+     This is a defensible proxy, not a grammar parse. Do not invoke
+     a full parser — the proxy is a project choice, enough to find
+     outliers and cheap enough to be reliable.
    - **Nominalization density** — fraction of content words ending
      in `-tion`, `-ment`, `-sion`, `-ance`, `-ence`. Exclude a
      deny-list of high-frequency false positives:
@@ -181,9 +181,10 @@ have to be computed before any sentence can be called an outlier.
      of document spread).
    - **Nominalization density:** flag sentences whose density
      exceeds `max(m + 2.5σ, 0.30)` — i.e., 30% of content words
-     are nominalizations. The `0.30` floor is the more reliable
-     half of the threshold for this dimension per
-     [[quantitative-quality-measures]].
+     are nominalizations. The `0.30` floor is a project default;
+     [[quantitative-quality-measures]] does not evaluate
+     nominalization density, and it warns that readability formulas
+     penalise legitimate nominalisation.
 6. **Rank within each dimension.** Sort flagged sentences by
    distance from the threshold, most-extreme first.
 7. **Cap by guidance level.** Surface only the top N per
@@ -353,8 +354,8 @@ This skill is grounded in scriptorium's knowledge layer:
   narrow outlier-detection skills are defensible because they
   surface candidates for human review without claiming to measure
   quality. This skill is the v0.3 cash-out of that *Selective Yes*.
-  The note's specific guidance — "flag sentences outside reasonable
-  distributional bounds for their section [...] calibration:
+  The note's specific guidance — "flags sentences outside reasonable
+  distributional bounds for their section [...] Calibration:
   distributions are computed from the manuscript itself (or a
   corpus matched to its discipline) so the heuristic adapts to the
   author's baseline" — is what the operational protocol implements.
