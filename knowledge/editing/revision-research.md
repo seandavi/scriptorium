@@ -155,6 +155,32 @@ and is unlikely to do any one thing deeply. The scriptorium pattern
 explicitly prevents this bundling, and the rationale is the four
 decades of composition-studies evidence on what bundling produces.
 
+## Implementation priority for scriptorium
+
+*(Section added 2026-10-20, #135. The note previously lacked one. The
+verdict is derived from "How this informs scriptorium" above and from
+[`docs/roadmap.md`](../../docs/roadmap.md), which lists this note as
+grounding for the shipped `argumentative-flow` and `compression`
+skills and lists the `manuscript-pipeline` orchestrator under v0.2 as
+not yet built. It records existing use; it is not a new project
+decision.)*
+
+**Verdict:** **Yes (current), as grounding — no standalone skill.**
+The one-purpose-per-pass rule ("Don't bundle") and the "Remaining
+Weaknesses" discipline already shape the transformation skills.
+
+**Scope for the skills that ground in it:**
+
+- `argumentative-flow` and `compression`: one revision purpose per
+  skill, with what was not addressed stated explicitly.
+- `manuscript-pipeline` (not built): design input only. When it is
+  built, it should allow re-entry rather than enforce a strict linear
+  sequence.
+
+**Why not a standalone skill:** the note argues *against* a single
+bundled "improve this" skill. Its findings are constraints on how the
+existing skills are scoped and sequenced.
+
 ## Open questions / weak evidence
 
 - Most revision research is on student writing or general English

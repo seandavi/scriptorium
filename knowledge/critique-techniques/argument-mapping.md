@@ -171,6 +171,31 @@ mapping is a *structuring* skill, not a *verification* skill.
 Scriptorium's job is to make the structure legible; the human author
 remains responsible for verifying that the warrants are sound.
 
+## Implementation priority for scriptorium
+
+*(Section added 2026-10-20, #135. The note previously lacked one. The
+verdict is derived from "How this informs scriptorium" above and from
+[`docs/roadmap.md`](../../docs/roadmap.md), which lists this note as
+grounding for the shipped v0.1 `argumentative-flow` skill. It records
+existing use; it is not a new project decision.)*
+
+**Verdict:** **Yes (current), as grounding — no standalone skill.**
+The Toulmin decomposition is the structuring logic `argumentative-flow`
+uses to name the missing component (warrant, qualifier, rebuttal) in a
+flagged flow gap.
+
+**Scope for the skills that ground in it:**
+
+- `argumentative-flow`: name the missing Toulmin component rather than
+  reporting "logic unclear".
+- Critique output *flags* a missing warrant rather than supplying one
+  (see Limits and caveats below).
+
+**Why not a standalone skill:** the note frames argument mapping as a
+*structuring* aid, not a verification method. Checking whether a
+warrant holds needs domain knowledge and often recomputation, so it
+stays with the author.
+
 ## Limits and caveats
 
 - Toulmin's scheme can flatten complex arguments into a single
