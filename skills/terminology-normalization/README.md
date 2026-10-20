@@ -165,6 +165,16 @@ This skill is grounded in scriptorium's knowledge layer:
   state file rather than imposed by the skill, and (b) US/UK
   English variation is out of scope by default — the venue, not
   the skill, decides.
+- [`promotional-register`](../../knowledge/scientific-writing/promotional-register.md)
+  — source of the default catalog the skill offers when the
+  declared lists are empty or thin. Only the 13 Vinkers- or
+  Kobak-backed entries are presented as corpus-grounded; the other
+  8 are labelled practice-derived, and the list is dated because
+  LLM marker words drift.
+- [`significance-positioning`](../../knowledge/scientific-writing/significance-positioning.md)
+  — grounds the exemption for significance claims proper, and
+  NIH's Innovation language as the reason not to push "novel" in
+  grant prose.
 
 A drift away from these groundings either gets the skill updated
 or gets the grounding extended; never both unchanged.

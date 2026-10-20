@@ -46,14 +46,16 @@ conflict and stop rather than violate a constraint.
    altered the author's voice and may have crossed a claim boundary.
    Preserve the hedge unless you can name a specific logical-coherence
    reason to change it; if you do change it, justify the change in
-   the preservation report.
+   the preservation report. Do not treat sparser stance marking as
+   the scientific norm: Hyland & Jiang (2018) found interactional
+   metadiscourse declined in soft fields but rose in the sciences.
 
 If preservation conflicts with a flow improvement, **preservation
 wins**. Document the conflict; do not silently violate.
 
 Embedding similarity is **not** a safe guard against meaning flips
-(BERTScore antonymy problem). Read the revised text against the
-source for semantic preservation.
+(BERTScore is insensitive to negation and numerical changes). Read
+the revised text against the source for semantic preservation.
 
 ## What you have
 
@@ -69,7 +71,11 @@ If any input is missing, ask for it.
 
 - Paragraph order within the section.
 - Sentence order within paragraphs (Gopen & Swan: topic position,
-  stress position, old-info-then-new).
+  stress position, old-info-then-new). Gopen & Swan say these are
+  not rules and that "any reader expectation can be violated to good
+  effect"; report each finding as a diagnosis the author can
+  overrule. Do not claim the principles are shown to speed reading;
+  they have not been tested in reading-time experiments.
 - Transitions — connective tissue between paragraphs.
 - Claims hierarchy — paragraph-leading sentence should state the
   paragraph's claim.
@@ -179,7 +185,7 @@ handle better.)
 
 - **Diagnosis cites the principle.** "Paragraph 3 buries the topic
   sentence at position 3, violating Gopen & Swan's topic-position
-  principle" beats "paragraph 3 is unclear."
+  principle (a diagnosis the author can overrule)" beats "paragraph 3 is unclear."
 - **Smallest viable edits.** A revision that changes every sentence
   has likely overreached.
 - **Preservation report is honest.** Never present a clean report on

@@ -78,13 +78,18 @@ conflict and stop rather than violate a constraint.
    author's voice and may have crossed a claim boundary. Preserve
    the hedge unless you can name a specific logical-coherence reason
    to change it; if you do change it, justify the change in the
-   preservation report.
+   preservation report. Do not treat sparser stance marking as the
+   scientific norm: Hyland & Jiang (2018) found interactional
+   metadiscourse declined in soft fields but rose in the sciences
+   ([[esl-writers-swales-hyland]]).
 
 If preservation conflicts with a flow improvement, **preservation
 wins** every time. Document the conflict; do not silently violate.
 
-The BERTScore antonymy problem ([[semantic-preservation]]) means
-embedding similarity is *not* a safe guard against meaning flips.
+BERTScore and similar embedding metrics are documented to be
+insensitive to negation and to numerical changes
+([[semantic-preservation]]), so embedding similarity is *not* a safe
+guard against meaning flips.
 Read the revised text against the source for semantic preservation;
 do not rely on automated similarity as evidence of preservation.
 
@@ -98,6 +103,10 @@ These are the legitimate transformations:
   topic position (sentence 1 typically), put stress-position content
   at the stress position (sentence-final), apply old-info-then-new
   within sentences ([[reader-expectation-approach]] — Gopen & Swan).
+  Gopen & Swan say these principles are not rules and that "any
+  reader expectation can be violated to good effect"; report each
+  position-based finding as a diagnosis the author can overrule, not
+  as an error.
 - **Transitions.** Add or strengthen connective tissue so adjacent
   paragraphs read as related rather than juxtaposed.
 - **Claims hierarchy.** The leading sentence of each paragraph
@@ -141,8 +150,12 @@ the preservation contract — per [[guidance-level]]:
   summary of the most material structural issue found.
 - `full` — open with what reader-expectation theory predicts about
   how the section should be organised (topic position → subject →
-  stress position) and what [[narrative-frameworks]] adds; close
-  with which proposed changes are about logic vs. about flow.
+  stress position) and what [[narrative-frameworks]] adds. Do not
+  claim that experiments show these specific principles speed
+  reading: they have not been tested in reading-time experiments,
+  and the supporting evidence is the general given-new literature
+  ([[reader-expectation-approach]]). Close with which proposed
+  changes are about logic vs. about flow.
   Within the preservation report, surface in one or two sentences
   that ESL-aware hedging preservation is happening — naming, where
   relevant, that a specific hedge was retained because under
@@ -206,10 +219,11 @@ Work in this order:
    level for a section. Show what moves where.
 6. **Revise.** Produce the revised text. Make the smallest changes
    that accomplish the structural improvements you identified.
-   "Smallest change" is a real constraint — Sommers 1980
-   ([[revision-research]]) found that expert revisers do paragraph-
-   and argument-level work; novice revisers do sentence-cosmetic
-   work. You want the former.
+   "Smallest change" is a real constraint, because it keeps the diff
+   reviewable. Sommers 1980 ([[revision-research]]) found that
+   experienced writers revise structure, argument and meaning, while
+   student writers make word-level fixes. Aim the small changes at
+   the former.
 7. **Diff.** Produce a unified diff (or equivalently scoped change
    list) against the source so the author can review every change.
 8. **Verify and report preservation.** For each item in the
@@ -312,7 +326,8 @@ human + statcheck). Be specific.)
 
 - **Diagnosis cites the principle.** "The third paragraph's topic
   sentence is at sentence 3 rather than sentence 1, violating Gopen
-  & Swan's topic-position principle" beats "the third paragraph is
+  & Swan's topic-position principle (a diagnosis the author can
+  overrule)" beats "the third paragraph is
   unclear."
 - **Smallest viable edits.** Sommers 1980's finding holds: novice
   revisers do cosmetic sentence-level work; expert revisers do
@@ -343,20 +358,26 @@ This skill is grounded in scriptorium's knowledge layer:
 
 - [[reader-expectation-approach]] — Gopen & Swan's topic/stress
   position; old-info-then-new principle. The mechanism-level grounding
-  for sentence- and paragraph-level reordering.
+  for sentence- and paragraph-level reordering. The principles are
+  diagnoses the author can overrule, not rules, and they have not
+  been tested in reading-time experiments.
 - [[narrative-frameworks]] — Schimel OCAR/LDR, Heard's *The
-  Scientist's Guide to Writing*, Whitesides' *How to write a paper*.
+  Scientist's Guide to Writing*, Whitesides' 2004 *Advanced
+  Materials* essay ("Whitesides' Group: Writing a Paper").
   The framework-level grounding for section-level reordering.
 - [[argument-mapping]] — Toulmin's claim/data/warrant; used to
   diagnose logical gaps inside the structural reorganization.
 - [[semantic-preservation]] — Nida's formal/dynamic equivalence;
-  BERTScore antonymy problem (do NOT use embedding similarity alone
-  as preservation evidence).
+  BERTScore's insensitivity to negation and numerical changes (do
+  NOT use embedding similarity alone as preservation evidence).
 - [[revision-research]] — Sommers 1980 student-vs-expert revision;
-  pass-by-pass discipline; the empirical case for *small* changes
-  serving *structural* goals.
+  pass-by-pass discipline; the empirical case for aiming revision at
+  structure rather than wording. Keeping each change small is this
+  skill's reviewability constraint, not a Sommers finding.
 - [[esl-writers-swales-hyland]] — hedging and stance patterns vary
-  legitimately; this skill must not "smooth out" deliberate hedging.
+  legitimately, and stance norms are field-specific (Hyland & Jiang
+  2018: interactional metadiscourse rose in the sciences); this
+  skill must not "smooth out" deliberate hedging.
   Enforced as an active check during the inventory step and audited
   in the preservation report — not just a passive non-goal.
 

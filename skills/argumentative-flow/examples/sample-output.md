@@ -12,7 +12,8 @@ the load-bearing claim. The opening sentence ("a growing literature
 suggests…") is contextual scene-setting; under Gopen & Swan's
 [topic-position principle](https://www.americanscientist.org/article/the-science-of-scientific-writing),
 the topic position of a paragraph belongs to the paragraph's *own*
-claim, not to background framing. The cohort finding — *Bacteroides
+claim, not to background framing. This is a diagnosis the author can
+overrule if the framing-first order is deliberate. The cohort finding — *Bacteroides
 fragilis* abundance vs. carotid intima-media thickness, r = −0.38,
 p = 0.002 — is buried at sentence 2 and competes with the contextual
 opening for attention. A reader scanning topic sentences misses it.
@@ -21,10 +22,10 @@ The paragraph also makes the cross-sectional limitation twice in
 slightly different wording ("the directionality of the
 microbiome–vascular relationship cannot be established from
 cross-sectional data" and "our findings should be interpreted with
-the limitations of cross-sectional design in mind"). Sommers 1980 on
-expert revision notes that *consolidation* — collapsing redundant
-moves into one — is one of the highest-leverage structural edits;
-this is a clear case.
+the limitations of cross-sectional design in mind"). Collapsing the
+two into one is *structural* revision in Sommers's (1980) sense,
+revisiting the argument rather than the wording; this is a clear
+case.
 
 The Mediterranean-diet observation is introduced without a connective
 sentence and then dropped. The reader is left to infer the relevance.

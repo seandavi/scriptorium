@@ -121,7 +121,12 @@ When offering the catalog, propose the subset that fits
   "long-term goal", "transformative", and "establish a foundation" are
   appropriate in an aims page or project summary when a credible plan
   backs them. Do not propose these as forbidden. See
-  [[grant-writing-evidence]] and [[nih-significance-patterns]].
+  [[grant-writing-evidence]] and [[nih-significance-patterns]]. The
+  vision exemption does not extend to *novel*: NIH's Innovation
+  language says a project "not applying novel concepts or approaches
+  may be of critical importance for the field", which is a reason not
+  to push authors toward the word in grant prose
+  ([[significance-positioning]]).
 
 Three exemptions apply regardless of target type, and you should say so
 when offering the list rather than letting the author discover them:
@@ -136,6 +141,18 @@ when offering the list rather than letting the author discover them:
 3. **Boosters at warranted strength.** The defect is a booster stronger
    than its evidence, not the presence of boosters
    ([[esl-writers-swales-hyland]]).
+
+When the offer includes the high-frequency vocabulary, keep the
+note's grounding split visible. Present as corpus-grounded only the
+13 entries [[promotional-register]] lists as Vinkers- or
+Kobak-backed (*robust*, *novel*, *innovative*, *unprecedented*,
+*crucial*, *pivotal*, *seamless*, *revolutionize*, *transformative*,
+*leverage*, *showcase*, *underscore*, *delve*). Label the other 8
+(*cutting-edge*, *state-of-the-art*, *world-class*, *key*,
+*landscape*, *ecosystem*, *paradigm*, *testament*) as
+practice-derived. Date the list to the note's last update and say
+that LLM marker words drift (Kobak et al. 2025; Hubarava & Ineichen
+2026), so the default needs periodic refreshing from the note.
 
 One calibration note carried from the evidence: Vinkers et al. found
 authors at institutions outside majority-English-speaking countries used
@@ -364,6 +381,14 @@ This skill is grounded in scriptorium's knowledge layer:
   file rather than imposed by the skill, and (b) US/UK English
   variation is out of scope by default — the venue, not the skill,
   decides.
+- [[promotional-register]] — source of the default catalog offered
+  when the declared lists are empty or thin. The note separates
+  corpus-grounded vocabulary (Vinkers et al. 2015; Kobak et al.
+  2025) from practice-derived entries and constructions, and records
+  the three registers the catalog must not touch.
+- [[significance-positioning]] — grounds the exemption for
+  significance claims proper, and NIH's Innovation language as the
+  reason not to push "novel" in grant prose.
 
 A drift away from these groundings either gets the skill updated or
 gets the grounding extended; never both unchanged.
