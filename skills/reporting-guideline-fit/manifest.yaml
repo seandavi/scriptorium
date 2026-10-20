@@ -8,9 +8,11 @@ category: critique          # critique | validation | normalization | transforma
 
 description: >
   Read the manuscript's methods section and infer which EQUATOR
-  Network reporting guideline applies — CONSORT, STROBE, PRISMA,
-  ARRIVE, TRIPOD/TRIPOD+AI, STARD, CARE, COREQ, CHEERS, plus
-  AI-extensions where applicable. Outputs the inferred
+  Network reporting guideline applies — CONSORT, SPIRIT, STROBE,
+  PRISMA, ARRIVE, TRIPOD/TRIPOD+AI, STARD, CARE, COREQ, CHEERS,
+  TRIPOD-LLM, REFINE, CHART, plus AI-extensions where applicable
+  and GAMER as an add-on disclosure checklist when generative-AI
+  use is declared. Outputs the inferred
   guideline(s) with confidence levels and per-inference
   rationale. Stops at the inference step; the downstream
   checklist audit is a separate skill
@@ -47,8 +49,8 @@ guidance_level_behavior:
   full: >
     Open with what reporting guidelines do (standardise reporting
     so reviewers and readers can evaluate methodology
-    consistently — the EQUATOR Network registry of ~500 active
-    guidelines), why the inference matters (authors often don't
+    consistently — the EQUATOR Network registry, whose library
+    lists roughly 700 records), why the inference matters (authors often don't
     know which checklist applies to their study design,
     especially across the AI-extension landscape), and the major
     design-to-checklist mapping.
@@ -107,7 +109,8 @@ preservation_constraints:
   - never_force_confident_answer    # low confidence is honest
   - never_run_the_full_checklist    # separate downstream skill
   - never_write_to_manuscript_state # schema doesn't carry this field
-  - prefer_current_versions         # PRISMA 2020 over 2009; TRIPOD+AI 2024 over TRIPOD 2015 for AI
+  - prefer_current_versions         # CONSORT 2025 over 2010; PRISMA 2020 over 2009; TRIPOD+AI 2024 over 2015 for AI
+  - gamer_is_add_on_only            # disclosure checklist, never replaces the design checklist
 
 # What this skill explicitly is NOT.
 non_goals:
@@ -126,4 +129,5 @@ non_goals:
     as written, not whether the design was the right choice.
   - Editor-side enforcement. Author-side decision support.
   - Recommending superseded checklist versions
-    (PRISMA 2009 when PRISMA 2020 is current).
+    (CONSORT 2010 when CONSORT 2025 is current; PRISMA 2009
+    when PRISMA 2020 is current).
