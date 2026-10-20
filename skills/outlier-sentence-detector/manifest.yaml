@@ -29,9 +29,9 @@ produces:
 # and decides what (if anything) to act on.
 modifies: []
 
-# document_phase values the skill is designed to operate on. Refuses
-# on outline-phase manuscripts (distributional statistics on stub
-# prose are noise).
+# document_phase values the skill is designed to operate on. Declines
+# outline-phase manuscripts by default (scope guard outline-phase;
+# distributional statistics on stub prose are noise).
 # Consumed by docs build (reference/skills page generator).
 lifecycle_phases:
   - draft
@@ -92,14 +92,17 @@ inputs:
       `bibliography.paths` field is used to exclude bibliography
       entries from the distributional statistics. The
       `document_phase.current` field — if `outline` — declines the
-      run. The skill proceeds at standard density if the state file
-      is missing, noting the un-grounded run in the output.
+      run unless the author overrides the outline-phase guard
+      (`meta.overrides` is read for that). The skill proceeds at
+      standard density if the state file is missing, noting the
+      un-grounded run in the output.
     schema: manuscript-state.schema.json
 
 # Knowledge-layer documents that ground this skill's design decisions.
 grounding:
   - knowledge/conventions/guidance-level.md
   - knowledge/conventions/declared-work-scope.md
+  - knowledge/conventions/author-authority.md
   - knowledge/scientific-writing/quantitative-quality-measures.md
   - knowledge/editing/copyediting-vs-developmental.md
 
@@ -109,8 +112,28 @@ non_goals:
   - Does not rate, grade, or pass/fail the manuscript.
   - Does not auto-edit the manuscript. This is a critique skill; outputs are surfaced for review.
   - Does not optimise toward Flesch-Kincaid, SMOG, Coleman-Liau, or any other universal-target readability index. Calibration is against the manuscript itself.
-  - Does not direct the author to specific rewrites. Each flag is "worth re-reading because X", never "rewrite to Y."
+  - Does not direct the author to specific rewrites by default (scope guard critique-rewrite-suggestions). Each flag is "worth re-reading because X", never "rewrite to Y."
   - Does not flag sentences in tables, figure captions, equations, or code blocks (excluded so their characteristics do not skew the statistics).
-  - Does not run at `outline` phase — distributional statistics on stub prose are noise.
+  - Does not run at `outline` phase by default (scope guard outline-phase) — distributional statistics on stub prose are noise.
   - Does not invoke a full grammar parser. The complexity proxy (commas + subordinators + coordinated-conjunction stacks) is intentional; it is cheap, reliable, and enough to surface outliers.
   - Does not check writing quality, readability, content correctness, or argument strength. Those are out of any single metric's reach for scientific text.
+
+# Guards this skill applies (knowledge/conventions/author-authority.md).
+# Policy and scope guards are defaults the author can override, per run
+# or under MANUSCRIPT_STATE.yaml#meta.overrides; accuracy guards are fixed.
+guards:
+  - id: outline-phase
+    kind: scope
+    summary: "The manuscript is at outline phase; there is not yet enough declared prose for this skill to work on."
+    source: "knowledge/conventions/declared-work-scope.md"
+    default: refuse
+  - id: critique-rewrite-suggestions
+    kind: scope
+    summary: "This critique skill flags problems for the author to fix; by default it proposes no concrete rewrites. If overridden, it proposes one per flagged item, marked as a suggestion."
+    source: "knowledge/editing/copyediting-vs-developmental.md"
+    default: refuse
+  - id: no-writing-quality-score
+    kind: accuracy
+    summary: "No overall writing-quality score, grade or readability index: no single number captures writing quality in scientific text."
+    source: "knowledge/scientific-writing/quantitative-quality-measures.md"
+    default: refuse

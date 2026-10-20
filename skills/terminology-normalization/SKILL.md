@@ -4,6 +4,7 @@ description: Detect terminology drift across a manuscript and enforce the prefer
 grounding:
   - knowledge/conventions/guidance-level.md
   - knowledge/conventions/declared-work-scope.md
+  - knowledge/conventions/author-authority.md
   - knowledge/critique-techniques/internal-consistency.md
   - knowledge/scientific-writing/style-guides.md
   - knowledge/scientific-writing/promotional-register.md
@@ -63,7 +64,8 @@ apply them without the author's explicit consent.
 - `argumentative-flow` has just run and the author wants to confirm
   that the transformation preserved declared terms.
 
-**Do not invoke when:**
+**Do not invoke when** (the first two are scope guards the author can
+override; see Guards and overrides):
 
 - `terminology.preferred`, `terminology.forbidden`, and
   `terminology.synonyms` are all empty — there is nothing to enforce.
@@ -71,6 +73,44 @@ apply them without the author's explicit consent.
   flagging drift here is noise.
 - As a silent side-effect of another skill. The output is a report
   for the author, not a precondition for another transformation.
+
+## Guards and overrides
+
+This skill's guards are declared in `manifest.yaml` and follow
+[[author-authority]]: the author decides what the skill may do. Both
+guards are scope guards with default refuse.
+
+- **`terminology-lists-required`.** Fires when `MANUSCRIPT_STATE.yaml`
+  is missing, or when all three terminology lists are empty and the
+  author declines the default catalog (see Inputs below). State the
+  concern and its source in one line: "`MANUSCRIPT_STATE.yaml`
+  declares no terminology preferences to enforce; the skill offers
+  its default catalog rather than inventing a list
+  (`terminology-lists-required`; source: [[declared-work-scope]])."
+  Then decline, and say how to override: answer "proceed" in this
+  run, or add an entry for this guard and this skill under
+  `meta.overrides`. On override, run undeclared-variant detection
+  only (protocol steps 2, 3 and 6, asking for the bibliography files
+  if there is no state file): the clusters are surfaced as questions,
+  the enforcement sections are left empty with a note that nothing
+  was declared, and no preferred or forbidden list is invented.
+- **`outline-phase`.** Fires when `document_phase.current` is
+  `outline`. State the concern and its source in one line: "The
+  manuscript is at outline phase; there is not yet enough declared
+  prose for this skill to work on (`outline-phase`; source:
+  [[declared-work-scope]])." Then decline, naming the same two
+  override routes. On override, run the full protocol and note in the
+  Summary that terminology at outline phase may not yet be stable.
+
+For each guard, the first of these decides: the author's answer in
+this run, in either direction; an entry under `meta.overrides` naming
+the guard and this skill (or `"*"`); the default, refuse. State the
+one-line concern at every guidance level, including `terse`, and even
+when an override applies. When the run proceeds past a guard, the
+output carries an `Overrides applied:` line listing the guard ids (see
+Output format); otherwise the line is omitted. The consent rules
+(never apply an edit, never promote a variant without the author) are
+not guards and are unaffected by any override.
 
 ## Inputs you should expect
 
@@ -85,14 +125,18 @@ apply them without the author's explicit consent.
   `MANUSCRIPT_STATE.yaml#bibliography.paths`. Read these *before*
   flagging any token in the manuscript (see constraint 2 above).
 
-If `MANUSCRIPT_STATE.yaml` is missing entirely, stop. Tell the author
-the skill has nothing to enforce against and suggest
+If `MANUSCRIPT_STATE.yaml` is missing entirely, the
+`terminology-lists-required` guard applies: by default, stop, tell the
+author the skill has nothing to enforce against, and suggest
 `scriptorium:init`.
 
 If the state file exists but its terminology lists are empty or thin,
 do not silently proceed and do not invent a list from the manuscript.
 Instead, **offer the default promotional-register catalog** described
-below, and stop until the author accepts, edits, or declines it. The
+below, and stop until the author accepts, edits, or declines it. If
+the lists are empty and the author declines, the
+`terminology-lists-required` guard applies; if they are thin, run
+against what is declared. The
 author's declared list stays authoritative; the default is a starting
 point, never an override. This preserves [[declared-work-scope]] — the
 author still declares — while removing the cold start that otherwise
@@ -197,7 +241,9 @@ guard against the false-positives-on-cited-names failure mode.
    - `terminology.synonyms` — map of variant → preferred term.
    - `bibliography.paths` — files to load before flagging.
    - `meta.guidance_level` — framing only; see above.
-   - `document_phase.current` — if `outline`, decline the run.
+   - `meta.overrides` — see Guards and overrides.
+   - `document_phase.current` — if `outline`, the `outline-phase`
+     guard applies (decline unless overridden).
 2. **Read the bibliography file(s).** Build a set of tokens that
    appear in author names, titles, journal names, and other
    bibliographic metadata. Tokens in this set are excluded from
@@ -235,6 +281,11 @@ order:
 
 ```markdown
 # Terminology normalization
+
+Overrides applied: <guard ids>
+
+(Only when this run proceeded past a scope guard, through a per-run
+answer or `meta.overrides`. Omit the line otherwise.)
 
 ## Summary
 
@@ -389,6 +440,8 @@ This skill is grounded in scriptorium's knowledge layer:
 - [[significance-positioning]] — grounds the exemption for
   significance claims proper, and NIH's Innovation language as the
   reason not to push "novel" in grant prose.
+- [[author-authority]] — the two scope guards are defaults the author
+  can override, per run or under `meta.overrides`.
 
 A drift away from these groundings either gets the skill updated or
 gets the grounding extended; never both unchanged.

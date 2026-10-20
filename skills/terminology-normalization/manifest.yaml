@@ -108,3 +108,18 @@ non_goals:
   - US/UK English variety translation (respects the manuscript's variety unless declared).
   - Auto-merging of undeclared variants (surfaces them as questions).
   - Auto-applying suggested normalizations without author consent.
+
+# Guards this skill applies (knowledge/conventions/author-authority.md).
+# Policy and scope guards are defaults the author can override, per run
+# or under MANUSCRIPT_STATE.yaml#meta.overrides; accuracy guards are fixed.
+guards:
+  - id: outline-phase
+    kind: scope
+    summary: "The manuscript is at outline phase; there is not yet enough declared prose for this skill to work on."
+    source: "knowledge/conventions/declared-work-scope.md"
+    default: refuse
+  - id: terminology-lists-required
+    kind: scope
+    summary: "MANUSCRIPT_STATE.yaml declares no terminology preferences to enforce; the skill offers its default catalog rather than inventing a list."
+    source: "knowledge/conventions/declared-work-scope.md"
+    default: refuse

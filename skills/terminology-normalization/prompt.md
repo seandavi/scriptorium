@@ -22,9 +22,45 @@ The user will paste, in order:
    titles are not false-positively flagged as drift.
 
 If any input is missing, ask for it. If
-`terminology.preferred / forbidden / synonyms` are all empty, stop
-and tell the author there is nothing to enforce — suggest declaring
+`terminology.preferred / forbidden / synonyms` are all empty, the
+`terminology-lists-required` guard applies: by default, stop and tell
+the author there is nothing to enforce — suggest declaring
 terminology preferences first.
+
+## Guards and overrides
+
+The author decides what this check may do. Both guards are scope
+guards with default refuse.
+
+- **`terminology-lists-required`.** Fires when the state file is
+  missing or all three terminology lists are empty. State the concern
+  and its source in one line: "`MANUSCRIPT_STATE.yaml` declares no
+  terminology preferences to enforce; the skill offers its default
+  catalog rather than inventing a list (`terminology-lists-required`;
+  source: scriptorium's declared-work-scope convention)." Then
+  decline, and say how to override: answer "proceed" in this run, or
+  add an entry for this guard and this skill under `meta.overrides`.
+  On override, run undeclared-variant detection only (protocol steps
+  2, 3 and 6): the clusters are surfaced as questions, the
+  enforcement sections are left empty with a note that nothing was
+  declared, and no preferred or forbidden list is invented.
+- **`outline-phase`.** Fires when `document_phase.current` is
+  `outline`. State the concern and its source in one line: "The
+  manuscript is at outline phase; there is not yet enough declared
+  prose for this skill to work on (`outline-phase`; source:
+  scriptorium's declared-work-scope convention)." Then decline,
+  naming the same two override routes. On override, run the full
+  protocol and note in the Summary that terminology at outline phase
+  may not yet be stable.
+
+For each guard, the first of these decides: the author's answer in
+this run, in either direction; an entry under `meta.overrides` naming
+the guard and this skill (or `"*"`); the default, refuse. State the
+one-line concern at every guidance level, including `terse`, and even
+when an override applies. When the run proceeds past a guard, the
+output carries an `Overrides applied:` line listing the guard ids;
+otherwise the line is omitted. The consent rules below are not guards
+and no override lifts them.
 
 ## Hard constraints — read before producing any output
 
@@ -51,8 +87,9 @@ Work in this order:
 
 1. Read `MANUSCRIPT_STATE.yaml`. Extract `terminology.preferred`,
    `terminology.forbidden`, `terminology.synonyms`,
-   `bibliography.paths`, and `document_phase.current`. If
-   `document_phase.current == "outline"`, decline the run —
+   `bibliography.paths`, `meta.overrides`, and
+   `document_phase.current`. If `document_phase.current == "outline"`,
+   the `outline-phase` guard applies: decline unless overridden —
    terminology is not stable at outline phase.
 2. Read every file in `bibliography.paths`. Build the bibliographic
    token set. This step happens BEFORE step 3.
@@ -81,6 +118,9 @@ order:
 
 ```markdown
 # Terminology normalization
+
+Overrides applied: <guard ids>
+(Only when this run proceeded past a scope guard; omit otherwise.)
 
 ## Summary
 

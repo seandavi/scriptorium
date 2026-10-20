@@ -65,22 +65,25 @@ properties and surfaces outliers in each dimension:
   candidates, calibrated against the manuscript.
 
 Each flag is **"worth re-reading because X"** — never "this
-sentence is bad" or "rewrite to Y." The author decides.
+sentence is bad" or, by default, "rewrite to Y." The author decides.
 
 ## What it does not do
 
 - **Produce a quality score.** No grade, no rating, no pass/fail,
-  no single number. This is the load-bearing refusal of the skill.
+  no single number. This is the load-bearing refusal of the skill,
+  and it is fixed: no override lifts it.
 - **Optimise toward Flesch-Kincaid or SMOG.** These indices
   systematically mis-score scientific prose; the skill calibrates
   against the manuscript itself, not against a universal target.
 - **Edit the manuscript.** The output is a markdown report.
-- **Direct specific rewrites.** Each flag is descriptive; the
-  author owns the decision.
+- **Direct specific rewrites**, by default. Each flag is
+  descriptive; the author owns the decision. The author can opt into
+  one labelled suggestion per flag (see
+  [Guards and overrides](#guards-and-overrides)).
 - **Flag inflated lists.** If every sentence is an outlier, the
   report has failed at its job. Guidance-level caps prevent this.
-- **Run at `outline` phase.** Distributional statistics on stub
-  prose are noise.
+- **Run at `outline` phase**, by default. Distributional statistics
+  on stub prose are noise.
 - **Check writing quality, readability, content correctness, or
   argument strength.** These are out of any single metric's reach
   for scientific text. Argument strength is `argumentative-flow` /
@@ -101,12 +104,33 @@ The Summary names "surfaced of flagged" (e.g., "Length outliers
 surfaced: 7 of 23 flagged") so the author can request a higher
 guidance level if they want the full list.
 
+## Guards and overrides
+
+The guards are declared in [`manifest.yaml`](manifest.yaml) and follow
+[`author-authority`](../../knowledge/conventions/author-authority.md).
+
+| Guard | Kind | Default | Author can override? |
+|---|---|---|---|
+| `outline-phase` | scope | refuse | Yes: answer "proceed" in the run, or list it under `meta.overrides` |
+| `critique-rewrite-suggestions` | scope | refuse | Yes: as above |
+| `no-writing-quality-score` | accuracy | refuse | No |
+
+When a scope guard fires, the skill states the concern in one line and
+declines unless the author overrides it. With `outline-phase`
+overridden it runs as usual and notes that the distribution comes
+from outline-phase prose. With `critique-rewrite-suggestions`
+overridden it adds one rewrite per flagged sentence, labelled as a
+suggestion, keeping cite keys and numbers verbatim. Either way the
+output carries an `Overrides applied: <guard ids>` line. That line is
+the skill's one output addition under author authority; it is absent
+when no override was applied.
+
 ## Inputs
 
 - **Manuscript text** — file path(s) or pasted prose. For
   multi-file projects, every file declared under `sections` is read.
 - **`MANUSCRIPT_STATE.yaml`** *(optional but recommended)* — the
-  `meta.guidance_level`, `bibliography.paths`, and
+  `meta.guidance_level`, `bibliography.paths`, `meta.overrides`, and
   `document_phase.current` fields are read. The skill proceeds at
   `standard` density if the state file is missing, noting the
   un-grounded run.
@@ -141,6 +165,8 @@ cat ~/.claude/plugins/scriptorium/skills/outlier-sentence-detector/prompt.md
 
 ```markdown
 # Outlier sentence detector
+
+Overrides applied: <guard ids>   (only when an override was applied)
 
 ## Summary
 - Sentences analysed: N
@@ -185,7 +211,10 @@ Einsohn's repeated injunction is that the copyeditor *queries* the
 author when something is unusual — they do not silently fix it. The
 skill follows the same posture: it points at sentences worth
 re-reading and surfaces the dimension along which they are
-unusual; what to do about them belongs to the author.
+unusual; what to do about them belongs to the author. That is the
+default; an author who wants a starting point can override
+`critique-rewrite-suggestions` and get one labelled suggestion per
+flag.
 
 ## Grounding
 
@@ -201,15 +230,18 @@ This skill is grounded in scriptorium's knowledge layer:
 - [`copyediting-vs-developmental`](../../knowledge/editing/copyediting-vs-developmental.md)
   — situates the skill on the editorial gradient. Outlier flagging
   is a copyediting / line-editing diagnostic; the descriptive
-  (not directive) posture comes from Einsohn's principle that
+  (not directive) default comes from Einsohn's principle that
   copyeditors query the author rather than silently fix.
 - [`guidance-level`](../../knowledge/conventions/guidance-level.md)
   — controls framing *and* the per-dimension flag cap. Both
   behaviours follow the convention's principle that the structured
   output shape is unchanged across levels.
 - [`declared-work-scope`](../../knowledge/conventions/declared-work-scope.md)
-  — the skill operates on declared prose. It refuses to run at
-  `outline` phase and does not invent the sentences it flags.
+  — the skill operates on declared prose. By default it declines to
+  run at `outline` phase, and it does not invent the sentences it
+  flags.
+- [`author-authority`](../../knowledge/conventions/author-authority.md)
+  — which guards the author can override and how.
 
 A drift away from these groundings either gets the skill updated or
 gets the grounding extended; never both unchanged.

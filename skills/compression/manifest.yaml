@@ -123,8 +123,9 @@ inputs:
       The target length the compression is reducing toward. Read
       from `MANUSCRIPT_STATE.yaml#constraints.max_word_count` by
       default; the user may supply a different target at invocation
-      (e.g., for a stricter target than the declared cap). Refuse to
-      run without a target — a target-less compression is an
+      (e.g., for a stricter target than the declared cap). Without a
+      target the skill declines by default (scope guard
+      length-target-required) — a target-less compression is an
       opinion about the author's prose, not a service. Units are
       words by default; pages and characters are also supported
       when declared.
@@ -152,6 +153,38 @@ non_goals:
   - Smoothing out ESL hedging or stance patterns — only hedging stacks are legitimate targets.
   - Cosmetic sentence-level rewrites that do not net-reduce length.
   - Structural reorganization (paragraph reordering, section restructuring) — that is argumentative-flow's territory.
-  - Compressing an entire manuscript at once.
-  - Running without a declared or supplied length target.
+  - Compressing an entire manuscript at once by default (scope guard single-section-unit).
+  - Running without a declared or supplied length target by default (scope guard length-target-required).
   - Auto-invocation as a follow-up to another skill.
+
+# Guards this skill applies (knowledge/conventions/author-authority.md).
+# Policy and scope guards are defaults the author can override, per run
+# or under MANUSCRIPT_STATE.yaml#meta.overrides; accuracy guards are fixed.
+guards:
+  - id: single-section-unit
+    kind: scope
+    summary: "This skill transforms one section per run so every change stays reviewable; a whole-manuscript pass is outside its default scope."
+    default: refuse
+  - id: length-target-required
+    kind: scope
+    summary: "No length target is declared or supplied; compression without a target is a judgement about the prose, not a service the author asked for."
+    default: refuse
+  - id: no-false-verification-claims
+    kind: accuracy
+    summary: "The skill never reports a check as done or passed when it was not (full-text support, a clean preservation report, a figure it did not see)."
+    default: refuse
+  - id: preserve-cited-support
+    kind: accuracy
+    summary: "Every cite key in the source stays attached to the claim it supports; none is removed, renamed or detached by the transformation."
+    source: "knowledge/editing/semantic-preservation.md"
+    default: refuse
+  - id: preserve-quantities-verbatim
+    kind: accuracy
+    summary: "Numbers, units and statistics are carried over verbatim; none is rounded, re-expressed or replaced with words."
+    source: "knowledge/editing/semantic-preservation.md"
+    default: refuse
+  - id: preserve-claim-set
+    kind: accuracy
+    summary: "The transformation adds, removes, merges, re-scopes or re-weights no claim (including by changing a hedge) without recording the change and its reason."
+    source: "knowledge/editing/semantic-preservation.md"
+    default: refuse
