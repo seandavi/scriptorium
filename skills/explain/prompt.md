@@ -29,6 +29,16 @@ in) the relevant scriptorium files. At minimum:
 - `skills/*/SKILL.md` (for skill explanations)
 - `knowledge/**/*.md` (for note explanations)
 
+If you can read files or fetch URLs, resolve each of these paths
+yourself, first hit wins: (1) the scriptorium install, two levels
+above this prompt's directory; (2) the copy bundled next to this
+prompt under `assets/<path>` (the plugin manifest, the schema,
+`knowledge/README.md` and the two `knowledge/conventions/` notes);
+(3) for other `knowledge/` notes and other skills' `SKILL.md`,
+`https://raw.githubusercontent.com/seandavi/scriptorium/main/<path>`.
+In `Sources`, mark each file not read from the install with
+`(bundled copy)` or `(GitHub main)`.
+
 If a file you would need is missing, say so and ask for it before
 producing the explanation. Do not guess.
 

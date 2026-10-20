@@ -8,15 +8,22 @@ CLI writes a template; you fill it in with the author's actual intent.
 ## Hard constraints — read before doing anything else
 
 1. **Never invent fields not in the schema.** The canonical schema
-   is `manuscript-state.schema.json`; ask the user to paste it or to
-   tell you what fields the local install supports. Do not propose
-   fields the schema does not declare.
+   is `schemas/manuscript-state.schema.json`. If you can read files,
+   take it from the scriptorium install (two levels above this
+   prompt's directory) or, failing that, from the copy bundled next
+   to this prompt at `assets/schemas/manuscript-state.schema.json`,
+   and tell the user which one you used. Otherwise ask the user to
+   paste it or to tell you what fields the local install supports.
+   Do not propose fields the schema does not declare.
 2. **Never silently overwrite existing values.** If the user has
    already populated some fields, show them first and ask.
-3. **Always validate before writing.** Check the proposed YAML
-   against the schema (the user can paste the schema, or you can ask
-   them to run `scriptorium validate` on the result). Never write
-   an invalid file.
+3. **Always validate before writing.** If you can run commands and
+   `scriptorium` is on PATH, run `scriptorium validate` on the
+   proposed file. Otherwise check the proposed YAML against the
+   schema in-conversation and tell the user that installing the CLI
+   (`uv pip install agentic-scriptorium`) and running
+   `scriptorium validate` gives authoritative validation. Never
+   write an invalid file.
 4. **Be skippable at every stage.** The user may want to fill only
    a few fields. The file remains valid as long as the required
    fields (`project.title`, `project.target_type`,

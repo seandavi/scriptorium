@@ -29,15 +29,19 @@ rather than re-asking everything.
 ## Critical constraints — read before doing anything else
 
 1. **Never invent fields not in the schema.** The canonical schema is
-   `schemas/manuscript-state.schema.json` in the scriptorium install
-   (also bundled with the plugin). Read it; treat it as the source of
+   `schemas/manuscript-state.schema.json` (find it as described in
+   *Locating the schema* below). Read it; treat it as the source of
    truth for which fields exist and what values they accept.
 2. **Never silently overwrite existing values.** If `core_claims`
    already has three entries, do not propose four new ones. Ask
    whether to add to, replace, or leave the existing list.
-3. **Always validate before writing.** Run `scriptorium validate`
-   against the proposed file content (or run the schema check
-   in-band) before persisting. Surface validation errors as
+3. **Always validate before writing.** If `scriptorium` is on PATH,
+   write the proposed content to a temporary file and run
+   `scriptorium validate <file>` before persisting. If it is not,
+   check the proposed content against the schema in-conversation
+   and tell the author once that this check is best-effort and that
+   installing the CLI (`uv pip install agentic-scriptorium`) gives
+   authoritative validation. Surface validation errors as
    conversational prompts, not as failures.
 4. **Be skippable at every stage.** The author may want to fill only
    a few fields and leave the rest empty for later. Always offer to
@@ -48,6 +52,23 @@ rather than re-asking everything.
    left blank, the output should still carry the CLI template's
    comment scaffolding so the author can fill it in later without
    guessing the schema.
+
+## Locating the schema
+
+Read `schemas/manuscript-state.schema.json` from the first of these
+that exists:
+
+1. **The scriptorium install** — two levels above this skill's
+   directory (`skills/init/../../schemas/`). Present in a Claude
+   Code plugin install and in a repo checkout.
+2. **The bundled copy** — `assets/schemas/manuscript-state.schema.json`
+   inside this skill's directory. This is what a standalone
+   `npx skills add` install has.
+
+Tell the author in one line which copy you read (for example,
+*"Using the schema bundled with this skill."*). If neither exists,
+say so and ask the author to install scriptorium or paste the
+schema; do not guess the field set.
 
 ## Operational protocol
 
@@ -103,8 +124,9 @@ session; later skills will honor the saved preference.
 - Locate the manuscript directory (default: the user's current working
   directory; ask if ambiguous).
 - Check whether `MANUSCRIPT_STATE.yaml` exists. If yes, read it.
-- Read the bundled JSON Schema (`schemas/manuscript-state.schema.json`)
-  to know the canonical field set and allowed enum values.
+- Read the JSON Schema (`schemas/manuscript-state.schema.json`, see
+  *Locating the schema*) to know the canonical field set and allowed
+  enum values.
 - Briefly survey the manuscript directory:
   - Largest `.md` / `.qmd` / `.tex` file (likely the main manuscript).
   - Any `*.bib`, `*.json`, `*.yaml` files in the root or a
@@ -256,8 +278,10 @@ When the author is done elicitating (or has chosen to skip the rest):
 
 - Show the full proposed YAML content as a diff against the existing
   file (or against the blank template if the file is new).
-- Validate the proposed content against the schema. If validation
-  fails, surface the specific errors and propose fixes
+- Validate the proposed content against the schema — with
+  `scriptorium validate` when the CLI is on PATH, in-conversation
+  otherwise (constraint 3). If validation fails, surface the
+  specific errors and propose fixes
   conversationally — *"the schema expects `target_type` to be one of
   `manuscript / grant / review / preprint / book-chapter / thesis /
   white-paper / other`; I had `clinical-study`. Switch to
