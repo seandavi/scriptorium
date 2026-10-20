@@ -50,8 +50,9 @@ guidance_level_behavior:
 invocation: explicit
 
 # CRITICAL: author-side only. The skill must refuse to run on a
-# manuscript the user did not author. Editorial use violates ICMJE,
-# NIH, Elsevier, and Nature peer-review policy.
+# manuscript the user did not author. Editorial use would delegate the
+# critique to AI, which NIH, Elsevier and Springer Nature reviewer
+# policies forbid; ICMJE defers to the journal's AI policy.
 positioning: author-side-only
 
 platforms:
@@ -80,6 +81,8 @@ grounding:
   - knowledge/peer-review/critique-quality-evidence.md
   - knowledge/scientific-writing/reporting-guidelines.md
   - knowledge/prior-art/ai-writing-failure-modes.md
+  - knowledge/prior-art/peer-review-platforms.md
+  - knowledge/peer-review/credit-taxonomy-authorship.md
 
 non_goals:
   - Editorial-side review of someone else's submission.
