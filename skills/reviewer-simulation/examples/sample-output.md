@@ -6,7 +6,7 @@ Risk appears **moderate-to-high** for a journal at the *Diabetes Care* tier. The
 
 ## Likely major critiques
 
-1. **[Statistical, Methodological]** No internal validation reported. The 5-variable logistic model is reported with AUC=0.79 on the development cohort only. With ~64% remission in n=287 (≈184 events), the events-per-variable ratio is reasonable but not generous; bootstrap optimism-corrected AUC or k-fold cross-validation should be reported. Without it, the AUC is over-optimistic by an unknown margin. Likely fatal at *Diabetes Care* unless addressed.
+1. **[Statistical, Methodological]** No internal validation reported. The 5-variable logistic model is reported with AUC=0.79 on the development cohort only. With ~64% remission in n=287 (≈184 events), the events-per-variable ratio is reasonable but not generous; bootstrap optimism-corrected AUC or k-fold cross-validation should be reported. Without it, the AUC is over-optimistic by an unknown margin. Serious, but fixable in revision: the validation can be run on the existing cohort.
 
 2. **[Statistical]** No calibration metric reported (calibration plot, Hosmer–Lemeshow, calibration intercept and slope). Discrimination (AUC) alone is insufficient for a clinical-prediction paper at this venue. TRIPOD reporting guideline expects both.
 
@@ -23,7 +23,7 @@ Risk appears **moderate-to-high** for a journal at the *Diabetes Care* tier. The
 (Numbered independently from majors above; "Suggested revisions"
 cross-references use the form "minor #N" for clarity.)
 
-1. **[Domain expert]** TRIPOD checklist is not mentioned in the methods. *Diabetes Care* increasingly expects TRIPOD-AI or TRIPOD adherence for clinical-prediction-model papers; including the checklist as a supplementary file is low-friction and reduces reviewer friction.
+1. **[Domain expert]** TRIPOD is not mentioned in the methods. *Diabetes Care* increasingly expects TRIPOD+AI or TRIPOD adherence for clinical-prediction-model papers. The missing internal validation and calibration (majors #1 and #2) are the reporting gaps a TRIPOD-minded reviewer would flag first; including the completed checklist as a supplementary file is low-friction.
 
 2. **[Presentation]** "Compares favorably to previously published scores" is vague hedging — replace with the actual AUC comparison.
 
@@ -31,7 +31,7 @@ cross-references use the form "minor #N" for clarity.)
 
 ## Potential fatal concerns
 
-The combination of (a) no internal validation, (b) no calibration metric, and (c) policy-level recommendations built on a single-center development AUC could push a methodologically strict reviewer toward "reject as currently presented" rather than "revise." If items 1, 2, and 3 above are addressed substantively, this risk drops to "major revision" territory.
+No fatal concerns identified. The most serious cluster, (a) no internal validation, (b) no calibration metric, and (c) policy-level recommendations built on a single-center development AUC, consists of statistics and overclaiming concerns. These are usually fixable in revision rather than grounds for rejection, and none of the critiques exposes a design-level flaw that reanalysis or rescoping could not address. Left unaddressed, the cluster could still push a methodologically strict reviewer toward "reject as currently presented"; addressing majors 1, 2, and 3 removes that risk.
 
 ## Enthusiasm drivers
 
