@@ -17,17 +17,19 @@ description: >
   or an explicit gap statement. Downstream of v0.2's
   reporting-guideline-fit (which infers which checklist applies).
   Validation skill — surfaces gaps for the author to address;
-  does not modify the manuscript and does not invent prose.
+  does not modify the manuscript, by default does not draft prose
+  (an author-overridable scope guard), and never invents facts
+  about the study.
 
 # Validation skills emit structured findings; they do not modify
-# the manuscript and do not propose replacement prose.
+# the manuscript and, by default, do not propose replacement prose.
 produces:
   - structured-markdown-report
 
 modifies: []
 
-# document_phase values the skill is designed to operate on. Refuses
-# on outline-phase manuscripts.
+# document_phase values the skill is designed to operate on. Declines
+# outline-phase manuscripts by default (outline-phase scope guard).
 # Consumed by docs build (reference/skills page generator).
 lifecycle_phases:
   - review
@@ -55,8 +57,8 @@ guidance_level_behavior:
     lists roughly 700 records), what this audit produces
     (per-item present / partial / missing / N-A with a quoted
     anchor or explicit gap), and how to read it (act on missing first, then partial;
-    N/A is not a gap; the audit does not invent prose to fill
-    gaps).
+    N/A is not a gap; by default the audit does not draft prose
+    to fill gaps).
 
 # Explicit invocation. Invoked when the applicable checklist is
 # known (declared in state, passed from reporting-guideline-fit,
@@ -85,8 +87,9 @@ inputs:
     required: true
     description: >
       MANUSCRIPT_STATE.yaml from the project root. Required:
-      document_phase.current (refuses on outline). Optional:
-      project.target_venue (venue-specific layered requirements),
+      document_phase.current (declines on outline by default).
+      Optional: meta.overrides (guards the author has
+      overridden), project.target_venue (venue-specific layered requirements),
       core_claims (intent disambiguation), known_weaknesses
       (acknowledged-but-unaddressed cross-reference),
       meta.guidance_level (framing only).
@@ -99,22 +102,53 @@ inputs:
       drive the audit. Alternative inputs: an explicit checklist
       named in the invocation, or (when the schema carries it)
       MANUSCRIPT_STATE.yaml#reporting_guideline. If none of
-      these is present, the skill refuses and points the author
-      at reporting-guideline-fit.
+      these is present, the skill declines by default
+      (checklist-required guard) and points the author at
+      reporting-guideline-fit.
 
 # Knowledge-layer documents that ground this skill's design.
 grounding:
   - knowledge/conventions/guidance-level.md
   - knowledge/conventions/declared-work-scope.md
+  - knowledge/conventions/author-authority.md
   - knowledge/scientific-writing/reporting-guidelines.md
   - knowledge/critique-techniques/internal-consistency.md
 
+# Guards this skill applies, per knowledge/conventions/author-authority.md.
+# Scope guards are defaults the author can override (per run or under
+# meta.overrides); accuracy guards are fixed.
+guards:
+  - id: generation-from-blankness
+    kind: scope
+    summary: "Nothing declared to ground against: this would write content (a section, a missing item, a caption) the author has not written or declared."
+    source: "knowledge/conventions/declared-work-scope.md"
+    default: refuse
+  - id: outline-phase
+    kind: scope
+    summary: "The manuscript is at outline phase; there is not yet enough declared prose for this skill to work on."
+    source: "knowledge/conventions/declared-work-scope.md"
+    default: refuse
+  - id: checklist-required
+    kind: scope
+    summary: "No reporting checklist is declared, supplied or named; this skill audits a given checklist and does not infer one (reporting-guideline-fit does)."
+    source: "knowledge/conventions/declared-work-scope.md"
+    default: refuse
+  - id: no-false-verification-claims
+    kind: accuracy
+    summary: "The skill never reports a check as done or passed when it was not (full-text support, a clean preservation report, a figure it did not see)."
+    default: refuse
+  - id: no-invented-manuscript-facts
+    kind: accuracy
+    summary: "The skill never states facts about the author's work (figure content, who did what, what the study did) that the manuscript and declared state do not contain."
+    source: "knowledge/conventions/declared-work-scope.md"
+    default: refuse
+
 # Hard rules the skill must honor.
 preservation_constraints:
-  - never_invent_prose             # surface gaps; do not write fill-text
+  - never_invent_prose             # surface gaps; fill-text only as a bracketed placeholder under override
   - never_modify_manuscript        # validation skill, no transformation
-  - refuse_on_outline_phase
-  - refuse_when_checklist_unknown  # point at reporting-guideline-fit
+  - refuse_on_outline_phase        # default; outline-phase guard is overridable
+  - refuse_when_checklist_unknown  # default; checklist-required guard is overridable
   - walk_every_checklist_item      # coverage is the point
   - anchor_present_and_partial     # quoted excerpt required
   - flow_diagram_items_default_partial  # author verifies the diagram
@@ -124,11 +158,14 @@ preservation_constraints:
 
 # What this skill explicitly is NOT.
 non_goals:
-  - Inferring which EQUATOR checklist applies. That is the
-    v0.2 reporting-guideline-fit skill's job; this skill audits
-    the checklist it is given.
-  - Inventing prose to fill missing items. Validation skill —
-    the author owns the fix.
+  - Inferring which EQUATOR checklist applies, by default. That
+    is the v0.2 reporting-guideline-fit skill's job; this skill
+    audits the checklist it is given (checklist-required guard,
+    author-overridable).
+  - Drafting prose to fill missing items, by default. Validation
+    skill — the author owns the fix (generation-from-blankness
+    guard, author-overridable). Never invents facts about the
+    study.
   - Modifying the manuscript. No transformation.
   - Critiquing study design. The audit assesses what is
     reported, not whether the design was the right choice.
@@ -138,7 +175,8 @@ non_goals:
   - Auditing figure / text alignment. See the
     figure-text-alignment skill.
   - Auditing citation accuracy. citation-audit's job.
-  - Operating on outline-phase manuscripts.
+  - Operating on outline-phase manuscripts, by default
+    (outline-phase guard, author-overridable).
   - Forcing a confident present / missing on ambiguous
     items. `partial` and `not-applicable` are first-class
     outcomes.
