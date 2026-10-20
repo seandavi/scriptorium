@@ -29,7 +29,10 @@ def _combined_output(result: Any) -> str:
     ``mix_stderr=False``. Using the union avoids brittle assertions.
     """
     out = result.output or ""
-    err = getattr(result, "stderr", None) or ""
+    try:
+        err = result.stderr or ""
+    except ValueError:  # stderr not captured separately (older click)
+        err = ""
     return out + err
 
 
