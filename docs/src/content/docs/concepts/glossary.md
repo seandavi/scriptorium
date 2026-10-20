@@ -58,8 +58,9 @@ to the knowledge layer.
 ## EQUATOR Network
 
 The international network that maintains reporting-guideline
-checklists for health research — CONSORT (RCTs), STROBE
-(observational), PRISMA (systematic reviews), ARRIVE (animal
+checklists for health research — CONSORT (RCTs; 2025 version),
+SPIRIT (trial protocols; 2025 version), STROBE (observational),
+PRISMA (systematic reviews), ARRIVE (animal
 research), TRIPOD / TRIPOD+AI (prediction models), STARD
 (diagnostic accuracy), CARE (case reports), COREQ (qualitative),
 CHEERS (economic evaluations), and their AI extensions

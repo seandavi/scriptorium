@@ -148,7 +148,7 @@ default. See [`knowledge/citations/hallucination-in-llm-citations.md`](knowledge
 
 ### Authorial-voice loss / "ChatGPT smell"
 
-[Kobak et al. 2024][kobak-2024] documented the lexical fingerprint of
+[Kobak et al. 2025][kobak-2025] documented the lexical fingerprint of
 LLM-edited scientific writing — over-use of "delve," "intricate,"
 "underscore," and similar markers. Scriptorium's conservative-edit
 posture (preserve source language, transformations are minimal and
@@ -184,7 +184,7 @@ their writing.
 
 [walters-wilder-2023]: https://doi.org/10.1038/s41598-023-41032-5
 [bhattacharyya-2023]: https://doi.org/10.7759/cureus.39238
-[kobak-2024]: https://arxiv.org/abs/2406.07016
+[kobak-2025]: https://doi.org/10.1126/sciadv.adt3813
 [parasuraman-2010]: https://doi.org/10.1177/0018720810376055
 
 ## Scope

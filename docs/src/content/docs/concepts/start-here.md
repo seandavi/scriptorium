@@ -95,8 +95,10 @@ the three that matter for the mental model:
   ([Hayes 2012](/concepts/workflow-stage/)) is the author's.
 - **No autonomous reviewing.** `reviewer-simulation` and
   `desk-rejection-risk` are author-side only. Editorial-side use
-  on someone else's manuscript violates ICMJE, NIH, and major-
-  publisher policy, and the skills refuse to run that way.
+  on someone else's manuscript would mean uploading a confidential
+  manuscript and delegating the critique to AI, which current NIH
+  and publisher reviewer policies rule out. The skills refuse to run
+  that way.
 - **No overall quality score.** No letter grade, no Flesch-Kincaid,
   no aggregate writing-quality number. Skills emit anchored
   findings, not aggregates.
