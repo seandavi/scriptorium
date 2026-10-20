@@ -70,9 +70,9 @@ would make the output wrong.
   rewrites (`critique-rewrite-suggestions`; source: scriptorium's
   copyediting-vs-developmental note)." Then decline, naming the same
   two override routes. On override, add one rewrite per flagged
-  sentence below its rationale, marked *Suggestion (author's call)*. Each suggestion keeps the sentence's
-  cite keys and numbers verbatim and makes no claim that it is
-  better.
+  sentence below its rationale, marked *Suggestion (author's call)*.
+  Each suggestion keeps the sentence's cite keys and numbers verbatim
+  and makes no claim that it is better.
 - **`no-writing-quality-score` (accuracy; fixed).** No overall score,
   grade or readability index, ever. Neither a per-run answer nor
   `meta.overrides` lifts it; if asked to, say the guard protects
@@ -169,6 +169,9 @@ Overrides applied: <guard ids>
   the manuscript's median length; consider whether two clauses
   could be split or whether the connective tissue is doing real
   work.
+  - *Suggestion (author's call):* "<one possible rewrite>" (only
+    under a `critique-rewrite-suggestions` override; one per flagged
+    sentence, in every dimension's list).
 
 ## Complexity outliers
 

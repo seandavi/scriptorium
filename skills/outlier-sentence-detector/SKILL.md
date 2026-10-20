@@ -177,8 +177,8 @@ have to be computed before any sentence can be called an outlier.
    `bibliography.paths`, `meta.overrides`, and
    `document_phase.current`. If
    `document_phase.current == "outline"`, the `outline-phase` guard
-   applies: decline unless overridden — there is not enough stable prose to compute a
-   distribution against.
+   applies: decline unless overridden — there is not enough stable
+   prose to compute a distribution against.
 2. **Read every manuscript file.** Concatenate the prose. Strip
    front-matter, code blocks, equations, tables, and figure
    captions — these have their own distributional characteristics

@@ -93,8 +93,9 @@ inputs:
       entries from the distributional statistics. The
       `document_phase.current` field — if `outline` — declines the
       run unless the author overrides the outline-phase guard
-      (`meta.overrides` is read for that). The skill proceeds at standard density if the state file
-      is missing, noting the un-grounded run in the output.
+      (`meta.overrides` is read for that). The skill proceeds at
+      standard density if the state file is missing, noting the
+      un-grounded run in the output.
     schema: manuscript-state.schema.json
 
 # Knowledge-layer documents that ground this skill's design decisions.
