@@ -1,6 +1,6 @@
 # Declared-work scope: where scriptorium does and does not operate
 
-*Last updated: 2026-05-20*
+*Last updated: 2026-10-20*
 
 ## Synthesis
 
@@ -43,12 +43,14 @@ Two corollaries follow:
    already committed to. A hypothetical skill that helps an author
    "figure out what to study" is *not* in scope — there is nothing
    declared to ground it.
-2. **Refusal is the right behaviour at the boundary.** When a user
+2. **Refusal is the default behaviour at the boundary.** When a user
    asks a skill to operate on prose that doesn't exist (an empty
    section, a missing chapter), the skill refuses cleanly and points
    the user at the pre-declaration work that needs to happen first.
    It does not silently degrade into best-effort blank-slate
-   generation.
+   generation. The refusal is a default, not a rule: each boundary
+   refusal is a **scope guard with `default: refuse`**, and the
+   author may override it ([[author-authority]]).
 
 ## Why this is the right cut — supporting evidence
 
@@ -106,7 +108,11 @@ against these failure modes. Each skill's specific guard — "no
 invented citations" for `citation-audit`, "preserve hedging and
 stance markers" for `argumentative-flow`, "never claim full-text
 verification of papers you haven't seen" — is the same principle
-applied to that skill's surface.
+applied to that skill's surface. Where such a guard protects the
+correctness of the output, [[author-authority]] classifies it as an
+accuracy guard, which cannot be overridden. The boundary refusal
+itself is a scope guard: stepping past it is a choice the author can
+make, not an error.
 
 ### Negative exemplar: end-to-end generation systems
 
@@ -164,8 +170,15 @@ synthesise from blankness.
 
 ## Refusal behaviour at the boundary
 
+Each boundary refusal is declared in the skill's `manifest.yaml` as
+a guard with `kind: scope` and `default: refuse`, citing this note
+as its `source`. The default behaviour is the one described here.
+The author may override it for one run, by answering the refusal, or
+for the project, under `meta.overrides` in `MANUSCRIPT_STATE.yaml`.
+[[author-authority]] defines the mechanism and the precedence.
+
 When a user asks a skill to operate beyond its declared-work
-boundary, the skill should:
+boundary and no override applies, the skill should:
 
 1. **Name the refusal explicitly.** "I can't draft the section
    because there's nothing there yet to ground against" is better
@@ -174,13 +187,23 @@ boundary, the skill should:
    first.** "Sketch a stub for the section — even a few sentences
    declaring what claims it will make — and I can identify gaps
    against that stub." The author owns the proposer step.
-3. **Not lecture.** The boundary is structural, not pedagogical.
+3. **Say how to override.** One clause naming the guard id and the
+   two routes: answer in this run, or add it under
+   `meta.overrides`.
+4. **Not lecture.** The boundary is structural, not pedagogical.
    One clear sentence is enough; no need to explain the
    declared-work principle every time it fires.
 
-This refusal pattern is the same shape as the per-skill failure
-guards (`citation-audit`'s "no invented citations", etc.). It is
-the principle at a different scope.
+When an override applies, the skill still states the concern in one
+line, proceeds, and lists the guard id in its "Overrides applied"
+line. The rationale above is why the default is refusal. The author
+is the one accountable for the work, so the author decides when the
+default does not fit their case.
+
+The per-skill accuracy guards (`citation-audit`'s "no invented
+citations", etc.) have the same shape but a different status: they
+refuse in every case, because overriding them would make the output
+wrong.
 
 ## When this convention may need to evolve
 
@@ -201,12 +224,13 @@ revisit:
   not generate; it does not say scriptorium can't *audit* an
   external generator's output.
 - **Author-side configuration of the boundary** (a power user who
-  declares "I am explicitly inviting blank-slate help here") would
-  need to be explicit and per-invocation; the project's default
-  posture should remain refusal at the boundary.
+  declares "I am explicitly inviting blank-slate help here") is now
+  handled by [[author-authority]]: per run by answering the refusal,
+  or per project under `meta.overrides`. The project's default
+  posture remains refusal at the boundary.
 
-These are not v0.1 decisions. The current convention is: declared
-work or nothing, with refusal as the boundary behaviour.
+The current convention is: declared work by default, with refusal as
+the default boundary behaviour and the author free to override it.
 
 ## Implementation priority for scriptorium
 
@@ -226,7 +250,10 @@ audited against it and so contributors know where the line is.
    from this convention if useful.
 4. If the skill could plausibly be asked to operate beyond the
    boundary (an empty section, a missing chapter), its operational
-   protocol should include the refusal behaviour above.
+   protocol should include the refusal behaviour above, and its
+   `manifest.yaml` should declare each such refusal as a
+   `kind: scope` guard with `default: refuse`
+   ([[author-authority]]).
 
 **What this is not:** This is not a verbosity rule or a refusal
 template. It is the project's structural commitment about where
@@ -246,3 +273,5 @@ scriptorium operates. Skills should *embody* the principle, not
   much* scriptorium teaches at each level. Declared-work-scope
   controls *where* scriptorium operates; guidance-level controls
   *how* it talks when it does.
+- [[author-authority]] — the guard mechanism. This note's boundary
+  refusals are its `kind: scope` guards, overridable by the author.
