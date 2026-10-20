@@ -6,6 +6,8 @@ grounding:
   - knowledge/conventions/declared-work-scope.md
   - knowledge/critique-techniques/internal-consistency.md
   - knowledge/scientific-writing/style-guides.md
+  - knowledge/scientific-writing/promotional-register.md
+  - knowledge/scientific-writing/significance-positioning.md
 ---
 
 # Terminology normalization
@@ -83,10 +85,63 @@ apply them without the author's explicit consent.
   `MANUSCRIPT_STATE.yaml#bibliography.paths`. Read these *before*
   flagging any token in the manuscript (see constraint 2 above).
 
-If `MANUSCRIPT_STATE.yaml` is missing or its terminology lists are
-empty, stop. Tell the author the skill has nothing to enforce against
-and suggest they declare terminology preferences first (e.g. via
-`scriptorium:init`).
+If `MANUSCRIPT_STATE.yaml` is missing entirely, stop. Tell the author
+the skill has nothing to enforce against and suggest
+`scriptorium:init`.
+
+If the state file exists but its terminology lists are empty or thin,
+do not silently proceed and do not invent a list from the manuscript.
+Instead, **offer the default promotional-register catalog** described
+below, and stop until the author accepts, edits, or declines it. The
+author's declared list stays authoritative; the default is a starting
+point, never an override. This preserves [[declared-work-scope]] — the
+author still declares — while removing the cold start that otherwise
+makes this skill useless on first contact.
+
+## The default promotional-register catalog
+
+Authors rarely arrive with a `terminology.forbidden` list. They arrive
+with an instruction like *"drop the jargon"* or *"this sounds like
+marketing."* [[promotional-register]] converts that instruction into a
+declarable list, which is the point: **an instruction to avoid a
+register decays across revision passes, because nothing in the loop
+remembers it; the same instruction in `terminology.forbidden` is a
+checkable gate.** That is the same property that makes
+`constraints.preserve_citations` trustworthy — the audit is mechanical,
+so the claim is falsifiable rather than asserted.
+
+When offering the catalog, propose the subset that fits
+`project.target_type`:
+
+- **Manuscripts, theses, reviews** — the full catalog: the
+  transactional construction, superlative self-assessment, value
+  assertion in place of statement, and the high-frequency vocabulary.
+- **Grants and proposals** — the same, **minus the vision-language
+  exemption**. Proposals are evaluated on vision plus feasibility, so
+  "long-term goal", "transformative", and "establish a foundation" are
+  appropriate in an aims page or project summary when a credible plan
+  backs them. Do not propose these as forbidden. See
+  [[grant-writing-evidence]] and [[nih-significance-patterns]].
+
+Three exemptions apply regardless of target type, and you should say so
+when offering the list rather than letting the author discover them:
+
+1. **Discipline-precise terms.** *Robust* has a technical meaning in
+   statistics, *novel* in chemistry, *key* in cryptography. Flagging
+   these in their home field is a false positive. Ask before including
+   them; see [[discipline-conventions]].
+2. **Significance claims proper.** A statement of why the work matters
+   is required work, not promotion. [[significance-positioning]] governs
+   these; this catalog must not touch them.
+3. **Boosters at warranted strength.** The defect is a booster stronger
+   than its evidence, not the presence of boosters
+   ([[esl-writers-swales-hyland]]).
+
+One calibration note carried from the evidence: Vinkers et al. found
+authors at institutions outside majority-English-speaking countries used
+significantly more positive words. A filter tuned to one register will
+disproportionately flag another author's ordinary prose. Propose; never
+enforce.
 
 ## Conversational style
 
