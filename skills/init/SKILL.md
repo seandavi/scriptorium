@@ -291,7 +291,8 @@ which fields are load-bearing for which downstream skill.
   author names, with the skills it applies to (`"*"` for every
   skill that declares it) and an optional note. Guard ids are
   listed under `guards:` in each skill's `manifest.yaml`;
-  `scriptorium validate` rejects unknown ids and accuracy guards.
+  `scriptorium validate` rejects unknown ids, accuracy guards, and
+  skills that don't declare the guard.
 
 If the file already has values for any of these, **show them first**
 and ask whether to update, add to, or leave alone.
