@@ -149,6 +149,33 @@ follow from the previous one, that is a *Smoothness* finding.
 Vocabulary parity with established editing literature makes the
 output legible to anyone trained in the editorial tradition.
 
+## Implementation priority for scriptorium
+
+*(Section added 2026-10-20, #135. The note previously lacked one. The
+verdict is derived from "How this informs scriptorium" above and from
+[`docs/roadmap.md`](../../docs/roadmap.md), which lists this note as
+grounding for the shipped v0.3 `compression` skill. It records existing
+use; it is not a new project decision.)*
+
+**Verdict:** **Yes (current), as grounding — no standalone skill.**
+The editing-level taxonomy is how skills declare their scope:
+`compression` works at the line-editing level, one step below
+`argumentative-flow`'s developmental level.
+
+**Scope for the skills that ground in it:**
+
+- Each transformation skill declares its editing level in SKILL.md.
+- Developmental-level changes surface a "Remaining Weaknesses"
+  section.
+- The conservative-edit posture follows the copyeditor's restraint
+  (no line-by-line rewriting licence).
+
+**Not decided here:** the planned entries in the table above
+(journal-style conversion, redundancy removal, active voice,
+restructuring) are illustrations of where future skills would sit.
+This note gives no verdict on them. Journal-style conversion has its
+own Maybe-later verdict in [[style-guides]].
+
 ## Open questions / weak evidence
 
 - The English-language editing taxonomy is not universal. In some

@@ -177,6 +177,33 @@ Mossop's twelve-parameter system. The vocabulary is shared with the
 broader editing tradition; the scriptorium contract is just a
 machine-checkable subset of it.
 
+## Implementation priority for scriptorium
+
+*(Section added 2026-10-20, #135. The note previously lacked one. The
+verdict is derived from "How this informs scriptorium" above and from
+[`docs/roadmap.md`](../../docs/roadmap.md), which lists this note as
+grounding for the shipped `argumentative-flow` (v0.1) and
+`compression` (v0.3) skills. It records existing use; it is not a new
+project decision.)*
+
+**Verdict:** **Yes (current), as grounding — no standalone skill.**
+The structured-invariant contract (citations, statistics, terminology,
+declared claims) is the preservation logic of the transformation
+skills.
+
+**Scope for the skills that ground in it:**
+
+- `argumentative-flow` and `compression`: verify preservation by
+  structured comparison (citation set membership, exact statistic
+  strings, terminology rules), not by embedding similarity, and emit a
+  preservation report alongside the edits.
+- Similarity scores, where used at all, are a hint to look at a
+  change, never an accept/reject gate.
+
+**Why not a standalone skill:** preservation is a contract every
+transformation skill has to honour on its own output, not a separate
+pass.
+
 ## Open questions / weak evidence
 
 - The set of structured invariants above is plausibly sufficient for
