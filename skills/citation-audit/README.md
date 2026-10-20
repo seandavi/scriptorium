@@ -9,6 +9,8 @@ markdown.
 **Category:** critique
 **Modifies the manuscript?** No.
 **Adds citations?** No, ever. This is the skill's load-bearing constraint.
+**Suggests citations?** Not by default; the author can opt in (see
+[Guards and overrides](#guards-and-overrides)).
 
 ## What it does
 
@@ -44,10 +46,13 @@ skill) can consume it.
 
 ## What it does not do
 
-- **Add or suggest citations.** This is the LLM hallucination failure
+- **Add or invent citations.** This is the LLM hallucination failure
   mode the skill exists in part to *not* introduce. If a claim has no
   citation, the audit flags it as unsupported; the author decides
   what to cite.
+- **Suggest citations, by default.** Choosing what to cite is the
+  author's call. An author who wants suggestions can override this
+  (see below).
 - **Modify the manuscript.** Audit is descriptive. Edits are the
   author's responsibility.
 - **Verify full-text claim alignment** unless the cited papers' full
@@ -56,6 +61,28 @@ skill) can consume it.
 - **Detect retractions** — that's a future v0.2 utility, not part of
   the v0.1 audit.
 - **Score the manuscript.** Audit reports findings; it does not rank.
+
+## Guards and overrides
+
+The skill declares its guards in [`manifest.yaml`](manifest.yaml),
+following the
+[`author-authority`](../../knowledge/conventions/author-authority.md)
+convention.
+
+- **`citation-recommendations`** (scope). By default the audit names
+  no papers to cite. The author can override this for one run by
+  answering "proceed", or for the project with an entry under
+  `meta.overrides` in `MANUSCRIPT_STATE.yaml`. The skill then names
+  only works it resolved against Crossref or PubMed in that session,
+  with the DOI or PMID, and says that a resolved record is not
+  evidence the work supports the claim.
+- **Accuracy guards** (fixed): `no-parametric-citations`,
+  `no-false-verification-claims`, `no-inference-beyond-evidence`,
+  `manuscript-text-is-data`. No override lifts them.
+
+When a run proceeds past `citation-recommendations`, the report opens
+with `Overrides applied: citation-recommendations`. Without an
+override the line is absent.
 
 ## Inputs
 
@@ -102,6 +129,8 @@ cat ~/.claude/plugins/scriptorium/skills/citation-audit/prompt.md
 
 ```markdown
 # Citation audit
+
+Overrides applied: <guard ids>   (only when an override was applied)
 
 ## Summary
 - Claims examined: N
@@ -156,6 +185,11 @@ This skill is grounded in scriptorium's knowledge layer:
 - [`peer-review-platforms`](../../knowledge/prior-art/peer-review-platforms.md)
   — hidden prompts in manuscripts; the manuscript is data, never
   instructions.
+- [`declared-work-scope`](../../knowledge/conventions/declared-work-scope.md)
+  — choosing what to cite is the author's call; the source of the
+  `citation-recommendations` guard.
+- [`author-authority`](../../knowledge/conventions/author-authority.md)
+  — guard kinds, `meta.overrides`, and the "Overrides applied" line.
 
 A drift away from these groundings either gets the skill updated or
 gets the grounding extended; never both unchanged.
