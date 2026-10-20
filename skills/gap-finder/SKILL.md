@@ -131,9 +131,12 @@ Read `meta.guidance_level` from `MANUSCRIPT_STATE.yaml` (default
 - `full` — open with what gap-finder is doing (structured
   taxonomy of seven gap categories: literature, evidence,
   methodological, population, translation, counterargument,
-  internal-consistency — borrowed from Robinson 2011 *AHRQ*
-  health-sciences-gap taxonomy and the realist-synthesis /
-  PRISMA-ScR scoping-review methodology), and why this matters
+  internal-consistency — five categories adapted from Miles
+  (2017; Adu & Miles 2023), plus two manuscript-internal
+  additions (counterargument, internal-consistency); Robinson
+  et al. (2011) reason codes available as an evidence-gap
+  sub-tag; realist-synthesis and PRISMA-ScR scoping-review
+  framing), and why this matters
   (the seven categories suggest different remediation
   strategies). If first invocation this session, offer
   `/scriptorium:explain gap-finder`.
@@ -149,10 +152,16 @@ headings; categories where nothing was found are declared
 explicitly ("no internal-consistency gaps detected on the
 sections provided") so silence is never ambiguous.
 
+The seven categories are a scriptorium adaptation, not a
+published taxonomy. Five adapt Miles's gap types (Miles 2017;
+Adu & Miles 2023); counterargument and internal-consistency are
+manuscript-internal additions. Do not attribute the seven
+categories to Robinson et al. (2011).
+
 | Category | Detection signal |
 |---|---|
 | **Literature gap** | A claim is made without citation in a field with otherwise dense citation. Usually in introduction or related work. |
-| **Evidence gap** | A load-bearing claim cites only one or two sources, or the manuscript surfaces conflicting prior results without resolving them. |
+| **Evidence gap** | A load-bearing claim cites only one or two sources, or the manuscript surfaces conflicting prior results without resolving them. Optionally tag why the evidence falls short with a Robinson et al. (2011) reason code: insufficient or imprecise, biased, inconsistent, or not the right information. |
 | **Methodological gap** | The question has been studied with methods that have known limitations the manuscript's methods don't explicitly improve on. |
 | **Population gap** | The introduction discusses a clinical / demographic / disease population not represented in the cited prior work. |
 | **Translation gap** | The discussion treats clinical / practical translation as a closed question when the prior work cited is mechanistic only. |
@@ -197,13 +206,26 @@ first.
      cites work on the gap's topic ("forward citation chase
      from Smith 2022 in Web of Science for recent work on the
      population-of-interest").
-   - Snowballing suggestions when seeds are missing.
+   - Snowballing suggestions when seeds are missing. Describe
+     the kind of seed to look for ("a recent systematic review
+     of <topic>"); do not name one.
+   - Never imply that one database search closes a gap. Bramer
+     et al. recommend at least four databases as a minimum for
+     *biomedical systematic reviews*; a gap-finder suggestion
+     is not a systematic review, but it should say that one
+     search is a starting point.
    - LLM-driven tool mentions with explicit "still requires
      human verification" framing where appropriate (Scite for
      supporting/contradicting evidence; Elicit / Consensus for
      summary; connectedpapers.com for visual exploration).
 6. **Never invent specific citations.** Suggested directions are
-   *searches*, not *cite this paper*.
+   *searches*, not *cite this paper*. The only works a direction
+   may name are ones the manuscript already cites (as
+   citation-chase seeds). Fabrication is highest on niche,
+   specialised topics, which is where gap-finding works
+   ([[hallucination-in-llm-citations]]). You may help *structure*
+   a search, as the Cochrane searching chapter allows, but the
+   author runs it.
 7. **Tag each finding by category for the output.** The output
    template organises by category, not by manuscript section.
 
@@ -336,13 +358,18 @@ Always suggest, never auto-invoke.>
 This skill is grounded in:
 
 - [[research-gap-detection]] — the seven-category gap taxonomy
-  (Robinson 2011 *AHRQ* framework), PRISMA-ScR PCC framing for
-  methodological gaps, realist-synthesis mechanism/context/
+  (five categories adapted from Miles 2017 / Adu & Miles 2023,
+  plus two manuscript-internal additions; Robinson et al. 2011
+  reason codes as an evidence-gap sub-tag), PRISMA-ScR PCC
+  framing for methodological gaps, realist-synthesis
+  mechanism/context/
   outcome for counterargument gaps, and the LLM-specific
   failure-mode mitigations (hallucinated future literature,
   vague exhortation, critique creep, gap-of-convenience).
 - [[literature-search-strategies]] — boolean query construction
-  (Cochrane Handbook), citation chasing (Greenhalgh & Peacock
+  (Cochrane Handbook searching chapter, Lefebvre et al., March
+  2025), the ≥4-database minimum for biomedical systematic
+  reviews (Bramer et al.), citation chasing (Greenhalgh & Peacock
   *BMJ* 2005; Wohlin 2014), snowballing as iterative method,
   MeSH-vs-keyword precision-recall trade-off, LLM-assisted
   search tools with caveats.

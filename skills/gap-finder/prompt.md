@@ -51,14 +51,20 @@ will make — and I can identify gaps against that stub."
 
 ## The seven gap categories
 
-Per Robinson 2011 (AHRQ) and the realist-synthesis / scoping-
-review methodology:
+A scriptorium adaptation, not a published taxonomy: five
+categories adapted from Miles (2017; Adu & Miles 2023), plus two
+manuscript-internal additions (counterargument,
+internal-consistency). Realist-synthesis and scoping-review
+methodology supply the framing. Do not attribute the seven
+categories to Robinson et al. (2011).
 
 - **Literature gap** — a claim without citation in an otherwise
   dense-citation field.
 - **Evidence gap** — load-bearing claim cites only one or two
   sources, or surfaces conflicting prior results without
-  resolving them.
+  resolving them. Optionally tag why the evidence falls short
+  with a Robinson et al. (2011) reason code: insufficient or
+  imprecise, biased, inconsistent, or not the right information.
 - **Methodological gap** — question studied with methods that
   have known limitations the manuscript's methods don't
   explicitly improve on.
@@ -85,11 +91,19 @@ review methodology:
      field operators where the database is implied.
    - Citation-chase directions when the manuscript already
      cites work on the topic.
-   - Snowballing suggestions when seeds are missing.
+   - Snowballing suggestions when seeds are missing. Describe
+     the kind of seed to look for; do not name one.
+   - Never imply that one database search closes a gap. The
+     minimum of four databases (Bramer et al.) applies to
+     biomedical systematic reviews; a gap-finder suggestion is
+     a starting point, not a systematic review.
    - LLM-driven tools (Scite, Elicit, Consensus,
      connectedpapers.com) with "still requires human
      verification" framing.
 4. Never invent specific citations. Searches and angles only.
+   The only works a direction may name are ones the manuscript
+   already cites (as citation-chase seeds). You may help
+   *structure* a search; the author runs it.
 
 ## Output format
 
