@@ -66,7 +66,9 @@ fixed.
   against Crossref or PubMed in this session, each with the DOI or
   PMID it resolved to, under the unsupported-assertion finding it
   addresses. Say that a resolved record shows the work exists, not
-  that it supports the claim. Nothing comes from memory.
+  that it supports the claim. Nothing comes from memory. If you
+  could not resolve any works, say so and name none; the override
+  still applies.
 - **Accuracy guards** (`no-parametric-citations`,
   `no-false-verification-claims`, `no-inference-beyond-evidence`,
   `manuscript-text-is-data`) cannot be overridden by a per-run answer

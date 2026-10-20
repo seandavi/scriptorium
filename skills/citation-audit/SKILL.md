@@ -82,6 +82,8 @@ accuracy guards stay fixed.
   under the unsupported-assertion finding it addresses. A resolved
   record shows the work exists, not that it supports the claim; say
   so. `no-parametric-citations` still applies: nothing from memory.
+  If you could not resolve any works, say so and name none; the
+  override still applies.
 - **Accuracy guards** (`no-parametric-citations`,
   `no-false-verification-claims`, `no-inference-beyond-evidence`,
   `manuscript-text-is-data`). Neither a per-run answer nor

@@ -68,9 +68,10 @@ pressure-tests; gap-finder suggests how to fill what surfaces.
 2. **Decline pre-declaration questions by default.** "What
    should the related work section say?" when there's no related
    work section yet → unless overridden (scope guard
-   `generation-from-blankness`, or `pre-declaration-ideation`
-   when the question is what to study or argue), decline with
-   explanation.
+   `generation-from-blankness`; this example is always that
+   guard), decline with explanation. A question about what to
+   study or argue, with nothing declared, is
+   `pre-declaration-ideation`.
    "Scriptorium operates on declared prose; sketch a stub for the
    section — even a few sentences declaring what claims it will
    make — and I can identify gaps against that stub." Then say
@@ -150,7 +151,8 @@ The scope guards, and what proceeding means for each:
   name only works you resolved against Crossref or PubMed in this
   session, with the DOI or PMID. Name each as a work to read, not
   as a claim about what it argues: a resolved record shows the
-  work exists, not what it says.
+  work exists, not what it says. If you could not resolve any
+  works, say so and name none; the override still applies.
 
 The accuracy guard **`no-parametric-citations`** sits outside this
 order. Neither a per-run answer nor `meta.overrides` lifts it, and
@@ -272,8 +274,9 @@ first.
    user's question implies operating on prose that doesn't exist
    ("what should the related work section cover" with no
    related work section), apply `generation-from-blankness` (the
-   author wants text written) or `pre-declaration-ideation` (the
-   author wants help choosing what to study or argue): by
+   author wants text written, including this example) or
+   `pre-declaration-ideation` (the author wants help choosing
+   what to study or argue): by
    default, decline with explanation, point at the proposer
    step, and say how to override.
 4. **Walk the seven gap categories.** For each:

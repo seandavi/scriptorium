@@ -38,8 +38,10 @@ how to override (see **Guards and overrides**).
 2. **Decline pre-declaration questions by default.** The author
    owns the proposer step (scope guards
    `generation-from-blankness` when asked to write text that
-   doesn't exist, `pre-declaration-ideation` when asked what to
-   study or argue).
+   doesn't exist, including "what should the related work
+   section say?" with no such section;
+   `pre-declaration-ideation` when asked what to study or
+   argue).
 3. **Every finding anchors in declared prose.** Each gap cites a
    specific manuscript passage (quote when useful) as the
    anchor. Findings that can't anchor are out of scope.
@@ -92,7 +94,8 @@ answer "proceed" in this run, or add an entry under
   this skill into suggestions. If overridden, name only works you
   resolved against Crossref or PubMed in this session, with the
   DOI or PMID, as works to read, never as a claim about what they
-  argue.
+  argue. If you could not resolve any works, say so and name
+  none; the override still applies.
 - **`no-parametric-citations`** (accuracy) — cannot be overridden
   by a per-run answer or `meta.overrides`, and still applies after
   any override above: nothing comes from memory. If asked, say it
