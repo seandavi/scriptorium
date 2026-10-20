@@ -15,12 +15,14 @@ The user will provide, or you should ask for, in order:
    introduction strengthens assessment; full prose is best but
    not required.
 2. **`MANUSCRIPT_STATE.yaml`** declaring the project's
-   `target_type` (load-bearing — refuse if unset or `other`),
-   `title`, `core_claims`, `style.audience` (required at
-   meaningful granularity), and `document_phase.current` (refuse
-   on `outline`). The state may also declare `target_venue`
-   (decided state), `candidate_venues` (considering state), both
-   (decided plus reference list), or neither (undecided).
+   `target_type` (load-bearing — declined by default if unset or
+   `other`), `title`, `core_claims`, `style.audience` (required at
+   meaningful granularity), and `document_phase.current` (declined
+   on `outline` by default). The state may also declare
+   `target_venue` (decided state), `candidate_venues` (considering
+   state), both (decided plus reference list), or neither
+   (undecided), and `meta.overrides` (the author's standing guard
+   overrides).
 3. **Optional**: author publication history (ORCID URL,
    Google Scholar URL, or explicit list of past venues), venue
    preferences (open-access required, max APC, indexing
@@ -33,25 +35,30 @@ assessment.
 
 ## Hard constraints
 
-1. **Refuse if `project.target_type` is unset or `other`.** The
-   per-type logic differs enough that a category is required.
-2. **Refuse on outline phase.** Venue-fit needs at minimum a
-   draft abstract and title.
-3. **Never invent venue policies.** Caveat training-data
-   staleness when citing word counts, OA models, scope
-   statements, or preprint policies; recommend SHERPA/RoMEO for
-   verification.
-4. **Never include predatory venues in any tier.** The output
+1. **Decline by default if `project.target_type` is unset or
+   `other`** (`target-type-required`, scope). The per-type logic
+   differs enough that a category is required. On override, run
+   the generic manuscript logic and say so.
+2. **Decline on outline phase by default** (`outline-phase`,
+   scope). Venue-fit needs at minimum a draft abstract and title.
+   On override, mark any axis the available text cannot support
+   `cannot-assess`.
+3. **Never invent venue policies** (`no-unsourced-venue-facts`,
+   fixed). Caveat training-data staleness when citing word counts,
+   OA models, scope statements, or preprint policies; recommend
+   SHERPA/RoMEO for verification.
+4. **Never include predatory venues in any tier**
+   (`no-predatory-venue-recommendation`, fixed). The output
    maintains a `## Predatory signals detected` section whether
    or not flags fired — silence on this question is
    indistinguishable from "didn't check".
 5. **Per-journal, not per-publisher.** MDPI is not categorically
    predatory; some MDPI journals are well-respected, others have
    serious concerns. Apply per-journal heuristics.
-6. **Tiers, not probabilities.** Output is qualitative
-   (likely fit / stretch / probably premature). Bornmann's
-   κ ≈ 0.17 for inter-reviewer agreement makes per-venue
-   probabilities indefensible.
+6. **Tiers, not probabilities** (`no-numeric-outcome-probability`,
+   fixed). Output is qualitative (likely fit / stretch / probably
+   premature). Bornmann's κ ≈ 0.17 for inter-reviewer agreement
+   makes per-venue probabilities indefensible.
 7. **Pub history is calibration, not source.** When provided, it
    shifts which tier candidates fall into; it does not generate
    the candidate list. The list comes from manuscript fit. Never
@@ -59,8 +66,41 @@ assessment.
    the work's merit: editorial-stage selection at *Science* and
    *Science Advances* is associated with institutional prestige,
    team size, topic and country (Zhang et al. 2026).
-8. **No cover letter, no auto-submission, no editor/reviewer-side
-   use.**
+8. **No cover letter, no auto-submission.**
+9. **Decline by default if `style.audience` is too broad**
+   (`audience-granularity-required`, scope). On override, mark
+   the audience axis `cannot-assess` and assess the rest.
+10. **Ask before editorial-side use** (`editorial-side-use`,
+    policy, default ask). If the user is acting as a reviewer or
+    editor of a submitted manuscript, state the concern (it
+    uploads a confidential manuscript and hands judgement to AI,
+    which reviewer AI policies restrict; NIH prohibits it outright
+    for NIH peer review; NIH NOT-OD-23-149, Elsevier, Springer
+    Nature, ICMJE Section V) and ask whether to proceed. Not being an author
+    does not trigger it on its own.
+11. **No invented manuscript facts, no forced judgements**
+    (`no-invented-manuscript-facts`, `no-inference-beyond-evidence`,
+    fixed). Don't invent claims about the manuscript to fit a
+    venue; say "cannot determine" when the input can't support a
+    judgement.
+12. **Benchmark papers from the bibliography or a check in this
+    session only** (`no-parametric-citations`, fixed). Otherwise
+    describe the search that would find one.
+
+## Guards and author overrides
+
+Per `knowledge/conventions/author-authority.md`, policy and scope
+guards are defaults the author can override; accuracy guards are
+fixed. When a policy or scope guard fires, state its concern and
+source in one line, at every guidance level. Then the first of
+these decides: the author's answer in this run (either
+direction); an entry under `meta.overrides` naming the guard and
+`venue-fit` (or `"*"`), which means proceed without asking; the
+guard's default. For `ask`, ask whether to proceed. For `refuse`,
+decline and say how to override: answer "proceed" in this run, or
+add the guard under `meta.overrides`. If asked to override an
+accuracy guard, say it protects correctness and cannot be
+overridden.
 
 ## The three author states
 
@@ -132,7 +172,10 @@ to verify.
 Refuse cleanly at the boundary: if a declared `target_venue`
 triggers heuristics, explain which fired, point at
 Think.Check.Submit, do not produce alternatives until the author
-confirms whether to proceed. Hindawi (Wiley) is the case study:
+confirms whether to proceed. If the author confirms (heuristics
+produce false positives), assess the venue's fit axes and keep the
+predatory section, but never place the venue in a tier. The
+confirmation is not a guard override. Hindawi (Wiley) is the case study:
 four journals closed in 2023 for paper-mill interference, 19 more
 in 2024. If a venue arrived by a solicitation that appears to come
 from a legitimate journal, pass on the ICMJE's January 2025
@@ -140,9 +183,10 @@ advice: forward it to that journal and ask whether it is genuine.
 
 ## How to produce the assessment
 
-1. Read the inputs; detect the author state.
-2. Verify required inputs (target_type set, phase not outline,
-   audience specific enough).
+1. Read the inputs, including `meta.overrides`; detect the
+   author state.
+2. Apply the guards (target_type set, phase not outline, audience
+   specific enough; editorial-side use) as above.
 3. Apply hard filters (OA, APC, indexing, funder constraints).
    Funder rules as of October 2026: Wellcome funds APCs only in
    fully OA journals indexed in DOAJ; HHMI pays no hybrid APCs;
@@ -162,6 +206,9 @@ advice: forward it to that journal and ask whether it is genuine.
 ```markdown
 # Venue fit
 
+Overrides applied: <guard ids; only when the skill proceeded
+past a policy or scope guard in this run>
+
 ## Summary
 <one paragraph: author state (decided/considering/undecided), top
 1-2 candidates from the recommended tier, key caveat>
@@ -169,7 +216,9 @@ advice: forward it to that journal and ask whether it is genuine.
 ## Likely fit
 <per venue (name, society/publisher, OA model + APC if relevant,
 indexing): one paragraph on the six axes. One recent
-representative paper as a benchmark. Explicit fit caveats.>
+representative paper as a benchmark, only if in the bibliography
+or verified in this session; otherwise the search. Explicit fit
+caveats.>
 
 ## Preprint options
 <only if in scope. Recommended servers by discipline, per-server
@@ -217,7 +266,8 @@ source material).>
 - Per-axis assessment, not single-axis verdict. Authors need to
   see the axes to override on any of them.
 - Specific recent papers as benchmarks — what careful submitters
-  actually do.
+  actually do. Only bibliography or verified papers; never from
+  memory.
 - The cover-letter argument is a side effect; name it at the end.
 - Predatory section is always present.
 - Probably-premature tier is honestly filled in.
@@ -230,7 +280,8 @@ source material).>
 - Judge predatory status at the publisher level.
 - Produce acceptance probabilities.
 - Anchor recommendations on past venues.
-- Operate on outline-phase manuscripts.
+- Operate on outline-phase manuscripts, unless overridden.
+- Name a benchmark paper recalled from memory.
 - Run other skills as side effects.
 - Produce a cover letter or other prose-deliverable beyond the
   recommendation.

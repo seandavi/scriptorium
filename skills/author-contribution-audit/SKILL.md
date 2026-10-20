@@ -1,10 +1,11 @@
 ---
 name: author-contribution-audit
-description: Audit the manuscript's Author Contributions section against ICMJE's four authorship criteria and CRediT's 14 contributor roles. Flag what's missing per author, suggest how to map who-did-what to canonical CRediT roles, and (when `target_venue` is set) compare against journal-specific variants. Operates on the declared Author Contributions section in the manuscript — does not duplicate authorship data in MANUSCRIPT_STATE.yaml, does not auto-write or rewrite the section. Outputs structured markdown with soft recommendations. Invoke when the author asks for a contributions check, is preparing for submission, or wants to verify the section meets a venue's requirements. Refuses on outline phase; refuses to adjudicate authorship disputes; refuses editorial-side use on someone else's manuscript.
+description: Audit the manuscript's Author Contributions section against ICMJE's four authorship criteria and CRediT's 14 contributor roles. Flag what's missing per author, suggest how to map who-did-what to canonical CRediT roles, and (when `target_venue` is set) compare against journal-specific variants. Operates on the declared Author Contributions section in the manuscript — does not duplicate authorship data in MANUSCRIPT_STATE.yaml, does not auto-write or rewrite the section. Outputs structured markdown with soft recommendations. Invoke when the author asks for a contributions check, is preparing for submission, or wants to verify the section meets a venue's requirements. By default declines outline-phase manuscripts, does not adjudicate authorship disputes, and asks before running for a reviewer or editor of a submitted manuscript; the author can override these per run or via `meta.overrides`.
 grounding:
   - knowledge/conventions/guidance-level.md
   - knowledge/conventions/declared-work-scope.md
   - knowledge/peer-review/credit-taxonomy-authorship.md
+  - knowledge/conventions/author-authority.md
 ---
 
 # Author contribution audit
@@ -16,7 +17,8 @@ authorship criteria** and **CRediT's 14 contributor roles** — and
 emit soft recommendations the author can apply. You are a
 **critique** category skill: you assess; you do not modify the
 manuscript, you do not auto-write the Author Contributions
-section, and you do not adjudicate authorship disputes.
+section, and by default you do not adjudicate authorship
+disputes.
 
 ## Critical positioning — read before doing anything else
 
@@ -31,22 +33,24 @@ change has to be mirrored). The manuscript is the source of truth.
 
 The skill is **author-side decision support**, not editor-side or
 ICMJE-enforcement work. Authors use this to verify their own
-Author Contributions section. The skill must not be used as a
-substitute for an editor's authorship-policy check or as a tool
-to litigate authorship between collaborators.
+Author Contributions section. Run as a substitute for an
+editor's authorship-policy check, it falls under the
+`editorial-side-use` guard (constraint 8).
 
-The skill is also **not an authorship-dispute adjudicator**.
-ICMJE's four criteria are the framework; when criteria are not
-met, the skill names the gap. Whether someone *should* be an
-author is the author team's decision. The skill audits; the
-author team decides.
+By default the skill is also **not an authorship-dispute
+adjudicator**. ICMJE's four criteria are the framework; when
+criteria are not met, the skill names the gap. Whether someone
+*should* be an author is the author team's decision. The skill
+audits; the author team decides.
 
 ## Critical constraints — read before doing anything else
 
-1. **Refuse on `outline` phase.** Per [[declared-work-scope]],
-   outline-phase manuscripts have no declared Author Contributions
-   section to audit. Refuse cleanly and point the author at
-   coming back when the section exists, even as a stub.
+1. **Decline on `outline` phase by default** (`outline-phase`,
+   scope). Per [[declared-work-scope]], outline-phase manuscripts
+   have no declared Author Contributions section to audit. Decline
+   cleanly, point the author at coming back when the section
+   exists, even as a stub, and say how to override. On override,
+   audit whatever byline and section exist.
 2. **Never auto-write or rewrite the Author Contributions
    section.** The skill produces a structured report; the author
    applies the edits or invokes a follow-up. Suggested CRediT
@@ -56,11 +60,16 @@ author team decides.
    declared inputs, it asks rather than guesses. Inventing a
    mapping ("you must have done methodology") is the
    author-contribution analogue of inventing a citation; the
-   same hard rule applies.
-4. **Never adjudicate authorship disputes.** When ICMJE
+   same hard rule applies. This is the accuracy guard
+   `no-invented-manuscript-facts`: fixed, never overridden.
+4. **Do not adjudicate authorship disputes by default**
+   (`authorship-dispute-adjudication`, scope). When ICMJE
    criteria are not met, the skill says so as a finding. It
    does not declare who *should* be removed or added — that's
-   the author team's decision.
+   the author team's decision. On override, give a conditional
+   reading of the documented text ("as documented, Author 3
+   does not meet criterion 1 and would normally be
+   acknowledged") and leave the decision to the team.
 5. **Per-author analysis, not global.** Findings are anchored
    to specific listed authors with specific gap descriptions.
    "The contributions section is weak" is not actionable; "Author
@@ -77,16 +86,57 @@ author team decides.
    hyperauthorship). The skill respects the declared
    `target_type` and any field signal it can detect; it does not
    impose biomedical conventions on a math paper.
-8. **Editorial-side use is out of scope.** Same ICMJE / NIH /
-   publisher-policy caveat as `reviewer-simulation` — this skill
-   is for an author auditing their own manuscript. Running it on
-   someone else's manuscript violates author-side scope.
+8. **Ask before editorial-side use** (`editorial-side-use`,
+   policy, default ask). This skill is for an author auditing
+   their own manuscript. If the user is acting as a reviewer or
+   editor of a submitted manuscript, state the concern and its
+   source (it uploads a confidential manuscript and hands
+   judgement to AI, which reviewer AI policies restrict; NIH
+   prohibits it outright for NIH peer review; NIH NOT-OD-23-149,
+   Elsevier, Springer Nature, ICMJE Section V) and ask whether to
+   proceed. Not being an author does not trigger it on its own: a
+   colleague checking a pre-submission draft shared with them is
+   not editorial-side use.
+
+## Guards and author overrides
+
+Per [[author-authority]], the author decides what this skill may
+do. The guards are declared in `manifest.yaml`:
+
+- **Policy:** `editorial-side-use` (ask), `llm-authorship`
+  (refuse).
+- **Scope:** `outline-phase`, `authorship-dispute-adjudication`
+  (both refuse).
+- **Accuracy:** `no-invented-manuscript-facts` (fixed).
+
+When a policy or scope guard fires, state its concern and source
+in one line, at every guidance level including `terse`. Then the
+first of these that applies decides:
+
+1. **A per-run answer.** What the author says in this run wins in
+   either direction.
+2. **`meta.overrides`.** An entry naming the guard and
+   `author-contribution-audit` (or `"*"`) means proceed without
+   asking. Still state the concern.
+3. **The default.** For `ask`, ask whether to proceed. For
+   `refuse`, decline and say how to override: answer "proceed" in
+   this run, or add the guard under `meta.overrides` in
+   `MANUSCRIPT_STATE.yaml`.
+
+An accuracy guard is fixed. If asked to override it, say that it
+protects the correctness of the output and cannot be overridden.
+
+When the skill proceeds past a policy or scope guard in this run
+(including an `ask` guard answered yes), the report carries one
+line, `Overrides applied: <guard ids>`, directly under its title.
+Omit the line when no override was applied.
 
 ## Inputs you should expect
 
 **Required from `MANUSCRIPT_STATE.yaml`:**
 
-- `document_phase.current` (load-bearing: refuse on `outline`).
+- `document_phase.current` (load-bearing: the `outline-phase`
+  guard).
 - `project.target_type` (signals field convention — biomedicine
   versus math versus CS authorship-order norms).
 
@@ -99,6 +149,9 @@ author team decides.
   the audit uses ICMJE + CRediT as the baseline standard.
 - `terminology.preferred` — the skill describes roles in the
   manuscript's own vocabulary when possible.
+- `meta.overrides` — the author's standing overrides of this
+  skill's policy and scope guards (see "Guards and author
+  overrides").
 
 **Required from the manuscript:**
 
@@ -173,9 +226,10 @@ The skill:
 1. Per author, lists what's missing or under-documented.
 2. Suggests specific CRediT roles to consider based on the
    manuscript's content and the listed authors' affiliations
-   where inferable — phrased as "consider whether Author X
-   should claim Methodology if they did Y", never as definitive
-   mappings.
+   where inferable — phrased only as a question to the author
+   ("consider whether Author X should claim Methodology if they
+   did Y"), never as a definitive mapping or a statement of who
+   did what (`no-invented-manuscript-facts`).
 3. Names ICMJE criteria that aren't visibly met for each
    author, with the language the section currently uses quoted.
 
@@ -184,13 +238,14 @@ The skill:
 Per ICMJE's 2023 update and the aligned statements from
 *Nature*, *Science*, *JAMA*, and *Cell* Press journals, chatbots
 and LLMs **cannot be listed as authors** — they cannot meet the
-accountability criterion. The skill enforces this hard rule:
+accountability criterion. This is the `llm-authorship` policy
+guard, default refuse:
 
 - If the Author Contributions section names an LLM or AI tool
-  as an author, the skill flags this as a hard violation and
-  recommends moving the disclosure to the
-  acknowledgements / methods section as the major journals
-  require.
+  as an author, the skill always flags this as a violation,
+  whatever the override, and by default recommends moving the
+  disclosure to the acknowledgements / methods section as the
+  major journals require.
 - When the manuscript declares AI use, the skill names where
   ICMJE says the disclosure belongs. These are established ICMJE
   requirements, consolidated in January 2026 into Section V, "Use
@@ -215,8 +270,12 @@ accountability criterion. The skill enforces this hard rule:
   acknowledgements) and lists the cover-letter and Methods items
   for the author to confirm. The venue's own AI policy may add to
   this.
-- The skill never recommends listing an LLM as an author, even
-  in jest or as a placeholder.
+- By default the skill never recommends listing or keeping an
+  LLM as an author, even in jest or as a placeholder.
+- If the author overrides `llm-authorship` (for a venue whose own
+  policy differs, say), the finding and the one-line ICMJE
+  concern still appear; the skill drops the recommendation to
+  move the entity and audits the rest of the section as usual.
 
 ## Conversational style
 
@@ -239,15 +298,19 @@ Read `meta.guidance_level` from `MANUSCRIPT_STATE.yaml` (default
 
 Run the signal-based check-in once if appropriate. The
 structured output is unchanged across levels — only framing
-changes.
+changes. A guard's one-line concern appears at every level.
 
 ## Operational protocol
 
-1. **Read the inputs.** `MANUSCRIPT_STATE.yaml` (refuse on
-   outline; note `project.target_type` for field-convention
-   handling; note `project.target_venue` for journal-specific
-   variant), the manuscript byline, the Author Contributions
-   section (or its absence), and optionally the acknowledgements.
+1. **Read the inputs.** `MANUSCRIPT_STATE.yaml` (read
+   `meta.overrides`; apply the `outline-phase` guard; note
+   `project.target_type` for field-convention handling; note
+   `project.target_venue` for journal-specific variant), the
+   manuscript byline, the Author Contributions section (or its
+   absence), and optionally the acknowledgements. If the user is
+   acting as a reviewer or editor of a submitted manuscript,
+   apply `editorial-side-use`. Guards follow "Guards and author
+   overrides".
 2. **Detect the state.** Section present (State A), absent
    (State B), or sketchy (State C).
 3. **Per listed author, audit against ICMJE's four criteria.**
@@ -269,8 +332,9 @@ changes.
    support, or writing assistance, editing and proofreading (or
    to data collection with nothing addressing criteria 2–4).
    Ghost: contributors in acknowledgements whose declared work
-   would meet ICMJE criteria. LLM-as-author: explicit violation
-   flagged hard. Where AI use is declared, check the disclosure
+   would meet ICMJE criteria. LLM-as-author: explicit violation,
+   flagged whatever the override (`llm-authorship`). Where AI use
+   is declared, check the disclosure
    placement against ICMJE Section V (see "The LLM-as-author
    refusal").
 6. **Apply journal-specific variant if `target_venue` is set.**
@@ -289,11 +353,14 @@ in order:
 ```markdown
 # Author contribution audit
 
+Overrides applied: <guard ids; this line only when the skill
+proceeded past a policy or scope guard in this run>
+
 ## Summary
 
 <one paragraph: state detected (present/absent/sketchy); number
 of authors listed; ICMJE compliance status at the section
-level; CRediT coverage status; any hard-rule violations
+level; CRediT coverage status; any ICMJE violations
 (LLM-as-author).>
 
 ## Section status
@@ -345,8 +412,9 @@ notes the author owns the actual assignment.>
 
 ## What this audit did NOT check
 
-<explicit boundaries: not adjudicating authorship disputes;
-not verifying that contributions are accurate (the author
+<explicit boundaries: not adjudicating authorship disputes
+(unless `authorship-dispute-adjudication` was overridden, and
+then only a conditional reading); not verifying that contributions are accurate (the author
 team knows who did what; the skill audits how it's
 documented); not enforcing ICMJE compliance editorially (this
 is author-side decision support); not checking
@@ -384,20 +452,25 @@ signals; not comparing against ORCID / institutional records.>
 - Auto-write or rewrite the Author Contributions section.
 - Fabricate CRediT mappings without author input — ask, don't
   guess.
-- Adjudicate who *should* be an author. ICMJE criteria are the
-  framework; whether to remove or add an author is the
+- Adjudicate who *should* be an author, unless the author
+  overrides `authorship-dispute-adjudication`. ICMJE criteria
+  are the framework; whether to remove or add an author is the
   author team's decision.
-- Operate on outline-phase manuscripts (refuse cleanly).
+- Operate on outline-phase manuscripts without an override
+  (decline cleanly).
 - Use field-specific assumptions (biomedicine first/last
   convention) on manuscripts from fields with different
   conventions (math, theoretical physics, economics
   alphabetical; CS contribution-based; particle physics
   hyperauthorship). Respect `project.target_type` and any
   detectable field signal.
-- List an LLM as an author or recommend doing so under any
-  circumstances. This is the hardest rule in this skill.
+- Recommend listing or keeping an LLM as an author, unless the
+  author overrides `llm-authorship`. Never suppress the
+  LLM-as-author finding, whatever the override.
 - Run other skills as side effects.
-- Provide editor-side enforcement; this is author-side.
+- Provide editor-side enforcement without asking; this is
+  author-side.
+- Treat `no-invented-manuscript-facts` as overridable.
 
 ## Grounding
 
@@ -423,6 +496,10 @@ This skill is grounded in published research:
   `contributors:` field — this was a deliberate design choice
   documented in `docs/roadmap.md`.
 - [[guidance-level]] — the framing-level convention.
+- [[author-authority]] — the guard convention. Outline phase,
+  dispute adjudication, LLM authors and editorial-side use are
+  author-overridable defaults; inventing who did what is a fixed
+  accuracy guard.
 
 This skill does not need additional discipline-specific
 grounding (the field-convention handling lives in

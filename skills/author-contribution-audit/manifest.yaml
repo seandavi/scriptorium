@@ -10,11 +10,12 @@ description: >
   Audit the manuscript's Author Contributions section against
   ICMJE's four authorship criteria and CRediT's 14 contributor
   roles. Per-author analysis, journal-specific variant check
-  when target_venue is set, LLM-as-author hard refusal and
-  ICMJE AI-disclosure placement check.
+  when target_venue is set, LLM-as-author check and ICMJE
+  AI-disclosure placement check.
   Soft recommendations; never auto-writes the section, never
-  adjudicates authorship disputes, never duplicates authorship
-  data in MANUSCRIPT_STATE.yaml.
+  duplicates authorship data in MANUSCRIPT_STATE.yaml. By
+  default does not adjudicate authorship disputes; the author
+  can override that and its other policy and scope guards.
 
 # Author-side decision support. Critique-shaped — produces a
 # structured report; modifies no manuscript content.
@@ -23,8 +24,8 @@ produces:
 
 modifies: []
 
-# document_phase values the skill is designed to operate on. Refuses
-# on outline-phase manuscripts.
+# document_phase values the skill is designed to operate on. Declines
+# outline-phase manuscripts by default (guard outline-phase).
 # Consumed by docs build (reference/skills page generator).
 lifecycle_phases:
   - review
@@ -69,10 +70,11 @@ inputs:
     required: true
     description: >
       MANUSCRIPT_STATE.yaml. Required: document_phase.current
-      (refuses on outline); project.target_type (signals field
-      convention for author-order norms). Optional:
+      (declines on outline by default); project.target_type
+      (signals field convention for author-order norms). Optional:
       project.target_venue (journal-specific variant check);
-      terminology.preferred.
+      terminology.preferred; meta.overrides (author overrides of
+      the guards below).
     schema: manuscript-state.schema.json
   - name: manuscript_byline
     required: true
@@ -103,21 +105,49 @@ grounding:
   - knowledge/conventions/guidance-level.md
   - knowledge/conventions/declared-work-scope.md
   - knowledge/peer-review/credit-taxonomy-authorship.md
+  - knowledge/conventions/author-authority.md
 
-# Hard rules the skill must honor.
+# Guards the skill applies, per knowledge/conventions/author-authority.md.
+# Policy and scope guards are author-overridable defaults; accuracy
+# guards are fixed.
+guards:
+  - id: editorial-side-use
+    kind: policy
+    summary: "Running this as a reviewer or editor of a submitted manuscript uploads a confidential manuscript and hands judgement to AI, which reviewer AI policies restrict (NIH prohibits it outright for NIH peer review)."
+    source: "NIH NOT-OD-23-149; Elsevier \"Generative AI policies for journals\" (June 2026); Springer Nature \"AI Use in Peer Review\"; ICMJE Recommendations Section V (January 2026)"
+    default: ask
+  - id: llm-authorship
+    kind: policy
+    summary: "ICMJE says AI tools cannot be authors because they cannot be accountable for the work; listing one breaches ICMJE and aligned journal policies."
+    source: "ICMJE Recommendations (May 2023 AI authorship update; Section V, January 2026)"
+    default: refuse
+  - id: outline-phase
+    kind: scope
+    summary: "The manuscript is at outline phase; there is not yet enough declared prose for this skill to work on."
+    source: "knowledge/conventions/declared-work-scope.md"
+    default: refuse
+  - id: authorship-dispute-adjudication
+    kind: scope
+    summary: "Whether someone should be added or removed as an author is the author team's decision; by default the skill reports ICMJE gaps only."
+    default: refuse
+  - id: no-invented-manuscript-facts
+    kind: accuracy
+    summary: "The skill never states facts about the author's work (figure content, who did what, what the study did) that the manuscript and declared state do not contain."
+    source: "knowledge/conventions/declared-work-scope.md"
+    default: refuse
+
+# Hard rules the skill must honor. Dispute adjudication, LLM authors
+# and outline phase are author-overridable guards (see guards: above).
 preservation_constraints:
   - never_auto_write_contributions_section
   - never_fabricate_credit_mappings
-  - never_adjudicate_authorship_disputes
-  - never_list_llm_as_author
-  - refuse_on_outline_phase
   - per_author_anchored_findings  # never global "section is weak"
 
 # What this skill explicitly is NOT.
 non_goals:
-  - Adjudicating authorship disputes. ICMJE criteria are the
-    framework; whether to add or remove an author is the
-    author team's decision.
+  - Adjudicating authorship disputes, by default. ICMJE
+    criteria are the framework; whether to add or remove an
+    author is the author team's decision.
   - Auto-writing the Author Contributions section. Soft
     recommendations only.
   - Fabricating CRediT mappings. Without author input, the
@@ -125,13 +155,14 @@ non_goals:
   - Duplicating authorship data in MANUSCRIPT_STATE.yaml. The
     schema does not carry a `contributors:` field — declared
     prose lives in the manuscript.
-  - Listing LLMs / chatbots / AI tools as authors. Per ICMJE
-    2023 and aligned policies at Nature, Science, JAMA, Cell
-    Press journals — categorical refusal.
-  - Operating on outline-phase manuscripts.
-  - Editorial-side use. This is author-side decision support
-    only; running it on someone else's manuscript violates
-    author-side scope.
+  - Recommending or keeping LLMs / chatbots / AI tools as
+    authors, by default. Per ICMJE 2023 and aligned policies at
+    Nature, Science, JAMA, Cell Press journals. The finding is
+    always reported.
+  - Operating on outline-phase manuscripts, by default.
+  - Editorial-side use without asking. This is author-side
+    decision support; a reviewer or editor of a submitted
+    manuscript is asked before the skill proceeds.
   - Verifying contribution accuracy. The skill audits how
     contributions are documented, not whether they're truthful
     — the author team owns ground truth.
