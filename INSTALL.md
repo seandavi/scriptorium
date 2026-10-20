@@ -29,7 +29,7 @@ and installs the `scriptorium` plugin from it. The skills appear as
 To pin to a specific tag or commit, append `@ref` to the shorthand:
 
 ```text
-/plugin marketplace add seandavi/scriptorium@v0.2.0
+/plugin marketplace add seandavi/scriptorium@v0.3.0
 ```
 
 The non-interactive equivalent (from a shell) is:

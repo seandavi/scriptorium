@@ -10,6 +10,27 @@ state schema may change between versions.
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-20
+
+The v0.3 release. Four skills ship: `reporting-guideline-compliance`,
+`figure-text-alignment` (text-only), `compression` and
+`outlier-sentence-detector`, for sixteen in total. Every note in
+`knowledge/` was re-verified against its sources in the October 2026
+knowledge refresh, and the skills were updated to match. The author
+now decides what skills may do and where: policy and scope guards are
+defaults the author can override for one run or in `meta.overrides`
+in `MANUSCRIPT_STATE.yaml`, and accuracy guards are fixed. The skills
+can also be installed with `npx skills add seandavi/scriptorium` for
+any agent the `skills` CLI supports, and the CLI runs on Python 3.14.
+`scriptorium prompt-pack` now writes one file per skill by default
+(see Changed).
+
+Test count: 226 (was 114 at v0.2.0).
+
+Not in v0.3: `statistics-consistency`, `voice-profile` and
+`persona-calibration`. Each has a design memo under `docs/design/` and
+is deferred to a later release.
+
 ### Author authority
 
 The author now decides what skills may do and where they apply (#156).
@@ -216,7 +237,7 @@ skill. Output-contract and behaviour changes:
 
 #### v0.3 skills
 
-Three v0.3 skills land in this cycle (alongside `terminology-normalization`,
+Four v0.3 skills land in this cycle (alongside `terminology-normalization`,
 `gap-finder`, and `author-contribution-audit`, which shipped early during the
 v0.2 ramp):
 
@@ -246,6 +267,17 @@ v0.2 ramp):
   below `argumentative-flow`. New grounding test file
   (`tests/test_compression_grounding.py`, 20 cases) enforces the
   preservation contract.
+- **`outlier-sentence-detector`** (#99) — flags sentences that are
+  outliers against the manuscript's own distribution on three
+  dimensions: length, syntactic complexity (a comma, subordinator and
+  coordination proxy; no parser) and nominalization density. A flag
+  needs more than 2.5σ above the manuscript median and an absolute
+  floor, and guidance level caps the flags surfaced per dimension
+  (`terse` 3, `standard` 7, `full` 15). Each flag gives a location and
+  a reason to re-read the sentence. No overall score, grade or
+  pass/fail verdict, and no rewrites. Runs only when invoked. Grounded
+  in `knowledge/scientific-writing/quantitative-quality-measures.md`
+  and `knowledge/editing/copyediting-vs-developmental.md`.
 
 #### v0.3 design memos and grounding
 
@@ -268,13 +300,114 @@ voice-profile memo in the established stylometry literature (Burrows,
 Hoover, Argamon, Stamatatos, Mosteller-Wallace) and bounds what is and
 isn't defensible at small-corpus sizes.
 
+#### Install
+
+- **`npx skills` install path** (#154, #155) —
+  `npx skills add seandavi/scriptorium` (the vercel-labs `skills` CLI)
+  installs the skills into any agent that CLI supports. `init`,
+  `explain` and `tour` now carry the repo files they read in their own
+  `assets/` directory, and look for them in a scriptorium install
+  first, then in `assets/`, then (`explain` only) on GitHub `main`;
+  each says which source it used. `scripts/sync_skill_assets.py` (and
+  `just sync-skill-assets`) keeps the bundled copies in sync, and a
+  test fails when they drift. INSTALL.md, the install how-to, README
+  and the landing page document the path. The Claude Code plugin is
+  still the recommended install.
+
+#### Skills and knowledge
+
+- **Promotional-register catalog in `terminology-normalization`**
+  (#124) — a new note,
+  `knowledge/scientific-writing/promotional-register.md`, covers
+  promotional and transactional register in academic prose. When
+  `MANUSCRIPT_STATE.yaml` exists but its terminology lists are empty
+  or thin, the skill now offers a default catalog drawn from the note
+  and waits for the author to accept, edit or decline it, instead of
+  stopping. Grant targets keep vision language off the list; discipline
+  terms, significance claims and warranted boosters are exempt.
+
+#### Docs site
+
+- **Landing page and README** (#101) — restructured around what
+  scriptorium operates on, workflow stages, the preservation contract
+  versus voice preservation, and a "what this won't do" list. New
+  pages: a constructed end-to-end case study
+  (`concepts/case-study`) and a skills reference
+  (`reference/skills`). The schema reference notes that
+  `MANUSCRIPT_STATE.yaml` stays local and `known_weaknesses` is a
+  calibration input.
+- **Concept pages and first-run how-to** (#106) — `start-here`,
+  `declared-work-scope`, `guidance-level`, `workflow-stage` and
+  `glossary` concept pages, and a `how-to/first-run` walkthrough.
+- **Generated tables** (#107, #119) — the skills reference page, the
+  `workflow-stage` skill-by-stage table and the `guidance-level`
+  per-skill block are generated from `skills/*/manifest.yaml` by
+  `docs/scripts/preprocess.py`. Two new manifest fields feed them:
+  `lifecycle_phases:` and `guidance_level_behavior:` (`terse`,
+  `standard`, `full`).
+- **Analytics** (#112, #123) — production docs builds load GA4 on the
+  standard property. `astro dev` sends nothing, and neither do
+  localhost, bare-IP or preview hosts (`workers.dev`, `netlify.app`,
+  `ts.net`).
+- `templates/README.md` points to the starter and example state files
+  and the schema reference (#102).
+
+#### Contributor tooling
+
+- **Link check** (#97) — a lychee workflow checks links in the
+  repo's prose (README, CHANGELOG, CONTRIBUTING, DESIGN, INSTALL,
+  `docs/`, `knowledge/`, `skills/`) on push, PR and a weekly schedule.
+- CONTRIBUTING.md gains sections on skill citation discipline (skill
+  bodies cite with plain markdown links, not resolver cite keys;
+  #98), documentation source of truth (repo-root files and
+  `knowledge/` are canonical; #102) and adding a new skill (#107).
+
 ### Changed
 
+- **`scriptorium prompt-pack` writes one file per skill by default**
+  (#118). `-o prompts/` (or an existing directory, or a new path with
+  no extension) now writes one `<skill>.md` per skill plus a
+  `README.md` listing each skill's category and description. For the
+  previous single concatenated file, pass `--single-file`, or give a
+  file path such as `-o pack.md`. With no `-o`, output still goes to
+  stdout as one document. `--prefix scriptorium-` names the files
+  `scriptorium-<skill>.md`. `prompt-pack` and `scriptorium list` now
+  take skill descriptions from `manifest.yaml`.
 - Renamed `reporting-compliance` → `reporting-guideline-compliance` for
   symmetry with `reporting-guideline-fit`. The original rename
   (commit `b9d0a32`) had not fully propagated; this cycle completes the
   propagation across roadmap, CHANGELOG, knowledge notes, the sibling
   skill's references, and the new skill itself.
+- DESIGN.md's roadmap section now points to `docs/roadmap.md`, and a
+  new Conventions section covers `declared-work-scope` and
+  `guidance-level` (#117).
+- The docs site's Tutorials section is gone; the how-to index lists
+  the shipped how-tos (#102).
+- Docs fixes: stale "planned" and version framing removed from
+  README, INSTALL.md, DESIGN.md, `knowledge/README.md` and the
+  `argumentative-flow`, `reporting-guideline-fit` and
+  `reporting-guideline-compliance` skill files; `docs/design/README.md`
+  indexes the design memos; roadmap rows marked landed (#96, #102,
+  #104, #116).
+
+### Fixed
+
+- **Python 3.14** (#168, fixes #120) — the CLI crashed on startup
+  because `importlib.abc.Traversable` was removed in 3.14; it now
+  imports `Traversable` from `importlib.resources.abc` on 3.11+. The CI
+  matrix and classifiers include 3.14.
+- `citation-audit`'s grounding pointed to
+  `knowledge/citations/citation-accuracy-evidence.md`; the note is
+  `.qmd`. Two knowledge notes had a mistyped Hyland 1999 DOI and a
+  stale medRxiv URL (#97).
+- Knowledge layer: 20 `[TODO verify]` marks resolved as verified,
+  softened or recorded as research gaps; the "Laughter and the Chair"
+  study is re-attributed to Pier et al. 2019, and the Crossref record
+  count is updated (#100).
+- The landing page's citation-audit example renders as a table, not
+  literal pipes (#115).
+- CONTRIBUTING.md markdownlint error (MD031) that failed CI lint
+  (#113).
 
 ## [0.2.0] - 2026-05-20
 
@@ -874,6 +1007,7 @@ Dual-licensed by category:
   thinking-block text is not persisted to the transcript by Claude Code,
   so it cannot be recovered.
 
-[Unreleased]: https://github.com/seandavi/scriptorium/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/seandavi/scriptorium/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/seandavi/scriptorium/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/seandavi/scriptorium/releases/tag/v0.2.0
 [0.1.0.dev0]: https://github.com/seandavi/scriptorium/releases/tag/v0.1.0.dev0

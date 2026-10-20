@@ -25,7 +25,7 @@ This symlinks the source repo into `~/.claude/plugins/scriptorium/`. Edits to th
 ### Copy-installed (clean / shared use)
 
 ```bash
-uv tool install agentic-scriptorium       # once published to PyPI
+uv tool install agentic-scriptorium
 scriptorium install --mode copy
 ```
 
