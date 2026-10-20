@@ -10,7 +10,8 @@ description: >
   Audit the manuscript's Author Contributions section against
   ICMJE's four authorship criteria and CRediT's 14 contributor
   roles. Per-author analysis, journal-specific variant check
-  when target_venue is set, LLM-as-author hard refusal.
+  when target_venue is set, LLM-as-author hard refusal and
+  ICMJE AI-disclosure placement check.
   Soft recommendations; never auto-writes the section, never
   adjudicates authorship disputes, never duplicates authorship
   data in MANUSCRIPT_STATE.yaml.

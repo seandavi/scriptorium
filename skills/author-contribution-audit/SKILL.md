@@ -137,9 +137,14 @@ The section exists with substantive content. The skill:
    contributors whose declared work would meet ICMJE criteria)
    when the acknowledgements are available.
 5. Flags honorary-authorship signals (listed authors whose
-   declared contributions are limited to funding, supervision,
-   or general advice — which per ICMJE alone do not justify
-   authorship).
+   declared contributions are limited to activities ICMJE lists
+   as not qualifying alone: acquisition of funding; general
+   supervision of a research group or general administrative
+   support; writing assistance, technical editing, language
+   editing and proofreading). ICMJE's list does not name data
+   acquisition, which counts toward criterion 1; a listed author
+   whose only declared contribution is collecting data still
+   fails criteria 2–4.
 6. If `target_venue` is set, compares structure against that
    journal's variant.
 
@@ -186,10 +191,30 @@ accountability criterion. The skill enforces this hard rule:
   recommends moving the disclosure to the
   acknowledgements / methods section as the major journals
   require.
-- The skill notes which venues require AI-use disclosure
-  (most major journals as of 2024) and where the declared use
-  should appear (acknowledgements, methods, or a dedicated AI-
-  disclosure section, varying by venue).
+- When the manuscript declares AI use, the skill names where
+  ICMJE says the disclosure belongs. These are established ICMJE
+  requirements, consolidated in January 2026 into Section V, "Use
+  of Artificial Intelligence in Publishing"; present them as such,
+  not as new 2026 rules:
+  - **Cover letter and manuscript** — disclose AI use in both
+    (since May 2023).
+  - **Writing, editing, proofreading** — describe in the
+    acknowledgements.
+  - **AI used to conduct the study** (data collection, analysis,
+    figure generation) — describe in the Methods in enough detail
+    to allow replication, "including the tool used, version, and
+    prompts where applicable" (since January 2024).
+  - **Not an author or a source** — do not list or cite AI as an
+    author; "referencing AI-generated material as the primary
+    source is not acceptable".
+  - **Consequences** — the current text warns that "nondisclosure
+    of AI use may require corrective action and may be construed
+    as misconduct in some circumstances".
+
+  The skill checks what it can see (the contributions section and
+  acknowledgements) and lists the cover-letter and Methods items
+  for the author to confirm. The venue's own AI policy may add to
+  this.
 - The skill never recommends listing an LLM as an author, even
   in jest or as a placeholder.
 
@@ -240,9 +265,14 @@ changes.
    never assert the role without author input.
 5. **Detect honorary / ghost / LLM-as-author signals.**
    Honorary: listed authors whose declared role is limited to
-   funding, supervision, or general advice. Ghost: contributors
-   in acknowledgements whose declared work would meet ICMJE
-   criteria. LLM-as-author: explicit violation flagged hard.
+   funding acquisition, general supervision or administrative
+   support, or writing assistance, editing and proofreading (or
+   to data collection with nothing addressing criteria 2–4).
+   Ghost: contributors in acknowledgements whose declared work
+   would meet ICMJE criteria. LLM-as-author: explicit violation
+   flagged hard. Where AI use is declared, check the disclosure
+   placement against ICMJE Section V (see "The LLM-as-author
+   refusal").
 6. **Apply journal-specific variant if `target_venue` is set.**
    NEJM requires a specific contributions structure; *Nature*
    wants both authorship-criteria statement and CRediT;
@@ -294,7 +324,10 @@ explicitly so silence is not ambiguous.>
 
 <always present. Either "no LLM-as-author violations detected"
 or per violation: the listed entity, the venue's policy on
-this, where the disclosure should be moved.>
+this, where the disclosure should be moved. When the manuscript
+declares AI use, also the ICMJE Section V placement items:
+what the visible text already covers, and the cover-letter and
+Methods items for the author to confirm.>
 
 ## Journal-specific variant
 
@@ -332,10 +365,11 @@ signals; not comparing against ORCID / institutional records.>
 - **Every finding cites the declared language.** Quote the
   contributions text the audit is anchored in.
 - **Honorary / ghost signals are surfaced cleanly.** Naming the
-  ICMJE framework (funding alone, supervision alone, data
-  acquisition alone do not justify authorship) is the
-  evidence-grounded way to surface honorary-authorship signals
-  without accusation.
+  ICMJE framework (acquisition of funding, general supervision
+  or administrative support, and writing assistance or editing
+  do not alone justify authorship; data collection alone leaves
+  criteria 2–4 unmet) is the evidence-grounded way to surface
+  honorary-authorship signals without accusation.
 - **The LLM-as-author check is always present.** Even when no
   violation exists, the explicit "no LLM-as-author violations
   detected" line makes the check visible.
@@ -373,8 +407,13 @@ This skill is grounded in published research:
   14 roles (Brand et al. 2015), ICMJE's four authorship
   criteria, the Wislar et al. 2011 *BMJ* prevalence data
   (21% of papers at top medical journals had honorary or ghost
-  authorship), and the ICMJE 2023 LLM-as-author policy update.
-  The skill's three-state behaviour (present / absent /
+  authorship), the ICMJE list of activities that alone do not
+  qualify for authorship, the ICMJE 2023 LLM-as-author policy
+  update, and the ICMJE AI-disclosure rules (May 2023 and
+  January 2024, consolidated into Section V in January 2026).
+  CRediT roles can now be deposited with Crossref metadata
+  (Schema 5.5), so a clean mapping can travel with the DOI
+  record. The skill's three-state behaviour (present / absent /
   sketchy) maps to the note's analysis of how the
   declaration-vs-reality gap manifests in real manuscripts.
 - [[declared-work-scope]] — the convention. The skill audits

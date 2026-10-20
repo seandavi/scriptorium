@@ -61,7 +61,9 @@ Primarily grounded in
 — CRediT's 14 roles (Brand et al. 2015), ICMJE's four authorship
 criteria, the Wislar et al. 2011 *BMJ* prevalence data (21% of
 papers at top medical journals had honorary or ghost authorship),
-and the ICMJE 2023 LLM-as-author policy update.
+the ICMJE 2023 LLM-as-author policy update, and the ICMJE
+AI-disclosure rules (May 2023 and January 2024, consolidated into
+Section V in January 2026).
 
 Field-convention handling (biomedicine first/last; math
 alphabetical; CS contribution-based; particle physics

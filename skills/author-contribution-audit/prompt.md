@@ -69,7 +69,7 @@ If any required input is missing, ask for it.
 
 ## ICMJE's four authorship criteria
 
-All four must be met (per ICMJE 2023):
+All four must be met (per ICMJE):
 
 1. Substantial contributions to conception or design of the
    work, or the acquisition, analysis, or interpretation of
@@ -81,9 +81,14 @@ All four must be met (per ICMJE 2023):
    ensuring questions related to accuracy or integrity are
    appropriately investigated and resolved.
 
-Funding, supervision, or data-acquisition alone do not justify
-authorship. Contributors who don't meet all four should be in
-the acknowledgements with their specific contributions
+ICMJE's examples of activities that alone do not qualify for
+authorship are acquisition of funding; general supervision of a
+research group or general administrative support; and writing
+assistance, technical editing, language editing and
+proofreading. Data acquisition is not on that list (it counts
+toward criterion 1), but someone who only collected data still
+fails criteria 2–4. Contributors who don't meet all four should
+be in the acknowledgements with their specific contributions
 described.
 
 ## CRediT's 14 contributor roles
@@ -109,14 +114,27 @@ Each contributor can hold multiple roles. Roles can be marked
 ## Honorary / ghost / LLM-as-author signal detection
 
 - **Honorary authorship**: listed author whose declared role is
-  limited to funding, supervision, or general advice. ICMJE
-  explicitly notes these do not justify authorship.
+  limited to the activities ICMJE lists above as not qualifying
+  alone, or to data collection with nothing addressing criteria
+  2–4.
 - **Ghost authorship**: contributor in acknowledgements whose
   declared work would meet ICMJE criteria.
 - **LLM-as-author**: hard violation per ICMJE 2023 and aligned
   policies at Nature, Science, JAMA, Cell Press. Move the
   disclosure to acknowledgements or a dedicated AI-disclosure
   section as the venue requires.
+- **AI-use disclosure**: when the manuscript declares AI use,
+  name where ICMJE says it belongs. These are established ICMJE
+  rules, consolidated into Section V in January 2026, not new
+  2026 rules: disclose in the cover letter and the manuscript
+  (since May 2023); writing assistance in the acknowledgements;
+  AI used to conduct the study in the Methods, "including the
+  tool used, version, and prompts where applicable" (since
+  January 2024); never list or cite AI as an author, or use
+  AI-generated material as the primary source; nondisclosure "may
+  be construed as misconduct in some circumstances". Check what
+  the visible text covers; list the cover-letter and Methods
+  items for the author to confirm.
 
 ## How to produce the audit
 
@@ -160,7 +178,10 @@ missing). One subsection per author.>
 explicitly.>
 
 ## LLM-as-author check
-<always present. "No violations detected" or per violation.>
+<always present. "No violations detected" or per violation.
+When AI use is declared, also the ICMJE Section V placement
+items: covered by the visible text, or for the author to
+confirm.>
 
 ## Journal-specific variant
 <only when `target_venue` set. Variant requirements and
