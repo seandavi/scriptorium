@@ -13,19 +13,21 @@ description: >
   and suggest directions for filling them. Structured by a seven-
   category gap taxonomy. Each finding anchors in a specific
   manuscript passage. Suggested directions are pasteable search
-  strategies; never invented citations. Refuses cleanly on
-  outline-phase manuscripts and pre-declaration questions.
+  strategies; never invented citations. Declines outline-phase
+  manuscripts and pre-declaration questions by default; the author
+  can override.
 
 # Read-only relative to the user's project. Critique-shape: produces
-# a structured report; does not modify the manuscript; does not
-# generate prose to fill any gap.
+# a structured report; does not modify the manuscript; by default
+# does not generate prose to fill any gap.
 produces:
   - structured-markdown-report
 
 modifies: []
 
-# document_phase values the skill is designed to operate on. Refuses
-# cleanly on outline-phase manuscripts (and pre-declaration questions).
+# document_phase values the skill is designed to operate on. Declines
+# outline-phase manuscripts (and pre-declaration questions) by default
+# (guards outline-phase, pre-declaration-ideation).
 # Consumed by docs build (reference/skills page generator).
 lifecycle_phases:
   - draft
@@ -72,7 +74,7 @@ inputs:
     required: true
     description: >
       MANUSCRIPT_STATE.yaml from the project root. Required:
-      document_phase.current (refuses on outline), core_claims
+      document_phase.current (declines outline by default), core_claims
       (anchors what's being argued), known_weaknesses (gaps already
       named, not re-flagged). Optional: style.audience,
       project.target_venue / candidate_venues, terminology.preferred.
@@ -104,8 +106,11 @@ grounding:
   - knowledge/critique-techniques/internal-consistency.md
   - knowledge/peer-review/common-critiques-taxonomy.md
   - knowledge/citations/hallucination-in-llm-citations.md
+  - knowledge/conventions/author-authority.md
 
-# Hard rules the skill must honor.
+# Rules the skill honours. The refuse_* and never_draft_* entries are
+# defaults the author can override (see guards: below); the others
+# are fixed.
 preservation_constraints:
   - never_invent_citations               # suggested directions are searches, not cites
   - every_finding_anchors_in_declared_prose
@@ -116,12 +121,14 @@ preservation_constraints:
 
 # What this skill explicitly is NOT.
 non_goals:
-  - Drafting prose to fill any gap. Suggests directions only.
+  - Drafting prose to fill any gap. Suggests directions only, by
+    default.
   - Inventing specific citations. "Suggested directions" output
-    is search strategies, never `cite this paper`.
-  - Operating on outline-phase manuscripts. Refuses cleanly.
+    is search strategies; by default it never says `cite this
+    paper`.
+  - Operating on outline-phase manuscripts. Declines by default.
   - Operating on pre-declaration questions ("what should I write
-    about?"). Author owns the proposer step.
+    about?"). Author owns the proposer step; declines by default.
   - Producing exhaustive output. Asks for a focus question if
     one isn't supplied.
   - Acting as a reviewer simulation. Reviewer-simulation is
@@ -130,3 +137,34 @@ non_goals:
   - Editorial-side use. Author-side decision support only.
   - Auto-invoking other skills. Suggests next steps;
     never invokes.
+
+# Guards this skill applies, per knowledge/conventions/author-authority.md.
+# Policy and scope guards are defaults the author can override (a per-run
+# answer, or meta.overrides in MANUSCRIPT_STATE.yaml); accuracy guards are
+# fixed.
+guards:
+  - id: generation-from-blankness
+    kind: scope
+    summary: "Nothing declared to ground against: this would write content (a section, a missing item, a caption) the author has not written or declared."
+    source: "knowledge/conventions/declared-work-scope.md"
+    default: refuse
+  - id: pre-declaration-ideation
+    kind: scope
+    summary: "Choosing what to study or what a section should argue is the author's proposer step, which comes before scriptorium's declared-work scope."
+    source: "knowledge/conventions/declared-work-scope.md"
+    default: refuse
+  - id: outline-phase
+    kind: scope
+    summary: "The manuscript is at outline phase; there is not yet enough declared prose for this skill to work on."
+    source: "knowledge/conventions/declared-work-scope.md"
+    default: refuse
+  - id: citation-recommendations
+    kind: scope
+    summary: "Choosing what to cite is the author's call; by default the skill names searches, not papers. If overridden, it names only works it resolved against Crossref or PubMed in this session."
+    source: "knowledge/conventions/declared-work-scope.md"
+    default: refuse
+  - id: no-parametric-citations
+    kind: accuracy
+    summary: "Citations never come from model memory: only works in the manuscript's bibliography, or ones verified against an authoritative record in this session, are named."
+    source: "knowledge/citations/hallucination-in-llm-citations.md"
+    default: refuse

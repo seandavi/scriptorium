@@ -18,28 +18,57 @@ adversarial by design) and complementary to it.
   a manuscript at draft phase or later.
 - Author has a focus question and a section to scan.
 
-## When this skill refuses (cleanly)
+## When this skill declines by default
+
+These are scope guards: the skill states the concern and declines
+unless the author overrides it (see
+[Guards and overrides](#guards-and-overrides)).
 
 - `document_phase.current = outline` — no declared prose to
-  anchor findings against.
+  anchor findings against (`outline-phase`).
 - The user's question implies operating on prose that doesn't
   exist yet ("what should the related work section say" when
   there's no related work section). The author owns the
-  proposer step.
-- No focus question supplied on a long manuscript — the skill
-  asks one clarifying question rather than producing exhaustive
-  output.
+  proposer step (`generation-from-blankness`,
+  `pre-declaration-ideation`).
+
+Without a focus question on a long manuscript, the skill asks one
+clarifying question rather than producing exhaustive output.
 
 ## What it explicitly will not do
 
-- Draft prose to fill any gap (per declared-work-scope).
 - Invent specific citations. Suggested directions are search
-  strategies, never `cite this paper`.
-- Operate on outline-phase or pre-declaration questions.
+  strategies, never citations from model memory. This is fixed.
+- By default: draft prose to fill any gap (per
+  declared-work-scope), operate on outline-phase or
+  pre-declaration questions, or name papers the manuscript does
+  not cite. The author can override each.
 - Produce findings without manuscript-passage anchors.
 - Produce critique-shaped findings (that's
   `reviewer-simulation`'s job).
 - Auto-invoke other skills.
+
+## Guards and overrides
+
+The skill declares its guards in [`manifest.yaml`](manifest.yaml),
+following the
+[`author-authority`](../../knowledge/conventions/author-authority.md)
+convention. The scope guards are defaults. The author overrides one
+for a single run by answering "proceed", or for the project with an
+entry under `meta.overrides` in `MANUSCRIPT_STATE.yaml`:
+
+- `outline-phase` — scans the outline; findings anchor in outline
+  entries.
+- `generation-from-blankness` — drafts only from declared
+  `core_claims` and the author's stub text, with no citations.
+- `pre-declaration-ideation` — offers directions anchored to
+  declared `core_claims` for the author to choose from.
+- `citation-recommendations` — names only works resolved against
+  Crossref or PubMed in that session, as works to read.
+
+The accuracy guard `no-parametric-citations` is fixed: no override
+lifts it. When a run proceeds past a scope guard, the report opens
+with `Overrides applied: <guard ids>`.
 
 ## The seven gap categories
 
