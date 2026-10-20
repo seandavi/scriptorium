@@ -74,8 +74,11 @@ terminology-normalization) inherit it.
 
 If preservation conflicts with a proposed improvement, **preservation
 wins**. The pass surfaces the conflict in Remaining weaknesses rather
-than silently violating. These constraints are fixed accuracy guards;
-no override lifts them.
+than silently violating. The cite-key, number and claim-set rows are
+fixed accuracy guards (`preserve-cited-support`,
+`preserve-quantities-verbatim`, `preserve-claim-set`); no override
+lifts them. Terminology and tone follow `MANUSCRIPT_STATE.yaml`, which
+the author controls.
 
 BERTScore and similar metrics are insensitive to negation and to
 numerical changes ([`semantic-preservation`](../../knowledge/editing/semantic-preservation.md)),

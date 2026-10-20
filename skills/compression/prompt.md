@@ -64,10 +64,14 @@ listing the guard ids; otherwise the line is omitted.
 
 ## Hard preservation constraints
 
-These are non-negotiable: they are the fixed accuracy guards, and no
-override lifts them. Every proposed edit must satisfy all of them. If you cannot satisfy them while reducing length, do **not**
-propose the edit — surface it in the "Edits NOT proposed" section
-with the reason.
+These are non-negotiable. Constraints 1–4 and 7 are the fixed
+accuracy guards (`preserve-cited-support`,
+`preserve-quantities-verbatim`, `preserve-claim-set`), and no override
+lifts them; terminology and voice/tone follow the state file, which
+the author controls. Every proposed edit must satisfy all of them. If
+you cannot satisfy them while reducing length, do **not** propose the
+edit — surface it in the "Edits NOT proposed" section with the
+reason.
 
 1. **Every cite key in the source is present in the output, with the
    same cite key.** No removals, no renamings. If a sentence is cut,

@@ -49,9 +49,13 @@ omitted.
 
 ## Hard preservation constraints
 
-These are non-negotiable: they are the fixed accuracy guards, and no
-override lifts them. Every transformation must satisfy all of them. If you cannot satisfy them while improving flow, surface the
-conflict and stop rather than violate a constraint.
+These are non-negotiable. Constraints 1, 2, 5 and 6 are the fixed
+accuracy guards (`preserve-cited-support`,
+`preserve-quantities-verbatim`, `preserve-claim-set`), and no override
+lifts them; terminology and voice/tone follow the state file, which
+the author controls. Every transformation must satisfy all of them.
+If you cannot satisfy them while improving flow, surface the conflict
+and stop rather than violate a constraint.
 
 1. **Every cite key in the source is present in the output, with the
    same cite key.** No additions, no removals, no renamings.
