@@ -176,8 +176,9 @@ What proceeding changes:
   `/scriptorium:reporting-guideline-fit`.
 - `generation-from-blankness` — a `missing` row may carry one
   `Placeholder:` sentence with a bracketed slot for every study
-  fact ("Allocation was concealed using [mechanism]."). The
-  placeholder asserts nothing about the study.
+  fact, including whether the step was done ("Allocation
+  [was / was not] concealed [using mechanism]."). The placeholder
+  asserts nothing about the study.
 
 **Accuracy guards** (fixed; neither a per-run answer nor
 `meta.overrides` lifts them):
@@ -296,7 +297,7 @@ Read `meta.guidance_level` from `MANUSCRIPT_STATE.yaml` (default
   this audit produces (per-item present / partial / missing /
   N-A with a quoted anchor or explicit gap), and how to read it (act on
   `missing` first, then `partial`; `N/A` is not a gap; the
-  audit does not invent prose to fill gaps). If first
+  audit does not draft prose to fill gaps). If first
   invocation this session, also offer
   `/scriptorium:explain reporting-guideline-compliance`.
 
@@ -487,8 +488,8 @@ the current run where relevant.)
   sequentially numbered opaque envelopes…'" is **not**, at any
   setting: it states a fact the manuscript does not contain. Under
   the `generation-from-blankness` override, "Placeholder:
-  Allocation was concealed using [mechanism]." is the most a row
-  carries.
+  Allocation [was / was not] concealed [using mechanism]." is the
+  most a row carries.
 - **Version-anchored.** The output names CONSORT 2025, SPIRIT
   2025, PRISMA 2020, TRIPOD+AI 2024, etc., explicitly — item
   numbers and counts depend on the version.

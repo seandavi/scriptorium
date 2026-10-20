@@ -98,7 +98,8 @@ What proceeding changes:
 - `generation-from-blankness` — draft only from what the manuscript
   already states about the figure. Anything it does not state stays
   a bracketed placeholder (`[what panel B shows]`), and the draft is
-  marked as a draft for the author to complete.
+  marked as a draft for the author to complete. It goes in a
+  `Draft:` line after the Orphan or Phantom flag it answers.
 - `figure-image-reading` — read the figure images and label every
   image-derived finding `unvalidated vision`. Text-only findings stay
   unlabelled. The label is there because LLM vision on scientific
@@ -324,6 +325,10 @@ subsections.)
 - "Figure N" referenced at (section / location), but no caption for
   Figure N was discovered.
 
+(Under the `generation-from-blankness` override, a `Draft:` line
+follows an Orphan or Phantom flag: a body-text reference for an
+orphan, a caption for a phantom, with placeholders bracketed.)
+
 ### Panel mismatches
 - Figure N caption defines panels {A, B, C}; body text at (location)
   references "Figure NX" where X ∉ {A, B, C}.
@@ -351,7 +356,10 @@ current run where relevant.)
   says it displays. (Under the `figure-image-reading` override,
   replace this item with: "Read figure images under an author
   override; every image-derived finding is labelled `unvalidated
-  vision`.")
+  vision`." The image-dependent items below (axis labels, rendered
+  annotations, pattern-claim verification) then state what was
+  actually read, labelled `unvalidated vision`, and the title drops
+  "(text-only)".)
 - Whether the figure's actual axis labels match what the caption
   claims they are. Requires reading the image.
 - Whether statistical annotations rendered on the figure (asterisks,

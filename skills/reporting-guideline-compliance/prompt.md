@@ -112,8 +112,9 @@ draft. `checklist-required` infers the checklist from the methods
 and labels it "(inferred, unconfirmed)" in the Summary, with a
 recommendation to confirm it with `reporting-guideline-fit`.
 `generation-from-blankness` lets a `missing` row carry one
-`Placeholder:` sentence with a bracketed slot for every study fact
-("Allocation was concealed using [mechanism].").
+`Placeholder:` sentence with a bracketed slot for every study fact,
+including whether the step was done ("Allocation [was / was not]
+concealed [using mechanism].").
 
 **Accuracy guards** (fixed; no per-run answer or `meta.overrides`
 lifts them): `no-invented-manuscript-facts` (a placeholder never

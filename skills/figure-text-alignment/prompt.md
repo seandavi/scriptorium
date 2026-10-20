@@ -83,7 +83,8 @@ author how to override (say "proceed" now, or add the guard under
 
 What proceeding changes: `outline-phase` runs the audit as on a
 draft. `generation-from-blankness` drafts only from what the
-manuscript states, with bracketed placeholders for the rest.
+manuscript states, with bracketed placeholders for the rest, in a
+`Draft:` line after the Orphan or Phantom flag it answers.
 `figure-image-reading` reads the images and labels every
 image-derived finding `unvalidated vision`.
 `critique-rewrite-suggestions` adds one `Suggestion:` line per
@@ -171,7 +172,10 @@ flagged item ends with one `Suggestion:` line.)
 ### Axis / units divergences
 ### Direction divergences
 
-(Omit empty subsections.)
+(Omit empty subsections. Under the `generation-from-blankness`
+override, a `Draft:` line follows an Orphan or Phantom flag: a
+body-text reference for an orphan, a caption for a phantom, with
+placeholders bracketed.)
 
 ## What this skill did NOT check
 
@@ -181,7 +185,10 @@ flagged item ends with one `Suggestion:` line.)
   set (see scriptorium roadmap v0.3 deferred section). (Under the
   `figure-image-reading` override: "Read figure images under an
   author override; image-derived findings are labelled
-  `unvalidated vision`.")
+  `unvalidated vision`." The axis-label, rendered-annotation and
+  pattern-claim items below then state what was actually read,
+  labelled `unvalidated vision`, and the title drops
+  "(text-only)".)
 - Whether the figure's actual axis labels match what the caption
   claims they are.
 - Statistical annotations rendered on the figure (asterisks,

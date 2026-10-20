@@ -98,7 +98,7 @@ The skill declares its guards in `manifest.yaml`, following
 |---|---|---|---|
 | `outline-phase` | scope | refuse | Runs the audit as on a draft. |
 | `checklist-required` | scope | refuse | Infers the checklist from the methods and labels it "inferred, unconfirmed". |
-| `generation-from-blankness` | scope | refuse | A `missing` row may carry one bracketed `Placeholder:` ("Allocation was concealed using [mechanism]."). |
+| `generation-from-blankness` | scope | refuse | A `missing` row may carry one bracketed `Placeholder:` ("Allocation [was / was not] concealed [using mechanism]."). |
 | `no-invented-manuscript-facts` | accuracy | refuse | Cannot be overridden; a placeholder never fills its slots. |
 | `no-false-verification-claims` | accuracy | refuse | Cannot be overridden; an unverified flow-diagram item is never `present`. |
 
