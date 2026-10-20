@@ -26,19 +26,33 @@ not in state).
 ## What it explicitly will not do
 
 - Auto-write or rewrite the Author Contributions section.
-- Adjudicate authorship disputes (ICMJE criteria are the
-  framework; whether to add or remove an author is the author
-  team's decision).
 - Fabricate CRediT mappings without author input — asks rather
-  than guesses.
-- List LLMs / chatbots / AI tools as authors. Per ICMJE 2023 and
-  aligned major-journal policies. Hard refusal.
+  than guesses. This is a fixed accuracy guard
+  (`no-invented-manuscript-facts`).
 - Duplicate authorship data in MANUSCRIPT_STATE.yaml.
-- Operate on outline-phase manuscripts.
-- Editorial-side enforcement. Author-side decision support only.
 - Verify truthfulness of contributions — the author team owns
   ground truth; the skill audits how contributions are
   documented.
+
+## What it declines or asks about by default
+
+These are guards the author can override for one run, or for the
+project under `meta.overrides` in `MANUSCRIPT_STATE.yaml` (see
+[`knowledge/conventions/author-authority.md`](../../knowledge/conventions/author-authority.md)).
+The skill states the concern in one line each time, and a report
+produced past one carries an `Overrides applied:` line.
+
+- Adjudicate authorship disputes (`authorship-dispute-adjudication`;
+  ICMJE criteria are the framework; whether to add or remove an
+  author is the author team's decision). On override, a
+  conditional reading of the documented text only.
+- Recommend listing or keeping LLMs / chatbots / AI tools as
+  authors (`llm-authorship`; per ICMJE 2023 and aligned
+  major-journal policies). Refused by default; the finding is
+  always reported.
+- Operate on outline-phase manuscripts (`outline-phase`).
+- Editorial-side use (`editorial-side-use`): asked, not refused,
+  when the user is a reviewer or editor of a submitted manuscript.
 
 ## The three states
 
