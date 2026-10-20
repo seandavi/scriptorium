@@ -196,7 +196,19 @@ live-linked dev install, see [INSTALL.md](INSTALL.md).
 
 ### Other agents (Codex, Gemini, Hermes, ChatGPT, …)
 
-Each skill ships with a platform-neutral `prompt.md` you can paste
+For agents that load skills from a directory (Codex, Cursor, Gemini
+CLI, Claude Code, and others), install with the
+[`skills` CLI](https://skills.sh):
+
+```bash
+npx skills add seandavi/scriptorium                      # all skills
+npx skills add seandavi/scriptorium --skill citation-audit
+```
+
+See [INSTALL.md](INSTALL.md#npx-skills-any-supported-agent) for agent
+selection, global installs, updates, and what the plugin adds on top.
+
+For agents without skill directories, each skill ships with a platform-neutral `prompt.md` you can paste
 into any LLM directly. To get all skills concatenated into a single
 prompt-pack file:
 
