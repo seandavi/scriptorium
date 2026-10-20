@@ -161,7 +161,7 @@ regenerates the block without manual edits.
 - **`figure-text-alignment`**
   - `terse` — Open with a one-line "running figure-text alignment (text-only)"; emit the markdown report; no closing summary.
   - `standard` — Open with a sentence naming the manuscript and the number of figures discovered; close with a one-line summary of the findings.
-  - `full` — Open with what this skill produces (per-figure caption-vs-body-text alignment classification + pattern-level flags) and what it explicitly does not do (read figure images); close with which findings to act on first and which are informational. The no-image-reading posture is never relaxed based on guidance level.
+  - `full` — Open with what this skill produces (per-figure caption-vs-body-text alignment classification + pattern-level flags) and what it explicitly does not do (read figure images); close with which findings to act on first and which are informational. Guidance level never relaxes a guard; the no-image-reading default changes only through the author's override.
 - **`gap-finder`**
   - `terse` — Open with one line ("running gap analysis"); emit the markdown report; no closing summary. Surfaces the top three to five anchored gaps.
   - `standard` — Open with a sentence naming the focus question and the gap categories that will be checked; close with which category had the most findings and whether any are load-bearing. The full anchored list.
@@ -177,7 +177,7 @@ regenerates the block without manual edits.
 - **`reporting-guideline-compliance`**
   - `terse` — Open with one line ("running reporting-guideline-compliance against <checklist> <version>"); emit the markdown report; no closing summary.
   - `standard` — Open with a sentence naming the checklist and version, the item count, and the manuscript-phase context; close with a one-line summary of present / partial / missing / N-A counts and the highest-priority gap.
-  - `full` — Open with what reporting guidelines do (minimum-information standards so reviewers and readers can evaluate methodology consistently — the EQUATOR Network registry, whose library lists roughly 700 records), what this audit produces (per-item present / partial / missing / N-A with a quoted anchor or explicit gap), and how to read it (act on missing first, then partial; N/A is not a gap; the audit does not invent prose to fill gaps).
+  - `full` — Open with what reporting guidelines do (minimum-information standards so reviewers and readers can evaluate methodology consistently — the EQUATOR Network registry, whose library lists roughly 700 records), what this audit produces (per-item present / partial / missing / N-A with a quoted anchor or explicit gap), and how to read it (act on missing first, then partial; N/A is not a gap; by default the audit does not draft prose to fill gaps).
 - **`reporting-guideline-fit`**
   - `terse` — Open with one line ("running reporting-guideline-fit inference"); emit the markdown report; no closing summary.
   - `standard` — Open with one sentence naming the methods-section signal strength (clear / moderately clear / sketchy) and the count of applicable checklists; close with the recommended next step (the matching reporting-guideline-compliance run).
