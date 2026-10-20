@@ -25,8 +25,9 @@ produces:
 
 modifies: []
 
-# document_phase values the skill is designed to operate on. Refuses
-# on outline-phase manuscripts (methods stub is insufficient).
+# document_phase values the skill is designed to operate on. Declines
+# outline-phase manuscripts by default (methods stub is insufficient;
+# outline-phase scope guard).
 # Consumed by docs build (reference/skills page generator).
 lifecycle_phases:
   - draft
@@ -73,7 +74,8 @@ inputs:
     required: true
     description: >
       MANUSCRIPT_STATE.yaml. Required: document_phase.current
-      (refuses on outline). Optional: project.target_type
+      (declines on outline by default). Optional: meta.overrides
+      (guards the author has overridden), project.target_type
       (confirms primary-research applicability),
       project.target_venue (venue-specific requirements),
       core_claims (disambiguates adjacent designs).
@@ -81,9 +83,10 @@ inputs:
   - name: methods_section
     required: true
     description: >
-      The manuscript's methods section. Load-bearing; refuses
-      without it. Title and abstract alone are insufficient to
-      discriminate between adjacent designs.
+      The manuscript's methods section. Load-bearing; declines
+      without it by default (methods-section-required guard).
+      Title and abstract alone are insufficient to discriminate
+      between adjacent designs.
   - name: title_and_abstract
     required: true
     description: >
@@ -100,11 +103,31 @@ inputs:
 grounding:
   - knowledge/conventions/guidance-level.md
   - knowledge/conventions/declared-work-scope.md
+  - knowledge/conventions/author-authority.md
   - knowledge/scientific-writing/reporting-guidelines.md
+
+# Guards this skill applies, per knowledge/conventions/author-authority.md.
+# Scope guards are defaults the author can override (per run or under
+# meta.overrides); accuracy guards are fixed.
+guards:
+  - id: outline-phase
+    kind: scope
+    summary: "The manuscript is at outline phase; there is not yet enough declared prose for this skill to work on."
+    source: "knowledge/conventions/declared-work-scope.md"
+    default: refuse
+  - id: methods-section-required
+    kind: scope
+    summary: "No methods section to infer the design from; title and abstract alone rarely tell adjacent designs apart."
+    source: "knowledge/scientific-writing/reporting-guidelines.md"
+    default: refuse
+  - id: no-inference-beyond-evidence
+    kind: accuracy
+    summary: "When the input cannot support a judgement, the skill says 'cannot determine' or 'low confidence' rather than forcing a confident answer."
+    default: refuse
 
 # Hard rules the skill must honor.
 preservation_constraints:
-  - refuse_on_outline_phase
+  - refuse_on_outline_phase         # default; outline-phase guard is overridable
   - never_declare_authoritatively   # recommendation only
   - never_force_confident_answer    # low confidence is honest
   - never_run_the_full_checklist    # separate downstream skill
@@ -118,7 +141,8 @@ non_goals:
     Separate downstream skill; this is the upstream inference.
   - Declaring a checklist as authoritatively applicable. The
     skill recommends; the author confirms.
-  - Operating on outline-phase manuscripts.
+  - Operating on outline-phase manuscripts, by default
+    (outline-phase guard, author-overridable).
   - Forcing a confident answer when methods is too sketchy.
     Low confidence is honest output, not a failure.
   - Writing to MANUSCRIPT_STATE.yaml. Schema deliberately

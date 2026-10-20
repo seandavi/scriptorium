@@ -7,7 +7,7 @@ AI-extensions where applicable) against a manuscript, and
 classifies every checklist item as `present`, `partial`, `missing`, or
 `not-applicable`. Each `present` and `partial` row anchors in a
 quoted manuscript excerpt; each `missing` row names the gap
-explicitly without proposing replacement prose.
+explicitly and, by default, without proposing replacement prose.
 
 This is the **downstream audit** in the reporting-guidelines
 workflow. The upstream `reporting-guideline-fit` skill (v0.2)
@@ -39,8 +39,8 @@ is known and the manuscript is in `draft` / `revision` /
   the evidence that a model can spot missing flow-diagram
   details is weak.
 - **Explicit gaps.** Every `missing` row names what is absent
-  ("no allocation-concealment mechanism described") — the skill
-  does not propose replacement prose.
+  ("no allocation-concealment mechanism described") — by default
+  the skill does not propose replacement prose.
 - **`not-applicable` as a first-class outcome.** Items that
   genuinely don't apply (CONSORT 2010 item 17b on binary
   outcomes for a continuous-outcome trial; the PRISMA 2020
@@ -67,13 +67,14 @@ is known and the manuscript is in `draft` / `revision` /
 
 ## What it does not do
 
-- **Infer which checklist applies.** That is the upstream
-  `reporting-guideline-fit` skill's job (v0.2). When the
-  applicable checklist isn't known, this skill refuses and
-  points the author there. It does not guess.
-- **Invent prose.** This skill names gaps; it does not write
-  replacement sentences or propose phrasing. The author owns
-  the fix.
+- **Infer which checklist applies**, by default. That is the
+  upstream `reporting-guideline-fit` skill's job (v0.2). When the
+  applicable checklist isn't known, this skill declines and
+  points the author there. It does not guess unless the author
+  overrides the `checklist-required` guard.
+- **Draft prose**, by default. This skill names gaps; it does not
+  write replacement sentences or propose phrasing. The author owns
+  the fix. It never invents facts about the study.
 - **Modify the manuscript.** Validation only.
 - **Critique study design.** The audit assesses what is
   reported, not whether the design was the right choice.
@@ -83,9 +84,39 @@ is known and the manuscript is in `draft` / `revision` /
 - **Audit figure / text alignment.** That is the
   `figure-text-alignment` skill's job.
 - **Audit citation accuracy.** That is `citation-audit`'s job.
-- **Operate on outline-phase manuscripts.** No substrate.
+- **Operate on outline-phase manuscripts**, by default. No
+  substrate.
 - **Editor-side enforcement.** Author-side decision support
   only.
+
+## Guards and overrides
+
+The skill declares its guards in `manifest.yaml`, following
+[`author-authority`](../../knowledge/conventions/author-authority.md).
+
+| Guard | Kind | Default | If the author overrides |
+|---|---|---|---|
+| `outline-phase` | scope | refuse | Runs the audit as on a draft. |
+| `checklist-required` | scope | refuse | Infers the checklist from the methods and labels it "inferred, unconfirmed". |
+| `generation-from-blankness` | scope | refuse | A `missing` row may carry one bracketed `Placeholder:` ("Allocation [was / was not] concealed [using mechanism]."). |
+| `no-invented-manuscript-facts` | accuracy | refuse | Cannot be overridden; a placeholder never fills its slots. |
+| `no-false-verification-claims` | accuracy | refuse | Cannot be overridden; an unverified flow-diagram item is never `present`. |
+
+When a scope guard fires, the skill states the concern and its
+source in one line at every guidance level. A per-run answer wins;
+otherwise an entry under `meta.overrides` in `MANUSCRIPT_STATE.yaml`
+lets the skill proceed without asking:
+
+```yaml
+meta:
+  overrides:
+    - guard: checklist-required
+      skills: [reporting-guideline-compliance]
+```
+
+When the run proceeds past a scope guard, the report carries an
+`Overrides applied: <guard ids>` line under its title. This line is
+the one addition to the output contract.
 
 ## Inputs
 
@@ -93,7 +124,8 @@ is known and the manuscript is in `draft` / `revision` /
   multi-file projects, every file declared under `sections`
   and `supplements` is read.
 - **`MANUSCRIPT_STATE.yaml`** — `document_phase.current` is
-  load-bearing (refuses on `outline`). Optional but useful:
+  load-bearing (declines on `outline` by default). Optional but
+  useful: `meta.overrides` (guards the author has overridden),
   `project.target_venue` (venue-specific layered requirements),
   `core_claims` (intent disambiguation), `known_weaknesses`
   (acknowledged-but-unaddressed cross-reference),
@@ -103,8 +135,8 @@ is known and the manuscript is in `draft` / `revision` /
   the invocation (`with CONSORT 2025`, etc.); or (when the
   schema carries it) `MANUSCRIPT_STATE.yaml#reporting_guideline`.
 
-If the applicable checklist isn't supplied, the skill refuses
-and points the author at `reporting-guideline-fit`.
+If the applicable checklist isn't supplied, the skill declines by
+default and points the author at `reporting-guideline-fit`.
 
 ## Using it
 
@@ -137,6 +169,8 @@ cat ~/.claude/plugins/scriptorium/skills/reporting-guideline-compliance/prompt.m
 
 ```markdown
 # Reporting-guideline compliance
+
+Overrides applied: <guard ids>   (only when an override applied)
 
 ## Summary
 - Checklist audited: <NAME VERSION>
@@ -186,11 +220,13 @@ The skill names gaps; the author writes the prose. This is the
 declared-work-scope principle ([`declared-work-scope`](../../knowledge/conventions/declared-work-scope.md))
 at the validation surface: scriptorium operates on prose the
 author has written or scaffolding the author has declared, and
-refuses cleanly when asked to produce prose from blankness.
+by default declines to produce prose from blankness.
 Reporting-compliance gaps are precisely where "consider adding…"
 phrasing slips into ghostwritten reporting language; this skill
 takes the harder discipline of pointing at the gap and stopping
-there.
+there. The author can override that default
+(`generation-from-blankness`) to get a bracketed placeholder; the
+skill still never fills in a fact about the study.
 
 ## Sibling-skill relationship
 
@@ -237,9 +273,12 @@ This skill is grounded in scriptorium's knowledge layer:
   `partial`.
 - [`declared-work-scope`](../../knowledge/conventions/declared-work-scope.md)
   — the convention. The audit operates on declared manuscript
-  prose; refuses cleanly on outline or when the applicable
-  checklist is unknown; never invents prose to fill missing
+  prose. By default it declines on outline or when the applicable
+  checklist is unknown, and does not draft prose to fill missing
   items.
+- [`author-authority`](../../knowledge/conventions/author-authority.md)
+  — the guard convention: scope guards are author-overridable
+  defaults, accuracy guards are fixed.
 - [`internal-consistency`](../../knowledge/critique-techniques/internal-consistency.md)
   — the bookkeeping framing. The per-item walk treats each
   checklist item as a cross-section comparison: does what the
@@ -262,7 +301,8 @@ updated or gets the grounding extended; never both unchanged.
 - **No invented prose.** The temptation in a checklist audit is
   to write the missing sentence ("consider adding: 'Allocation
   was concealed using sequentially numbered opaque envelopes…'").
-  This skill explicitly does not. The author owns the fix; the
+  This skill explicitly does not; that sentence asserts a fact
+  the manuscript does not contain. The author owns the fix; the
   audit names the gap. The harder discipline produces a more
   trustworthy report.
 - **Coverage over confidence.** Walking every item — even with

@@ -1,9 +1,10 @@
 ---
 name: reporting-guideline-compliance
-description: Run an EQUATOR Network reporting-guideline checklist (CONSORT, SPIRIT, STROBE, PRISMA, ARRIVE, STARD, TRIPOD/TRIPOD+AI, CARE, COREQ, CHEERS, plus AI extensions) against a manuscript and classify every checklist item as present / partial / missing / not-applicable. For each item, anchors the classification in a quoted passage from the declared manuscript prose, or explicitly names the gap. Downstream of the v0.2 reporting-guideline-fit skill (which infers which checklist applies); this skill runs the checklist. Validation skill — surfaces gaps for the author to address; does not modify the manuscript and does not invent prose to fill missing items.
+description: Run an EQUATOR Network reporting-guideline checklist (CONSORT, SPIRIT, STROBE, PRISMA, ARRIVE, STARD, TRIPOD/TRIPOD+AI, CARE, COREQ, CHEERS, plus AI extensions) against a manuscript and classify every checklist item as present / partial / missing / not-applicable. For each item, anchors the classification in a quoted passage from the declared manuscript prose, or explicitly names the gap. Downstream of the v0.2 reporting-guideline-fit skill (which infers which checklist applies); this skill runs the checklist. Validation skill — surfaces gaps for the author to address; does not modify the manuscript and by default does not draft prose for missing items (an author-overridable scope guard). Never invents facts about the study.
 grounding:
   - knowledge/conventions/guidance-level.md
   - knowledge/conventions/declared-work-scope.md
+  - knowledge/conventions/author-authority.md
   - knowledge/scientific-writing/reporting-guidelines.md
   - knowledge/critique-techniques/internal-consistency.md
 ---
@@ -31,15 +32,17 @@ runs the chosen checklist.
 The two skills are deliberately separate. Conflating them
 produces a single audit that fails silently when the upstream
 inference is wrong (a STROBE checklist run against an RCT misses
-randomisation reporting entirely). Stop at the audit step — do
-not re-infer the checklist.
+randomisation reporting entirely). Stop at the audit step — by
+default, do not re-infer the checklist (the `checklist-required`
+guard; see *Guards and author overrides*).
 
 ## Critical positioning — read before doing anything else
 
 This skill operates on **declared work** ([[declared-work-scope]]).
 The manuscript prose is the substrate against which the checklist
-is run. The skill **does not invent prose** to fill a missing
-item; it surfaces the gap. The author addresses it.
+is run. By default the skill **does not draft prose** to fill a
+missing item; it surfaces the gap. The author addresses it. It
+never invents facts about the study.
 
 `not-applicable` is a **first-class outcome**. Several checklist
 items don't apply to every study — CONSORT 2010 item 17b
@@ -61,22 +64,28 @@ skill exists to avoid.
 
 ## Critical constraints — read before doing anything else
 
-1. **Never invent prose.** The skill quotes from the manuscript
-   or names the gap. It does not write the missing sentence,
-   propose phrasing, or suggest "consider adding…" prose. The
-   author owns the fix.
+1. **Do not draft prose by default (scope guard
+   `generation-from-blankness`).** The skill quotes from the
+   manuscript or names the gap. By default it does not write the
+   missing sentence, propose phrasing, or suggest "consider
+   adding…" prose. The author owns the fix. Facts about the study
+   are never invented, even under an override (accuracy guard
+   `no-invented-manuscript-facts`; fixed).
 2. **Never modify the manuscript.** Validation skill, not a
    transformation. Output is a structured markdown report.
-3. **Refuse on `outline` phase.** Per [[declared-work-scope]],
-   the substrate isn't there. Refuse cleanly and point the
-   author at "come back when the manuscript is in draft, even
-   as a partial draft — the audit's value scales with how much
-   prose exists."
-4. **Refuse when the applicable checklist is unknown.** If
-   neither `MANUSCRIPT_STATE.yaml#reporting_guideline` nor a
-   passed `reporting_guideline_fit_output` declares which
-   checklist to run, refuse and point the author at
-   `/scriptorium:reporting-guideline-fit`. Do not guess.
+3. **Decline on `outline` phase by default (scope guard
+   `outline-phase`).** Per [[declared-work-scope]], the substrate
+   isn't there. State the concern in one line and point the
+   author at "come back when the manuscript is in draft, even as
+   a partial draft — the audit's value scales with how much prose
+   exists", unless the author overrides the guard.
+4. **Decline when the applicable checklist is unknown, by default
+   (scope guard `checklist-required`).** If no checklist is
+   declared in `MANUSCRIPT_STATE.yaml#reporting_guideline`, passed
+   as `reporting_guideline_fit_output`, or named in the
+   invocation, state the concern in one line and point the author
+   at `/scriptorium:reporting-guideline-fit`. Do not guess unless
+   the author overrides the guard.
 5. **Walk every checklist item.** The audit's value is in
    coverage. Skipping items the skill is unsure about is the
    same failure mode as forcing a confident wrong answer.
@@ -103,7 +112,8 @@ skill exists to avoid.
    version mismatch: the extensions were built on the 2010 and
    2013 base checklists, and we found no updated versions as of
    October 2026.
-8. **Default flow-diagram items to `partial`.** Completeness of
+8. **Default flow-diagram items to `partial` (accuracy guard
+   `no-false-verification-claims`; fixed).** Completeness of
    the participant flow diagram is a figure-borne check, and the
    one published vision-model result detected missing
    flow-diagram details with only 57% accuracy. Classify these
@@ -116,7 +126,78 @@ skill exists to avoid.
    not state.
 10. **Do not re-infer the checklist.** That's
     `reporting-guideline-fit`'s job. If the author wants to
-    change the audited checklist, they re-run that skill.
+    change the audited checklist, they re-run that skill. The
+    one exception is an override of `checklist-required`, below.
+
+## Guards and author overrides
+
+This skill declares its guards in `manifest.yaml`, following
+[[author-authority]]. The author decides the scope guards; the
+accuracy guards are fixed.
+
+**Scope guards** (`default: refuse`; the author can override):
+
+- `outline-phase` — `document_phase.current` is `outline`; there
+  is not yet enough prose to audit.
+- `checklist-required` — no checklist is declared, passed or
+  named; this skill audits a given checklist and does not infer
+  one.
+- `generation-from-blankness` — drafting prose for a missing
+  item.
+
+When a scope guard fires, state the concern and its source in one
+line (the guard's `summary` and `source` from `manifest.yaml`). Then
+the first of these that applies decides:
+
+1. **A per-run answer.** What the author says in this run wins, in
+   either direction.
+2. **`meta.overrides`.** An entry naming the guard with
+   `reporting-guideline-compliance` (or `"*"`) under `skills` means
+   proceed without asking.
+3. **The default.** Decline that part of the work, and tell the
+   author how to override: say "proceed" in this run, or add the
+   guard under `meta.overrides` in `MANUSCRIPT_STATE.yaml`. For
+   `checklist-required`, also point at
+   `/scriptorium:reporting-guideline-fit`.
+
+The one-line concern statement appears at every guidance level,
+including `terse`, and also when an override applies.
+
+What proceeding changes:
+
+- `outline-phase` — the audit runs as it would on a draft; expect
+  most items to read `missing`.
+- `checklist-required` — infer the checklist from the methods
+  using the design-to-checklist mapping in
+  [[reporting-guidelines]], and label it **inferred, unconfirmed**
+  in the Summary (`Checklist audited: CONSORT 2025 (inferred,
+  unconfirmed)`). The label is what keeps a wrong inference from
+  failing silently. Recommend confirming it with
+  `/scriptorium:reporting-guideline-fit`.
+- `generation-from-blankness` — a `missing` row may carry one
+  `Placeholder:` sentence with a bracketed slot for every study
+  fact, including whether the step was done ("Allocation
+  [was / was not] concealed [using mechanism]."). The placeholder
+  asserts nothing about the study.
+
+**Accuracy guards** (fixed; neither a per-run answer nor
+`meta.overrides` lifts them):
+
+- `no-invented-manuscript-facts` — no statement of what the study
+  did that the manuscript and declared state do not contain. A
+  placeholder never fills its slots ("sequentially numbered opaque
+  envelopes" is an invented fact, not a placeholder).
+- `no-false-verification-claims` — a flow-diagram item the skill
+  has not verified is never `present` (constraint 8).
+
+If the author asks to override an accuracy guard, say that it
+protects the correctness of the audit and cannot be overridden.
+
+**Overrides applied.** When the run proceeds past a scope guard,
+through a per-run answer or `meta.overrides`, the report carries one
+line directly under its title listing the guard ids, e.g.
+`Overrides applied: checklist-required`. Omit the line when no
+override applied.
 
 ## Invocation discipline — when to invoke, when not
 
@@ -137,8 +218,10 @@ skill exists to avoid.
 **Do not invoke when:**
 
 - The applicable checklist is not yet known — run
-  `reporting-guideline-fit` first.
-- The manuscript is in `outline` phase — substrate isn't there.
+  `reporting-guideline-fit` first (`checklist-required`, unless the
+  author overrides it).
+- The manuscript is in `outline` phase — substrate isn't there
+  (`outline-phase`, unless the author overrides it).
 - As a silent side-effect of another skill. The output is a
   per-item audit; the author reads it.
 
@@ -146,7 +229,8 @@ skill exists to avoid.
 
 **Required from `MANUSCRIPT_STATE.yaml`:**
 
-- `document_phase.current` — refuse on `outline`.
+- `document_phase.current` — apply the `outline-phase` guard on
+  `outline`.
 
 **One of these must declare which checklist to audit:**
 
@@ -159,11 +243,14 @@ skill exists to avoid.
 - An explicit guideline named in the invocation
   (`with CONSORT 2025`, `with PRISMA 2020`, etc.).
 
-If none of these is present, refuse and point the author at
+If none of these is present, apply the `checklist-required` guard:
+by default, decline and point the author at
 `/scriptorium:reporting-guideline-fit`.
 
 **Optional from `MANUSCRIPT_STATE.yaml`:**
 
+- `meta.overrides` — guards the author has overridden for the
+  project; see *Guards and author overrides*.
 - `project.target_venue` — some venues require specific
   checklists or have additional reporting requirements layered
   on the standard checklist. The skill notes venue-specific
@@ -210,14 +297,16 @@ Read `meta.guidance_level` from `MANUSCRIPT_STATE.yaml` (default
   this audit produces (per-item present / partial / missing /
   N-A with a quoted anchor or explicit gap), and how to read it (act on
   `missing` first, then `partial`; `N/A` is not a gap; the
-  audit does not invent prose to fill gaps). If first
+  audit does not draft prose to fill gaps). If first
   invocation this session, also offer
   `/scriptorium:explain reporting-guideline-compliance`.
 
 Run the signal-based check-in once if appropriate. The
 structured output is unchanged across levels — only framing
-changes. The no-invented-prose posture is **never** relaxed
-based on guidance level.
+changes. Guidance level **never** relaxes a guard: the
+no-drafted-prose default changes only through the author's
+override, and the one-line statement of a guard's concern appears
+at every level.
 
 ## Operational protocol
 
@@ -226,11 +315,14 @@ running the wrong checklist; step 4 before step 5 is the guard
 against confident-wrong answers on ambiguous items.
 
 1. **Read `MANUSCRIPT_STATE.yaml`.** Extract:
-   - `document_phase.current` — if `outline`, decline the run.
+   - `document_phase.current` — if `outline`, apply the
+     `outline-phase` guard.
    - `reporting_guideline` (if schema carries it) or
      `reporting_guideline_fit_output` (if passed) or the
-     explicit guideline named in the invocation. If none, refuse
-     and point at `/scriptorium:reporting-guideline-fit`.
+     explicit guideline named in the invocation. If none, apply
+     the `checklist-required` guard.
+   - `meta.overrides` — guards the author has overridden for this
+     project; apply them in the precedence above.
    - `project.target_venue` — for venue-specific requirements.
    - `core_claims`, `known_weaknesses` — for context.
    - `meta.guidance_level` — for framing only.
@@ -258,7 +350,9 @@ against confident-wrong answers on ambiguous items.
    - If not found and the item applies to the study design,
      classify `missing` with an explicit gap statement
      ("no allocation-concealment mechanism described"). Do
-     **not** propose phrasing.
+     **not** propose phrasing, unless the author overrides
+     `generation-from-blankness` (then one bracketed
+     `Placeholder:`, never a filled-in fact).
    - If the item does not apply to this study, classify
      `not-applicable` with a one-sentence justification
      ("continuous primary outcome — CONSORT 2010 item 17b on
@@ -288,12 +382,15 @@ in order:
 ```markdown
 # Reporting-guideline compliance
 
+Overrides applied: <guard ids>   (only when the run proceeded past a scope guard)
+
 ## Summary
 
 - Checklist audited: <NAME VERSION> (e.g., CONSORT 2025, SPIRIT
   2025, PRISMA 2020, ARRIVE 2.0, TRIPOD+AI 2024; for an
   AI-intervention trial, CONSORT 2025 + CONSORT-AI 2020 with the
-  version mismatch stated)
+  version mismatch stated; append "(inferred, unconfirmed)" under
+  the `checklist-required` override)
 - Item count: N
 - Present: N
 - Partial: N
@@ -314,14 +411,16 @@ Locations are section names — or section:line if available.)
 |---|---|---|---|
 | <n>. <item title> | present | <section:line> — "<quoted excerpt>" | <one-line context if useful> |
 | <n>. <item title> | partial | <section:line> — "<quoted excerpt>" | What would tip to present: <one-line note> |
-| <n>. <item title> | missing | (no anchor) | Gap: <explicit, no proposed prose> |
+| <n>. <item title> | missing | (no anchor) | Gap: <explicit, no proposed prose by default> |
 | <n>. <item title> | not-applicable | (n/a) | Justification: <one sentence> |
 
 ## Highest-priority gaps
 
 (Subset of the `missing` rows. Ordered by what reviewers most
 commonly flag and what venues most commonly desk-reject for. Do
-**not** propose prose; name the gap.)
+**not** propose prose; name the gap. Under the
+`generation-from-blankness` override, the bracketed placeholder
+stays in the table row.)
 
 1. **Item <n>. <title>.** <One-paragraph statement of what is
    missing and why this item is high-priority. No proposed
@@ -354,7 +453,8 @@ the current run where relevant.)
 
 - Whether the chosen checklist was the right one. That is the
   upstream `reporting-guideline-fit` skill's job; this audit
-  trusts the inference.
+  trusts the inference. (Under the `checklist-required` override,
+  say that the checklist was inferred here and is unconfirmed.)
 - Whether the underlying study design was the right choice. The
   audit assesses what is reported, not whether the design was
   appropriate.
@@ -385,7 +485,11 @@ the current run where relevant.)
 - **Missing rows name the gap; they do not propose prose.**
   "No allocation-concealment mechanism described" is the right
   level. "Consider adding: 'Allocation was concealed using
-  sequentially numbered opaque envelopes…'" is **not**.
+  sequentially numbered opaque envelopes…'" is **not**, at any
+  setting: it states a fact the manuscript does not contain. Under
+  the `generation-from-blankness` override, "Placeholder:
+  Allocation [was / was not] concealed [using mechanism]." is the
+  most a row carries.
 - **Version-anchored.** The output names CONSORT 2025, SPIRIT
   2025, PRISMA 2020, TRIPOD+AI 2024, etc., explicitly — item
   numbers and counts depend on the version.
@@ -398,12 +502,19 @@ the current run where relevant.)
 
 ## What you must not do
 
-- Invent prose to fill missing items. Surface the gap; the
-  author owns the fix.
+- Draft prose to fill missing items, unless the author overrides
+  `generation-from-blankness`. Surface the gap; the author owns
+  the fix.
+- Invent facts about the study, at any setting
+  (`no-invented-manuscript-facts`; fixed).
 - Modify the manuscript or any state file.
-- Re-infer the applicable checklist. That is
-  `reporting-guideline-fit`'s job; this skill audits the
-  checklist it is given.
+- Re-infer the applicable checklist, unless the author overrides
+  `checklist-required`. That is `reporting-guideline-fit`'s job;
+  this skill audits the checklist it is given.
+- Mark an unverified flow-diagram item `present`
+  (`no-false-verification-claims`; fixed).
+- Run on an outline-phase manuscript, unless the author overrides
+  `outline-phase`.
 - Force a confident `present` or `missing` when the honest
   answer is `partial`.
 - Mark items `not-applicable` without a one-sentence
@@ -451,9 +562,15 @@ This skill is grounded in scriptorium's knowledge layer:
   detecting missing flow-diagram details, a single small
   study) is why flow-diagram items default to `partial`.
 - [[declared-work-scope]] — the convention. The audit
-  operates on declared manuscript prose; refuses cleanly on
-  outline or when the applicable checklist is unknown; never
-  invents prose to fill missing items.
+  operates on declared manuscript prose. By default it declines
+  on outline or when the applicable checklist is unknown, and
+  does not draft prose to fill missing items (the
+  `outline-phase`, `checklist-required` and
+  `generation-from-blankness` scope guards).
+- [[author-authority]] — the guard convention. The scope guards
+  above are defaults the author can override, per run or under
+  `meta.overrides`; the accuracy guards are fixed. It also
+  defines the "Overrides applied" line.
 - [[internal-consistency]] — the bookkeeping framing. The
   per-item walk treats each checklist item as a cross-section
   comparison: does what the prose says satisfy the item's

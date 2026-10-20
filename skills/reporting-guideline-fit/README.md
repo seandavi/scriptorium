@@ -66,12 +66,39 @@ The skill takes a stand on three forms of honesty:
 - Declare a checklist as authoritatively applicable.
   Recommendation only — the author confirms.
 - Operate on outline-phase manuscripts (no methods to infer
-  from).
+  from), or without a methods section, by default.
 - Force a confident answer when methods is too sketchy.
 - Write to MANUSCRIPT_STATE.yaml.
 - Critique study design (the skill infers from the methods as
   written, not whether the design was the right choice).
 - Editor-side enforcement. Author-side decision support only.
+
+## Guards and overrides
+
+The skill declares its guards in `manifest.yaml`, following
+[`author-authority`](../../knowledge/conventions/author-authority.md).
+
+| Guard | Kind | Default | If the author overrides |
+|---|---|---|---|
+| `outline-phase` | scope | refuse | Infers from whatever methods stub exists. |
+| `methods-section-required` | scope | refuse | Infers from title, abstract and registration metadata, every inference capped at `low` confidence. |
+| `no-inference-beyond-evidence` | accuracy | refuse | Cannot be overridden. |
+
+When a scope guard fires, the skill states the concern and its
+source in one line at every guidance level. A per-run answer wins;
+otherwise an entry under `meta.overrides` in `MANUSCRIPT_STATE.yaml`
+lets the skill proceed without asking:
+
+```yaml
+meta:
+  overrides:
+    - guard: methods-section-required
+      skills: [reporting-guideline-fit]
+```
+
+When the run proceeds past a scope guard, the report carries an
+`Overrides applied: <guard ids>` line under its title. This line is
+the one addition to the output contract.
 
 ## Grounding
 
@@ -90,6 +117,11 @@ interventions), LLM-evaluation studies to TRIPOD-LLM or REFINE,
 chatbot health-advice studies to CHART, and GAMER as an
 additional disclosure checklist whenever generative AI was
 used.
+
+The guards follow
+[`knowledge/conventions/author-authority.md`](../../knowledge/conventions/author-authority.md):
+scope guards are author-overridable defaults, and the accuracy
+guard is fixed.
 
 ## See also
 

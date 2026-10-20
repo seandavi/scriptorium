@@ -1,9 +1,10 @@
 ---
 name: reporting-guideline-fit
-description: Read the manuscript's methods section (and abstract/title for context) and infer which EQUATOR Network reporting guideline applies — CONSORT for RCTs, SPIRIT for trial protocols, STROBE for observational, PRISMA for systematic reviews, ARRIVE for animal research, TRIPOD/TRIPOD+AI for prediction models, STARD for diagnostic accuracy, CARE for case reports, COREQ for qualitative, TRIPOD-LLM or REFINE for LLM studies, CHART for chatbot health-advice studies, with relevant AI-extensions (CONSORT-AI, SPIRIT-AI, TRIPOD+AI) when applicable, and GAMER as an add-on disclosure checklist when generative-AI use is declared. Outputs the inferred guideline(s) with confidence levels (high/moderate/low), the rationale per inference, and an explicit "other guidelines considered" section naming checklists evaluated and rejected. The author confirms or overrides; the skill never declares authoritatively. Upstream inference for the reporting-guideline-compliance skill — this skill stops at "which checklist applies?"; running the full checklist against the manuscript is the downstream skill's job. Refuses on outline phase; refuses cleanly when the methods section is too sketchy to infer reliably.
+description: Read the manuscript's methods section (and abstract/title for context) and infer which EQUATOR Network reporting guideline applies — CONSORT for RCTs, SPIRIT for trial protocols, STROBE for observational, PRISMA for systematic reviews, ARRIVE for animal research, TRIPOD/TRIPOD+AI for prediction models, STARD for diagnostic accuracy, CARE for case reports, COREQ for qualitative, TRIPOD-LLM or REFINE for LLM studies, CHART for chatbot health-advice studies, with relevant AI-extensions (CONSORT-AI, SPIRIT-AI, TRIPOD+AI) when applicable, and GAMER as an add-on disclosure checklist when generative-AI use is declared. Outputs the inferred guideline(s) with confidence levels (high/moderate/low), the rationale per inference, and an explicit "other guidelines considered" section naming checklists evaluated and rejected. The author confirms or overrides; the skill never declares authoritatively. Upstream inference for the reporting-guideline-compliance skill — this skill stops at "which checklist applies?"; running the full checklist against the manuscript is the downstream skill's job. Declines by default on outline phase or without a methods section (author-overridable scope guards); says low confidence, rather than guessing, when the methods section is too sketchy to infer reliably.
 grounding:
   - knowledge/conventions/guidance-level.md
   - knowledge/conventions/declared-work-scope.md
+  - knowledge/conventions/author-authority.md
   - knowledge/scientific-writing/reporting-guidelines.md
 ---
 
@@ -27,11 +28,11 @@ question and points the author at the right next step.
 
 This skill operates on **declared work**
 ([[declared-work-scope]]). The methods section is the declared
-prose the inference grounds in. Without methods, the skill refuses
-— title and abstract alone are usually insufficient to discriminate
-between adjacent designs (e.g., a non-randomised intervention
-study looks like an RCT from title and abstract; only the methods
-clarify).
+prose the inference grounds in. Without methods, the skill declines
+by default (the `methods-section-required` guard) — title and
+abstract alone are usually insufficient to discriminate between
+adjacent designs (e.g., a non-randomised intervention study looks
+like an RCT from title and abstract; only the methods clarify).
 
 The inference is a **recommendation, not a declaration**. The
 author confirms or overrides. The skill's output is structured to
@@ -48,15 +49,18 @@ silently when the inference is wrong. Keep the steps separate.
 
 ## Critical constraints — read before doing anything else
 
-1. **Refuse on `outline` phase.** Per [[declared-work-scope]],
-   no methods section yet to infer from. Refuse cleanly and
+1. **Decline on `outline` phase by default (scope guard
+   `outline-phase`).** Per [[declared-work-scope]], no methods
+   section yet to infer from. State the concern in one line and
    point the author at "come back when methods is drafted, even
-   as a stub describing the design".
-2. **Refuse when methods is too sketchy to infer.** Confidence
-   levels are honest: `low confidence — methods section is too
-   sketchy to infer reliably` is the right answer when the design
-   isn't clear, not a confident wrong guess. The honest default
-   when uncertain is to say so.
+   as a stub describing the design", unless the author overrides
+   the guard.
+2. **Say so when methods is too sketchy to infer (accuracy guard
+   `no-inference-beyond-evidence`; fixed).** Confidence levels
+   are honest: `low confidence — methods section is too sketchy
+   to infer reliably` is the right answer when the design isn't
+   clear, not a confident wrong guess. The honest default when
+   uncertain is to say so.
 3. **Multiple checklists can apply.** An animal randomised
    intervention study uses both ARRIVE 2.0 and CONSORT 2025
    (plus CONSORT-AI 2020 if AI-enabled). The skill must surface the
@@ -88,14 +92,72 @@ silently when the inference is wrong. Keep the steps separate.
    why this skill exists). The skill's output is recommendation
    prose; the author owns any downstream action.
 
+## Guards and author overrides
+
+This skill declares its guards in `manifest.yaml`, following
+[[author-authority]]. The author decides the scope guards; the
+accuracy guard is fixed.
+
+**Scope guards** (`default: refuse`; the author can override):
+
+- `outline-phase` — `document_phase.current` is `outline`; there
+  is not yet a methods section to infer from.
+- `methods-section-required` — no methods section; title and
+  abstract alone rarely tell adjacent designs apart.
+
+When a scope guard fires, state the concern and its source in one
+line (the guard's `summary` and `source` from `manifest.yaml`). Then
+the first of these that applies decides:
+
+1. **A per-run answer.** What the author says in this run wins, in
+   either direction.
+2. **`meta.overrides`.** An entry naming the guard with
+   `reporting-guideline-fit` (or `"*"`) under `skills` means proceed
+   without asking.
+3. **The default.** Decline, and tell the author how to override:
+   say "proceed" in this run, or add the guard under
+   `meta.overrides` in `MANUSCRIPT_STATE.yaml`.
+
+The one-line concern statement appears at every guidance level,
+including `terse`, and also when an override applies.
+
+What proceeding changes:
+
+- `outline-phase` — infer from whatever methods stub exists; a
+  stub usually supports only `low` confidence.
+- `methods-section-required` — infer from the title, abstract and
+  any registration metadata, and cap every inference at `low`
+  confidence. The "What the methods section needs to do" section
+  names what a methods section would have to say to raise it.
+
+**Accuracy guard** (fixed; neither a per-run answer nor
+`meta.overrides` lifts it):
+
+- `no-inference-beyond-evidence` — when the input cannot support
+  a confident inference, the output says `low` confidence or that
+  the design cannot be determined (constraint 2). It applies with
+  full force under either override.
+
+If the author asks to override it, say that it protects the
+correctness of the inference and cannot be overridden.
+
+**Overrides applied.** When the run proceeds past a scope guard,
+through a per-run answer or `meta.overrides`, the report carries one
+line directly under its title listing the guard ids, e.g.
+`Overrides applied: methods-section-required`. Omit the line when
+no override applied.
+
 ## Inputs you should expect
 
 **Required from `MANUSCRIPT_STATE.yaml`:**
 
-- `document_phase.current` (load-bearing: refuse on `outline`).
+- `document_phase.current` (load-bearing: apply the
+  `outline-phase` guard on `outline`).
 
 **Optional from `MANUSCRIPT_STATE.yaml`:**
 
+- `meta.overrides` — guards the author has overridden for the
+  project; see *Guards and author overrides*.
 - `project.target_type` — confirms the work is a primary research
   manuscript (where reporting guidelines apply) vs. a review,
   thesis, white paper, etc. Most EQUATOR checklists target
@@ -110,7 +172,8 @@ silently when the inference is wrong. Keep the steps separate.
 **Required from the manuscript:**
 
 - The **methods section** is load-bearing. Without it, the skill
-  refuses (title and abstract alone are insufficient).
+  declines by default (`methods-section-required`; title and
+  abstract alone are insufficient).
 - The **title and abstract** add context, particularly for
   disambiguation.
 
@@ -274,15 +337,18 @@ Read `meta.guidance_level` from `MANUSCRIPT_STATE.yaml` (default
 
 Run the signal-based check-in once if appropriate. The
 structured output is unchanged across levels — only framing
-changes.
+changes. Guidance level never relaxes a guard, and the one-line
+statement of a guard's concern appears at every level.
 
 ## Operational protocol
 
-1. **Read the inputs.** `MANUSCRIPT_STATE.yaml` (refuse on
-   outline; note `project.target_type` and `project.target_venue`
-   for context), the manuscript methods section (load-bearing —
-   refuse if absent), title and abstract for disambiguation,
-   any registration metadata if visible in the methods.
+1. **Read the inputs.** `MANUSCRIPT_STATE.yaml` (apply the
+   `outline-phase` guard on outline; read `meta.overrides`; note
+   `project.target_type` and `project.target_venue` for context),
+   the manuscript methods section (load-bearing — apply the
+   `methods-section-required` guard if absent), title and abstract
+   for disambiguation, any registration metadata if visible in the
+   methods.
 2. **Apply each detection heuristic** systematically (not
    opportunistic). For each guideline, check the methods
    against the detection signals; tag the match as high /
@@ -327,6 +393,8 @@ in order:
 
 ```markdown
 # Reporting-guideline fit
+
+Overrides applied: <guard ids>   (only when the run proceeded past a scope guard)
 
 ## Summary
 
@@ -440,10 +508,14 @@ was the right choice); not editor-side enforcement.>
   skill).
 - Declare a checklist as authoritatively applicable. The skill
   recommends; the author confirms.
-- Operate on outline-phase manuscripts (refuse cleanly).
+- Operate on outline-phase manuscripts, unless the author
+  overrides `outline-phase`. By default, state the concern in one
+  line, decline, and say how to override.
+- Infer without a methods section, unless the author overrides
+  `methods-section-required`; then cap every inference at `low`.
 - Force a confident answer when the methods is too sketchy
   to discriminate. Low confidence is honest; confident wrong
-  is not.
+  is not. (`no-inference-beyond-evidence`; fixed.)
 - Write to MANUSCRIPT_STATE.yaml. The schema doesn't carry a
   `reporting_guidelines:` field (deliberately — authors often
   don't know which checklist applies, which is why this skill
@@ -475,9 +547,15 @@ This skill is grounded in published research:
   directly to the design-discriminating signals each checklist
   was built to capture.
 - [[declared-work-scope]] — the convention. The inference
-  operates on the declared methods section; refuses cleanly
-  on outline or when methods is too sketchy; does not run the
-  full checklist (separate, downstream).
+  operates on the declared methods section. By default it
+  declines on outline or without a methods section (the
+  `outline-phase` and `methods-section-required` scope guards);
+  it says low confidence when methods is too sketchy; it does
+  not run the full checklist (separate, downstream).
+- [[author-authority]] — the guard convention. The scope guards
+  are defaults the author can override, per run or under
+  `meta.overrides`; the accuracy guard is fixed. It also defines
+  the "Overrides applied" line.
 - [[guidance-level]] — the framing-level convention.
 
 This skill is the **upstream inference** in the

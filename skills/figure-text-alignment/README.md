@@ -9,8 +9,10 @@ mismatch, axis/units divergence, direction divergence).
 
 **Category:** critique
 **Modifies the manuscript?** No.
-**Reads figure images?** No, ever — this is the **text-only** subset.
-The multimodal counterpart (sub-skill B) is explicitly deferred.
+**Reads figure images?** Not by default — this is the **text-only**
+subset. The multimodal counterpart (sub-skill B) is explicitly
+deferred. The author can override the `figure-image-reading` guard;
+every image-derived finding is then labelled `unvalidated vision`.
 **Invocation:** explicit. Safe to suggest when a manuscript has at
 least one figure with a caption and at least one body-text reference,
 and is in `draft` / `revision` / `submission` phase.
@@ -25,8 +27,8 @@ checks alignment between two textual surfaces:
 2. The **body-text figure references** — sentences in the manuscript
    that say "Figure N shows X" or "as illustrated in Fig. N".
 
-It does **not** look at the figure file itself. That is the job of
-sub-skill B (multimodal), which is deferred until LLM-vision
+By default it does **not** look at the figure file itself. That is
+the job of sub-skill B (multimodal), which is deferred until LLM-vision
 reliability for scientific figures is validated against a
 known-mismatch test set. The two failure modes are conceptually
 separable — text-only catches caption/body-text disagreement, which
@@ -63,8 +65,9 @@ skill) can consume it.
 
 ## What it does not do
 
-- **Read figure images.** Sub-skill B is the right skill for that and
-  is deferred — see *Scope: text-only* above.
+- **Read figure images**, by default. Sub-skill B is the right skill
+  for that and is deferred — see *Scope: text-only* above and
+  *Guards and overrides* below.
 - **Verify axis labels rendered in the figure**, statistical
   annotations on the figure, or whether described trends are actually
   visible. All require reading the image.
@@ -75,11 +78,44 @@ skill) can consume it.
   for the boundary). In ASM's 2023–24 pilot, ImageTwin flagged
   problems only in halftone images (blots, micrographs,
   photographs), not graphs or line art.
-- **Modify the manuscript** or suggest specific rewrites. Flags
-  misalignments; the author decides what to change.
+- **Modify the manuscript.** By default it does not suggest specific
+  rewrites either: it flags misalignments, and the author decides
+  what to change.
 - **Score the manuscript** on a quality scale. Audit is descriptive.
-- **Operate on outline-phase manuscripts.** Figures are not yet
-  stable; the skill declines cleanly.
+- **Operate on outline-phase manuscripts**, by default. Figures are
+  not yet stable; the skill states the concern and declines unless
+  the author overrides.
+
+## Guards and overrides
+
+The skill declares its guards in `manifest.yaml`, following
+[`author-authority`](../../knowledge/conventions/author-authority.md).
+
+| Guard | Kind | Default | If the author overrides |
+|---|---|---|---|
+| `outline-phase` | scope | refuse | Runs the audit as on a draft. |
+| `generation-from-blankness` | scope | refuse | Drafts a caption or reference only from what the manuscript states; the rest stays a bracketed placeholder. |
+| `figure-image-reading` | scope | refuse | Reads figure images; every image-derived finding is labelled `unvalidated vision`. |
+| `critique-rewrite-suggestions` | scope | refuse | Adds one `Suggestion:` per flagged item; the manuscript is still not modified. |
+| `no-invented-manuscript-facts` | accuracy | refuse | Cannot be overridden. |
+| `no-inference-beyond-evidence` | accuracy | refuse | Cannot be overridden. |
+| `no-image-integrity-claims` | accuracy | refuse | Cannot be overridden, including when reading images. |
+
+When a scope guard fires, the skill states the concern and its
+source in one line at every guidance level. A per-run answer wins;
+otherwise an entry under `meta.overrides` in `MANUSCRIPT_STATE.yaml`
+lets the skill proceed without asking:
+
+```yaml
+meta:
+  overrides:
+    - guard: figure-image-reading
+      skills: [figure-text-alignment]
+```
+
+When the run proceeds past a scope guard, the report carries an
+`Overrides applied: <guard ids>` line under its title. This line is
+the one addition to the output contract.
 
 ## Inputs
 
@@ -88,8 +124,9 @@ skill) can consume it.
   projects (e.g. Quarto with `sections` declared), every section file
   is read.
 - **`MANUSCRIPT_STATE.yaml`** *(optional but recommended)* —
-  `document_phase.current` (refuses on outline),
-  `meta.guidance_level` (framing), `core_claims` (context). Figure
+  `document_phase.current` (declines on outline by default),
+  `meta.guidance_level` (framing), `meta.overrides` (guards the
+  author has overridden), `core_claims` (context). Figure
   locations are not declared in the schema; the skill discovers them
   from the manuscript text.
 
@@ -123,6 +160,8 @@ cat ~/.claude/plugins/scriptorium/skills/figure-text-alignment/prompt.md
 
 ```markdown
 # Figure-text alignment (text-only)
+
+Overrides applied: <guard ids>   (only when an override applied)
 
 ## Summary
 - Figures discovered (caption present): N
@@ -177,8 +216,14 @@ This skill is grounded in scriptorium's knowledge layer:
   — scriptorium-wide convention for how much framing the skill adds.
 - [`declared-work-scope`](../../knowledge/conventions/declared-work-scope.md)
   — scriptorium-wide convention. The skill operates on declared
-  captions and declared body-text references; it does not generate
-  captions or invent figure references.
+  captions and declared body-text references; by default it does not
+  generate captions or invent figure references.
+- [`author-authority`](../../knowledge/conventions/author-authority.md)
+  — scriptorium-wide convention for guards: scope guards are
+  author-overridable defaults, accuracy guards are fixed.
+- [`copyediting-vs-developmental`](../../knowledge/editing/copyediting-vs-developmental.md)
+  — source of the no-rewrites default: a critique skill queries
+  problems for the author to fix.
 
 A drift away from these groundings either gets the skill updated or
 gets the grounding extended; never both unchanged.
