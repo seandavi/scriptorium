@@ -145,7 +145,7 @@ regenerates the block without manual edits.
 - **`citation-audit`**
   - `terse` — Open with a one-line "running citation audit"; emit the markdown report; no closing summary. Surfaces only the highest-priority claim-citation mismatches.
   - `standard` — Open with a sentence naming the manuscript and the number of citations to be audited; close with a one-line summary of the findings. The full table with per-claim rationale.
-  - `full` — Open with what this skill produces (claim-level alignment classifications, pattern-level smells) and how to read it (per-claim, then patterns); close with which findings to act on first and which are informational. The structured output itself is unchanged across levels.
+  - `full` — Open with what this skill produces (claim-level alignment classifications, reference identity findings, pattern-level smells) and how to read it (per-claim, then patterns); close with which findings to act on first and which are informational. The structured output itself is unchanged across levels.
 - **`compression`**
   - `terse` — Open with one line ("running compression on <section>, target <N> words"); emit the markdown report; no closing summary.
   - `standard` — Open with the section, the current length, the declared target, and the gap to close; close with a one-line summary naming whether the target was met and how much of the reduction was non-load-bearing redundancy vs. structural reduction.
@@ -153,7 +153,7 @@ regenerates the block without manual edits.
 - **`desk-rejection-risk`**
   - `terse` — Open with a one-line "running desk-rejection-risk audit against {target_venue}"; emit the markdown report; no closing summary.
   - `standard` — Open with a sentence naming the target venue and document phase; note any categories that cannot be fully assessed (e.g. no cover letter provided); close with a one-line summary of the overall risk band.
-  - `full` — Open with what the skill is looking at (the five triage-heuristic categories) and why the 70-90% desk-rejection base rate at top journals makes this the highest-leverage pre-submission check; close with which findings to act on first and which are informational.
+  - `full` — Open with what the skill is looking at (the five triage-heuristic categories) and why the fact that most submissions to top general journals are declined without full peer review makes this the highest-leverage pre-submission check; close with which findings to act on first and which are informational.
 - **`explain`**
   - `terse` — Suppress the "why this matters" prose; emit only the structured summary.
   - `standard` — Keep the framing around the structured summary; one-screenful target with sources cited at the end.
@@ -177,11 +177,11 @@ regenerates the block without manual edits.
 - **`reporting-guideline-compliance`**
   - `terse` — Open with one line ("running reporting-guideline-compliance against <checklist> <version>"); emit the markdown report; no closing summary.
   - `standard` — Open with a sentence naming the checklist and version, the item count, and the manuscript-phase context; close with a one-line summary of present / partial / missing / N-A counts and the highest-priority gap.
-  - `full` — Open with what reporting guidelines do (minimum-information standards so reviewers and readers can evaluate methodology consistently — the EQUATOR Network registry of ~600 active guidelines), what this audit produces (per-item present / partial / missing / N-A with a quoted anchor or explicit gap), and how to read it (act on missing first, then partial; N/A is not a gap; the audit does not invent prose to fill gaps).
+  - `full` — Open with what reporting guidelines do (minimum-information standards so reviewers and readers can evaluate methodology consistently — the EQUATOR Network registry, whose library lists roughly 700 records), what this audit produces (per-item present / partial / missing / N-A with a quoted anchor or explicit gap), and how to read it (act on missing first, then partial; N/A is not a gap; the audit does not invent prose to fill gaps).
 - **`reporting-guideline-fit`**
   - `terse` — Open with one line ("running reporting-guideline-fit inference"); emit the markdown report; no closing summary.
   - `standard` — Open with one sentence naming the methods-section signal strength (clear / moderately clear / sketchy) and the count of applicable checklists; close with the recommended next step (the matching reporting-guideline-compliance run).
-  - `full` — Open with what reporting guidelines do (standardise reporting so reviewers and readers can evaluate methodology consistently — the EQUATOR Network registry of ~500 active guidelines), why the inference matters (authors often don't know which checklist applies to their study design, especially across the AI-extension landscape), and the major design-to-checklist mapping.
+  - `full` — Open with what reporting guidelines do (standardise reporting so reviewers and readers can evaluate methodology consistently — the EQUATOR Network registry, whose library lists roughly 700 records), why the inference matters (authors often don't know which checklist applies to their study design, especially across the AI-extension landscape), and the major design-to-checklist mapping.
 - **`reviewer-simulation`**
   - `terse` — Open with one line ("running reviewer simulation across four lenses"); emit the markdown report; no closing summary. Returns one or two critiques per lens.
   - `standard` — Open with which core_claims will be pressure-tested and which known_weaknesses will be excluded from fatal-concern flagging; close with a one-line summary of acceptance risk. The full six-section per-lens output (Major / Minor / Fatal / Enthusiasm / Suggested Revisions / Acceptance Risk).
@@ -197,7 +197,7 @@ regenerates the block without manual edits.
 - **`venue-fit`**
   - `terse` — Open with one line ("running venue-fit"); emit the markdown report; no closing summary beyond the report itself.
   - `standard` — Open with one sentence naming the author state (decided / considering / undecided) and the manuscript fit axes; close with a one-line summary of the top recommendation.
-  - `full` — Open with what venue-fit is doing (scope / audience / methodological / novelty / significance / OA assessment per axis; not a probability estimate) and why the tier structure matters (most authors over-aim; tiered output saves time); close with which tier the author should consider first and why.
+  - `full` — Open with what venue-fit is doing (scope / audience / methodological / novelty / significance / OA assessment per axis; not a probability estimate) and why the tier structure matters (a sizeable minority of papers reach their final venue only after a rejection elsewhere; naming the tiers makes a stretch attempt a deliberate choice); close with which tier the author should consider first and why.
 <!-- GENERATED:guidance-level-skills:end -->
 
 The mapping is: *terse filters, standard is the default complete
