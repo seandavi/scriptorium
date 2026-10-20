@@ -458,8 +458,9 @@ _CATEGORY_ORDER: list[tuple[str, str, str]] = [
         "skills inherit the same preservation contract — citations, "
         "statistics, declared terminology, declared core claims, and the "
         "author's hedging stance are preserved or surfaced as per-edit notes. "
-        "Both are explicit-invocation only and operate on a single named "
-        "section at a time. The author reviews each diff and decides.",
+        "Both are explicit-invocation only and by default operate on a "
+        "single named section at a time. The author reviews each diff and "
+        "decides.",
     ),
     (
         "meta",
@@ -745,8 +746,9 @@ def _generate_skills_page(manifests: list[dict[str, Any]]) -> str:
         "  - *meta* — orientation or explanation; no manuscript modification.\n"
         "  - *utility* — bootstrap; modifies only `MANUSCRIPT_STATE.yaml`.\n"
         "- **Lifecycle stage** — which `document_phase` values the skill is "
-        "invokable in. Skills refuse cleanly on phases for which they do "
-        "not have enough declared state to ground against.\n"
+        "invokable in. By default, skills decline on phases for which they "
+        "do not have enough declared state to ground against; the author "
+        "can override that (see [Author authority](/concepts/author-authority/)).\n"
         "- **Modifies the manuscript?** — *no* (most critique skills), "
         "*suggests* (normalization and transformation skills emit diffs the "
         "author reviews and applies), or *state file only* (utility, or "
@@ -755,9 +757,10 @@ def _generate_skills_page(manifests: list[dict[str, Any]]) -> str:
     parts.append(
         "Two additional flags some authors need:\n\n"
         "- **Author-side only?** — *yes* for skills whose `manifest.yaml` "
-        "declares `positioning: author-side-only`. Editorial-side use "
-        "violates ICMJE / NIH / major-publisher policy and the skill itself "
-        "refuses to run on a manuscript the user did not author.\n"
+        "declares `positioning: author-side-only`. Running one as a reviewer "
+        "or editor of a submitted manuscript triggers the "
+        "`editorial-side-use` policy guard: the skill states the concern and "
+        "asks before proceeding.\n"
         "- **Requires bibliography?** — *yes* when the manifest's "
         "`bibliography` input is `required: true`; *optional* when the "
         "input is declared but not required; *no* when the manifest does "
@@ -774,7 +777,7 @@ def _generate_skills_page(manifests: list[dict[str, Any]]) -> str:
     parts.append("## Lifecycle fit, summarised\n")
     parts.append(
         "Skills declare which `document_phase` values they operate on in "
-        "their `manifest.yaml#lifecycle_phases`. They refuse cleanly on "
+        "their `manifest.yaml#lifecycle_phases`. By default they decline on "
         "phases for which they do not have enough declared state to ground "
         "against. The phases listed under each row below are cumulative — "
         "skills invocable at `draft` are also invocable at `review`, "
@@ -789,8 +792,14 @@ def _generate_skills_page(manifests: list[dict[str, Any]]) -> str:
     parts.append("## Author-side only\n")
     parts.append(
         "Skills whose `manifest.yaml` declares `positioning: author-side-only` "
-        "refuse to run on a manuscript the user did not author. Editorial-side "
-        "use violates ICMJE, NIH, and major-publisher peer-review policy.\n"
+        "are built for authors pressure-testing their own work. Running one "
+        "as a reviewer or editor of a submitted manuscript uploads a "
+        "confidential manuscript and hands judgement to AI, which reviewer "
+        "AI policies restrict (NIH prohibits it outright for NIH peer "
+        "review). That use is the `editorial-side-use` policy guard, "
+        "`default: ask`: the skill states the concern and its source and "
+        "asks whether to proceed. See "
+        "[Author authority](/concepts/author-authority/).\n"
     )
     parts.append(_render_author_side_list(manifests) + "\n")
     parts.append("## Source of truth\n")
