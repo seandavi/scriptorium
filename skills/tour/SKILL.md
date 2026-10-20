@@ -60,6 +60,28 @@ The skill still grounds in [[guidance-level]] because one of the
 things tour teaches new users is that the three levels exist and
 that they'll be asked to pick one when they run `init`.
 
+## Locating scriptorium files
+
+Tour reads two scriptorium files, `templates/MANUSCRIPT_STATE.example.yaml`
+and `knowledge/README.md`. Resolve each in this order and use the
+first that exists:
+
+1. **The scriptorium install** — two levels above this skill's
+   directory (`skills/tour/../..`), but only if
+   `.claude-plugin/plugin.json` exists there. A Claude Code plugin
+   install and a repo checkout have the whole tree; an `npx skills`
+   install sits in an agent's `skills/` directory instead.
+2. **The bundled copy** — `assets/<path>` inside this skill's
+   directory. This is what a standalone `npx skills add` install
+   has.
+
+When you show the example state (step 4), say in half a sentence
+whether it came from the install, the bundled copy, or is a
+synthesised example. If there is no local `knowledge/` tree, point
+a curious user at
+<https://github.com/seandavi/scriptorium/tree/main/knowledge>
+rather than at a `knowledge/` directory they don't have.
+
 ## Operational protocol
 
 ### 1. Detect the situation
@@ -173,8 +195,9 @@ looks like.
 
 Show a short, real-looking excerpt of `MANUSCRIPT_STATE.yaml` so the
 user understands what the "shared state" actually is. Pull from
-`templates/MANUSCRIPT_STATE.example.yaml` if available; otherwise
-construct a 10-15 line excerpt with realistic fields:
+`templates/MANUSCRIPT_STATE.example.yaml` if available (see
+*Locating scriptorium files*); otherwise construct a 10-15 line
+excerpt with realistic fields:
 
 ```yaml
 project:

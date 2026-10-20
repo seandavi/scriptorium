@@ -36,4 +36,5 @@ repos:
         # Skip the knowledge layer for now — research-agent output uses
         # academic prose patterns markdownlint flags as "issues" but they
         # are intentional (long lines, footnote-style references).
-        exclude: "^knowledge/"
+        # skills/*/assets/ holds synced copies of knowledge/ notes.
+        exclude: "^(knowledge/|skills/[^/]+/assets/)"

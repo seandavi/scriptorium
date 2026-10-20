@@ -55,6 +55,36 @@ Look at the argument string the user passed:
 If the argument is ambiguous (matches both a skill and a field, or
 no candidate found), ask the user to disambiguate; do not guess.
 
+## Locating scriptorium files
+
+Every path this skill reads (`.claude-plugin/plugin.json`,
+`schemas/...`, `skills/<name>/SKILL.md`, `knowledge/...`) is
+relative to the scriptorium root. Resolve each one in this order and
+use the first that exists:
+
+1. **The scriptorium install** — two levels above this skill's
+   directory (`skills/explain/../..`), but only if
+   `.claude-plugin/plugin.json` exists there. A Claude Code plugin
+   install and a repo checkout have the whole tree. An
+   `npx skills` install sits in an agent directory such as
+   `.claude/skills/` or `.agents/skills/`; that `skills/` holds the
+   user's skills, not scriptorium's, so skip this step.
+2. **The bundled copy** — `assets/<path>` inside this skill's
+   directory. A standalone `npx skills add` install carries
+   `.claude-plugin/plugin.json`, `schemas/manuscript-state.schema.json`,
+   `knowledge/README.md`, `knowledge/conventions/guidance-level.md`
+   and `knowledge/conventions/declared-work-scope.md`.
+3. **GitHub `main`** — for other `knowledge/` notes and other
+   skills' `SKILL.md`, fetch
+   `https://raw.githubusercontent.com/seandavi/scriptorium/main/<path>`.
+   Without a scriptorium install, take the list of skill names from
+   the "What ships today" list in `README.md` fetched the same way.
+
+Say which source you used: in the `Sources` section, mark each file
+not read from the scriptorium install with `(bundled copy)` or
+`(GitHub main)`. If a file is in none of the three (for example, no
+network), say so; do not reconstruct it from memory.
+
 ## Operational protocol
 
 ### A. Whole-system overview (no argument)

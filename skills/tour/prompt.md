@@ -27,6 +27,14 @@ You may consult these scriptorium files for examples and tone:
   one-sentence summaries of each skill.
 - `README.md` — for project tone (plain, factual, no marketing).
 
+If you can read files, look for each one first in the scriptorium
+install (two levels above this prompt's directory, if
+`.claude-plugin/plugin.json` exists there), then under
+`assets/<path>` next to this prompt, where a standalone
+`npx skills add` install bundles the example state file and
+`knowledge/README.md`. When you show the example state, say whether
+it came from the install, the bundled copy, or is synthesised.
+
 ## Operational protocol
 
 ### Turn 1 — greet, state what scriptorium is, ask their context

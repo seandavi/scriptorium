@@ -113,6 +113,35 @@ appear correctly there:
    `test_skills_reference_generator.py` tests will fail if your new
    manifest is missing `lifecycle_phases` or declares an unknown phase.
 
+### Bundled assets for standalone installs
+
+`npx skills add seandavi/scriptorium` installs each skill's directory
+and nothing else. Skills that read files elsewhere in the repo carry
+copies under `skills/<name>/assets/<repo-relative path>`; the list
+lives in `SKILL_ASSETS` in `scripts/sync_skill_assets.py`. Edit the
+canonical file, never the copy, then run:
+
+```bash
+just sync-skill-assets
+```
+
+`tests/test_sync_skill_assets.py` fails when a copy drifts. The copies
+are excluded from markdownlint and lychee, like `knowledge/`.
+
+After changing which files a skill reads, push the branch and smoke
+test a standalone install in an empty directory:
+
+```bash
+cd "$(mktemp -d)" && git init -q
+npx -y skills add seandavi/scriptorium#<branch> \
+  --skill init --skill explain --skill tour -a claude-code --copy -y
+find .claude/skills -type f
+```
+
+Every repo path the installed `SKILL.md` and `prompt.md` mention
+should exist under the skill's `assets/`, or (for `explain`) resolve
+on `https://raw.githubusercontent.com/seandavi/scriptorium/main/`.
+
 ## Knowledge layer contributions
 
 `knowledge/` is the evidence base scriptorium's skills ground in. New
