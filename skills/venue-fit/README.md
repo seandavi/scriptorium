@@ -41,9 +41,29 @@ The skill detects the state from `MANUSCRIPT_STATE.yaml`:
   with serious concerns).
 - Generate a cover letter, auto-submit, or auto-write to
   `MANUSCRIPT_STATE.yaml` without explicit consent.
-- Operate as editor-side or reviewer-side assessment. This is
-  author-side decision support.
-- Operate on outline-phase manuscripts.
+- Name a benchmark paper from memory. Benchmarks come from the
+  manuscript's bibliography or are verified in the same session.
+
+The probability, predatory-tier and benchmark rules are fixed
+accuracy guards.
+
+## What it declines or asks about by default
+
+These are guards the author can override for one run, or for the
+project under `meta.overrides` in `MANUSCRIPT_STATE.yaml` (see
+[`knowledge/conventions/author-authority.md`](../../knowledge/conventions/author-authority.md)).
+The skill states the concern in one line each time, and a report
+produced past one carries an `Overrides applied:` line.
+
+- Operate without `project.target_type`, or with it set to `other`
+  (`target-type-required`). On override, generic manuscript logic.
+- Operate on outline-phase manuscripts (`outline-phase`).
+- Assess audience fit when `style.audience` is too broad
+  (`audience-granularity-required`). On override, the audience
+  axis is marked `cannot-assess`.
+- Editor-side or reviewer-side assessment (`editorial-side-use`):
+  asked, not refused, when the user is a reviewer or editor of a
+  submitted manuscript. This is author-side decision support.
 
 ## Optional inputs
 

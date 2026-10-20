@@ -1,6 +1,6 @@
 ---
 name: venue-fit
-description: Assess venue fit for a manuscript and return a tiered set of candidate venues (likely fit / stretch / probably premature) with per-venue rationale, fit caveats per axis (scope, audience, methodological, novelty, significance, open-access/cost), and explicit predatory-venue refusal. Handles three author states — decided (assesses target_venue and offers alternatives), considering (assesses each declared candidate_venues entry), and undecided (open recommendation). Optional opt-in mode for preprint server recommendations and pre/post-publication review platform suggestions. Optional bias-managed calibration via author publication history (ORCID / Google Scholar / declared past venues). Invoke when the author is choosing a submission target or wants to pressure-test a declared one. Refuses to recommend predatory venues; refuses to operate without `project.target_type`; refuses on outline-phase manuscripts.
+description: Assess venue fit for a manuscript and return a tiered set of candidate venues (likely fit / stretch / probably premature) with per-venue rationale, fit caveats per axis (scope, audience, methodological, novelty, significance, open-access/cost), and explicit predatory-venue refusal. Handles three author states — decided (assesses target_venue and offers alternatives), considering (assesses each declared candidate_venues entry), and undecided (open recommendation). Optional opt-in mode for preprint server recommendations and pre/post-publication review platform suggestions. Optional bias-managed calibration via author publication history (ORCID / Google Scholar / declared past venues). Invoke when the author is choosing a submission target or wants to pressure-test a declared one. Never places a predatory venue in a recommendation tier. By default declines when `project.target_type` is unset or `other`, when `style.audience` is too broad, or on outline-phase manuscripts, and asks before running for a reviewer or editor of a submitted manuscript; the author can override these per run or via `meta.overrides`.
 grounding:
   - knowledge/conventions/guidance-level.md
   - knowledge/conventions/declared-work-scope.md
@@ -9,6 +9,8 @@ grounding:
   - knowledge/peer-review/preprint-landscape.md
   - knowledge/peer-review/editorial-decision-making.md
   - knowledge/scientific-writing/significance-positioning.md
+  - knowledge/citations/hallucination-in-llm-citations.md
+  - knowledge/conventions/author-authority.md
 ---
 
 # Venue fit
@@ -29,44 +31,54 @@ suggest-only.
 
 This skill is **author-side decision support**, not editor-side or
 reviewer-side work. The author uses this to plan their own
-submission. The skill must not be used as a substitute for an
-editor's triage assessment of a manuscript the editor is
-considering.
+submission. Run as a substitute for an editor's triage assessment
+of a manuscript the editor is considering, it falls under the
+`editorial-side-use` guard (constraint 10).
 
 The recommendation is **qualitative**, not probabilistic. Outputs
 are tier bands (likely fit / stretch / probably premature). The
 peer-review-outcome variance literature (Bornmann κ ≈ 0.17 for
 inter-reviewer agreement) makes per-venue acceptance probabilities
 indefensible. A skill that outputs "70% chance at Nature
-Communications" is wrong.
+Communications" is wrong. This is the fixed accuracy guard
+`no-numeric-outcome-probability`.
 
 The recommendation grounds in **declared work** ([[declared-work-
 scope]]). The skill reads what the author has put into
 `MANUSCRIPT_STATE.yaml` and the manuscript; it does not invent
-claims about the manuscript to make it fit a venue.
+claims about the manuscript to make it fit a venue
+(`no-invented-manuscript-facts`, fixed).
 
-The recommendation **never includes a predatory venue**. See
-"Predatory refusal" below.
+The recommendation **never includes a predatory venue**
+(`no-predatory-venue-recommendation`, fixed). See "Predatory
+refusal" below.
 
 ## Critical constraints — read before doing anything else
 
-1. **Refuse if `project.target_type` is unset or `other`.** The
-   per-type logic differs enough that a category is required. Ask
-   the author to set `project.target_type` (`manuscript`, `grant`,
-   `review`, `preprint`, `book-chapter`, `thesis`, `white-paper`)
-   first; then proceed.
-2. **Refuse on outline phase.** Per [[declared-work-scope]],
-   venue-fit needs at minimum a draft abstract and title to
-   assess fit. If `document_phase.current` is `outline`, refuse
-   cleanly and point the author at writing a stub
-   abstract + title before re-invoking.
-3. **Never invent venue policies.** When the skill cites a venue's
-   word count, OA model, scope statement, or preprint policy, it
-   must caveat training-data staleness and recommend verifying via
-   the journal's current instructions. Better: when uncertain,
-   say so.
-4. **Never include predatory venues in recommendation tiers.**
-   Per [[predatory-publishing]]. The skill maintains a
+1. **Decline by default if `project.target_type` is unset or
+   `other`** (`target-type-required`, scope). The per-type logic
+   differs enough that a category is required. Ask the author to
+   set `project.target_type` (`manuscript`, `grant`, `review`,
+   `preprint`, `book-chapter`, `thesis`, `white-paper`) first, and
+   say how to override. On override, run the generic manuscript
+   logic and say so in the report.
+2. **Decline on outline phase by default** (`outline-phase`,
+   scope). Per [[declared-work-scope]], venue-fit needs at minimum
+   a draft abstract and title to assess fit. If
+   `document_phase.current` is `outline`, decline cleanly, point
+   the author at writing a stub abstract + title before
+   re-invoking, and say how to override. On override, assess from
+   whatever title and summary exist, and mark any axis they cannot
+   support `cannot-assess`.
+3. **Never invent venue policies** (`no-unsourced-venue-facts`,
+   fixed). When the skill cites a venue's word count, OA model,
+   scope statement, or preprint policy, it must caveat
+   training-data staleness and recommend verifying via the
+   journal's current instructions. Better: when uncertain, say so
+   (`no-inference-beyond-evidence`, fixed).
+4. **Never include predatory venues in recommendation tiers**
+   (`no-predatory-venue-recommendation`, fixed). Per
+   [[predatory-publishing]]. The skill maintains a
    `## Predatory signals detected` section even when no flags
    fired, to make the check visible.
 5. **Per-journal, not per-publisher, judgments.** MDPI, for
@@ -74,24 +86,84 @@ The recommendation **never includes a predatory venue**. See
    serious concerns. The skill judges the specific venue, not the
    parent publisher.
 6. **Honest about probability.** Tiers are qualitative.
-   Acceptance is not predicted.
+   Acceptance is not predicted (`no-numeric-outcome-probability`,
+   fixed).
 7. **No auto-submission, no cover-letter generation.** The
    recommendation reasoning *is* a useful cover-letter argument
    for the author, but this skill produces only the recommendation.
 8. **The structured output shape is unchanged across guidance
    levels** — only the framing prose around it changes (see
    "Conversational style" below).
+9. **Decline by default if `style.audience` is too broad**
+   (`audience-granularity-required`, scope). "Biologists" is not
+   enough to assess audience fit. Ask for a narrower audience and
+   say how to override. On override, mark the audience axis
+   `cannot-assess` and assess the rest.
+10. **Ask before editorial-side use** (`editorial-side-use`,
+    policy, default ask). If the user is acting as a reviewer or
+    editor of a submitted manuscript, state the concern and its
+    source (reviewer AI policies; NIH prohibits AI in NIH peer
+    review outright) and ask whether to proceed. Not being an
+    author does not trigger it on its own: a colleague checking a
+    pre-submission draft shared with them is not editorial-side
+    use.
+11. **Benchmark papers come from the bibliography or a check in
+    this session** (`no-parametric-citations`, fixed). Name a
+    benchmark paper only if it is in the manuscript's bibliography
+    or was verified against an authoritative record (Crossref,
+    PubMed, the venue's own site) in this session. Otherwise
+    describe the search that would find one.
+
+## Guards and author overrides
+
+Per [[author-authority]], the author decides what this skill may
+do. The guards are declared in `manifest.yaml`:
+
+- **Policy:** `editorial-side-use` (ask).
+- **Scope:** `target-type-required`, `outline-phase`,
+  `audience-granularity-required` (all refuse).
+- **Accuracy (fixed):** `no-numeric-outcome-probability`,
+  `no-invented-manuscript-facts`,
+  `no-predatory-venue-recommendation`, `no-unsourced-venue-facts`,
+  `no-parametric-citations`, `no-inference-beyond-evidence`.
+
+When a policy or scope guard fires, state its concern and source
+in one line, at every guidance level including `terse`. Then the
+first of these that applies decides:
+
+1. **A per-run answer.** What the author says in this run wins in
+   either direction.
+2. **`meta.overrides`.** An entry naming the guard and `venue-fit`
+   (or `"*"`) means proceed without asking. Still state the
+   concern.
+3. **The default.** For `ask`, ask whether to proceed. For
+   `refuse`, decline and say how to override: answer "proceed" in
+   this run, or add the guard under `meta.overrides` in
+   `MANUSCRIPT_STATE.yaml`.
+
+An accuracy guard is fixed. If asked to override it, say that it
+protects the correctness of the output and cannot be overridden.
+
+When the skill proceeds past a policy or scope guard in this run
+(including an `ask` guard answered yes), the report carries one
+line, `Overrides applied: <guard ids>`, directly under its title.
+Omit the line when no override was applied. Confirming a
+predatory-flagged declared venue (see "Predatory refusal") is not
+a guard override and does not add the line.
 
 ## Inputs you should expect
 
 **Required from `MANUSCRIPT_STATE.yaml`:**
 
-- `project.target_type` (load-bearing; refuse if unset).
+- `project.target_type` (load-bearing; the `target-type-required`
+  guard).
 - `project.title` and `core_claims` (the basis for scope and
   significance fit).
-- `document_phase.current` (load-bearing: refuse on `outline`).
+- `document_phase.current` (load-bearing: the `outline-phase`
+  guard).
 - `style.audience` (for audience fit; required at meaningful
-  granularity — "biologists" is not enough).
+  granularity — "biologists" is not enough; the
+  `audience-granularity-required` guard).
 
 **Optional from `MANUSCRIPT_STATE.yaml`:**
 
@@ -106,6 +178,9 @@ The recommendation **never includes a predatory venue**. See
   at stringent venues.
 - `terminology.preferred` — used to refine scope matching at
   specialty journals.
+- `meta.overrides` — the author's standing overrides of this
+  skill's policy and scope guards (see "Guards and author
+  overrides").
 
 **Required from the manuscript:**
 
@@ -152,8 +227,10 @@ The author has committed to a venue. The skill:
 3. Offers 1–3 alternative venues if a fit mismatch is found.
 4. Does not silently re-rank — if the declared venue is a defensible
    fit, the skill says so. Honesty over differentiation.
-5. If declared venue triggers predatory flags, refuses
-   immediately and surfaces the predatory signals.
+5. If declared venue triggers predatory flags, stops
+   immediately, surfaces the predatory signals, and asks whether
+   to proceed (see "Predatory refusal"). The venue is never
+   tiered.
 
 ### State B: Considering (`candidate_venues` is non-empty)
 
@@ -172,7 +249,9 @@ The author has a short list. The skill:
 Open recommendation. The skill:
 
 1. Asks one clarifying question if any required input is thin
-   (target_type missing, audience too broad).
+   (target_type missing, audience too broad: the
+   `target-type-required` and `audience-granularity-required`
+   guards).
 2. Returns a full tiered list of recommended venues across the
    tiers.
 3. Offers to write the resulting top tier to
@@ -231,7 +310,12 @@ declared `target_venue` triggers heuristics, refusal is the
 correct response — explain which heuristics fired, point the
 author at Think.Check.Submit for verification, do not produce
 alternative recommendations until the author confirms whether to
-proceed.
+proceed. Heuristics produce false positives, so the author may
+confirm. That confirmation is this skill's own flow, not a guard
+override. After it, assess the declared venue's fit axes and keep
+the `## Predatory signals detected` section, but never place the
+venue in a tier: `no-predatory-venue-recommendation` is a fixed
+accuracy guard.
 
 ## Preprint mode — opt-in
 
@@ -425,18 +509,23 @@ Read `meta.guidance_level` from `MANUSCRIPT_STATE.yaml` (default
 
 Run the signal-based check-in once if appropriate (see
 [[guidance-level]]). The structured output is unchanged across
-levels — only framing changes.
+levels — only framing changes. A guard's one-line concern appears
+at every level.
 
 ## Operational protocol
 
 1. **Read the inputs.** `MANUSCRIPT_STATE.yaml` first (state
    detection, declared constraints, declared preferences),
    manuscript prose second (title, abstract, intro, available
-   sections). Detect the author state (A: decided, B:
-   considering, C: undecided).
-2. **Verify required inputs.** Refuse with explanation if
-   `target_type` is unset/`other`, if `document_phase.current` is
-   `outline`, or if `style.audience` is too broad to assess.
+   sections). Read `meta.overrides`. Detect the author state (A:
+   decided, B: considering, C: undecided).
+2. **Apply the guards.** `target-type-required` if
+   `target_type` is unset/`other`, `outline-phase` if
+   `document_phase.current` is `outline`,
+   `audience-granularity-required` if `style.audience` is too
+   broad to assess, and `editorial-side-use` if the user is acting
+   as a reviewer or editor of a submitted manuscript. Follow
+   "Guards and author overrides".
 3. **Apply hard filters.** If the author has declared
    open-access / max-APC / indexing / funder constraints, filter
    the candidate venue space *before* tiering. Honest about
@@ -490,6 +579,9 @@ detected` section appearing whether or not flags fired):
 ```markdown
 # Venue fit
 
+Overrides applied: <guard ids; this line only when the skill
+proceeded past a policy or scope guard in this run>
+
 ## Summary
 
 <one paragraph: author state (decided/considering/undecided),
@@ -501,7 +593,9 @@ the top 1-2 candidates from the recommended tier, key caveat>
 indexing): one paragraph on scope fit, audience fit,
 methodological fit, novelty bar, significance bar. One recent
 representative paper from the venue as a benchmark for the
-author to read. Explicit fit caveats per axis if any.>
+author to read, named only if it is in the bibliography or was
+verified in this session; otherwise the search that would find
+one. Explicit fit caveats per axis if any.>
 
 ## Preprint options
 
@@ -567,7 +661,11 @@ reasoning above is the source material for one).>
 - **Specific recent papers as benchmarks.** "Look at <paper> in
   <venue> from <year> — it's the closest match in approach to
   what you're doing." This is what careful submitters actually
-  do; the skill makes it explicit.
+  do; the skill makes it explicit. The paper is one from the
+  manuscript's bibliography or one verified against Crossref,
+  PubMed or the venue's site in this session, never one recalled
+  from memory. Without one, name the search ("recent <venue>
+  papers using <method>").
 - **The cover-letter argument is a side effect.** The reasoning
   prose for each tier is what the author needs to write in the
   cover letter. Calling this out at the end of the output is a
@@ -592,13 +690,16 @@ reasoning above is the source material for one).>
 - Produce per-venue acceptance probabilities. Tiers only.
 - Anchor recommendations on the author's past venues. History is
   calibration, not source.
-- Run on outline-phase manuscripts (refuse cleanly).
+- Run on outline-phase manuscripts without an override (decline
+  cleanly).
 - Auto-write to `MANUSCRIPT_STATE.yaml` without explicit author
   confirmation.
 - Auto-invoke another skill at the end of the output. Suggest
   only.
 - Operate when `project.target_type` is unset or `other`
-  (refuse and ask the author to set it).
+  without an override (decline and ask the author to set it).
+- Name a benchmark paper recalled from memory.
+- Treat an accuracy guard as overridable.
 - Produce a cover letter or any other prose-deliverable beyond
   the structured recommendation.
 
@@ -645,6 +746,13 @@ conventions:
   claims about the manuscript to make it fit a venue.
 - [[guidance-level]] — the framing-level convention all
   conversation-bearing skills honor.
+- [[author-authority]] — the guard convention. Target type,
+  outline phase, audience granularity and editorial-side use are
+  author-overridable defaults; the accuracy guards (no
+  probabilities, no predatory tiers, no invented venue or
+  manuscript facts, no benchmark papers from memory) are fixed.
+- [[hallucination-in-llm-citations]] — why benchmark papers are
+  named only from the bibliography or a check in this session.
 
 ## See also
 

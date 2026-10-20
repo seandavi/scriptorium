@@ -23,8 +23,9 @@ produces:
 modifies:
   - MANUSCRIPT_STATE.yaml#project.candidate_venues   # only on explicit author consent
 
-# document_phase values the skill is designed to operate on. Refuses
-# on outline-phase manuscripts (insufficient declared state).
+# document_phase values the skill is designed to operate on. Declines
+# outline-phase manuscripts by default (guard outline-phase;
+# insufficient declared state).
 # Consumed by docs build (reference/skills page generator).
 lifecycle_phases:
   - review
@@ -70,10 +71,11 @@ inputs:
     required: true
     description: >
       MANUSCRIPT_STATE.yaml from the project root. The skill reads
-      project.target_type (required), project.title, core_claims,
-      style.audience, document_phase.current (refuses on outline),
-      and one or both of project.target_venue / project.candidate_venues
-      to detect the author's decision state.
+      project.target_type (required by default), project.title,
+      core_claims, style.audience, document_phase.current (declines
+      on outline by default), meta.overrides (author overrides of
+      the guards below), and one or both of project.target_venue /
+      project.candidate_venues to detect the author's decision state.
     schema: manuscript-state.schema.json
   - name: manuscript_text
     required: true
@@ -111,6 +113,62 @@ grounding:
   - knowledge/peer-review/preprint-landscape.md
   - knowledge/peer-review/editorial-decision-making.md
   - knowledge/scientific-writing/significance-positioning.md
+  - knowledge/citations/hallucination-in-llm-citations.md
+  - knowledge/conventions/author-authority.md
+
+# Guards the skill applies, per knowledge/conventions/author-authority.md.
+# Policy and scope guards are author-overridable defaults; accuracy
+# guards are fixed.
+guards:
+  - id: editorial-side-use
+    kind: policy
+    summary: "Running this as a reviewer or editor of a submitted manuscript uploads a confidential manuscript and hands judgement to AI, which reviewer AI policies restrict (NIH prohibits it outright for NIH peer review)."
+    source: "NIH NOT-OD-23-149; Elsevier \"Generative AI policies for journals\" (June 2026); Springer Nature \"AI Use in Peer Review\"; ICMJE Recommendations Section V (January 2026)"
+    default: ask
+  - id: outline-phase
+    kind: scope
+    summary: "The manuscript is at outline phase; there is not yet enough declared prose for this skill to work on."
+    source: "knowledge/conventions/declared-work-scope.md"
+    default: refuse
+  - id: target-type-required
+    kind: scope
+    summary: "project.target_type is unset or 'other'; the venue logic differs by target type."
+    source: "knowledge/conventions/declared-work-scope.md"
+    default: refuse
+  - id: audience-granularity-required
+    kind: scope
+    summary: "style.audience is too broad to assess audience fit."
+    source: "knowledge/conventions/declared-work-scope.md"
+    default: refuse
+  - id: no-parametric-citations
+    kind: accuracy
+    summary: "Citations never come from model memory: only works in the manuscript's bibliography, or ones verified against an authoritative record in this session, are named."
+    source: "knowledge/citations/hallucination-in-llm-citations.md"
+    default: refuse
+  - id: no-inference-beyond-evidence
+    kind: accuracy
+    summary: "When the input cannot support a judgement, the skill says 'cannot determine' or 'low confidence' rather than forcing a confident answer."
+    default: refuse
+  - id: no-invented-manuscript-facts
+    kind: accuracy
+    summary: "The skill never states facts about the author's work (figure content, who did what, what the study did) that the manuscript and declared state do not contain."
+    source: "knowledge/conventions/declared-work-scope.md"
+    default: refuse
+  - id: no-numeric-outcome-probability
+    kind: accuracy
+    summary: "No numeric probability of acceptance or rejection: reviewer agreement is too low (kappa about 0.17) for per-manuscript estimates."
+    source: "knowledge/peer-review/editorial-decision-making.md"
+    default: refuse
+  - id: no-predatory-venue-recommendation
+    kind: accuracy
+    summary: "A venue that trips predatory-publishing heuristics is never placed in a recommendation tier."
+    source: "knowledge/peer-review/predatory-publishing.md"
+    default: refuse
+  - id: no-unsourced-venue-facts
+    kind: accuracy
+    summary: "Venue policies and figures recalled from model memory are flagged as possibly stale; figures with no published source are not quoted."
+    source: "knowledge/peer-review/predatory-publishing.md"
+    default: refuse
 
 # Preservation constraints — what the skill must hold inviolate.
 preservation_constraints:
@@ -131,6 +189,6 @@ non_goals:
   - Substituting for authoritative venue verification
     (Think.Check.Submit, DOAJ, SHERPA/RoMEO remain the
     references).
-  - Operating on outline-phase manuscripts.
-  - Editor-side or reviewer-side use; this is author-side
-    decision support only.
+  - Operating on outline-phase manuscripts, by default.
+  - Editor-side or reviewer-side use without asking; this is
+    author-side decision support.
