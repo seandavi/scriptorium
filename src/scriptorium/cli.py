@@ -3,7 +3,8 @@
 The CLI exposes six subcommands:
 
 * ``install`` — copy or link the plugin into a Claude Code plugins dir.
-* ``validate`` — lint a ``MANUSCRIPT_STATE.yaml`` against the JSON Schema.
+* ``validate`` — lint a ``MANUSCRIPT_STATE.yaml`` against the JSON Schema
+  and check ``meta.overrides`` against the bundled skills' guards.
 * ``prompt-pack`` — emit bundled skill prompts as per-skill files or one
   concatenated document (``--single-file``) for platform-neutral use.
 * ``list`` — list bundled skills with descriptions and grounding references.
@@ -389,6 +390,7 @@ def _iter_skills() -> list[dict[str, Any]]:
         grounding: list[str] = []
         prompt: str | None = None
         category: str | None = None
+        guards: list[dict[str, Any]] = []
         skill_md = entry.joinpath("SKILL.md")
         if skill_md.is_file():
             description, grounding = _parse_skill_metadata(skill_md.read_text(encoding="utf-8"))
@@ -403,6 +405,11 @@ def _iter_skills() -> list[dict[str, Any]]:
                 # manifest.yaml description is the source of truth for
                 # prompt-pack output; collapse YAML folded-scalar whitespace.
                 description = " ".join(raw_description.split()).strip()
+            raw_guards = manifest.get("guards")
+            if isinstance(raw_guards, list):
+                guards = [
+                    g for g in raw_guards if isinstance(g, dict) and isinstance(g.get("id"), str)
+                ]
         prompt_md = entry.joinpath("prompt.md")
         if prompt_md.is_file():
             prompt = prompt_md.read_text(encoding="utf-8")
@@ -413,9 +420,50 @@ def _iter_skills() -> list[dict[str, Any]]:
                 "grounding": grounding,
                 "prompt": prompt,
                 "category": category,
+                "guards": guards,
             }
         )
     return out
+
+
+def _override_errors(
+    overrides: list[dict[str, Any]], skills: list[dict[str, Any]]
+) -> list[tuple[str, str]]:
+    """Cross-check schema-valid ``meta.overrides`` entries against skill guards.
+
+    Returns ``(location, message)`` pairs. See
+    ``knowledge/conventions/author-authority.md``.
+    """
+    kinds: dict[str, str] = {}
+    declared_by: dict[str, list[str]] = {}
+    for skill in skills:
+        for guard in skill.get("guards", []):
+            kinds[guard["id"]] = str(guard.get("kind"))
+            declared_by.setdefault(guard["id"], []).append(skill["name"])
+
+    errors: list[tuple[str, str]] = []
+    for index, override in enumerate(overrides):
+        location = f"meta/overrides/{index}"
+        guard_id = override["guard"]
+        if guard_id not in declared_by:
+            errors.append((location, f"unknown guard {guard_id!r}: no bundled skill declares it"))
+            continue
+        if kinds[guard_id] == "accuracy":
+            errors.append(
+                (location, f"guard {guard_id!r} is an accuracy guard and cannot be overridden")
+            )
+            continue
+        for skill_name in override["skills"]:
+            if skill_name != "*" and skill_name not in declared_by[guard_id]:
+                declaring = ", ".join(declared_by[guard_id])
+                errors.append(
+                    (
+                        location,
+                        f"skill {skill_name!r} does not declare guard {guard_id!r} "
+                        f"(declared by: {declaring})",
+                    )
+                )
+    return errors
 
 
 def _remove_existing(dest: Path) -> None:
@@ -491,7 +539,11 @@ def install(mode: str, target: Path | None, force: bool) -> None:
     type=click.Path(exists=True, dir_okay=False, path_type=Path),
 )
 def validate(path: Path) -> None:
-    """Validate a MANUSCRIPT_STATE.yaml file against the JSON Schema."""
+    """Validate a MANUSCRIPT_STATE.yaml file against the JSON Schema.
+
+    Also checks ``meta.overrides`` against the guards the bundled skills
+    declare in their ``manifest.yaml``.
+    """
     try:
         data = yaml.safe_load(path.read_text(encoding="utf-8"))
     except yaml.YAMLError as exc:
@@ -508,6 +560,12 @@ def validate(path: Path) -> None:
             location = "/".join(str(p) for p in err.absolute_path) or "<root>"
             click.echo(f"  {location}: {err.message}", err=True)
         raise click.ClickException(f"{path} is invalid ({len(errors)} error(s)).")
+    overrides = data.get("meta", {}).get("overrides", [])
+    override_errors = _override_errors(overrides, _iter_skills()) if overrides else []
+    if override_errors:
+        for location, message in override_errors:
+            click.echo(f"  {location}: {message}", err=True)
+        raise click.ClickException(f"{path} is invalid ({len(override_errors)} error(s)).")
     click.echo(f"{path}: valid")
 
 
