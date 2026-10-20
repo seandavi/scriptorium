@@ -107,9 +107,9 @@ a wrong one.
      methods-fleshing before the downstream audit.
 4. Identify rejected candidates explicitly — particularly when
    the manuscript is on the edge between two designs.
-5. Recommend the next step (downstream `reporting-guideline-compliance`
-   in v0.3, or manual checklist walkthrough at the EQUATOR
-   URL).
+5. Recommend the next step (downstream
+   `reporting-guideline-compliance`, or manual checklist
+   walkthrough at the EQUATOR URL).
 
 ## Output format
 

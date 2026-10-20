@@ -13,7 +13,8 @@ description: >
   AI-extensions where applicable. Outputs the inferred
   guideline(s) with confidence levels and per-inference
   rationale. Stops at the inference step; the downstream
-  checklist audit is a separate v0.3 skill.
+  checklist audit is a separate skill
+  (reporting-guideline-compliance).
 
 # Upstream inference in the reporting-guidelines workflow.
 # Critique-shaped output; modifies no manuscript content.
@@ -31,7 +32,7 @@ lifecycle_phases:
   - revision
 
 # Explicit invocation. Invoked when the author asks "which
-# checklist applies?" or before running the v0.3
+# checklist applies?" or before running the
 # reporting-guideline-compliance skill.
 invocation: explicit
 
@@ -82,14 +83,14 @@ preservation_constraints:
   - refuse_on_outline_phase
   - never_declare_authoritatively   # recommendation only
   - never_force_confident_answer    # low confidence is honest
-  - never_run_the_full_checklist    # separate v0.3 skill
+  - never_run_the_full_checklist    # separate downstream skill
   - never_write_to_manuscript_state # schema doesn't carry this field
   - prefer_current_versions         # PRISMA 2020 over 2009; TRIPOD+AI 2024 over TRIPOD 2015 for AI
 
 # What this skill explicitly is NOT.
 non_goals:
-  - Running the full reporting-guideline-compliance audit. Separate v0.3
-    skill; this is the upstream inference.
+  - Running the full reporting-guideline-compliance audit.
+    Separate downstream skill; this is the upstream inference.
   - Declaring a checklist as authoritatively applicable. The
     skill recommends; the author confirms.
   - Operating on outline-phase manuscripts.
