@@ -4,6 +4,7 @@ description: Propose page-limit-driven length reductions on a manuscript section
 grounding:
   - knowledge/conventions/guidance-level.md
   - knowledge/conventions/declared-work-scope.md
+  - knowledge/conventions/author-authority.md
   - knowledge/scientific-writing/narrative-frameworks.md
   - knowledge/editing/semantic-preservation.md
   - knowledge/editing/copyediting-vs-developmental.md
@@ -38,19 +39,66 @@ without the user re-asking. The author owns their voice and their
 section length; an unrequested compression — even a "helpful" one —
 is unwelcome.
 
-If the user has not specified a section, ask. Do not compress an
-entire manuscript at once — the unit of work is one section at a time
-(introduction, abstract, results, discussion, or a named subsection).
-Single-section scope is what makes the diff reviewable.
+If the user has not specified a section, ask. The unit of work is one
+section at a time (introduction, abstract, results, discussion, or a
+named subsection). Single-section scope is what makes the diff
+reviewable; a whole-manuscript pass is outside the default scope (the
+`single-section-unit` guard below).
 
 If no length target is declared in `MANUSCRIPT_STATE.yaml#constraints.max_word_count`
-and the user has not supplied one at invocation, ask. Refuse to
-"just shorten" without a target — compression without a target is an
-opinion about the author's prose, not a structural service.
+and the user has not supplied one at invocation, ask for one. If the
+author does not give one, the `length-target-required` guard below
+applies: by default the skill does not "just shorten" without a
+target — compression without a target is an opinion about the
+author's prose, not a structural service.
+
+## Guards and overrides
+
+This skill's guards are declared in `manifest.yaml` and follow
+[[author-authority]]: the author decides what the skill may do, except
+where proceeding would make the output wrong.
+
+- **`single-section-unit` (scope; default refuse).** If the author
+  asks for a whole-manuscript pass, state the concern and its source
+  in one line: "This skill transforms one section per run so every
+  change stays reviewable; a whole-manuscript pass is outside its
+  default scope (`single-section-unit`; source: this skill's
+  reviewability design)." Then decline, and say how to override:
+  answer "proceed" in this run, or add an entry for this guard and
+  this skill under `meta.overrides` in `MANUSCRIPT_STATE.yaml`. On
+  override, work through the sections one at a time, in manuscript
+  order, with a complete report for each section.
+- **`length-target-required` (scope; default refuse).** If no target
+  is declared and the author gives none when asked, state the concern
+  and its source in one line: "No length target is declared or
+  supplied; compression without a target is a judgement about the
+  prose, not a service the author asked for
+  (`length-target-required`; source: this skill's design)." Then
+  decline, and name the same two override routes. On override,
+  propose only cheap reductions (redundant phrasing, hedging stacks,
+  filler discourse markers), no structural edits, and label the run
+  untargeted in the Summary.
+- **Accuracy guards (fixed).** `preserve-cited-support`,
+  `preserve-quantities-verbatim` and `preserve-claim-set` are the hard
+  preservation constraints below. `no-false-verification-claims`
+  means the preservation report is never clean when a proposed edit
+  is not. Neither a per-run answer nor `meta.overrides` lifts them; if
+  asked to, say the guard protects correctness and cannot be
+  overridden.
+
+Read `meta.overrides` with the rest of `MANUSCRIPT_STATE.yaml`. For
+each scope guard, the first of these decides: the author's answer in
+this run, in either direction; an entry under `meta.overrides` naming
+the guard and this skill (or `"*"`); the default, refuse. State the
+one-line concern at every guidance level, including `terse`, and even
+when an override applies. When the run proceeds past a scope guard,
+the output carries an `Overrides applied:` line listing the guard ids
+(see Output format); otherwise the line is omitted.
 
 ## Hard preservation constraints
 
-These are non-negotiable. Every proposed edit must satisfy all of
+These are non-negotiable: they are the skill's fixed accuracy guards,
+and no override lifts them. Every proposed edit must satisfy all of
 them. If you cannot satisfy them while reducing length, do **not**
 propose the edit — surface it in the "Edits NOT proposed" section
 with the reason.
@@ -227,10 +275,11 @@ the source.
 1. **Read the section, `MANUSCRIPT_STATE.yaml`, the bibliography,
    and the length target.** You need the bibliography to verify
    citation preservation; you need the state file for `core_claims`,
-   `terminology`, `style.voice`, `style.tone`, and
-   `constraints.max_word_count`. If the user has supplied a target
-   at invocation that differs from the state file, use the
-   invocation target and surface the discrepancy in the report.
+   `terminology`, `style.voice`, `style.tone`,
+   `constraints.max_word_count`, and `meta.overrides`. If the user
+   has supplied a target at invocation that differs from the state
+   file, use the invocation target and surface the discrepancy in
+   the report.
 2. **Measure baseline.** Count words, characters, and lines of the
    source section. Compute the gap to the target.
 3. **Inventory before proposing edits.** Extract:
@@ -277,6 +326,11 @@ this order:
 ```markdown
 # Compression
 
+Overrides applied: <guard ids>
+
+(Only when this run proceeded past a scope guard, through a per-run
+answer or `meta.overrides`. Omit the line otherwise.)
+
 ## Summary
 
 | Measure | Source | Target | Proposed-after |
@@ -285,7 +339,9 @@ this order:
 | Characters | N | — | N' |
 | Lines | N | — | N' |
 
-- Target met: yes / no.
+- Target met: yes / no. (Untargeted run under a
+  `length-target-required` override: Target is "none" and this line
+  reads "n/a, untargeted run; cheap reductions only".)
 - Reduction breakdown: N words from non-load-bearing redundancy;
   M words from structural reduction (paragraph merges,
   parenthetical moves).
@@ -420,12 +476,15 @@ the current run where relevant.)
   single surviving hedge — and only after recording the change in
   the preservation breakdown.
 - Run without an explicit user invocation on a specific section.
-- Compress an entire manuscript at once.
+- Compress an entire manuscript at once unless the author has
+  overridden `single-section-unit`; even then, one section at a time.
 - Hide a preservation violation behind a clean-looking report. If
   it does not satisfy the contract, surface it.
-- Run without a declared or supplied length target. A target-less
-  compression is an opinion about the author's prose, not a
-  service.
+- Run without a declared or supplied length target unless the author
+  has overridden `length-target-required`. A target-less compression
+  is an opinion about the author's prose, not a service; an
+  overridden run is labelled untargeted and proposes cheap
+  reductions only.
 
 ## Grounding
 
@@ -472,6 +531,9 @@ This skill is grounded in scriptorium's knowledge layer:
   substitution; em-dash overuse, rule-of-three constructions and
   inflated symbolism are practice-derived tells the note does not
   catalogue.
+- [[author-authority]] — which guards the author can override and
+  how; the preservation constraints are accuracy guards and stay
+  fixed.
 
 A drift away from these groundings either gets the skill updated or
 gets the grounding extended; never both unchanged.

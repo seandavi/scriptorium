@@ -9,8 +9,9 @@ declared core claim, and every declared terminology choice.
 output is a structured markdown report the author reads, accepts,
 or rejects edit-by-edit. The manuscript on disk is unchanged.
 **Invocation:** explicit. Never proactive, never as a follow-up to
-another skill without the user re-asking. Refuses to run without a
-declared or supplied length target.
+another skill without the user re-asking. By default, declines to run
+without a declared or supplied length target; the author can override
+that (see [Guards and overrides](#guards-and-overrides)).
 
 ## Why "transformation" that suggests but does not apply
 
@@ -80,10 +81,10 @@ result to check that the cuts did not damage flow.
 - **Restructure the section.** Paragraph reordering, claims
   hierarchy changes, narrative-framework shifts — these are
   `argumentative-flow`'s territory.
-- **Compress the whole manuscript at once.** Single-section scope is
-  what makes the per-edit diff reviewable.
-- **Run without a length target.** Target-less compression is an
-  opinion about the author's prose, not a service.
+- **Compress the whole manuscript at once**, by default.
+  Single-section scope is what makes the per-edit diff reviewable.
+- **Run without a length target**, by default. Target-less
+  compression is an opinion about the author's prose, not a service.
 
 ## Hard preservation constraints
 
@@ -110,6 +111,27 @@ meaning flips. The skill reads each proposed edit against the source
 for semantic preservation; it does not delegate that check to a
 similarity metric.
 
+## Guards and overrides
+
+The guards are declared in [`manifest.yaml`](manifest.yaml) and follow
+[`author-authority`](../../knowledge/conventions/author-authority.md).
+
+| Guard | Kind | Default | Author can override? |
+|---|---|---|---|
+| `single-section-unit` | scope | refuse | Yes: answer "proceed" in the run, or list it under `meta.overrides` |
+| `length-target-required` | scope | refuse | Yes: as above |
+| `preserve-cited-support`, `preserve-quantities-verbatim`, `preserve-claim-set` | accuracy | refuse | No |
+| `no-false-verification-claims` | accuracy | refuse | No |
+
+When a scope guard fires, the skill states the concern in one line and
+declines unless the author overrides it. With `single-section-unit`
+overridden it works through the sections one at a time, one report
+each. With `length-target-required` overridden it proposes cheap
+reductions only and labels the run untargeted. Either way the output
+carries an `Overrides applied: <guard ids>` line. That line is the
+skill's one output addition under author authority; it is absent when
+no override was applied.
+
 ## Inputs
 
 - **Section text** — a single named section (introduction, abstract,
@@ -120,13 +142,16 @@ similarity metric.
   pass can verify each is preserved across proposed edits.
 - **Length target** — read from
   `MANUSCRIPT_STATE.yaml#constraints.max_word_count` by default;
-  the user may supply a different target at invocation. The skill
-  refuses to run without a target.
+  the user may supply a different target at invocation. Without a
+  target the skill asks for one, then declines by default
+  (`length-target-required`).
 
 ## Output structure
 
 ```markdown
 # Compression
+
+Overrides applied: <guard ids>   (only when an override was applied)
 
 ## Summary
 | Measure | Source | Target | Proposed-after |
@@ -178,6 +203,9 @@ the preservation contract exists to prevent.
 The `MANUSCRIPT_STATE.yaml#constraints.max_word_count` field is the
 declared target; the user may supply a stricter target at
 invocation. If neither is set, the skill asks before doing anything.
+An author who still wants a pass without a target can override
+`length-target-required`; the run is then labelled untargeted and
+kept to cheap reductions.
 
 ## Using it
 
@@ -256,6 +284,8 @@ This skill is grounded in scriptorium's knowledge layer:
   substitution; em-dash overuse, rule-of-three constructions and
   inflated symbolism are practice-derived tells the note does not
   catalogue.
+- [`author-authority`](../../knowledge/conventions/author-authority.md)
+  — which guards the author can override and how.
 
 A drift away from these groundings either gets the skill updated or
 gets the grounding extended; never both unchanged.
@@ -277,12 +307,14 @@ gets the grounding extended; never both unchanged.
   the load-bearing-vs-extraneous classification carefully.
   Honest passes leave compression on the table the author may still
   want to make.
-- **Target is required.** A target-less compression is an opinion
-  about the author's prose; with a target, it's a service. The
-  skill refuses to run without one.
+- **Target is required by default.** A target-less compression is an
+  opinion about the author's prose; with a target, it's a service.
+  The skill declines to run without one unless the author overrides
+  `length-target-required`.
 - **Single-section scope.** Reviewable per-edit diffs require small
-  surface area. A "compress the whole manuscript" mode is implicitly
-  declined — splitting into per-section passes is the design.
+  surface area. A "compress the whole manuscript" request is declined
+  by default (`single-section-unit`); with the author's override it
+  still runs as per-section passes, which is the design.
 
 ## See also
 
