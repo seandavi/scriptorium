@@ -49,8 +49,11 @@ by being concrete about its limits.
   See [`declared-work-scope`](knowledge/conventions/declared-work-scope.md).
 - **No autonomous reviewing.** `reviewer-simulation` and
   `desk-rejection-risk` are author-side only. Editorial-side use
-  violates ICMJE, NIH, and major-publisher peer-review policy, and
-  the skills refuse to run on a manuscript the user did not author.
+  would mean uploading a confidential manuscript and delegating the
+  critique to AI, which current NIH and publisher reviewer policies
+  rule out
+  ([`peer-review-platforms`](knowledge/prior-art/peer-review-platforms.md)).
+  The skills refuse to run on a manuscript the user did not author.
 - **No overall writing-quality score.** No letter grade, no
   Flesch-Kincaid, no aggregate number. Those systematically misrate
   scientific prose and would be theater rather than information.
@@ -122,7 +125,7 @@ Critique skills (`citation-audit`, `reviewer-simulation`,
 **Not promised (sentence-level voice preservation).** Scriptorium
 does not claim that running a transformation skill leaves your
 prose "sounding like you" at the sentence level. The evidence is
-the Kobak et al. 2024 lexical-fingerprint work: LLM-edited prose
+the Kobak et al. 2025 lexical-fingerprint work: LLM-edited prose
 is detectable at corpus scale, and correcting it at sentence scale
 is not reliable. The conservative-edit posture above minimizes the
 surface area of changes; it does not promise that nothing about
