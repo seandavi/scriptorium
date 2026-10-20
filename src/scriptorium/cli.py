@@ -18,11 +18,11 @@ from __future__ import annotations
 import json
 import re
 import shutil
+import sys
 import uuid
 from collections.abc import Iterator
 from datetime import datetime, timezone
 from importlib import resources
-from importlib.abc import Traversable
 from pathlib import Path
 from typing import Any
 
@@ -31,6 +31,11 @@ import yaml
 from jsonschema import Draft202012Validator
 
 from scriptorium import __version__
+
+if sys.version_info >= (3, 11):
+    from importlib.resources.abc import Traversable
+else:  # importlib.abc.Traversable was removed in Python 3.14
+    from importlib.abc import Traversable
 
 PACKAGE = "scriptorium"
 SCHEMA_SUBDIR = "_schemas"
