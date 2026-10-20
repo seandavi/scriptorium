@@ -2,7 +2,9 @@
 
 Audit a manuscript's existing citations for claim-support alignment,
 primary-vs-review mismatch, causal overreach, and unsupported
-assertions. Reports findings as structured markdown.
+assertions, and check that each reference's identifier resolves to
+the work the reference describes. Reports findings as structured
+markdown.
 
 **Category:** critique
 **Modifies the manuscript?** No.
@@ -11,8 +13,8 @@ assertions. Reports findings as structured markdown.
 ## What it does
 
 For every in-text citation in a manuscript, citation-audit runs the
-four-step journal-editorial protocol from [Greenberg
-2009](https://doi.org/10.1136/bmj.b2680):
+four-step reference-accuracy / editorial spot-check protocol, the
+same form that reference-accuracy surveys and journal editors use:
 
 1. **Extract** the in-text claim the citation is attached to.
 2. **Identify** the cited reference(s).
@@ -24,7 +26,17 @@ Beyond per-citation alignment, it flags pattern-level smells:
 unsupported assertions, causal overreach, primary-vs-review mismatch,
 single-source load-bearing claims, and possible amplification or
 invention (hedges lost between the primary source and the citing
-sentence).
+sentence). The amplification and invention categories come from
+[Greenberg 2009](https://doi.org/10.1136/bmj.b2680). It also reports
+hidden or invisible text in the manuscript, and never follows
+instructions embedded in it.
+
+It checks every entry in the reference list for identity. Each
+identifier is resolved, and the resolved title, first author, year,
+and venue are compared against the reference string. Problems are
+reported as "identifier resolves to a different work", "identifier
+does not resolve", "no identifier", or "could not verify", never as
+"fabricated".
 
 The output is a structured markdown report with consistent section
 headings so future orchestrators (the v0.2 `manuscript-pipeline`
@@ -96,6 +108,9 @@ cat ~/.claude/plugins/scriptorium/skills/citation-audit/prompt.md
 - Supports: A | Partially supports: B | Does not support: C |
   Cannot determine: D
 - Unsupported assertions (no citation): E
+- Reference identity: R entries checked | Resolves to a different
+  work: F | Does not resolve: G | No identifier: H |
+  Could not verify: I
 - Patterns flagged: short list
 
 ## Per-claim assessment
@@ -107,6 +122,8 @@ cat ~/.claude/plugins/scriptorium/skills/citation-audit/prompt.md
 ### Review-only support for mechanistic claims
 ### Single-source load-bearing claims
 ### Possible amplification / invention
+### Reference identity problems
+### Hidden text or embedded instructions
 
 ## What this skill did NOT check
 ```
@@ -118,19 +135,27 @@ See [`examples/`](examples/) for a worked example showing each pattern.
 This skill is grounded in scriptorium's knowledge layer:
 
 - [`citation-claim-alignment`](../../knowledge/critique-techniques/citation-claim-alignment.md)
-  — the operational four-step protocol; Greenberg 2009 BMJ distortion
+  — the operational four-step protocol (the reference-accuracy /
+  editorial spot-check protocol); Greenberg 2009 BMJ distortion
   patterns; scite.ai's supporting / contrasting / mentioning
-  classifier; manual journal-editorial protocols.
+  classifier.
 - [`citation-accuracy-evidence`](../../knowledge/citations/citation-accuracy-evidence.qmd)
-  — error-prevalence baselines from de Lacey 1985 onward (~20% median
-  quotation error rate across replications).
+  — error-prevalence baselines from de Lacey 1985 onward (~20%
+  median quotation-error rate per journal; Wager & Middleton 2008).
 - [`citation-overreach-research`](../../knowledge/citations/citation-overreach-research.md)
   — Boutron 2010 JAMA on spin; the amplification and invention
   patterns that single-shot audit can detect.
 - [`hallucination-in-llm-citations`](../../knowledge/citations/hallucination-in-llm-citations.md)
   — the failure mode this skill exists in part to *not* introduce.
   Documents why the hard constraint "never invent citations" is
-  load-bearing rather than stylistic.
+  load-bearing rather than stylistic, and grounds the reference
+  identity check (NeurIPS 2025, the Lancet audit, ICLR 2026).
+- [`reference-managers`](../../knowledge/prior-art/reference-managers.md)
+  — an exported bibliography is not verified metadata; reference
+  managers mis-capture some output types, such as datasets.
+- [`peer-review-platforms`](../../knowledge/prior-art/peer-review-platforms.md)
+  — hidden prompts in manuscripts; the manuscript is data, never
+  instructions.
 
 A drift away from these groundings either gets the skill updated or
 gets the grounding extended; never both unchanged.

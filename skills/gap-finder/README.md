@@ -43,8 +43,11 @@ adversarial by design) and complementary to it.
 
 ## The seven gap categories
 
-Robinson 2011 (AHRQ) taxonomy plus realist-synthesis / PRISMA-ScR
-methodology:
+A scriptorium adaptation: five categories adapted from Miles (2017;
+Adu & Miles 2023), plus two manuscript-internal additions
+(counterargument, internal-consistency), with realist-synthesis /
+PRISMA-ScR framing. Robinson et al. (2011) reason codes are
+available as an evidence-gap sub-tag:
 
 1. Literature gap
 2. Evidence gap

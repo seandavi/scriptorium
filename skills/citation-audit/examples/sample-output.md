@@ -6,8 +6,12 @@
 - Supports: 1 | Partially supports: 1 | Does not support: 2 |
   Cannot determine: 0
 - Unsupported assertions (no citation): 2
+- Reference identity: 3 entries checked | Resolves to a different
+  work: 0 | Does not resolve: 0 | No identifier: 3 |
+  Could not verify: 0
 - Patterns flagged: 1 causal overreach, 1 review-only mechanistic
-  support, 2 unsupported assertions, 1 citation–claim mismatch
+  support, 2 unsupported assertions, 1 citation–claim mismatch,
+  3 entries without identifiers
 
 ## Per-claim assessment
 
@@ -54,6 +58,14 @@
   ("correlation; causation needs further work") becomes a stated
   mechanism through citation of a narrative review.
 
+### Reference identity problems
+
+- chen2023 — no identifier. The entry has no DOI, PMID, or arXiv ID,
+  so its title, first author, year, and venue could not be checked
+  against a resolved record.
+- kumar2022review — no identifier (as above).
+- martinez2024 — no identifier (as above).
+
 ## What this skill did NOT check
 
 - Whether the full text of kumar2022review (which we did not
@@ -62,8 +74,10 @@
 - Whether the chen2023 high-fat-diet caveat — which the manuscript's
   Limitations section does acknowledge — fully addresses the
   generalisability concern.
-- Whether the bibliography itself contains errors (DOI accuracy,
-  author-list completeness, etc.).
+- Whether the bibliography contains errors beyond the reference
+  identity check (author-list completeness, page numbers, etc.).
+  No entry carried an identifier, so the identity check could not
+  confirm any of the three references.
 - Whether any of the cited papers have been retracted.
 - Whether a better-supporting primary citation exists somewhere in
   the literature for the TMAO mechanistic claim. Suggesting

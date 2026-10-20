@@ -84,3 +84,4 @@ establishing causation.
 | "Established role of TMAO as a primary driver of atherogenesis" | (in-text) | Unsupported assertion — no citation |
 | "Stronger predictor than statin use" | martinez2024 | Citation overreach — the cited cohort found the two statistically indistinguishable, not one stronger |
 | First sentence's reference to "growing literature" | (in-text) | Unsupported general claim |
+| No bibliography entry carries a DOI, PMID, or arXiv ID | all three entries | Reference identity: no identifier |
