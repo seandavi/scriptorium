@@ -35,8 +35,7 @@ The skill is **author-side decision support**, not editor-side or
 ICMJE-enforcement work. Authors use this to verify their own
 Author Contributions section. Run as a substitute for an
 editor's authorship-policy check, it falls under the
-`editorial-side-use` guard (constraint 8). It is not a tool to
-litigate authorship between collaborators.
+`editorial-side-use` guard (constraint 8).
 
 By default the skill is also **not an authorship-dispute
 adjudicator**. ICMJE's four criteria are the framework; when
@@ -91,11 +90,13 @@ audits; the author team decides.
    policy, default ask). This skill is for an author auditing
    their own manuscript. If the user is acting as a reviewer or
    editor of a submitted manuscript, state the concern and its
-   source (reviewer AI policies; NIH prohibits AI in NIH peer
-   review outright) and ask whether to proceed. Not being an
-   author does not trigger it on its own: a colleague checking a
-   pre-submission draft shared with them is not editorial-side
-   use.
+   source (it uploads a confidential manuscript and hands
+   judgement to AI, which reviewer AI policies restrict; NIH
+   prohibits it outright for NIH peer review; NIH NOT-OD-23-149,
+   Elsevier, Springer Nature, ICMJE Section V) and ask whether to
+   proceed. Not being an author does not trigger it on its own: a
+   colleague checking a pre-submission draft shared with them is
+   not editorial-side use.
 
 ## Guards and author overrides
 
@@ -359,7 +360,7 @@ proceeded past a policy or scope guard in this run>
 
 <one paragraph: state detected (present/absent/sketchy); number
 of authors listed; ICMJE compliance status at the section
-level; CRediT coverage status; any hard-rule violations
+level; CRediT coverage status; any ICMJE violations
 (LLM-as-author).>
 
 ## Section status

@@ -63,9 +63,11 @@ If any required input is missing, ask for it.
    paper.
 9. **Ask before editorial-side use** (`editorial-side-use`,
    policy, default ask). If the user is acting as a reviewer or
-   editor of a submitted manuscript, state the concern (reviewer
-   AI policies restrict it; NIH prohibits it outright for NIH
-   peer review) and ask whether to proceed. Not being an author
+   editor of a submitted manuscript, state the concern (it
+   uploads a confidential manuscript and hands judgement to AI,
+   which reviewer AI policies restrict; NIH prohibits it outright
+   for NIH peer review; NIH NOT-OD-23-149, Elsevier, Springer
+   Nature, ICMJE Section V) and ask whether to proceed. Not being an author
    does not trigger it on its own.
 
 ## Guards and author overrides
@@ -197,7 +199,7 @@ past a policy or scope guard in this run>
 ## Summary
 <one paragraph: state (present/absent/sketchy); number of
 authors listed; ICMJE compliance status; CRediT coverage
-status; any hard-rule violations.>
+status; any ICMJE violations (LLM-as-author).>
 
 ## Section status
 <exists and substantive / exists but sketchy / absent. If

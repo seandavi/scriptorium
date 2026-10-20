@@ -72,9 +72,11 @@ assessment.
    the audience axis `cannot-assess` and assess the rest.
 10. **Ask before editorial-side use** (`editorial-side-use`,
     policy, default ask). If the user is acting as a reviewer or
-    editor of a submitted manuscript, state the concern (reviewer
-    AI policies restrict it; NIH prohibits it outright for NIH
-    peer review) and ask whether to proceed. Not being an author
+    editor of a submitted manuscript, state the concern (it
+    uploads a confidential manuscript and hands judgement to AI,
+    which reviewer AI policies restrict; NIH prohibits it outright
+    for NIH peer review; NIH NOT-OD-23-149, Elsevier, Springer
+    Nature, ICMJE Section V) and ask whether to proceed. Not being an author
     does not trigger it on its own.
 11. **No invented manuscript facts, no forced judgements**
     (`no-invented-manuscript-facts`, `no-inference-beyond-evidence`,
