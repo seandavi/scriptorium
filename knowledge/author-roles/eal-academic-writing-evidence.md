@@ -126,9 +126,9 @@ This evidence base grounds the EAL author-persona work (#42, #43, #44):
 
 8. Ivanič, R. (1998). *Writing and identity: The discoursal construction of identity in academic writing*. John Benjamins. ISBN: 978-9027217981. (ISBN corrected 2026-10-20. The previous ISBN, 978-9027218001, resolves to Aikman, *Intercultural Education and Literacy*.)
 
-9. Soler, J. (2019). Academic Publishing in English: Exploring Linguistic Privilege and Scholars' Trajectories. *Journal of Language, Identity & Education*, 18(6), 389–399. DOI: [10.1080/15348458.2019.1671193](https://doi.org/10.1080/15348458.2019.1671193). (Author and pages corrected 2026-10-20. The entry previously read "Habib, A., Corcoran, J. N., & Englander, K. … 387–400" with a "[TODO verify exact author order]" marker. Crossref lists Josep Soler as sole author.)
+9. Soler, J. (2019). Academic Publishing in English: Exploring Linguistic Privilege and Scholars' Trajectories. *Journal of Language, Identity & Education*, 18(6), 389–399. DOI: [10.1080/15348458.2019.1671193](https://doi.org/10.1080/15348458.2019.1671193). (Author and pages corrected 2026-10-20 against Crossref, which lists Josep Soler as sole author. The entry previously read "Habib, A., Corcoran, J. N., & Englander, K. … 387–400".)
 
-10. Jiang, F. K., & Hyland, K. (2025). Does ChatGPT Argue Like Students? Bundles in Argumentative Essays. *Applied Linguistics*, 46(3), 375–391. Published online 20 August 2024. DOI: [10.1093/applin/amae052](https://doi.org/10.1093/applin/amae052). (Final pagination resolved 2026-10-20; previously "advance access" with a "[TODO verify final pagination]" marker.)
+10. Jiang, F. K., & Hyland, K. (2025). Does ChatGPT Argue Like Students? Bundles in Argumentative Essays. *Applied Linguistics*, 46(3), 375–391. Published online 20 August 2024. DOI: [10.1093/applin/amae052](https://doi.org/10.1093/applin/amae052). (Final pagination resolved 2026-10-20; previously listed as advance access.)
 
 11. Lillis, T., & Curry, M. J. (2010). *Academic writing in a global context: The politics and practices of publishing in English*. Routledge. ISBN: 978-0415468817. (ISBN corrected 2026-10-20. The previous ISBN, 978-0415468824, resolves to an unrelated Routledge title.)
 

@@ -223,10 +223,6 @@ sources are:
   practitioner writing on Approach sections, reviewer psychology,
   and resubmission strategy. Drawn from experience as a research
   development professional; not empirical research.
-- **Friedman, *Career Development Awards*** — guidance on K-series
-  awards. [TODO verify: no book or guide by this author and title
-  was located in the October 2026 refresh; keep unverified until a
-  bibliographic record is found, or remove.]
 - **Agency-specific guides** (NIAID, NINDS, NIDDK practitioner pages;
   NSF program officer essays).
 
