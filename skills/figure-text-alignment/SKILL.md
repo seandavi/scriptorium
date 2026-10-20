@@ -358,7 +358,7 @@ This skill is grounded in scriptorium's knowledge layer:
   image-integrity claims. When pointing authors to ImageTwin,
   note that in ASM's 2023–24 pilot it flagged problems only in
   halftone images (blots, micrographs, photographs), not graphs
-  or line art. No source states Proofig's image-type coverage,
+  or line art. No source we found states Proofig's image-type coverage,
   so do not extend that limit to Proofig.
 - [[guidance-level]] — scriptorium-wide convention controlling
   how much framing the skill adds around its structured output.

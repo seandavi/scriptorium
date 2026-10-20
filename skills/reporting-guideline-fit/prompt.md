@@ -31,9 +31,9 @@ inference."
 2. **Methods section is load-bearing.** Title and abstract
    alone are insufficient.
 3. **Multiple checklists can apply.** Animal RCTs need ARRIVE
-   2.0 + CONSORT (or CONSORT-AI). Systematic reviews with
-   meta-analysis need PRISMA. AI-based diagnostic tools need
-   STARD + STARD-AI. AI-intervention trials need CONSORT 2025 +
+   2.0 + CONSORT 2025 (plus CONSORT-AI 2020 if AI-enabled).
+   Systematic reviews with meta-analysis need PRISMA. AI-based
+   diagnostic tools need STARD + STARD-AI. AI-intervention trials need CONSORT 2025 +
    CONSORT-AI 2020, with the version mismatch named. Declared
    generative-AI use adds GAMER to the design checklist. Surface
    multi-checklist explicitly.

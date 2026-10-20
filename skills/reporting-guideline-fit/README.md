@@ -48,8 +48,9 @@ The skill takes a stand on three forms of honesty:
    right answer when the methods is too sketchy to
    discriminate, not a confident wrong guess.
 2. **Multi-checklist applicability is surfaced.** An animal
-   randomised intervention study uses ARRIVE + CONSORT (or
-   CONSORT-AI). The skill never picks one when several apply.
+   randomised intervention study uses ARRIVE 2.0 + CONSORT 2025
+   (plus CONSORT-AI 2020 if AI-enabled). The skill never picks
+   one when several apply.
 3. **Versioning is honest.** CONSORT 2025 over CONSORT 2010;
    SPIRIT 2025 for trial protocols; PRISMA 2020 over PRISMA
    2009; TRIPOD+AI 2024 over TRIPOD 2015 for AI-based

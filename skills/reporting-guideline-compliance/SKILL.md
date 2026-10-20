@@ -101,8 +101,8 @@ skill exists to avoid.
    AI-intervention trial, run the 2025 base checklist plus the
    2020 AI extension (CONSORT-AI or SPIRIT-AI) and state the
    version mismatch: the extensions were built on the 2010 and
-   2013 base checklists, and no updated versions had been
-   published as of October 2026.
+   2013 base checklists, and we found no updated versions as of
+   October 2026.
 8. **Default flow-diagram items to `partial`.** Completeness of
    the participant flow diagram is a figure-borne check, and the
    one published vision-model result detected missing
@@ -361,7 +361,7 @@ the current run where relevant.)
 - Whether quantitative claims are internally consistent (Table 1
   N vs. methods N; abstract percentages vs. figure percentages).
   That is the planned `statistics-consistency` skill's job.
-- Whether figures match the prose. That is the planned
+- Whether figures match the prose. That is the
   `figure-text-alignment` skill's job.
 - The bibliography itself. Reporting guidelines specify *what*
   must be reported, not citation accuracy — that is the

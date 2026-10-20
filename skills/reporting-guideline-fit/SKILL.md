@@ -58,8 +58,8 @@ silently when the inference is wrong. Keep the steps separate.
    isn't clear, not a confident wrong guess. The honest default
    when uncertain is to say so.
 3. **Multiple checklists can apply.** An animal randomised
-   intervention study uses both ARRIVE 2.0 and CONSORT (or
-   CONSORT-AI if AI-enabled). The skill must surface the
+   intervention study uses both ARRIVE 2.0 and CONSORT 2025
+   (plus CONSORT-AI 2020 if AI-enabled). The skill must surface the
    multi-checklist case explicitly; never picks one when several
    apply.
 4. **Honest about extensions and successors.** CONSORT 2025
@@ -315,10 +315,9 @@ changes.
    CONSORT and STROBE; the skill names which and why one was
    chosen).
 6. **Recommend the next step.** Point the author at the v0.3
-   `reporting-guideline-compliance` skill (or, while that's not yet
-   built, at the EQUATOR-published checklist URL and a
-   manual checklist walkthrough). Never run the checklist
-   itself.
+   `reporting-guideline-compliance` skill (with the
+   EQUATOR-published checklist URL as a manual fallback). Never
+   run the checklist itself.
 7. **Emit the structured markdown report.**
 
 ## Output format
@@ -389,11 +388,9 @@ ambiguity.">
 
 <concrete: "Once you confirm the inference, run
 /scriptorium:reporting-guideline-compliance with [chosen guideline] to
-audit the manuscript against the checklist items. Until
-reporting-guideline-compliance lands in v0.3, the EQUATOR Network
-publishes the [checklist] at [URL]; a manual walkthrough is
-feasible for any of the v0.1 supported checklists." Concrete
-URLs where stable.>
+audit the manuscript against the checklist items. For a manual
+walkthrough, the EQUATOR Network publishes the [checklist] at
+[URL]." Concrete URLs where stable.>
 
 ## What this inference did NOT do
 
