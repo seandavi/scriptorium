@@ -312,9 +312,9 @@ When in scope:
 
 ### Pre vs post-publication peer review sub-section
 
-When the author opts in, include a sub-section on the strategic
-choice between traditional pre-publication review and
-post-publication review:
+When the preprint section is in scope (opted in, or required by
+HHMI), include a sub-section on the strategic choice between
+traditional pre-publication review and post-publication review:
 
 - **Peer Community In (PCI)** — community-curated discipline-
   specific recommendation; strongest in ecology, evolutionary
