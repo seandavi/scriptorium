@@ -67,8 +67,8 @@ wins**. The conflict goes into "Edits NOT proposed"; it does not
 silently violate.
 
 Embedding similarity is **not** a safe guard against meaning flips
-(BERTScore antonymy problem). Read each proposed edit against the
-source for semantic preservation.
+(BERTScore is insensitive to negation and numerical changes). Read
+each proposed edit against the source for semantic preservation.
 
 ## What you have
 
@@ -96,20 +96,26 @@ If any input is missing, ask for it.
   hedge ("may").
 - **Eliminate filler discourse markers** ("It is important to note
   that", "It should be mentioned that", "As previously discussed").
+  Justify each cut by what the marker fails to add, not by a
+  supposed scientific norm of sparser stance marking: Hyland & Jiang
+  (2018) found interactional metadiscourse rose in the sciences.
 - **Move discursive parentheticals to footnotes or supplementary
   material** — only if the manuscript format permits it and the
   parenthetical is not load-bearing.
 - **Tighten subordinate clauses** that restate the main clause. Long
   subject phrases that separate subject from verb are often
   compressible *and* more readable (Gopen-Swan subject-verb
-  proximity).
+  proximity). Name the repair in the rationale as a diagnosis the
+  author can overrule; Gopen & Swan say their principles are not
+  rules.
 
 Compression is justified when it removes **extraneous load**
 (filler, unmotivated repetition, mechanical scaffolding). It is
-*not* justified when it removes **germane load** (scaffolding the
+*not* justified when it removes **germane content** (scaffolding the
 reader needs to construct the claim's schema). Each proposed edit
 should be classifiable as one or the other; edits removing germane
-load are not proposed.
+content are not proposed. Do not describe germane load as a quantity
+an edit adds or removes.
 
 ## Forbidden transforms
 

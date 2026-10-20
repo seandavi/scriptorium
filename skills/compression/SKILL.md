@@ -83,12 +83,13 @@ with the reason.
    by the state file.
 6. **Voice and tone are preserved.** Active or passive as the source
    has it; the `style.voice` and `style.tone` from the state file
-   are the targets. No "helpful" stylistic embellishment. Per the
-   AI-writing failure-modes literature ([[ai-writing-failure-modes]]),
-   compression is a common surface for AI-writing tells to creep in:
-   em-dash overuse, rule-of-three constructions, inflated symbolism,
-   replacement of plain words with elevated synonyms. These are
-   forbidden transformations.
+   are the targets. No "helpful" stylistic embellishment. Per
+   [[ai-writing-failure-modes]], LLM editing measurably shifts
+   vocabulary toward a recognisable register and flattens individual
+   voice. Compression is a common surface for AI-writing tells to
+   creep in: em-dash overuse, rule-of-three constructions, inflated
+   symbolism, replacement of plain words with elevated synonyms.
+   These are forbidden transformations.
 7. **Hedging and stance markers are preserved.** Epistemic modals
    ("may", "might", "could"), epistemic adverbs ("possibly",
    "apparently"), approximators ("approximately", "about"),
@@ -107,10 +108,12 @@ If preservation conflicts with a length reduction, **preservation
 wins** every time. The conflict goes into "Edits NOT proposed"; it
 does not silently violate.
 
-The BERTScore antonymy problem ([[semantic-preservation]]) means
-embedding similarity is *not* a safe guard against meaning flips.
-Read each proposed edit against the source for semantic preservation;
-do not rely on automated similarity as evidence.
+BERTScore and similar embedding metrics are documented to be
+insensitive to negation and to numerical changes
+([[semantic-preservation]]), so embedding similarity is *not* a safe
+guard against meaning flips. Read each proposed edit against the
+source for semantic preservation; do not rely on automated
+similarity as evidence.
 
 ## Allowable transforms
 
@@ -129,7 +132,11 @@ These are the legitimate length-reducing moves:
 - **Eliminate filler discourse markers** that add no information
   ("It is important to note that", "It should be mentioned that",
   "As previously discussed"). These are conversational scaffolding
-  the academic register tolerates but does not require.
+  the academic register tolerates but does not require. Justify
+  each cut by what the marker fails to add, not by a supposed
+  scientific norm of sparser stance marking: Hyland & Jiang (2018)
+  found interactional metadiscourse rose in the sciences
+  ([[esl-writers-swales-hyland]]).
 - **Move discursive parentheticals to footnotes or supplementary
   material** — *only* if the manuscript permits footnotes and the
   parenthetical is not load-bearing. Most journals limit footnote
@@ -138,14 +145,20 @@ These are the legitimate length-reducing moves:
   Per [[reader-expectation-approach]], a 30-word subject phrase is
   often compressible by moving stress-bearing material into the
   stress position; the resulting sentence is shorter *and* more
-  readable.
+  readable. Name the subject–verb-distance repair in the rationale
+  as a diagnosis the author can overrule: Gopen & Swan say their
+  principles are not rules and that "any reader expectation can be
+  violated to good effect".
 
 Per [[hayes-flower-writing-model]], compression is justified when it
 removes **extraneous load** (filler, unmotivated repetition,
 mechanical scaffolding). It is *not* justified when it removes
-**germane load** (scaffolding the reader needs to construct the
+**germane content** (scaffolding the reader needs to construct the
 claim's schema). Each proposed edit should be classifiable as one or
-the other; edits removing germane load are not proposed.
+the other; edits removing germane content are not proposed. Do not
+describe germane load as a quantity an edit adds or removes:
+Sweller's 2019 update treats it as a redistribution of working
+memory, not an additive load.
 
 ## Forbidden transforms
 
@@ -384,10 +397,8 @@ the current run where relevant.)
   the load-bearing-vs-extraneous classification carefully. Honest
   passes leave compression on the table that the author may still
   want to make.
-- **Proposed reductions skew toward cheap reductions first.** Per
-  Sommers 1980 ([[revision-research]]), an expert reviser's pass
-  produces small changes that aggregate to structural improvement.
-  A compression that needs every paragraph merged to hit target has
+- **Proposed reductions skew toward cheap reductions first.** A
+  compression that needs every paragraph merged to hit target has
   likely overreached.
 - **The "Words saved" column adds up.** A reader should be able to
   sum the per-edit savings and reproduce the Summary's
@@ -425,9 +436,10 @@ This skill is grounded in scriptorium's knowledge layer:
   which paragraphs carry the resolution vs. which carry scaffolding
   that may compress.
 - [[semantic-preservation]] — Nida's formal-equivalence framing;
-  BERTScore antonymy problem. Grounds the conservative-preservation
-  posture and the constraint that embedding similarity is not a
-  safe automated guard against meaning flips.
+  BERTScore's insensitivity to negation and numerical changes.
+  Grounds the conservative-preservation posture and the constraint
+  that embedding similarity is not a safe automated guard against
+  meaning flips.
 - [[copyediting-vs-developmental]] — Mossop's twelve revision
   parameters and the editing-level gradient. Compression sits at
   line editing, one level below `argumentative-flow`'s developmental
@@ -439,17 +451,27 @@ This skill is grounded in scriptorium's knowledge layer:
 - [[reader-expectation-approach]] — Gopen & Swan's topic/stress
   position and subject-verb proximity. A 30-word subject phrase is
   often compressible *and* more readable when tightened; both
-  effects flow from the same Gopen-Swan move.
+  effects flow from the same Gopen-Swan move. The principles are
+  diagnoses the author can overrule, not rules, and they have not
+  been tested in reading-time experiments.
 - [[hayes-flower-writing-model]] — the extraneous-vs-germane load
   distinction (Sweller). Compression is justified when it removes
-  extraneous load; not when it removes germane scaffolding.
+  extraneous load; not when it removes germane scaffolding. Editing
+  can only lower extraneous load; it frees capacity for the reader's
+  germane processing but does not create it.
 - [[esl-writers-swales-hyland]] — hedging and stance patterns vary
-  legitimately across linguistic backgrounds. Compression must not
-  "smooth out" deliberate hedging.
-- [[ai-writing-failure-modes]] — the failure-mode literature
-  (Kobak 2024 on the lexical fingerprint of LLM-edited prose). The
-  forbidden-transforms list draws directly from the patterns this
-  note documents.
+  legitimately across linguistic backgrounds, and stance norms are
+  field-specific (Hyland & Jiang 2018: interactional metadiscourse
+  rose in the sciences). Compression must not "smooth out"
+  deliberate hedging.
+- [[ai-writing-failure-modes]] — the failure-mode literature behind
+  the voice-preservation posture: Kobak et al. (2025, *Science
+  Advances*) on excess vocabulary in LLM-processed PubMed abstracts,
+  and the homogenisation evidence (Agarwal et al.; Doshi & Hauser).
+  The excess-vocabulary evidence grounds the ban on elevated-synonym
+  substitution; em-dash overuse, rule-of-three constructions and
+  inflated symbolism are practice-derived tells the note does not
+  catalogue.
 
 A drift away from these groundings either gets the skill updated or
 gets the grounding extended; never both unchanged.

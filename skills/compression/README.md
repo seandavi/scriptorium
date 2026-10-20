@@ -102,9 +102,10 @@ If preservation conflicts with a proposed length reduction,
 **preservation wins**. The conflict goes into "Edits NOT proposed"
 rather than violating silently.
 
-The BERTScore antonymy problem
-([`semantic-preservation`](../../knowledge/editing/semantic-preservation.md))
-means embedding similarity is **not** a safe automated guard against
+BERTScore and similar metrics are insensitive to negation and to
+numerical changes
+([`semantic-preservation`](../../knowledge/editing/semantic-preservation.md)),
+so embedding similarity is **not** a safe automated guard against
 meaning flips. The skill reads each proposed edit against the source
 for semantic preservation; it does not delegate that check to a
 similarity metric.
@@ -215,7 +216,8 @@ This skill is grounded in scriptorium's knowledge layer:
   paragraphs carry the resolution vs. which carry scaffolding the
   author may want to compress.
 - [`semantic-preservation`](../../knowledge/editing/semantic-preservation.md)
-  — Nida's formal-equivalence framing; BERTScore antonymy problem.
+  — Nida's formal-equivalence framing; BERTScore's insensitivity to
+  negation and numerical changes.
   Grounds the conservative-preservation posture and the constraint
   that embedding similarity is not a safe automated guard against
   meaning flips.
@@ -231,19 +233,29 @@ This skill is grounded in scriptorium's knowledge layer:
 - [`reader-expectation-approach`](../../knowledge/scientific-writing/reader-expectation-approach.md)
   — Gopen & Swan's topic/stress position and subject-verb proximity.
   A 30-word subject phrase is often compressible *and* more readable
-  when tightened.
+  when tightened. The principles are diagnoses the author can
+  overrule, not rules, and have not been tested in reading-time
+  experiments.
 - [`hayes-flower-writing-model`](../../knowledge/scientific-writing/hayes-flower-writing-model.md)
   — Sweller's extraneous-vs-germane load distinction. Compression
   is justified when it removes extraneous load; not when it removes
-  germane scaffolding the reader needs.
+  germane scaffolding the reader needs. Editing can only lower
+  extraneous load; it frees capacity for the reader's germane
+  processing but does not create it.
 - [`esl-writers-swales-hyland`](../../knowledge/scientific-writing/esl-writers-swales-hyland.md)
   — hedging and stance patterns vary legitimately across linguistic
-  backgrounds. Compression must not "smooth out" deliberate hedging;
-  only hedging *stacks* are legitimate targets.
+  backgrounds, and stance norms are field-specific (Hyland & Jiang
+  2018: interactional metadiscourse rose in the sciences).
+  Compression must not "smooth out" deliberate hedging; only hedging
+  *stacks* are legitimate targets.
 - [`ai-writing-failure-modes`](../../knowledge/prior-art/ai-writing-failure-modes.md)
-  — Kobak 2024 on the lexical fingerprint of LLM-edited prose. The
-  forbidden-transforms list draws directly from the patterns this
-  note documents.
+  — Kobak et al. (2025, *Science Advances*) on excess vocabulary in
+  LLM-processed PubMed abstracts, plus the homogenisation evidence
+  (Agarwal et al.; Doshi & Hauser). This grounds the
+  voice-preservation posture and the ban on elevated-synonym
+  substitution; em-dash overuse, rule-of-three constructions and
+  inflated symbolism are practice-derived tells the note does not
+  catalogue.
 
 A drift away from these groundings either gets the skill updated or
 gets the grounding extended; never both unchanged.
