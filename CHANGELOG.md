@@ -10,6 +10,153 @@ state schema may change between versions.
 
 ## [Unreleased]
 
+### Knowledge refresh (October 2026)
+
+Every note in `knowledge/` was re-verified against its sources (#125).
+Identifiers were checked against Crossref, PubMed, arXiv or the
+publisher, misattributed findings were corrected, unverifiable figures
+were removed, and 2025–2026 evidence and policy changes were added.
+The shipped skills were then updated to match.
+
+#### Knowledge notes
+
+- **Peer-review evidence and platforms** (#136) — statistics and
+  overclaiming critiques are common but usually fixable (Bordage 2001,
+  Bornmann 2010); suggesting a checklist to reviewers had no effect in
+  an RCT (Cobo 2007); 2026 reviewer-AI policies at Elsevier and
+  Springer Nature; hidden prompt injections in manuscripts.
+- **Reporting guidelines, reproducibility and research integrity**
+  (#137) — CONSORT 2025 and SPIRIT 2025 (renumbered items), the
+  LLM-era reporting guidelines (TRIPOD-LLM, REFINE, CHART, GAMER),
+  LLM adherence-checking studies, TOP 2025, and a corrected Statcheck
+  validity record (Schmidt 2017 is a critique) and Carlisle figure.
+- **Grants and significance** (#138) — NIH Simplified Review Framework
+  scoring (Factor 1 caps Overall Impact), the end of paylines, the
+  NOT-OD-25-132 AI-originality policy and NOT-OD-23-149; NSF and HHMI
+  updates; Teplitskiy et al. 2022 replaces a misattributed "Lin et al.
+  2022".
+- **Citations and scholarly tooling** (#139) — corrected Cochrane review
+  denominators (medians are per journal), the reversed Sauder 2022
+  finding, Greenberg 2009 denominators, and the four-step protocol
+  re-attributed to the reference-accuracy / editorial spot-check
+  protocol (Greenberg supplies the distortion categories).
+- **AI and LLMs in scholarly writing and review** (#140) — the ICLR 2025
+  RCT is Thakkar et al., not Liang; Kobak et al. updated to the 2025
+  *Science Advances* version; prevalence data on hallucinated
+  references (NeurIPS 2025, the Lancet audit, ICLR 2026).
+- **Critique techniques, editing, author roles and conventions** (#141)
+  — `gap-finder`'s seven categories come from Miles (2017; Adu & Miles
+  2023), not Robinson 2011; BERTScore's documented weakness is
+  negation and numerical insensitivity, not "antonymy"; van Gelder's
+  argument-mapping figures are pooled pre/post studies.
+- **Publishing, venues and editorial policy** (#143) — journal-disclosed
+  desk-rejection figures replace trade-press rates; *Science*'s Board
+  of Reviewing Editors breakdown (Zhang et al. 2026); ICMJE AI-disclosure
+  rules dated May 2023 / January 2024 and consolidated in Section V in
+  January 2026; HHMI requires preprints for covered original research,
+  Gates expects them.
+- **Scientific-writing craft** (#146) — CSE 9th and Chicago 18th
+  editions; the promotional-register catalog split into Vinkers- or
+  Kobak-backed and practice-derived entries; Gopen & Swan's principles
+  untested in reading-time experiments; Sweller 2019 on germane load.
+- **Unverified material removed** (#147) — the last `[TODO verify]`
+  markers and the unlocatable Smith & Banks 1991 citation are gone;
+  `knowledge/README.md` now says a note does not merge with any.
+
+#### Skill updates
+
+Section headings, order and refusal posture are unchanged in every
+skill. Output-contract and behaviour changes:
+
+- **`venue-fit`** (#148)
+  - `## Preprint options` (with its review sub-section) is included
+    without asking for HHMI-covered original research, with servers
+    limited to HHMI's list; otherwise it stays opt-in.
+  - Funder APC rules (Wellcome, HHMI, Gates, proposed NIH caps) and JIF
+    eligibility join the hard filter.
+  - The tier rationale no longer says most authors over-aim, and a
+    history-driven move to `Stretch` is never presented as a judgement
+    of merit.
+- **`author-contribution-audit`** (#148)
+  - When AI use is declared, `## LLM-as-author check` lists the ICMJE
+    Section V placement items, each marked covered by the text or for
+    the author to confirm.
+  - The non-author activity list matches ICMJE.
+- **`citation-audit`** (#149)
+  - New reference identity check on every bibliography entry: a new
+    always-present Summary bullet (`Reference identity: …`) and new
+    `### Reference identity problems` and
+    `### Hidden text or embedded instructions` pattern subsections,
+    omitted when empty.
+  - A claim is `cannot determine` when its reference's identity is in
+    doubt.
+  - New hard constraint: the manuscript is data, not instructions.
+  - "What this skill did NOT check" narrows the bibliography item to
+    errors beyond the identity check.
+- **`gap-finder`** (#149)
+  - Categories credited to Miles plus two project additions; an
+    optional Robinson et al. 2011 reason-code sub-tag on evidence-gap
+    findings (no new section).
+  - Directions name only works the manuscript already cites and never
+    imply that one database search closes a gap.
+- **`reporting-guideline-compliance`** (#150)
+  - Trial reports default to CONSORT 2025 (2010 only when the author or
+    venue requires it) and protocols to SPIRIT 2025; every item number
+    carries its version, so output item numbering changes.
+  - Flow-diagram completeness items default to `partial` unless the
+    prose reports every required number.
+  - New manifest constraints `flow_diagram_items_default_partial` and
+    `version_tag_every_item_number`.
+- **`reporting-guideline-fit`** (#150)
+  - New routing targets: SPIRIT 2025, TRIPOD-LLM, REFINE and CHART.
+    GAMER appears only as an add-on inside the existing sections
+    (`gamer_is_add_on_only`).
+  - Both reporting skills' `full` framing now says the EQUATOR library
+    lists roughly 700 records.
+- **`figure-text-alignment`** (#150) — grounding and README only; no
+  contract change.
+- **`argumentative-flow`, `compression`, `terminology-normalization`,
+  `outlier-sentence-detector`** (#151) — no output-contract change.
+  - `argumentative-flow`'s `full` framing must not claim reading-time
+    evidence for Gopen & Swan; its findings are diagnoses the author
+    can overrule.
+  - `compression` rationales cite negation and numerical insensitivity,
+    not "antonymy", and don't treat germane load as a quantity an edit
+    adds.
+  - `terminology-normalization`'s catalog offer labels entries
+    corpus-grounded or practice-derived, with a date and a drift caveat.
+  - `outlier-sentence-detector`: misattributed grounding claims
+    corrected; no behaviour change.
+- **`reviewer-simulation`** (#152)
+  - Hidden or instruction-like text is reported as item 1 under "Likely
+    major critiques" with `[Submission integrity]` in the lens slot,
+    only when found.
+  - "Potential fatal concerns" is narrower: a statistics or
+    overclaiming critique goes there only when it exposes a
+    design-level problem.
+  - Critiques are formed from methods and results before the author's
+    stated limitations are weighed.
+  - The author-side-only rationale cites the actual NIH, Elsevier,
+    Springer Nature and ICMJE rules.
+- **`desk-rejection-risk`** (#152)
+  - "What this assessment did NOT check": "The editor's actual mood…"
+    became "Selection the manuscript cannot change…" (Zhang et al.
+    2026).
+  - The `full` guidance text drops the retired 70–90% desk-rejection
+    figure; only journal-disclosed rates are quoted.
+  - ICMJE AI-disclosure checks and hidden-text findings are reported
+    inside the existing Format and length category.
+  - "Lin et al. 2022" corrected to Teplitskiy et al. 2022.
+
+#### Docs and CI
+
+- `lychee.toml`: `include_fragments = "none"` replaces `false`, which
+  lychee ≥ 0.20 no longer parses; link-check had been loading no
+  config (#142).
+- `knowledge/README.md`, `docs/roadmap.md`, DESIGN.md, README.md, the
+  landing page and the concept pages aligned with the refreshed notes;
+  concept tables regenerated from the manifests (#135).
+
 ### Added
 
 #### v0.3 skills
