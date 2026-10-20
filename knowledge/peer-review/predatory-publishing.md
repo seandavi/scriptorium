@@ -1,6 +1,6 @@
 # Predatory publishing: detection, taxonomy, and the moving landscape
 
-*Last updated: 2026-05-20*
+*Last updated: 2026-10-20*
 
 ## Synthesis
 
@@ -19,7 +19,18 @@ were estimated to be either definitively predatory or operating
 without the quality controls a legitimate journal would maintain
 [2]; that fraction has shifted as the legitimate OA infrastructure
 matured, but the predatory landscape has matured too, and detection
-remains an active problem.
+remains an active problem. In January 2025 the ICMJE's member
+editors published a joint editorial on protecting authors from
+predatory journals, citing an estimate of more than 15,000
+predatory journals in 2021 [21]. According to a secondary summary of
+the January 2025 ICMJE update (the ICMJE site could not be read
+directly), the ICMJE also linked the editorial from the existing
+predatory-journal section of its Recommendations [21]. In a 2025
+*PNAS* study of the entities that enable fraud at scale (paper
+mills, brokers and predatory journals), the authors' final analysis
+suggests that the ability of these entities to evade interventions
+is enabling the number of fraudulent publications to grow far faster
+than legitimate science [22].
 
 Several patterns dominate the predatory operating model:
 
@@ -32,10 +43,10 @@ Several patterns dominate the predatory operating model:
 - **Fake or misleading metrics.** Journals invent impact factor
   analogues ("Universal Impact Factor", "Global Impact Factor"),
   cite themselves to inflate Google Scholar h-index, or claim
-  indexing in databases they're not in [4].
+  indexing in databases they're not in [5].
 - **Hijacked journals.** Established journal titles are cloned at
   look-alike URLs to harvest fees from authors searching for the
-  legitimate journal [5].
+  legitimate journal [4, 5].
 - **Aggressive solicitation.** Mass-emailed calls for papers
   targeting researchers who have published nearby, often with
   flattering personalisation lifted from public CVs.
@@ -118,6 +129,18 @@ including peer-review documentation and editorial-board
 transparency. OASPA membership is a positive signal for OA
 publishers similar to DOAJ inclusion for journals.
 
+**ICMJE (2025).** The ICMJE Recommendations already carried
+warnings about predatory or pseudo-journals for authors (Section
+II.C.1.a). In January 2025 the ICMJE member editors published a new
+joint editorial simultaneously in the member journals [21]. A
+secondary summary of the January 2025 update reports that the ICMJE
+linked Section II.C.1.a to that editorial; this detail could not be
+read on the ICMJE site itself [21]. The editorial advises authors who receive
+a solicitation that appears to come from a legitimate journal to
+forward it to that journal and ask whether it is genuine, which
+also alerts the journal that it is being imitated [21]. This is
+guidance on process, like Think.Check.Submit, not a list.
+
 For an automated venue-fit recommendation, the right posture is to
 use these resources as soft signals — DOAJ inclusion is a positive
 heuristic, Cabell's flagging is a negative heuristic — but not to
@@ -143,6 +166,19 @@ single entity is wrong in both directions: it would flag
 legitimate venues and it would miss problems in specific journals
 within the portfolio.
 
+National research-assessment bodies now act on this at journal
+level. Finland's Publication Forum (JUFO) downgraded 271 MDPI and
+Frontiers journals it treated as "grey area" to level 0 from the
+start of 2025, but kept 16 MDPI and 22 Frontiers journals at
+level 1. After its May 2025 panel evaluation it restored some
+journals to level 1 on suggestions from the Finnish research
+community [19]. In September 2025 JUFO also decided to stop using
+the term "level 0". Channels outside levels 1–3, including
+"predatory and gray area journals", will now be called "other
+identified publication channels" [20]. The JUFO case shows two
+things. Publisher-level scrutiny happens. When the decision is
+made carefully, it still comes down journal by journal.
+
 The principle: **predatory assessment must be per-journal, not
 per-publisher**. The same publisher can host both a venue with
 rigorous review and a venue with predatory characteristics. The
@@ -151,12 +187,19 @@ consideration, with the publisher as one signal among several.
 
 ### The Hindawi-Wiley case: when legitimate publishers degrade
 
-In 2023-2024, Wiley closed 19 Hindawi-acquired journals after
-documented manipulation by paper mills [16, 17]. Hindawi had been
-a long-standing OA publisher acquired by Wiley in 2021;
-subsequent investigation found that several of its journals had
-been heavily compromised by special-issue submission patterns
-correlating with paper-mill operations. The case is significant
+Hindawi, a long-standing OA publisher with about 250 journals, was
+acquired by Wiley in 2021. Wiley and Hindawi closed four journals in
+May 2023 because of paper-mill interference. In May 2024 Wiley
+announced the closure of 19 more former Hindawi journals, having
+retracted more than 11,300 compromised papers over the previous two
+years. Wiley attributed the 2024 closures partly to other factors,
+such as low submission rates [18]. The clean-up contributed to a
+record year: *Nature* reported that retractions of research articles
+passed 10,000 in 2023 as publishers dealt with sham papers and
+peer-review fraud [16]. Investigation of the compromised journals
+pointed to special-issue submission patterns correlating with
+paper-mill operations [23], part of the broader paper-mill problem
+documented in [17]. The case is significant
 for venue-fit work because it demonstrates that **legitimacy is
 not permanent**: a journal can move from defensible to compromised
 within a few years, especially in the OA-special-issue model where
@@ -174,7 +217,7 @@ current status via Think.Check.Submit or DOAJ at submission time.
 A distinct subcategory worth naming: **hijacked journals**, where
 a predatory operation creates a look-alike domain or even a full
 clone of a legitimate journal's website to intercept submissions
-and fees [5]. The legitimate journal still exists at its real URL;
+and fees [4, 5]. The legitimate journal still exists at its real URL;
 authors searching the journal name and clicking the wrong result
 end up paying APCs to the hijacked version, which provides no
 actual publication or indexing.
@@ -236,6 +279,17 @@ expensive misfit failure mode for an author is publishing in a
 predatory venue, and not flagging that is worse than not
 recommending at all.
 
+**2026-10-20 refresh:** verdict unchanged. The new evidence
+supports the posture the note already recommends. ICMJE member
+editors now give authors explicit predatory-journal advice,
+including checking suspicious solicitations with the legitimate
+journal [21]. JUFO's 2025 decisions were taken journal by journal
+[19, 20]. And the *PNAS* authors' final analysis suggests that
+fraudulent output is growing far faster than legitimate science
+[22], which strengthens the staleness caveat. No change to
+skill behaviour is required. The Hindawi chronology the skill may
+repeat is now four closures in 2023 and 19 in 2024.
+
 **Why useful context anyway:**
 
 - The per-journal-not-per-publisher principle applies to any
@@ -285,7 +339,7 @@ That's a future capability, not a v0.2 dependency.
 ## References
 
 [1] Beall, J. (2008-2017). *Scholarly Open Access*. Blog.
-Original URL no longer active (removed 2017-01-15); archived at
+Original URL no longer active (removed January 2017); archived at
 the Internet Archive and Wayback Machine.
 
 [2] Shen, C., & Björk, B.-C. (2015). 'Predatory' open access: a
@@ -296,18 +350,21 @@ the early-to-mid 2010s.)
 
 [3] Kakamad, F. H., Mohammed, S. H., Najar, K. A., Qadr, G. A.,
 Ahmed, J. O., Mohammed, K. K., Salih, R. Q., Hassan, M. N., Mikael,
-T. M., Kakamad, S. H., Baba, H. O., Salih, A. M., Othman, S., &
-Ahmed, M. S. (2019). Kscien's list; a new strategy to discourage
-predatory journals and publishers. *International Journal of
-Surgery Open*, 17, 5-7. DOI: 10.1016/j.ijso.2019.01.002. [TODO
-verify exact volume/page; the Kscien list itself is the more
-durable reference here than the methodology paper.]
+T. M., Kakamad, S. H., Baba, H. O., et al. (2019). Kscien's list; a
+new strategy to hoist predatory journals and publishers.
+*International Journal of Surgery Open*, 17, 5-7.
+DOI: 10.1016/j.ijso.2019.01.002. (Title and author list corrected
+against Crossref in the 2026-10 refresh; the record lists 19
+authors, and Crossref also registers an erratum (2020) and a
+correction (2025) against it. The Kscien list itself is the more
+durable reference here than the methodology paper.)
 
 [4] Jalalian, M., & Mahboobi, H. (2014). Hijacked journals and
 predatory publishers: Is there a need to re-think how to assess
 the quality of academic research? *Walailak Journal of Science and
-Technology*, 11(5), 389-394. (Early documentation of the
-"hijacked journals" pattern.)
+Technology*, 11(5), 389-394. DOI: 10.14456/wjst.2014.16. (Early
+documentation of the "hijacked journals" pattern. The DOI is
+registered with Thailand's NRCT DOI agency, not Crossref.)
 
 [5] Dadkhah, M., Maliszewski, T., & Teixeira da Silva, J. A.
 (2016). Hijacked journals, hijacked web-sites, journal phishing,
@@ -360,28 +417,82 @@ indicates additional rigor criteria.)
 publishers; membership criteria publicly listed.)
 
 [14] Crosetto, P. (2021). Is MDPI a predatory publisher? *Blog
-post*. <https://paolocrosetto.wordpress.com/2021/04/12/
-is-mdpi-a-predatory-publisher/>. (Influential informal analysis
-of MDPI's growth and self-citation patterns. Conclusion:
-publisher-level designation is wrong, but specific concerns about
-specific journals within the portfolio are real. The reference is
-a blog post rather than a peer-reviewed paper; cited here because
-it is the most widely-referenced contemporary discussion of the
-MDPI question.)
+post*. <https://paolocrosetto.wordpress.com/2021/04/12/is-mdpi-a-predatory-publisher/>.
+(Influential informal analysis of MDPI's growth and self-citation
+patterns. Crosetto concludes: "I would name their methods
+aggressive rent extracting, rather than predatory." The reference
+is a blog post rather than a peer-reviewed paper; cited here
+because it is the most widely-referenced contemporary discussion of
+the MDPI question.)
 
-[15] Petrou, C. (2022). Guest Post — MDPI's Remarkable Growth.
-*The Scholarly Kitchen*. <https://scholarlykitchen.sspnet.org/
-2020/08/10/guest-post-mdpis-remarkable-growth/>. [TODO verify
-date; the URL slug suggests 2020 not 2022.] (Industry-side
-analysis of MDPI's growth and the structural questions it raised
-about the OA-special-issue model.)
+[15] Petrou, C. (2020). Guest post — MDPI's remarkable growth.
+*The Scholarly Kitchen*, 10 August 2020.
+<https://scholarlykitchen.sspnet.org/2020/08/10/guest-post-mdpis-remarkable-growth/>.
+(Industry-side analysis of MDPI's growth and the structural
+questions it raised about the OA-special-issue model. Year
+corrected from 2022 to 2020 in the 2026-10 refresh.)
 
-[16] Else, H. (2024). Paper-mill detector put to the test in
-biggest-ever publishing-fraud sweep. *Nature*, 627, 261-262.
-DOI: 10.1038/d41586-024-00580-0. (Coverage of the Wiley-Hindawi
-shutdown and the paper-mill detection work behind it.)
+[16] Van Noorden, R. (2023). More than 10,000 research papers were
+retracted in 2023 — a new record. *Nature*, 624(7992), 479-481.
+DOI: 10.1038/d41586-023-03974-8. PMID: 38087103. (Replaces an
+earlier entry, "Else 2024", whose DOI resolved to an unrelated
+*Nature* careers article.)
 
 [17] Brainard, J. (2023). Fake scientific papers are alarmingly
-common. *Science*, 380(6645), 568-569.
-DOI: 10.1126/science.adi9617. (Broader context on paper-mill
-operations and their effect on OA-venue integrity.)
+common. *Science* (news), 9 May 2023.
+DOI: 10.1126/science.adi6523. (Broader context on paper-mill
+operations and their effect on OA-venue integrity. The previous
+DOI, 10.1126/science.adi9617, does not resolve.)
+
+[18] *Inside Higher Ed*. (2024, 15 May). Wiley to shutter 19
+journals. Quick Takes.
+<https://www.insidehighered.com/news/quick-takes/2024/05/15/wiley-shutter-19-journals>.
+(Reports the 19 closures, the 11,300+ retractions, Hindawi's
+portfolio of about 250 journals, and the earlier closure of four
+journals in May 2023. The byline was not visible in the fetched
+page, so no author is given.)
+
+[19] Publication Forum (JUFO), Finland. (2024, updated 2025).
+Changes to the classification.
+<https://julkaisufoorumi.fi/en/news/changes-classification>.
+
+[20] Publication Forum (JUFO), Finland. (2025). The Publication
+Forum Steering Group decided on changes to the classification
+system.
+<https://julkaisufoorumi.fi/en/news/publication-forum-steering-group-decided-changes-classification-system>.
+
+[21] Laine, C., Babski, D., Bachelet, V. C., Bärnighausen, T. W.,
+Baethge, C., Bibbins-Domingo, K., Frizelle, F., Gollogly, L.,
+Kleinert, S., Loder, E., Monteiro, J., Rubin, E. J., Sahni, P.,
+Wee, C. C., Yoo, J.-H., & Zakhama, L. (2025). Predatory journals —
+what can we do to protect their prey? *New England Journal of
+Medicine*, 392(3), 283-285. DOI: 10.1056/NEJMe2415937.
+PMID: 39774496. (ICMJE joint editorial, published simultaneously in
+ICMJE member journals in January 2025. The claim that the January
+2025 update of the ICMJE Recommendations added a link to it from the
+existing Section II.C.1.a on predatory or pseudo-journals
+(<https://www.icmje.org/recommendations/>) rests on a secondary
+summary only, because icmje.org blocked automated fetching: Synpharm,
+"ICMJE 2025 recommendations update" (31 January 2025),
+<https://www.synpharm.com/en/icmje-2025-recommendations-update/>,
+which states that "the link to an editorial on predatory journals,
+which was published in parallel with this update, has been added".
+Corrected in the 2026-10 re-check: an earlier wording said the
+section itself was added in 2025; the editorial states that the
+Recommendations already "include warnings about predatory
+publishing".)
+
+[22] Richardson, R. A. K., Hong, S. S., Byrne, J. A., Stoeger, T.,
+& Amaral, L. A. N. (2025). The entities enabling scientific fraud at
+scale are large, resilient, and growing rapidly. *Proceedings of the
+National Academy of Sciences*, 122(32), e2420092122.
+DOI: 10.1073/pnas.2420092122. PMID: 40758886. (The abstract's
+wording is hedged: "Our final analysis suggests that this ability to
+evade interventions is enabling the number of fraudulent
+publications to grow at a rate far outpacing that of legitimate
+science.")
+
+[23] Bishop, D. V. M. (2023). Red flags for paper mills need to go
+beyond the level of individual articles: a case study of Hindawi
+special issues. *PsyArXiv* preprint. DOI: 10.31234/osf.io/6mbgv.
+(Preprint; not peer reviewed.)
