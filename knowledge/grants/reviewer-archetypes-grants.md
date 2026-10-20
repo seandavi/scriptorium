@@ -223,14 +223,8 @@ in duration". Appointments are renewable seven-year terms.[^4] This
 replaces the narrower 2024 eligibility window described in the May
 2026 version of this note.
 
-The HHMI review process for the 2024 competition was described as
-review by Scientific Review Board members (distinguished scientists),
-semifinalist video presentations, and a virtual symposium with Q&A,
-with applicants submitting a set of their most significant recent
-publications. [TODO verify: the 2024 program announcement PDF now
-redirects to the program page, and the review stages and publication
-requirements could not be re-checked for the 2027 competition.] The
-artifact reviewers evaluate is *the scientist*, not *the proposal*.
+Because selection is person-focused, the artifact reviewers evaluate
+is *the scientist*, not *the proposal*.
 
 ### Private foundations (general patterns)
 
@@ -274,7 +268,7 @@ catalog:
    priorities guidance (open to all; non-protected characteristics
    for broadening participation) rather than pre-2025 templates.
 7. **HHMI-style person reviewer** — evaluates the candidate's
-   scientific trajectory and most-significant-papers package.
+   scientific trajectory.
 
 These personas mirror the empirical structure of the review process,
 not just stylistic variation.

@@ -100,9 +100,7 @@ chain amplification of something less certain?
 These studies together establish the methodological template still in
 use: select a sample of in-text citations, retrieve each cited
 reference, classify whether the cited source supports the in-text
-statement, tally. (A "Smith & Banks 1991 *BMJ*" citation-accuracy
-paper named in the original brief could not be located; see the
-research-gap note at the end of this document.)
+statement, tally.
 
 ### Computational approaches
 
@@ -307,16 +305,3 @@ categories the audit flags.
 [^8]: Cohan A, Ammar W, van Zuylen M, Cady F. Structural scaffolds for
     citation intent classification in scientific publications.
     *NAACL 2019*. arXiv: 1904.01608.
-
-**Research gap:** A "Smith & Banks 1991 *BMJ*" citation-accuracy
-paper appears in some bibliographies and was sketched here, but it
-could not be located in CrossRef, PubMed, or Google Scholar searches
-during the May 2026 knowledge-layer sweep, nor in a repeat web search
-during the October 2026 refresh. The closest foundational
-work in this vein is de Lacey, Record & Wade (1985) *BMJ* and
-Eichorn & Yankauer (1987) *AJPH* (entry [^2] above) — both are
-methodologically primary for this skill's grounding and the Smith &
-Banks reference is not load-bearing. The claim has been left here
-as a gap rather than fabricated. *What would verify it: locating the
-exact Smith & Banks 1991 paper (or confirming the citation was a
-secondary-source misattribution).*

@@ -96,8 +96,9 @@ Each subdirectory has a consistent document structure:
 ## Citation discipline
 
 - Real DOIs, PMIDs, ISBNs, arXiv IDs only.
-- Items the research could not verify in-session are marked
-  `[TODO verify]` rather than fabricated.
+- Unverified items may carry a `[TODO verify]` marker while a note is
+  being drafted, but a note does not merge with any. Material that
+  cannot be verified is left out, not fabricated.
 - Where source language matters (Toulmin's argument model, Gopen & Swan's
   reader-expectation principles, Kerr's HARKing definition, etc.), the
   text is quoted directly.
@@ -141,8 +142,9 @@ treatment land in DESIGN.md or non-goals; findings that warrant
 The first-pass evidence base (~40 documents) was produced by parallel
 research agents over a focused session. Each agent was scoped to a
 topical subdirectory, given strict citation-discipline instructions
-(real DOIs only; mark unverifiable as `[TODO verify]`), and required
-to close each document with the *Implementation priority* annotation.
+(real DOIs only; flag anything unverifiable rather than fabricate
+it), and required to close each document with the *Implementation
+priority* annotation.
 The agents independently identified several non-obvious findings worth
 the project's attention:
 

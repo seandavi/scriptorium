@@ -431,10 +431,10 @@ reviews. In *Proceedings of the 36th International Conference on
 Information Systems (ICIS 2015)*, Fort Worth, TX. Association for
 Information Systems.
 https://aisel.aisnet.org/icis2015/proceedings/ResearchMethods/2/.
-(Corrected 2026-10-20: this entry was previously a
-"[TODO verify]" placeholder citing "Müller, R., & Köhler, T.
-(2018)", which could not be found. The information-systems
-gap framework that the placeholder described is this paper.)
+(Corrected 2026-10-20: this entry replaces an unverified
+placeholder citing "Müller, R., & Köhler, T. (2018)", which
+could not be found. The information-systems gap framework that
+the placeholder described is this paper.)
 
 [7] Toulmin, S. (2003). *The Uses of Argument* (updated ed.).
 Cambridge University Press. ISBN: 9780521534833. (Toulmin's

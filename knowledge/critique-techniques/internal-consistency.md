@@ -247,8 +247,7 @@ LLM limits — be honest:
     the vendor's BMJ Open case study, which describes the checks
     above:
     https://www.penelope.ai/blog/2018/2/12/9id69afc4jd8sy6h36vc2x8px69myo.
-    (Resolved 2026-10-20: this entry previously ended in a
-    "[TODO verify]" marker asking for a methods reference. The
+    (Resolved 2026-10-20: no methods reference could be found. The
     earlier "30+ checks" figure could not be sourced and has been
     removed.)
 
