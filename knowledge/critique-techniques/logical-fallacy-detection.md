@@ -1,6 +1,6 @@
 # Logical-fallacy detection in scientific writing
 
-*Last updated: 2026-05-17*
+*Last updated: 2026-10-20*
 
 ## Synthesis
 
@@ -109,7 +109,7 @@ surface form an automated check can match against.
    found HARKing widely practiced and widely viewed as inappropriate.
    HARKing is the upstream cause of many spurious "novel" findings
    and is detectable from internal evidence — see
-   [[internal-consistency]] and Yarkoni 2019 [^5].
+   [[internal-consistency]] and Yarkoni 2022 [^5].
 
 9. **Overgeneralisation from a model organism / model system.**
    Inferring human relevance from cells in a dish, a single mouse
@@ -226,5 +226,8 @@ debated.
     hardback). Companion site: https://www.logicallyfallacious.com/.
 
 [^5]: Yarkoni T. The generalizability crisis. *Behavioral and Brain
-    Sciences*. 2019 (published online 2020); 45:e1.
-    DOI: 10.1017/S0140525X20001685.
+    Sciences*. 2022; 45:e1. Published online 21 December 2020;
+    preprint 2019. DOI: 10.1017/S0140525X20001685. (Date corrected
+    2026-10-20: the entry previously gave 2019 as the publication
+    year. Per Crossref, 2019 is the preprint, the print volume is
+    2022, and online publication was 2020.)

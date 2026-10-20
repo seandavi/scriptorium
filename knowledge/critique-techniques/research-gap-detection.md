@@ -1,6 +1,6 @@
 # Research-gap detection: methodology and LLM-specific failure modes
 
-*Last updated: 2026-05-20*
+*Last updated: 2026-10-20*
 
 ## Synthesis
 
@@ -60,17 +60,54 @@ output.
 
 ### Taxonomies of research gaps
 
-The most widely cited gap taxonomy in the health-sciences
-literature is Robinson et al.'s 2011 framework [5], which
-identifies seven categories: evidence, knowledge, practical-
-knowledge, methodological, empirical, theoretical, and
-population. Müller et al.'s 2018 review [TODO verify citation; the
-operations-research-gap literature also has a Robinson-like
-taxonomy with slightly different category labels] is the
-operations-research analogue. Across taxonomies, the agreement is
-on the structure (there are kinds of gaps) more than on the
-specific labels. The categories scriptorium's gap-finder skill
-should consume in some form:
+Two published frameworks underlie most gap taxonomies, and a
+third synthesises them. They should not be conflated:
+
+- **Robinson, Saldanha & McKoy (2011)** [5], an AHRQ methods
+  report, is the health-sciences framework for identifying gaps
+  *from systematic reviews*. It does **not** list seven gap
+  types. It characterises each gap with PICOS elements
+  (population, intervention, comparison, outcomes, setting) and
+  classifies the *reason* the gap exists as "(a) insufficient or
+  imprecise information, (b) biased information; (c)
+  inconsistency or unknown consistency, and (d) not the right
+  information" [5]. A 2013 follow-up applied the framework to 50
+  systematic reviews, identified about 600 unique research gaps,
+  and revised the instructions [8].
+- **Müller-Bloch & Kranz (2015)** [6], an information-systems
+  paper presented at ICIS 2015, proposes a framework for
+  rigorously identifying research gaps in qualitative literature
+  reviews. It is the business / information-systems analogue to
+  Robinson, and the taxonomy below describes it as a six-type
+  model [10].
+- **Miles (2017)** [9], a doctoral-workshop paper, is the source
+  of the widely repeated **seven-type taxonomy**. Miles combines
+  the two frameworks above and defines knowledge gaps (an issue
+  not sufficiently studied), evidence gaps (contradictory
+  findings), theoretical gaps, practical-knowledge gaps (a
+  discrepancy between practice and knowledge), empirical gaps
+  (propositions needing empirical validation), population gaps
+  (populations not adequately represented), and methodological
+  gaps. The list is as summarised in a 2024 manuscript-writing
+  guide [11]. Adu & Miles (2023) [10] republish the model as a
+  book chapter. The workshop paper is not peer reviewed and has
+  no DOI; cite the 2023 chapter where a stable identifier is
+  needed.
+
+Across taxonomies, the agreement is on the structure (there are
+kinds of gaps) more than on the specific labels.
+**Scriptorium's seven categories are a project-compiled
+adaptation, not a published taxonomy** (researcher synthesis, not
+a source claim). Literature, evidence, methodological, and
+population gaps correspond to Miles's knowledge, evidence,
+methodological, and population gaps. The practical-translation
+gap corresponds to Miles's practical-knowledge gap.
+Counterargument and internal-consistency gaps are
+manuscript-internal additions with no counterpart in Miles.
+Miles's theoretical and empirical gaps are not separate
+scriptorium categories. Robinson's four reasons are a useful
+sub-tag for scriptorium's evidence gaps. The categories
+scriptorium's gap-finder skill should consume in some form:
 
 - **Literature gap** — no published work on the question.
   Detectable from a manuscript when a claim is made without
@@ -203,6 +240,13 @@ For the `gap-finder` skill specifically:
    / translation / counterargument / internal-consistency), not
    by manuscript section. This makes the categories visible to
    the author and makes the output actionable per category.
+   When the skill names the taxonomy's provenance, it should say
+   that five of the categories are adapted from Miles's gap
+   types (Miles 2017, republished as Adu & Miles 2023 [10]), and
+   that counterargument and internal-consistency gaps are
+   scriptorium additions. Robinson et al. (2011) [5] supply the
+   optional evidence-gap reason codes in item 7. The skill
+   should not attribute the seven categories to Robinson.
 
 2. **Every finding anchors in declared prose.** Per
    [[declared-work-scope]], the skill operates on existing
@@ -235,21 +279,46 @@ For the `gap-finder` skill specifically:
    declared explicitly ("no internal-consistency gaps detected on
    the sections provided") so silence isn't ambiguous.
 
+7. **Robinson's reason codes as an optional evidence-gap tag.**
+   When the skill flags an evidence gap, it can say *why* the
+   cited evidence falls short: insufficient or imprecise,
+   possibly biased, inconsistent, or not the right information
+   [5]. This makes the suggested direction more specific. For
+   example, "not the right information" points to a different
+   population or outcome; "inconsistent" points to a search for
+   the conflicting studies.
+
 ## Implementation priority for scriptorium
 
-**Verdict:** Direct grounding for the `gap-finder` skill (v0.3
-candidate, currently `needs-grounding` until both this note and
-[[literature-search-strategies]] land). This note documents the
-*detection* side; literature-search-strategies documents the
-*direction-suggestion* side. Both are required because the
-skill's job is to surface gaps **and** point at how to fill them.
+**Verdict:** Direct grounding for the `gap-finder` skill, which
+has shipped (`skills/gap-finder/SKILL.md` lists this note and
+[[literature-search-strategies]] in its grounding). This note
+documents the *detection* side; literature-search-strategies
+documents the *direction-suggestion* side. Both are required
+because the skill's job is to surface gaps **and** point at how
+to fill them.
+
+**Correction to carry into the skill (2026-10-20):** gap-finder's
+`full`-level framing and its Grounding section attribute the
+seven-category taxonomy to "Robinson 2011 *AHRQ*". As documented
+above, Robinson et al. (2011) [5] supply PICOS characterisation
+and four reasons for gaps, not seven gap types. The seven types
+come from Miles (2017) [9]. Five of scriptorium's seven
+categories adapt Miles's types; counterargument and
+internal-consistency are project additions. Suggested skill
+wording: "five categories adapted from Miles (2017; Adu & Miles
+2023), plus two manuscript-internal additions; Robinson et al.
+(2011) reason codes available as an evidence-gap sub-tag". Cite
+Adu & Miles (2023) [10] where a stable identifier is needed. The
+skill text should be corrected (tracked in the skills issue, not
+edited here).
 
 **Why useful context anyway:**
 
 - The taxonomy is reusable for any future scriptorium skill that
   needs to distinguish kinds of incompleteness in a manuscript.
   The seven-category breakdown is a useful project-wide
-  vocabulary.
+  vocabulary, provided its project-adapted status is stated.
 
 - The "hallucinated future literature" failure mode is one not
   yet named explicitly elsewhere in the knowledge layer. Worth
@@ -269,6 +338,18 @@ the current scope), this note would expand to cover the
 systematic-review-side methodology (search protocols, screening,
 data extraction) it currently doesn't. That's a v0.5+ question if
 it ever arises.
+
+## Open questions / weak evidence
+
+- **The seven-type taxonomy is weakly sourced.** Miles (2017) [9]
+  is a workshop paper, not peer reviewed. Its reach comes from
+  repetition in methods guides and teaching materials, not from
+  validation. Neither Miles nor scriptorium's adaptation has
+  been tested for inter-rater agreement on manuscript text.
+- **Müller-Bloch & Kranz's six categories were not checked
+  against the primary text** in the October 2026 refresh.
+  Automated access to the ICIS paper was blocked. The six-type
+  description above comes from Adu & Miles (2023) [10].
 
 ## Cross-references
 
@@ -332,23 +413,58 @@ Internal Medicine*, 169(7), 467-473. DOI: 10.7326/M18-0850.
 PMID: 30178033. (Canonical scoping-review checklist; the PCC
 framing the gap-finder skill borrows from.)
 
-[5] Robinson, K. A., Akinyede, O., Dutta, T., Sawin, V. I.,
-Li, T., Spencer, M. R., Turkelson, C. M., & Weston, C. (2013).
-*Framework for determining research gaps during systematic
-review: evaluation* (Methods Research Report). Agency for
-Healthcare Research and Quality (US). PMID: 23534077. (The
-seven-category gap taxonomy widely cited in the
-health-sciences-gap-detection literature.)
+[5] Robinson, K. A., Saldanha, I. J., & McKoy, N. A. (2011).
+*Frameworks for determining research gaps during systematic
+reviews* (Methods Future Research Needs Report No. 11-EHC043-EF).
+Agency for Healthcare Research and Quality (US). PMID: 21977524.
+NCBI Bookshelf: NBK62478. (The PICOS-plus-reasons framework:
+gaps characterised by PICOS elements and classified by reason
+— insufficient/imprecise, biased, inconsistent, or not the
+right information. Corrected 2026-10-20: the entry previously
+listed the 2013 evaluation report's authors under PMID 23534077,
+which resolves to an unrelated HCUP statistical brief; the 2013
+report is now [8].)
 
-[6] Müller, R., & Köhler, T. (2018). Research gap framework: A
-systematic review approach for identifying gaps in the
-literature. [TODO verify exact citation; the Müller et al.
-operations-research-gap framework is widely cited in
-business / operations literature with a similar shape to
-Robinson 2011, but the exact reference details should be
-checked against the primary source.]
+[6] Müller-Bloch, C., & Kranz, J. (2015). A framework for
+rigorously identifying research gaps in qualitative literature
+reviews. In *Proceedings of the 36th International Conference on
+Information Systems (ICIS 2015)*, Fort Worth, TX. Association for
+Information Systems.
+https://aisel.aisnet.org/icis2015/proceedings/ResearchMethods/2/.
+(Corrected 2026-10-20: this entry was previously a
+"[TODO verify]" placeholder citing "Müller, R., & Köhler, T.
+(2018)", which could not be found. The information-systems
+gap framework that the placeholder described is this paper.)
 
 [7] Toulmin, S. (2003). *The Uses of Argument* (updated ed.).
 Cambridge University Press. ISBN: 9780521534833. (Toulmin's
 argument-warrant-data framework, the underlying methodology
 for counterargument-gap detection.)
+
+[8] Robinson, K. A., Akinyede, O., Dutta, T., Sawin, V. I.,
+Li, T., Spencer, M. R., Turkelson, C. M., & Weston, C. (2013).
+*Framework for determining research gaps during systematic
+review: evaluation* (Methods Research Report No. 13-EHC019-EF).
+Agency for Healthcare Research and Quality (US). PMID: 23487868.
+NCBI Bookshelf: NBK126708. (Evaluation and revision of [5];
+applied to 50 systematic reviews.)
+
+[9] Miles, D. A. (2017). A taxonomy of research gaps: Identifying
+and defining the seven research gaps. *Doctoral Student Workshop:
+Finding Research Gaps — Research Methods and Strategies*, Dallas,
+TX, pp. 1–15. (Workshop paper; not peer reviewed; no DOI. Source
+of the seven-type taxonomy: knowledge, evidence, theoretical,
+practical-knowledge, empirical, population, methodological.)
+
+[10] Adu, P., & Miles, D. A. (2023). Understanding the seven types
+of research gaps. In *Dissertation Research Methods*. Routledge.
+DOI: 10.4324/9781003268154-5. (Book-chapter version of the Miles
+taxonomy, which describes it as an amalgamation of Robinson et
+al. 2011 and Müller-Bloch & Kranz.)
+
+[11] Sefcik, J. S., Glasofer, A., & Smith, M. L. (2024). Writing
+manuscript "bookends": Strategies to effectively frame science.
+*Health Behavior Research*, 7(4). DOI: 10.4148/2572-1836.1258.
+PMCID: PMC12459627. (Secondary source quoting the definitions of
+the seven Miles gap types; cited here because the 2017 workshop
+paper is not reliably retrievable.)
