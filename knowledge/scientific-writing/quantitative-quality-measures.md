@@ -1,6 +1,6 @@
 # Quantitative quality measures: what they can and cannot tell us
 
-*Last updated: 2026-05-17*
+*Last updated: 2026-10-20*
 
 ## Synthesis
 
@@ -14,10 +14,10 @@ quantify vocabulary breadth. Modern entries include BERTScore
 (Zhang et al. 2020) [4] for semantic similarity, Coh-Metrix
 (Graesser, McNamara et al.) [5] for cohesion and discourse-level
 features, and LIWC (Pennebaker) [6] for psycholinguistic
-categorisation. Hyland's corpus work [7, 8] has documented stable
-diachronic patterns in academic writing — increasing
-metadiscourse, shifting stance marker frequencies, evolving
-sentence-length distributions.
+categorisation. Hyland's corpus work [7, 8] has documented
+measurable diachronic shifts in academic writing — shifting balances of
+interactive and interactional metadiscourse, with field-specific
+stance-marker trends.
 
 The blunt assessment: **most quantitative writing-quality measures
 are noise for scholarly text.** They were designed for or
@@ -29,8 +29,10 @@ mis-score correctly-used technical terminology as
 capture the dimensions that actually matter (argument coherence,
 claim-evidence alignment, hedging calibration). Sand-Jensen's
 satirical-but-cited 2007 *Oikos* paper [9] is a useful corrective:
-following readability heuristics aggressively produces consistently
-boring text without making it consistently good.
+its "top-10 list of recommendations for how to write consistently
+boring scientific publications" targets the "predictable, stilted
+structure and language" of research papers — qualities of focus,
+structure, and engagement that no readability formula measures.
 
 The constructive position is that quantitative measures are useful
 **diagnostically** — as outlier flags that prompt human
@@ -85,11 +87,14 @@ The formulas are valid for their original domain (audience-
 calibrated public-facing materials, low-literacy adaptation,
 military training texts) and they are valid as plain-language
 diagnostics for that genre (see [[plain-language-lay-summaries]]).
-They are *invalid* as quality indices for scientific writing aimed
-at expert audiences. Sand-Jensen's 2007 *Oikos* paper [9]
-satirises the consequence: a manuscript can satisfy every
-readability heuristic while being unreadable in the sense that
-matters (no argument, no contribution, no interest).
+The Kincaid et al. derivation itself was calibrated on 531 Navy
+enlisted personnel and 18 passages from Navy Rate Training Manuals
+[2]. They are *invalid* as quality indices for scientific writing
+aimed at expert audiences. Sand-Jensen's 2007 *Oikos* paper [9]
+makes the complementary point by satire: a manuscript can be dull
+and hard to read for reasons — no focus, no story, stilted
+structure — that sit entirely outside what a readability formula
+counts.
 
 ### Lexical diversity
 
@@ -113,7 +118,7 @@ demands it. Discussion sections are higher-diversity. Diversity
 varies systematically by section, by sub-discipline, and by
 authorial style; mean diversity carries no quality signal.
 
-### Sentence-length distributions and corpus stylistics
+### Corpus stylistics: diachronic metadiscourse change
 
 Hyland and Jiang's corpus work [7, 8] is the most careful study of
 academic writing patterns over time. Their 2018 paper, *"In this
@@ -127,15 +132,20 @@ journals in four disciplines over 50 years and documented:
   (hedges, boosters, attitude markers, self-mention) — but with
   field heterogeneity, declining in soft fields and *rising* in
   sciences.
-- Sentence-length distributions trending shorter on average over
-  the corpus period.
+
+(An earlier version of this note also attributed a shortening
+sentence-length trend to this paper. The paper's abstract reports
+only the metadiscourse findings above, so that claim has been
+removed pending a source that reports it.)
 
 The work demonstrates that academic-writing style is not a
 timeless ideal; it drifts measurably and the drift is
 field-specific. For an automated quality tool, this matters
-because *the target distribution is moving* — a sentence-length
-heuristic calibrated to 1970s writing will misfit 2020s writing
-and vice versa.
+because *the target distribution is moving* — a metadiscourse or
+hedging-density heuristic calibrated to 1970s writing will misfit
+2020s writing and vice versa. (Extending the same caution to
+sentence-length heuristics is researcher inference, not a finding
+of [7].)
 
 ### Hedging vocabulary
 
@@ -272,6 +282,9 @@ should appear in DESIGN.md as a positive claim about scope.
 
 **Verdict:** **Selective Yes.** No general-purpose quality-score
 skill — that's theatre. Narrow diagnostic skills are valuable.
+Reconsidered 2026-10-20: the verdict holds. The corrections in this
+refresh (Sand-Jensen characterisation, the Hyland & Jiang findings,
+LIWC licensing) do not change which skills are in or out of scope.
 
 **Yes-now (in scope, v0.2 / v0.3):**
 
@@ -279,7 +292,9 @@ skill — that's theatre. Narrow diagnostic skills are valuable.
   outside reasonable section-local distributional bounds for human
   review. Required data: section-aware sentence segmentation, a
   distance metric (length, nesting depth), reporting interface.
-  No automated rewrite.
+  No automated rewrite. Its rationale should not cite Hyland &
+  Jiang [7] for a sentence-length drift trend; that paper reports
+  metadiscourse drift only.
 - **`terminology-drift-detector`** (already in v0.3 spec): catch
   within-manuscript term variation. Required data: term-form
   candidate list (from frequency counts or from MANUSCRIPT_STATE
@@ -313,19 +328,23 @@ is a defensible thought-leadership position.
   scientific-writing literature relies more on commentary than on
   controlled experiments. One adjacent result: Tanprasert & Kauchak
   (2021) "Flesch-Kincaid is Not a Text Simplification Evaluation
-  Metric" (GEM workshop) shows Flesch-Kincaid is not a valid
+  Metric" (GEM workshop) [10] shows Flesch-Kincaid is not a valid
   *evaluation* metric for simplification; the analogous study
   specifically validating "Flesch-Kincaid mis-scores scientific
   research articles" was not located in this sweep.
 - A clean, openly-licensed machine-readable Hyland hedging-marker
   list was not located during this sweep; scriptorium would need to
   compile its own from the published taxonomy.
-- LIWC requires a paid license (academic licenses sold by Receptiviti;
-  commercial use requires a separate commercial license). This
-  precludes bundling LIWC in scriptorium without licensing. Coh-
-  Metrix is distributed by the Arizona State SoLET lab under
-  research-use terms; redistribution as part of a deployed tool
-  requires direct contact with the maintainers.
+- LIWC requires a paid license. Per LIWC.app (checked 2026-10-20),
+  academic licenses are sold through LIWC.app only for academic
+  research in university settings, and all other users — including
+  non-profits and government agencies — must buy a commercial
+  license through Receptiviti. This precludes bundling LIWC in
+  scriptorium without licensing. Coh-Metrix is distributed by the
+  Arizona State SoLET lab under research-use terms; redistribution
+  as part of a deployed tool requires direct contact with the
+  maintainers. (The Coh-Metrix distribution terms were not
+  re-verified on 2026-10-20: cohmetrix.com returned an error.)
 - The boundary between "outlier" and "stylistically unusual but
   correct" is empirical. The skill should be honest that it
   produces candidates, not verdicts.
@@ -339,6 +358,7 @@ is a defensible thought-leadership position.
    Count and Flesch Reading Ease Formula) for Navy Enlisted
    Personnel. Research Branch Report 8-75. Naval Technical
    Training Command, Millington TN; 1975.
+   https://stars.library.ucf.edu/istlibrary/56 (UCF STARS repository).
 3. McCarthy PM, Jarvis S. MTLD, vocd-D, and HD-D: A validation
    study of sophisticated approaches to lexical diversity
    assessment. *Behavior Research Methods*. 2010;42(2):381–392.
@@ -358,14 +378,20 @@ is a defensible thought-leadership position.
    of Language and Social Psychology*. 2010;29(1):24–54.
    doi:10.1177/0261927X09351676. See also Pennebaker JW et al.,
    *The Development and Psychometric Properties of LIWC-22*
-   (technical manual; LIWC.app).
+   (technical manual; LIWC.app). Licensing:
+   https://www.liwc.app/buy (accessed 2026-10-20).
 7. Hyland K, Jiang FK. "In this paper we suggest": Changing
    patterns of disciplinary metadiscourse. *English for Specific
-   Purposes*. 2018;51:18–30. doi:10.1016/j.esp.2018.04.005.
+   Purposes*. 2018;51:18–30. doi:10.1016/j.esp.2018.02.001.
 8. Hyland K. *Hedging in Scientific Research Articles*.
    Pragmatics & Beyond New Series 54. John Benjamins; 1998.
-   ISBN 9789027250698. See also Hyland K. *Metadiscourse:
-   Exploring Interaction in Writing*. Continuum; 2005.
+   ISBN 9789027250674 (also ISBN 9781556198168). See also Hyland K.
+   *Metadiscourse: Exploring Interaction in Writing*. Continuum; 2005.
 9. Sand-Jensen K. How to write consistently boring scientific
    literature. *Oikos*. 2007;116(5):723–727.
    doi:10.1111/j.0030-1299.2007.15674.x.
+10. Tanprasert T, Kauchak D. Flesch-Kincaid is not a text
+    simplification evaluation metric. In: *Proceedings of the 1st
+    Workshop on Natural Language Generation, Evaluation, and Metrics
+    (GEM 2021)*. Association for Computational Linguistics;
+    2021:1–14. doi:10.18653/v1/2021.gem-1.1.

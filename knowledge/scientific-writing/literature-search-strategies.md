@@ -1,6 +1,6 @@
 # Literature-search strategies: from boolean queries to citation chasing
 
-*Last updated: 2026-05-20*
+*Last updated: 2026-10-20*
 
 ## Synthesis
 
@@ -85,12 +85,28 @@ reference for boolean query construction. The core methodology:
   type. Reduces noise; PubMed's `[ti]`, `[au]`, `[journal]`
   operators are the most-used.
 
+The current Handbook chapter on searching (Lefebvre et al., last
+updated March 2025) [3] also points searchers to the PRISMA-S
+reporting extension for search strategies [10], recommends peer
+review of search strategies, and suggests that searchers may ask
+AI chatbots "for suggestions for ways to structure searches, using
+a detailed explanation of the search question as a prompt". That is
+the same division of labour this note recommends: a model may help
+*structure* a search, while the search itself, and the judgement of
+what it returns, stays with the human.
+
 For a gap-finder skill's direction-suggestion output, the right
 shape is a **structured search-string draft** keyed to the
 specific database the author is most likely to use given the
 manuscript's field. For biomedical work that's usually PubMed;
 for clinical psychology it might be APA PsycInfo; for engineering
-it might be IEEE Xplore.
+it might be IEEE Xplore. No single database is sufficient for
+systematic retrieval: in Bramer et al.'s prospective study, the
+combination of Embase, MEDLINE, Web of Science Core Collection, and
+Google Scholar performed best (overall recall 98.3%), and the
+authors recommend those four as a minimum for biomedical systematic
+reviews [6]. A gap-finder suggestion is not a systematic review, but
+it should not imply that one database search closes a gap.
 
 ### Citation chasing — forward and backward
 
@@ -102,8 +118,11 @@ literature where MeSH hasn't caught up).
 
 **Greenhalgh & Peacock (2005) [4]** documented citation chasing
 as a complement to database search in their landmark BMJ study —
-in their case, the chasing strategies found half of the relevant
-papers that database search missed. **Wohlin (2014) [5]**
+in an audit of the 495 primary sources of one systematic review of
+complex evidence, only 30% came from the protocol-defined database
+and hand searches, while 51% were found by "snowballing" (such as
+pursuing references of references) and 24% through personal
+knowledge or contacts. **Wohlin (2014) [5]**
 formalised snowballing for software-engineering systematic
 reviews and argued snowballing alone can produce comparable
 coverage to database search if iterated to saturation.
@@ -169,20 +188,31 @@ assistants: **Elicit**, **Consensus**, **Scite**, **Undermind**,
 These vary substantially in quality and trustworthiness:
 
 - **Scite** is the most-cited for *finding contradicting and
-  supporting evidence* and has the largest classified-citation
-  dataset (≈1.2B citation classifications as of 2024 [TODO
-  verify current scale]). Its citation-intent classifier is
-  the most rigorous in the space.
+  supporting evidence*. Its citation-intent classification method
+  is described in Nicholson et al. [7]. The index is large and
+  growing: Research Solutions, which acquired scite in November
+  2023, described it at acquisition as "an index of over one
+  billion Smart Citations" [11]. More recent vendor figures exist
+  but were not verified against a primary source in the 2026-10
+  refresh, so treat any specific current count as unconfirmed.
 - **Elicit** and **Consensus** offer LLM-generated summaries of
   search results. Quality varies; both have been documented to
   produce confidently wrong summaries in cases where the
   underlying papers actually conflict.
-- **Undermind** [TODO verify current product status] aims to be
-  a deeper-search tool with iterative LLM-driven refinement.
+- **Undermind** is an active product (checked 2026-10-20): an
+  agentic search tool that asks follow-up questions, "reads and
+  evaluates hundreds of papers, follows citation trails", and
+  returns reports with in-line citations traceable to source papers
+  [12]. Its own site reports a recall benchmark against agentic
+  web-search configurations of general-purpose LLMs; that figure is
+  vendor-reported and has not been independently checked here.
 - The general failure mode across LLM-driven tools is the same
   as scriptorium guards against: confidently wrong summaries,
   inverted causal claims, and over-confident "no evidence for X"
-  statements based on shallow search.
+  statements based on shallow search. A related risk is
+  plausibility: LLM-generated scientific abstracts can be hard for
+  scientists to tell apart from real ones [8], which is why
+  unverified LLM output about the literature is risky [9].
 
 For gap-finder's direction-suggestion output, naming these
 tools as options is appropriate when the gap is bounded; the
@@ -200,7 +230,10 @@ unresolved:
 - **How does LLM-assisted search affect the coverage of
   systematic reviews?** Early evidence suggests mixed
   results — better discovery on some topics, worse on others;
-  the long-term answer is unclear.
+  the long-term answer is unclear. The Cochrane Handbook's
+  searching chapter, as last updated (March 2025), still states
+  that as of mid-2023 no sufficiently large and valid evaluations
+  of LLMs for study selection were available [3].
 - **What is the right way to evaluate LLM-driven literature
   tools?** The metrics that work for traditional database
   search (recall, precision, F1) don't capture the failure
@@ -273,6 +306,11 @@ candidate, currently `needs-grounding` until this note and
 *direction-suggestion* side of gap-finder; the sister note
 covers the *detection* side. Both are required.
 
+*Reviewed 2026-10-20:* the verdict holds. The March 2025 update of
+the Cochrane searching chapter [3] supports the design rather than
+changing it: it accepts AI help with *structuring* searches but
+gives no endorsement to LLM-found citations.
+
 **Why useful context anyway:**
 
 - Search-strategy methodology is useful framing for any future
@@ -335,17 +373,24 @@ reference for literature-search methodology; the
 PICOS-structured approach to query construction.)
 
 [2] Aromataris, E., & Riitano, D. (2014). Constructing a search
-strategy and searching for evidence. *American Journal of
+strategy and searching for evidence. A guide to the literature
+search for a systematic review. *American Journal of
 Nursing*, 114(5), 49-56. DOI: 10.1097/01.NAJ.0000446779.99522.f6.
 PMID: 24759479. (Accessible introduction to PICO-structured
 boolean-query construction.)
 
-[3] Higgins, J. P. T., Thomas, J., Chandler, J., Cumpston, M.,
-Li, T., Page, M. J., & Welch, V. A. (eds.). (2022). *Cochrane
-Handbook for Systematic Reviews of Interventions* (version
-6.3). Cochrane. <https://training.cochrane.org/handbook>.
-Chapter 4 ("Searching for studies"). (The canonical
-search-strategy reference for systematic reviews.)
+[3] Lefebvre, C., Glanville, J., Briscoe, S., Featherstone, R.,
+Littlewood, A., Metzendorf, M.-I., Noel-Storr, A., Paynter, R.,
+Rader, T., Thomas, J., & Wieland, L. S. (2025). Chapter 4:
+Searching for and selecting studies [last updated March 2025]. In
+J. P. T. Higgins, J. Thomas, J. Chandler, M. Cumpston, T. Li, M. J.
+Page, & V. A. Welch (eds.), *Cochrane Handbook for Systematic
+Reviews of Interventions* (version 6.5.1). Cochrane.
+<https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-04>
+(accessed 2026-10-20). (The canonical search-strategy reference
+for systematic reviews. Previously cited here as version 6.3
+(2022); the Handbook landing page lists version 6.5, updated
+August 2024: <https://www.cochrane.org/authors/handbooks-and-manuals/handbook>.)
 
 [4] Greenhalgh, T., & Peacock, R. (2005). Effectiveness and
 efficiency of search methods in systematic reviews of complex
@@ -379,13 +424,37 @@ classification methodology.)
 
 [8] Else, H. (2023). Abstracts written by ChatGPT fool
 scientists. *Nature*, 613(7944), 423.
-DOI: 10.1038/d41586-023-00056-7. PMID: 36635510. (Documents
-the LLM-summary failure mode that gap-finder's
-"name tools with caveats" recommendation guards against.)
+DOI: 10.1038/d41586-023-00056-7. PMID: 36635510. (News report
+of a preprint finding that scientists could not always tell
+ChatGPT-generated abstracts from real ones; cited for the
+plausibility of LLM-generated scientific text.)
 
 [9] van Dis, E. A. M., Bollen, J., Zuidema, W., van Rooij, R.,
 & Bockting, C. L. (2023). ChatGPT: five priorities for
 research. *Nature*, 614(7947), 224-226.
 DOI: 10.1038/d41586-023-00288-7. PMID: 36737653. (The
-much-cited Nature commentary on LLM use in research, including
-the limitations of LLM-driven literature search.)
+much-cited Nature comment on LLM use in research and the case
+for keeping human verification in the loop; secondary summaries
+give "hold on to human verification" as the first of its five
+priorities. The full text is paywalled and was not re-read in the
+2026-10 refresh, so neither that wording nor its specific
+treatment of literature search has been checked against the
+primary text.)
+
+[10] Rethlefsen, M. L., Kirtley, S., Waffenschmidt, S., Ayala,
+A. P., Moher, D., Page, M. J., Koffel, J. B., & PRISMA-S Group.
+(2021). PRISMA-S: an extension to the PRISMA Statement for
+Reporting Literature Searches in Systematic Reviews. *Systematic
+Reviews*, 10, 39. DOI: 10.1186/s13643-020-01542-z. (The search-
+reporting standard the Cochrane searching chapter points to.)
+
+[11] Research Solutions, Inc. (2023, November 27). Research
+Solutions announces acquisition of scite [Press release].
+<https://www.researchsolutions.com/resources/press-releases/research-solutions-announces-acquisition-of-scite>
+(accessed 2026-10-20). (Source for the "over one billion Smart
+Citations" figure.)
+
+[12] Undermind. Undermind: your AI co-researcher for the
+literature. <https://www.undermind.ai/> (accessed 2026-10-20).
+(Product description; vendor-reported benchmark not
+independently verified.)

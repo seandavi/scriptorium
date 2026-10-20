@@ -1,6 +1,6 @@
-## Promotional and transactional register
+# Promotional and transactional register
 
-*Last updated: 2026-08-26*
+*Last updated: 2026-10-20*
 
 ## Synthesis
 
@@ -89,13 +89,33 @@ noun or a copula-plus-judgment.
 
 ### The high-frequency vocabulary
 
-Empirically grounded in [^1] and consistent with the AI-tell catalogs in
+The default catalog, consistent with the AI-tell catalogs in
 [[ai-writing-failure-modes]]: *robust* (outside its precise statistical sense),
 *novel*, *innovative*, *unprecedented*, *cutting-edge*, *state-of-the-art*,
 *world-class*, *revolutionize*, *transformative* (outside proposal vision
 language, below), *seamless*, *pivotal*, *crucial*, *key* (adjectival),
 *leverage*, *landscape* (abstract), *ecosystem*, *paradigm*, *showcase*,
-*underscore*, *testament*, *delve*.
+*underscore*, *testament*, *delve*. The entries differ in how well they are
+grounded:
+
+- **Pre-LLM positive-word trend [^1]:** *robust*, *novel*, *innovative*,
+  *unprecedented* (the four words with the sharpest rise among Vinkers'
+  25 preselected positive words).
+- **LLM-era excess style words in PubMed abstracts [^3]:** *crucial* (named in
+  the main text as a common excess word, δ=0.037, and one of the 10-word common
+  marker set); and, in the full list of 291 rarer 2024 excess style words
+  (Fig. S6 of the arXiv v5 preprint), *pivotal*, *seamless*/*seamlessly*,
+  *revolutionize*/*revolutionizing*, *transformative*, *leverages*/*leveraging*,
+  *innovative*, *showcased*/*showcases*/*showcasing*,
+  *underscore*/*underscores*/*underscored*/*underscoring*, and
+  *delve*/*delves*/*delved*/*delving*. Kobak et al. count inflections
+  separately, so the catalog's lemma (e.g. *leverage*) stands in for the listed
+  forms. *Innovative* is backed by both studies.
+- **Practice-derived only:** *cutting-edge*, *state-of-the-art*,
+  *world-class*, *key*, *landscape*, *ecosystem*, *paradigm*, *testament*. None
+  of these appears in Fig. S6 or in the main-text examples of [^3], and none is
+  among the four words [^1] highlights. They come from the practice-derived
+  catalogs, not from either corpus study.
 
 ### What this catalog must not touch
 
@@ -110,7 +130,7 @@ Three legitimate registers that a naive promotional-language filter will damage:
    claim ↔ feasibility, not claim ↔ evidence; see [[grant-writing-evidence]] and
    [[nih-significance-patterns]]. A promotional-register pass run against a
    proposal must exempt the vision statement and audit feasibility instead.
-3. **Evidence-tied hedging and boosters.** Hyland's metadiscourse work treats
+3. **Evidence-tied hedging and boosters.** Hyland's metadiscourse work [^2] treats
    boosters ("clearly", "demonstrates") as a normal resource for staking a claim
    at its warranted strength. The defect is a booster *stronger than its
    evidence*, not the presence of boosters. See [[esl-writers-swales-hyland]].
@@ -149,7 +169,9 @@ few — "raises the floor", "the scarce skill" — are defensible in some voices
 ## Implementation priority for scriptorium
 
 **Verdict:** Yes (knowledge layer + default catalog for `terminology-normalization`
-and `init`). No (not a skill of its own).
+and `init`). No (not a skill of its own). Reconsidered 2026-10-20: still holds.
+As of this date `terminology-normalization` does not yet ground in this note or
+ship a default catalog, so the "Yes" remains pending work rather than shipped.
 
 **Yes — grounding and default data:** wire into `terminology-normalization` as
 the source of its default forbidden catalog, and into `init` as the seed it
@@ -187,6 +209,12 @@ because they are structural and survive synonym substitution.
   precise meanings in statistics, chemistry, and cryptography respectively. The
   default catalog needs per-discipline exemptions that this document does not
   yet supply; see [[discipline-conventions]].
+- **LLM marker words drift.** [^3] reports a lower bound of 13.5% of 2024
+  PubMed abstracts processed with LLMs, inferred from excess style words; a
+  2026 preprint on arXiv and medRxiv abstracts finds some LLM-associated lexical
+  markers rising persistently and others rising then receding (Hubarava &
+  Ineichen, arXiv:2610.26008; see [[corpus-based-stylometry]]). A fixed default
+  list will age; date it and refresh it.
 
 ## References
 
@@ -198,5 +226,14 @@ because they are structural and survive synonym substitution.
     with Google Books Ngram as a general-English control.
 
 [^2]: Hyland K. *Metadiscourse: Exploring Interaction in Writing*. Continuum;
-    2005. The hedges-and-boosters framing this document relies on for the
-    distinction between a booster and an overclaim.
+    2005. ISBN 9780826476104 (hardback); 9780826476111. The hedges-and-boosters
+    framing this document relies on for the distinction between a booster and
+    an overclaim.
+
+[^3]: Kobak D, González-Márquez R, Horvát E-Á, Lause J. Delving into
+    LLM-assisted writing in biomedical publications through excess vocabulary.
+    *Science Advances*. 2025;11(27):eadt3813. doi:10.1126/sciadv.adt3813.
+    Preprint arXiv:2406.07016. Excess-word analysis of over 15 million PubMed
+    abstracts from 2010–2024. Word-level grounding above is from the arXiv v5
+    HTML: main-text excess words (§2.1–2.2) and Fig. S6, "All 291 excess style
+    words in 2024 with frequency below 0.02".
