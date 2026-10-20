@@ -9,9 +9,16 @@ import { Aside } from '@astrojs/starlight/components';
 
 Scriptorium operates on prose the author has already written, or on
 scaffolding the author has committed to in `MANUSCRIPT_STATE.yaml`.
-It does not produce prose from a blank page. This page is the
-why-and-where of that commitment, and the table at the bottom shows
+By default it does not produce prose from a blank page. This page is
+the why-and-where of that default, and the table at the bottom shows
 how each shipped skill respects it.
+
+The boundary is a default the author controls. Each skill declares
+its boundary refusals as **scope guards** with `default: refuse`, and
+the author can override a scope guard for one run or for the project.
+The accuracy guards that sit alongside them, such as never citing
+from model memory, cannot be overridden.
+[Author authority](/concepts/author-authority/) covers the mechanism.
 
 The fuller, evidence-grounded version of this principle lives in
 [`knowledge/conventions/declared-work-scope`](https://github.com/seandavi/scriptorium/blob/main/knowledge/conventions/declared-work-scope.md).
@@ -34,17 +41,21 @@ Scriptorium reads two kinds of input:
 Both count as *declared work*. A skill grounds its output against
 one or both. It does not synthesise output from nothing.
 
-The mirror commitment: scriptorium does not draft sections from a
+The mirror default: scriptorium does not draft sections from a
 blank page. It does not propose what the paper should be arguing.
-It does not invent claims for the author to defend.
+It does not invent claims for the author to defend. A skill steps
+outside this only when the author overrides the scope guard that
+holds it.
 
-<Aside type="note" title="Generation isn't categorically forbidden — blank-slate generation is">
+<Aside type="note" title="Generation isn't out of scope — blank-slate generation is, by default">
 A future skill that takes declared significance + declared
 hypotheses + declared methods and turns them into specific-aims
 prose would still be in scope, because the inputs are declared
-scaffolding. A skill that helps an author "figure out what to
-study" is not in scope, because there is nothing declared to
-ground against. The principle is *declared inputs*, not
+scaffolding. (For NIH applications it would also carry the
+`nih-application-prose` policy guard; see the
+[roadmap](/roadmap/).) A skill that helps an author "figure out
+what to study" is not in scope by default, because there is nothing
+declared to ground against. The principle is *declared inputs*, not
 *read-only*.
 </Aside>
 
@@ -127,45 +138,53 @@ The bar for "declared" is much lower than the bar for "finished":
   a draft exists for that venue's format.
 
 In all of these cases, scriptorium has something to ground against
-and can run. The trigger for refusal is not "this prose is rough,"
-it is "there is no prose here yet."
+and can run. The trigger for the default refusal is not "this prose
+is rough," it is "there is no prose here yet."
 
-## What's out of scope
+## What's out of scope by default
 
-What scriptorium will not do, even if asked:
+What the skills decline unless the author overrides the scope guard
+involved:
 
 - **Draft an empty section.** Asking a skill to fill in an empty
-  Related Work section is a blank-slate generation request. The
-  skill will refuse cleanly and point at the pre-declaration work
-  that needs to happen first.
+  Related Work section is a blank-slate generation request
+  (`generation-from-blankness`). By default the skill declines and
+  points at the pre-declaration work that needs to happen first.
 - **Write a discussion from a results table.** The discussion is
   proposer work — it requires the author's reading of what the
   results mean. A skill cannot ground discussion prose against a
   table alone.
 - **Propose new aims, claims, or hypotheses.** Adding to
   `core_claims` based on what would "round out" the paper is
-  proposer work the author owns.
+  proposer work the author owns (`pre-declaration-ideation`).
 - **Generate a literature review from a topic name.** Even if a
   bibliography is supplied, choosing what to engage with — and how
   — is proposer work.
+
+One related refusal is not a scope guard and no override changes it:
+
 - **Invent a citation to support a claim.** This is the canonical
-  hallucination case. No skill adds a citation; citation-audit
-  surfaces missing support and suggests search strategies, but the
-  author chooses what to cite.
+  hallucination case, and `no-parametric-citations` is an accuracy
+  guard: no skill names a citation from model memory. By default
+  `citation-audit` and `gap-finder` surface missing support and
+  suggest search strategies, and the author chooses what to cite.
+  An author who overrides their `citation-recommendations` scope
+  guard gets named papers, but only works the skill resolved against
+  Crossref or PubMed in that session.
 
 When a skill is asked to operate beyond its declared-work boundary,
 the [refusal pattern](https://github.com/seandavi/scriptorium/blob/main/knowledge/conventions/declared-work-scope.md#refusal-behaviour-at-the-boundary)
 is to name the refusal clearly, point at the pre-declaration work,
-and not lecture. The boundary is structural; one sentence is
-enough.
+say how to override (answer in this run, or add an entry under
+`meta.overrides`), and not lecture. One sentence is enough.
 
 ## The phase axis is a proxy
 
 `MANUSCRIPT_STATE.yaml` has a `document_phase.current` field that
 takes values `outline` / `draft` / `review` / `revision` /
 `submission` / `post-submission` / `accepted`. Several skills
-refuse to run on `outline` for the same reason this page
-describes: outline-phase manuscripts often have empty sections,
+decline by default on `outline` (the `outline-phase` scope guard)
+for the same reason this page describes: outline-phase manuscripts often have empty sections,
 and operating on an empty section is blank-slate generation.
 
 The phase axis is a *proxy* for the declared-work principle. It
@@ -184,17 +203,20 @@ the [skills reference](/reference/skills/) and the
 
 The table is the operational expression of this page. Every shipped
 skill names what it consumes from the author's declarations and
-what it refuses to synthesise from blankness. Rows are alphabetical.
+what it declines to synthesise by default. Rows are alphabetical.
+Which of these are overridable scope guards and which are fixed
+accuracy guards is listed per skill in the
+[guard table](/concepts/author-authority/#guards-by-skill).
 
-| Skill | Declared inputs | What it refuses to invent |
+| Skill | Declared inputs | What it won't invent by default |
 |---|---|---|
 | `argumentative-flow` | Manuscript section + `terminology.*` + `style.tone` / `style.voice` + declared `core_claims` | New claims; new citations; voice changes outside declared style |
 | `author-contribution-audit` | Author Contributions section + `project.target_venue` (optional) | Authorship adjudication; CRediT roles not derivable from declared text |
 | `citation-audit` | Manuscript prose + bibliography | New citations; full-text claims about papers not supplied |
 | `compression` | Manuscript section + `constraints.max_word_count` + declared `core_claims` | Cuts to declared claims; cuts to citations or statistics |
-| `desk-rejection-risk` | Manuscript + `project.target_venue` | Generic advice (refuses without a declared venue) |
+| `desk-rejection-risk` | Manuscript + `project.target_venue` | Generic advice (declines without a declared venue) |
 | `explain` | Plugin tree only | Anything outside the plugin tree |
-| `figure-text-alignment` | Manuscript prose + figure captions | Image content (text-only skill); fabricated panel descriptions |
+| `figure-text-alignment` | Manuscript prose + figure captions | Image content (text-only by default); fabricated panel descriptions |
 | `gap-finder` | Manuscript prose + declared `core_claims` + `known_weaknesses` | Prose to fill the gap; citations to fill it |
 | `init` | Filesystem + author Q&A | Fields beyond what the schema declares |
 | `outlier-sentence-detector` | Manuscript prose only | Universal quality thresholds; the calibration is per-manuscript |
@@ -206,9 +228,9 @@ what it refuses to synthesise from blankness. Rows are alphabetical.
 | `venue-fit` | `project.target_type` + manuscript metadata + (optional) `pub_history` | Predatory venues; venue assessment without `target_type` |
 
 The pattern that repeats: the *declared inputs* column is what the
-skill grounds against; the *refuses to invent* column is what the
-skill structurally cannot produce because it has no declared
-ground to anchor against.
+skill grounds against; the *won't invent* column is what the skill
+does not produce by default because it has no declared ground to
+anchor against.
 
 ## Related
 
@@ -219,6 +241,9 @@ ground to anchor against.
 - [Guidance level](/concepts/guidance-level/) — the sister
   convention controlling *how* scriptorium talks; this page
   controls *where* it operates.
+- [Author authority](/concepts/author-authority/) — how the
+  author overrides this page's scope guards, and which guards
+  stay fixed.
 - [`knowledge/conventions/declared-work-scope`](https://github.com/seandavi/scriptorium/blob/main/knowledge/conventions/declared-work-scope.md)
   — the full, evidence-grounded note.
 - [`hayes-flower-writing-model`](https://github.com/seandavi/scriptorium/blob/main/knowledge/scientific-writing/hayes-flower-writing-model.md)

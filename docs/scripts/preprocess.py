@@ -25,7 +25,8 @@ Six things happen:
    from the manifests because the manifests are the source.
 6. Concept pages that mix hand-written prose with manifest-driven tables
    (``concepts/workflow-stage.md`` skill-by-stage table,
-   ``concepts/guidance-level.md`` per-skill block) have their generated
+   ``concepts/guidance-level.md`` per-skill block,
+   ``concepts/author-authority.md`` guard table) have their generated
    blocks replaced in-place between sentinel comments. The surrounding
    prose stays under version control; only the bracketed block changes.
 
@@ -63,6 +64,7 @@ ROADMAP_OUT = CONTENT_ROOT / "roadmap.md"
 SKILLS_OUT = CONTENT_ROOT / "reference" / "skills.md"
 WORKFLOW_STAGE_OUT = CONTENT_ROOT / "concepts" / "workflow-stage.md"
 GUIDANCE_LEVEL_OUT = CONTENT_ROOT / "concepts" / "guidance-level.md"
+AUTHOR_AUTHORITY_OUT = CONTENT_ROOT / "concepts" / "author-authority.md"
 QMD_SRC = DOCS_DIR / "qmd"
 
 # Knowledge subdirectories rendered as sidebar sections — display name +
@@ -456,8 +458,9 @@ _CATEGORY_ORDER: list[tuple[str, str, str]] = [
         "skills inherit the same preservation contract — citations, "
         "statistics, declared terminology, declared core claims, and the "
         "author's hedging stance are preserved or surfaced as per-edit notes. "
-        "Both are explicit-invocation only and operate on a single named "
-        "section at a time. The author reviews each diff and decides.",
+        "Both are explicit-invocation only and by default operate on a "
+        "single named section at a time. The author reviews each diff and "
+        "decides.",
     ),
     (
         "meta",
@@ -743,8 +746,9 @@ def _generate_skills_page(manifests: list[dict[str, Any]]) -> str:
         "  - *meta* — orientation or explanation; no manuscript modification.\n"
         "  - *utility* — bootstrap; modifies only `MANUSCRIPT_STATE.yaml`.\n"
         "- **Lifecycle stage** — which `document_phase` values the skill is "
-        "invokable in. Skills refuse cleanly on phases for which they do "
-        "not have enough declared state to ground against.\n"
+        "invokable in. By default, skills decline on phases for which they "
+        "do not have enough declared state to ground against; the author "
+        "can override that (see [Author authority](/concepts/author-authority/)).\n"
         "- **Modifies the manuscript?** — *no* (most critique skills), "
         "*suggests* (normalization and transformation skills emit diffs the "
         "author reviews and applies), or *state file only* (utility, or "
@@ -753,9 +757,10 @@ def _generate_skills_page(manifests: list[dict[str, Any]]) -> str:
     parts.append(
         "Two additional flags some authors need:\n\n"
         "- **Author-side only?** — *yes* for skills whose `manifest.yaml` "
-        "declares `positioning: author-side-only`. Editorial-side use "
-        "violates ICMJE / NIH / major-publisher policy and the skill itself "
-        "refuses to run on a manuscript the user did not author.\n"
+        "declares `positioning: author-side-only`. Running one as a reviewer "
+        "or editor of a submitted manuscript triggers the "
+        "`editorial-side-use` policy guard: the skill states the concern and "
+        "asks before proceeding.\n"
         "- **Requires bibliography?** — *yes* when the manifest's "
         "`bibliography` input is `required: true`; *optional* when the "
         "input is declared but not required; *no* when the manifest does "
@@ -772,7 +777,7 @@ def _generate_skills_page(manifests: list[dict[str, Any]]) -> str:
     parts.append("## Lifecycle fit, summarised\n")
     parts.append(
         "Skills declare which `document_phase` values they operate on in "
-        "their `manifest.yaml#lifecycle_phases`. They refuse cleanly on "
+        "their `manifest.yaml#lifecycle_phases`. By default they decline on "
         "phases for which they do not have enough declared state to ground "
         "against. The phases listed under each row below are cumulative — "
         "skills invocable at `draft` are also invocable at `review`, "
@@ -787,8 +792,14 @@ def _generate_skills_page(manifests: list[dict[str, Any]]) -> str:
     parts.append("## Author-side only\n")
     parts.append(
         "Skills whose `manifest.yaml` declares `positioning: author-side-only` "
-        "refuse to run on a manuscript the user did not author. Editorial-side "
-        "use violates ICMJE, NIH, and major-publisher peer-review policy.\n"
+        "are built for authors pressure-testing their own work. Running one "
+        "as a reviewer or editor of a submitted manuscript uploads a "
+        "confidential manuscript and hands judgement to AI, which reviewer "
+        "AI policies restrict (NIH prohibits it outright for NIH peer "
+        "review). That use is the `editorial-side-use` policy guard, "
+        "`default: ask`: the skill states the concern and its source and "
+        "asks whether to proceed. See "
+        "[Author authority](/concepts/author-authority/).\n"
     )
     parts.append(_render_author_side_list(manifests) + "\n")
     parts.append("## Source of truth\n")
@@ -1015,6 +1026,91 @@ def process_guidance_level_concept() -> bool:
     return True
 
 
+# ---------------------------------------------------------------------------
+# Concept page: author-authority guard table
+# ---------------------------------------------------------------------------
+#
+# The guard table on ``concepts/author-authority.md`` is regenerated from
+# each manifest's ``guards:`` list (see
+# ``knowledge/conventions/author-authority.md``). One row per skill and
+# guard, in manifest order, so the page shows exactly which guards each
+# skill applies and which of them the author can override.
+
+_GUARD_KINDS: list[str] = ["policy", "scope", "accuracy"]
+
+
+def _render_author_authority_guard_table(manifests: list[dict[str, Any]]) -> str:
+    """Render the skill-by-guard table for ``concepts/author-authority.md``.
+
+    A count line precedes the table: distinct guard ids by kind, and the
+    number of skills that declare any. Skills that declare no guards get
+    no rows.
+    """
+    kind_by_id: dict[str, str] = {}
+    declaring_skills = 0
+    rows: list[str] = [
+        "| Skill | Guard | Kind | Default | Summary |",
+        "|---|---|---|---|---|",
+    ]
+    for m in sorted(manifests, key=lambda m: m["name"]):
+        guards = m.get("guards") or []
+        if guards:
+            declaring_skills += 1
+        for guard in guards:
+            kind_by_id[guard["id"]] = str(guard["kind"])
+            summary = _normalise_description(str(guard["summary"])).replace("|", "\\|")
+            rows.append(
+                "| "
+                + " | ".join(
+                    [
+                        f"`{m['name']}`",
+                        f"`{guard['id']}`",
+                        str(guard["kind"]),
+                        f"`{guard['default']}`",
+                        summary,
+                    ]
+                )
+                + " |"
+            )
+    counts = ", ".join(f"{list(kind_by_id.values()).count(kind)} {kind}" for kind in _GUARD_KINDS)
+    count_line = f"{len(kind_by_id)} guards ({counts}) declared across {declaring_skills} skills."
+    return count_line + "\n\n" + "\n".join(rows)
+
+
+def process_author_authority_concept() -> bool:
+    """Replace the generated guard table inside the concept page.
+
+    Returns True if the table was written, False if the sentinel
+    markers are missing or the page itself does not exist.
+    """
+    if not AUTHOR_AUTHORITY_OUT.is_file():
+        print(f"  (no {AUTHOR_AUTHORITY_OUT.name}; skipping)")
+        return False
+    manifests = _load_manifests()
+    if not manifests:
+        print("  (no skills/ manifests found; skipping)")
+        return False
+    original = AUTHOR_AUTHORITY_OUT.read_text(encoding="utf-8")
+    table = _render_author_authority_guard_table(manifests)
+    updated, replaced = _replace_sentinel_block(original, "author-authority-guards", table)
+    if not replaced:
+        print(
+            f"  ! {AUTHOR_AUTHORITY_OUT.name} is missing the "
+            "GENERATED:author-authority-guards sentinel block; skipping"
+        )
+        return False
+    if updated != original:
+        AUTHOR_AUTHORITY_OUT.write_text(updated, encoding="utf-8")
+        try:
+            rel = AUTHOR_AUTHORITY_OUT.relative_to(DOCS_DIR)
+        except ValueError:
+            rel = AUTHOR_AUTHORITY_OUT
+        print(f"  wrote {rel}")
+    else:
+        print(f"  ({AUTHOR_AUTHORITY_OUT.name} table already up to date)")
+    return True
+
+
 def main() -> None:
     print("Preprocessing scriptorium docs site")
     print(f"  source: {REPO_ROOT}")
@@ -1034,6 +1130,7 @@ def main() -> None:
     print("\n[4/5] Concept-page sentinel blocks")
     process_workflow_stage_concept()
     process_guidance_level_concept()
+    process_author_authority_concept()
 
     print("\n[5/5] Quarto sources")
     n_qmd = process_qmd()

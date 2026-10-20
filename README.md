@@ -31,10 +31,18 @@ showing real reviewer-simulation output and a before/after argumentative-flow ru
   Transformation skills operate under an explicit preservation
   contract (citations, statistics, declared terminology, declared
   core claims, hedging style — see [voice preservation](#voice-preservation-the-honest-version)).
-- **Refuses to invent.** No skill adds a citation. No skill drafts a
-  section from a blank page. The
+- **Doesn't invent.** No skill names a citation from model memory.
+  By default no skill drafts a section from a blank page; the
   [`declared-work-scope`](knowledge/conventions/declared-work-scope.md)
-  convention is enforced across every conversation-bearing skill.
+  convention applies across every conversation-bearing skill.
+- **Leaves the call to the author.** By default, skills decline
+  blank-slate generation and uses that funder or publisher AI
+  policies restrict. Each such refusal is a declared policy or scope
+  guard, and the author can override it for one run or in
+  `MANUSCRIPT_STATE.yaml`; the skill's output then lists it under
+  "Overrides applied". Accuracy guards, such as no citations from
+  model memory, can't be overridden. See
+  [`author-authority`](knowledge/conventions/author-authority.md).
 
 ## What scriptorium will not do
 
@@ -43,17 +51,20 @@ These are explicit non-goals, grounded in the
 Naming them up front is the point — a pre-submission tool earns trust
 by being concrete about its limits.
 
-- **No blank-slate prose generation.** Scriptorium does not draft
-  sections from nothing. The proposer role (Hayes 2012) is the
-  author's; scriptorium occupies the translator and evaluator roles.
-  See [`declared-work-scope`](knowledge/conventions/declared-work-scope.md).
+- **No blank-slate prose generation by default.** Scriptorium does
+  not draft sections from nothing. The proposer role (Hayes 2012) is
+  the author's; scriptorium occupies the translator and evaluator
+  roles. See [`declared-work-scope`](knowledge/conventions/declared-work-scope.md).
+  This is a scope guard, so an author can override it for a skill
+  that declares it.
 - **No autonomous reviewing.** `reviewer-simulation` and
-  `desk-rejection-risk` are author-side only. Editorial-side use
+  `desk-rejection-risk` are built for authors. Editorial-side use
   would mean uploading a confidential manuscript and delegating the
   critique to AI, which current NIH and publisher reviewer policies
-  rule out
+  restrict
   ([`peer-review-platforms`](knowledge/prior-art/peer-review-platforms.md)).
-  The skills refuse to run on a manuscript the user did not author.
+  Run by a reviewer or editor on a submitted manuscript, the skills
+  state that concern and ask before proceeding.
 - **No overall writing-quality score.** No letter grade, no
   Flesch-Kincaid, no aggregate number. Those systematically misrate
   scientific prose and would be theater rather than information.
@@ -281,7 +292,7 @@ Deliberately *not* shipped (see [DESIGN.md](DESIGN.md) and the
 [roadmap](docs/roadmap.md) for build order): the
 `manuscript-pipeline` orchestrator (held until the leaves have been
 exercised on more real manuscripts); blank-slate drafting skills
-(structurally out of scope); Codex/Gemini installer scripts.
+(out of scope by design); Codex/Gemini installer scripts.
 
 ## Companion tools
 

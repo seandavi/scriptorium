@@ -135,14 +135,29 @@ Several of scriptorium's design choices are *responses* to documented
 failure modes of AI writing assistance. The choices look conservative
 because the failure modes are real.
 
+Where a defence is a refusal, each skill declares it as a guard in its
+`manifest.yaml`. Guards that protect the correctness of the output
+(`kind: accuracy`) are fixed. Guards that apply a funder's or
+publisher's policy, or the declared-work boundary, are defaults the
+author can override; see
+[`knowledge/conventions/author-authority.md`](knowledge/conventions/author-authority.md).
+
 ### Hallucinated citations
 
 LLMs reliably invent references with plausible authors, journals, and
 DOIs ([Walters & Wilder 2023 *Sci Reports*][walters-wilder-2023];
-[Bhattacharyya et al. 2023 *Cureus*][bhattacharyya-2023]). Scriptorium's
-critique skills (`citation-audit`, `reviewer-simulation`) **must not
-generate, suggest, or add citations** under any circumstances. They can
-only assess existing ones. This is hardcoded by convention and by
+[Bhattacharyya et al. 2023 *Cureus*][bhattacharyya-2023]). No
+scriptorium skill **names a citation from model memory**: only works
+in the manuscript's bibliography, or ones verified against an
+authoritative record in the same session. This is the
+`no-parametric-citations` accuracy guard, and no author override
+changes it. By default the critique skills (`citation-audit`,
+`gap-finder`) assess existing citations and suggest searches, not
+papers. An author can opt in, by overriding the
+`citation-recommendations` scope guard, to named papers that the skill
+resolved against Crossref or PubMed in that session. Transformation
+skills keep every cite key attached to the claim it supports
+(`preserve-cited-support`), backed by
 `MANUSCRIPT_STATE.yaml`'s `constraints.preserve_citations: true`
 default. See [`knowledge/citations/hallucination-in-llm-citations.md`](knowledge/citations/hallucination-in-llm-citations.md).
 
@@ -193,11 +208,12 @@ their writing.
 
 Scriptorium operates on **declared work** — prose the author has
 written or scaffolding the author has committed to in
-`MANUSCRIPT_STATE.yaml`. It does not produce prose from blankness.
-The cut maps onto Hayes' 2012 cognitive-process model of writing
-(*proposer / translator / transcriber / evaluator*): scriptorium
-occupies the translator and evaluator roles when the author has
-proposed, and refuses to act as the proposer. The full rationale —
+`MANUSCRIPT_STATE.yaml`. By default it does not produce prose from
+blankness. The cut maps onto Hayes' 2012 cognitive-process model of
+writing (*proposer / translator / transcriber / evaluator*):
+scriptorium occupies the translator and evaluator roles when the
+author has proposed, and by default declines to act as the proposer.
+The full rationale —
 grounded in the cognitive-process literature, the AI-writing
 failure-mode evidence (hallucinated citations and lexical
 homogenisation as blank-slate generation failures), and the
@@ -205,15 +221,23 @@ end-to-end-generation survey (Sakana AI Scientist's documented
 failure modes as the negative exemplar) — lives in
 [`knowledge/conventions/declared-work-scope.md`](knowledge/conventions/declared-work-scope.md).
 
-Two corollaries:
+Three corollaries:
 
 1. **Generation is not forbidden, but it must transform declared
    inputs.** A v0.4 `specific-aims` skill that turns declared
    significance + hypotheses + methods into aims prose is in scope.
    A hypothetical "help me figure out what to study" skill is not.
-2. **Refusal is the right behaviour at the boundary** — never silent
+2. **Refusal is the default at the boundary** — never silent
    best-effort degradation when asked to operate on prose that
-   doesn't exist yet.
+   doesn't exist yet. The refusal says how to override.
+3. **The author decides where the boundary applies.** Each boundary
+   refusal is a `kind: scope` guard with `default: refuse`. The
+   author can override it for one run, or for the project under
+   `meta.overrides` in `MANUSCRIPT_STATE.yaml`, and the skill's output
+   then lists it on an "Overrides applied" line. The same holds for
+   `kind: policy` guards (funder and publisher rules). Accuracy
+   guards are not overridable. See
+   [`knowledge/conventions/author-authority.md`](knowledge/conventions/author-authority.md).
 
 Every conversation-bearing skill grounds in this convention; a
 parametrized test in `tests/test_guidance_level.py` enforces it.
@@ -283,7 +307,8 @@ future tooling, not behavior.
 ## Conventions
 
 Two project-side conventions landed in v0.2 and now load-bear for
-every shipped skill. They live in
+every shipped skill; a third, `author-authority`, decides which of
+their refusals the author can override. They live in
 [`knowledge/conventions/`](knowledge/conventions/) alongside the
 evidence-based notes, but they are not findings from the literature —
 they are scriptorium's own design commitments, documented so every
@@ -292,8 +317,9 @@ skill grounds in the same rule.
 ### `declared-work-scope`
 
 Scriptorium operates on prose the author has written or scaffolding
-the author has committed to in `MANUSCRIPT_STATE.yaml`. It does not
-produce prose from blankness. The full framing — the Hayes 2012
+the author has committed to in `MANUSCRIPT_STATE.yaml`. By default
+it does not produce prose from blankness. The full framing — the
+Hayes 2012
 proposer / translator / transcriber / evaluator cut, the
 hallucinated-citation and lexical-homogenisation failure modes it
 defends against, and the end-to-end-generation negative exemplar —
@@ -322,6 +348,20 @@ is the framing prose around the structured work: upfront
 orientation, per-field rationale, end-of-phase recap. Full
 specification, including the in-session check-in protocol, lives in
 [`knowledge/conventions/guidance-level.md`](knowledge/conventions/guidance-level.md).
+
+### `author-authority`
+
+The author decides what skills may do and where they apply. Each
+skill declares its refusals as guards in `manifest.yaml`, each with a
+`kind`: `policy` (a funder's or publisher's rule), `scope` (the
+declared-work boundary) or `accuracy` (the correctness of the output).
+Policy and scope guards are defaults: the author overrides them per
+run or under `meta.overrides`, a per-run answer wins over the state
+file, and the skill still states the concern and its source in one
+line. Accuracy guards are fixed, because overriding one would produce
+wrong output rather than a riskier choice; `scriptorium validate`
+rejects an override that names one. Full specification in
+[`knowledge/conventions/author-authority.md`](knowledge/conventions/author-authority.md).
 
 ## Roadmap
 
@@ -366,9 +406,11 @@ the tagline does the brand work.
 - **Replacing peer review.** Reviewer simulation is a sparring partner,
   not a substitute for real reviewers.
 - **Generating manuscripts from scratch.** Out of scope by design,
-  not by phase — see the declared-work-scope convention. The harder
-  design questions are about coordination and bounded transformation,
-  not blank-slate generation.
+  not by phase — see the declared-work-scope convention. By default
+  skills decline blank-slate requests. An author override lets a
+  skill draft from declared inputs; no skill is built to write the
+  manuscript. The harder design questions are about coordination and
+  bounded transformation, not blank-slate generation.
 
 ## Why this is open source
 

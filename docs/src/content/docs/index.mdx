@@ -357,8 +357,8 @@ in the roadmap, each pointing at the evidence note that justifies it.
   <div class="limits-grid__column">
     <h3>Out of scope by design</h3>
     <ul>
-      <li><strong>No blank-slate prose generation.</strong> Scriptorium does not draft sections from nothing. The proposer role (Hayes 2012) is yours. <a href="https://github.com/seandavi/scriptorium/blob/main/knowledge/conventions/declared-work-scope.md">declared-work-scope</a>.</li>
-      <li><strong>No autonomous reviewing.</strong> <code>reviewer-simulation</code> and <code>desk-rejection-risk</code> are author-side only. Editorial-side use would mean uploading a confidential manuscript and delegating the critique to AI, which current NIH and publisher reviewer policies rule out. <a href="https://github.com/seandavi/scriptorium/blob/main/knowledge/prior-art/peer-review-platforms.md">peer-review-platforms</a>.</li>
+      <li><strong>No blank-slate prose generation by default.</strong> Scriptorium does not draft sections from nothing. The proposer role (Hayes 2012) is yours. <a href="https://github.com/seandavi/scriptorium/blob/main/knowledge/conventions/declared-work-scope.md">declared-work-scope</a>.</li>
+      <li><strong>No autonomous reviewing.</strong> <code>reviewer-simulation</code> and <code>desk-rejection-risk</code> are built for authors. Editorial-side use would mean uploading a confidential manuscript and delegating the critique to AI, which current NIH and publisher reviewer policies restrict; run that way, the skills state the concern and ask before proceeding. <a href="https://github.com/seandavi/scriptorium/blob/main/knowledge/prior-art/peer-review-platforms.md">peer-review-platforms</a>.</li>
       <li><strong>No overall quality score.</strong> No letter grade, no Flesch-Kincaid, no "writing quality" number. Those systematically misrate scientific prose.</li>
       <li><strong>No reference-manager replacement.</strong> Citation audit works with the bibliography Zotero / Mendeley / BibTeX already produced. <a href="https://github.com/seandavi/scriptorium/blob/main/knowledge/prior-art/reference-managers.md">reference-managers</a>.</li>
     </ul>
@@ -373,6 +373,15 @@ in the roadmap, each pointing at the evidence note that justifies it.
     </ul>
   </div>
 </div>
+
+The first two are defaults, and the author decides whether they
+apply. Each is a declared guard: a scope guard for the declared-work
+boundary, a policy guard for the reviewer-policy concern. The author
+can override either for one run or in `MANUSCRIPT_STATE.yaml`, and
+the skill's output then lists it under "Overrides applied". Accuracy
+guards, such as no citations from model memory and no overall quality
+score, can't be overridden. See
+[Author authority](./concepts/author-authority/).
 
 Skills also surface their own limits in the report itself —
 each output includes a "What this skill did NOT check" section so
