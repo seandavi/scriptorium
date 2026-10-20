@@ -25,7 +25,8 @@ The user will provide, or you should ask for, in order:
    Google Scholar URL, or explicit list of past venues), venue
    preferences (open-access required, max APC, indexing
    requirements, preprint preference, funder constraints), time
-   pressure (submission deadline).
+   pressure (submission deadline). Funders include NIH, Wellcome,
+   cOAlition S, HHMI and Gates.
 
 If any required input is missing, ask for it before producing the
 assessment.
@@ -53,7 +54,11 @@ assessment.
    probabilities indefensible.
 7. **Pub history is calibration, not source.** When provided, it
    shifts which tier candidates fall into; it does not generate
-   the candidate list. The list comes from manuscript fit.
+   the candidate list. The list comes from manuscript fit. Never
+   present a history-driven shift to `Stretch` as a judgement of
+   the work's merit: editorial-stage selection at *Science* and
+   *Science Advances* is associated with institutional prestige,
+   team size, topic and country (Zhang et al. 2026).
 8. **No cover letter, no auto-submission, no editor/reviewer-side
    use.**
 
@@ -84,11 +89,30 @@ When in scope, include `## Preprint options` and `### Pre vs
 post-publication peer review` sections. When out of scope,
 suppress entirely.
 
+Two declared funders change the ask (policies checked October
+2026; tell the author to confirm current text):
+
+- **HHMI: required.** For articles submitted from 1 January 2026,
+  original research articles that are major contributions from a
+  covered HHMI lab ((co-)first, (co-)last or (co-)corresponding
+  author) need initial and revised CC BY 4.0 preprints. Reviews,
+  perspectives and commentaries are exempt. Skip the question,
+  include the preprint section, and restrict servers to bioRxiv
+  (preferred), medRxiv, ChemRxiv or arXiv. If coverage is unclear
+  from the declared state, ask once rather than assume.
+- **Gates: strong prompt, not enforced.** Gates expects preprints
+  "to the extent feasible", with a grantee-determined exception.
+  Ask with that expectation stated; respect a no.
+
 Per-server caveats: bioRxiv (life sciences, moderation-light),
 medRxiv (clinical, added screening), arXiv (physics/CS/math,
-endorsement-based), ChemRxiv (chemistry), OSF (cross-discipline),
-SSRN (social sciences/economics — note Elsevier acquisition
-controversy), PsyArXiv (psychology).
+endorsement-based; arXiv CS takes review and position papers only
+after completed peer review, so never route an unreviewed survey
+or position paper there), ChemRxiv (chemistry), OSF
+(cross-discipline), SSRN (social sciences/economics; owned by
+Elsevier since 2016), PsyArXiv (psychology). eLife's
+reviewed-preprint model has an indexing cost: eLife is not
+eligible for a Journal Impact Factor.
 
 Pre vs post-pub review platforms are a **strategic choice** about
 timing, transparency, community signal, and field convention — not
@@ -108,7 +132,11 @@ to verify.
 Refuse cleanly at the boundary: if a declared `target_venue`
 triggers heuristics, explain which fired, point at
 Think.Check.Submit, do not produce alternatives until the author
-confirms whether to proceed.
+confirms whether to proceed. Hindawi (Wiley) is the case study:
+four journals closed in 2023 for paper-mill interference, 19 more
+in 2024. If a venue arrived by a solicitation that appears to come
+from a legitimate journal, pass on the ICMJE's January 2025
+advice: forward it to that journal and ask whether it is genuine.
 
 ## How to produce the assessment
 
@@ -116,6 +144,11 @@ confirms whether to proceed.
 2. Verify required inputs (target_type set, phase not outline,
    audience specific enough).
 3. Apply hard filters (OA, APC, indexing, funder constraints).
+   Funder rules as of October 2026: Wellcome funds APCs only in
+   fully OA journals indexed in DOAJ; HHMI pays no hybrid APCs;
+   Gates pays no APCs; NIH publication-cost caps are proposed,
+   not finalised. A Journal Impact Factor requirement excludes
+   eLife. Caveat the date; point at the funder's current policy.
 4. Ask about preprints if scope is unclear.
 5. Assess fit on the six axes for each declared and considered
    venue. Score qualitatively per axis; aggregate to tier.

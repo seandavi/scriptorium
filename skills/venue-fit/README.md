@@ -56,15 +56,21 @@ The skill detects the state from `MANUSCRIPT_STATE.yaml`:
 - **Venue preferences** — open-access required, max APC,
   indexing requirements, preprint preference. Applied as hard
   filters before tiering when declared.
-- **Funder constraints** — NIH / Wellcome / cOAlition S / HHMI
-  requirements. Hard filters.
+- **Funder constraints** — NIH / Wellcome / cOAlition S / HHMI /
+  Gates requirements, including funder APC rules (Wellcome
+  DOAJ-only, HHMI no hybrid, Gates none; NIH caps proposed, not
+  finalised as of October 2026). Hard filters.
 
 ## Preprint mode
 
 Preprint server + pre/post-publication review platform
 recommendations are opt-in. If signals are unclear, the skill
 asks once; if the author opts out, the section is suppressed
-entirely. When in scope, the skill names PCI, Review Commons,
+entirely. The exception is HHMI: for an original research article
+that is a major contribution from a covered HHMI lab, preprinting
+is required and the section is included, restricted to HHMI's
+designated servers. A Gates-funded author gets a strong prompt,
+not a requirement. When in scope, the skill names PCI, Review Commons,
 F1000Research, and eLife's post-2022 reviewed-preprint model as
 strategic alternatives to traditional pre-publication review —
 a timing/transparency/community-signal decision, not a single

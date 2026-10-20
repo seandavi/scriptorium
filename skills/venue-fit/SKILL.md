@@ -122,13 +122,15 @@ The recommendation **never includes a predatory venue**. See
   recommendation list** (see "The publication-history question"
   below for the full bias-management protocol).
 - **Author venue preferences** — open-access required? Maximum
-  APC? Indexing requirements (PubMed, Scopus, WoS)? Preprint
+  APC? Indexing requirements (PubMed, Scopus, WoS, a Journal
+  Impact Factor)? Preprint
   preference (preprint required / prohibited / no preference)?
   Geographic / society restrictions? When declared, these are
   hard filters applied before tiering, not soft preferences.
-- **Funder constraints** — NIH, Wellcome, cOAlition S, HHMI, etc.
-  These are hard filters too (a Wellcome paper recommended to a
-  subscription-only journal is a wrong recommendation).
+- **Funder constraints** — NIH, Wellcome, cOAlition S, HHMI,
+  Gates, etc. These are hard filters too (a Wellcome paper
+  recommended to a subscription-only journal is a wrong
+  recommendation). See "Funder rules in the hard filter" below.
 - **Time pressure** — submission deadline, if any. Affects
   recommendations that involve longer-turnaround venues.
 - **Preprint scope** — whether preprint recommendations are in
@@ -200,8 +202,14 @@ declared or generated. The heuristics include:
 - **Publisher legitimacy** — applied per-journal, not
   per-publisher. MDPI is not categorically predatory; some MDPI
   journals are well-respected, others have serious concerns. Same
-  for Hindawi (acquired by Wiley) where 19 journals were closed in
-  2023-2024 after paper-mill manipulation.
+  for Hindawi (acquired by Wiley in 2021): four journals were
+  closed in 2023 because of paper-mill interference, and 19 more
+  in 2024.
+- **Solicitations that imitate a real journal** — the ICMJE's
+  January 2025 joint editorial advises authors who receive a
+  solicitation that appears to come from a legitimate journal to
+  forward it to that journal and ask whether it is genuine. Pass
+  this advice on when a declared venue arrived by solicitation.
 
 **The skill's output always includes a `## Predatory signals
 detected` section, even when no flags fired.** Silence on this
@@ -229,9 +237,10 @@ proceed.
 
 Per [[preprint-landscape]], preprint recommendations are an
 explicit mode the author opts into, not a default included in
-every output. Many authors and fields don't preprint;
-boilerplating preprint recommendations into every output is
-wasted cognitive load.
+every output (the exception is an HHMI-covered article; see "When
+a funder changes the default" below). Many authors and fields
+don't preprint; boilerplating preprint recommendations into every
+output is wasted cognitive load.
 
 ### When to ask
 
@@ -253,6 +262,33 @@ preprint already in scope; field is clinical surgery and
 target_type is manuscript → preprint default-off), the skill can
 skip the question.
 
+### When a funder changes the default
+
+Per [[preprint-landscape]], two declared funders change the ask.
+The policies are dated (checked October 2026); tell the author to
+confirm against the funder's current text.
+
+- **HHMI — required, not opt-in.** For articles submitted from
+  1 January 2026, HHMI requires initial and revised preprints
+  under CC BY 4.0 for original research articles that are major
+  contributions from a covered HHMI lab (someone from the lab is
+  (co-)first, (co-)last or (co-)corresponding author; the covered
+  roles are named in the policy). Reviews, perspectives and
+  commentaries are exempt. When the declared state shows a covered
+  article, skip the question and include the preprint section.
+  Restrict servers to bioRxiv (preferred), or medRxiv, ChemRxiv
+  or arXiv for out-of-scope work; HHMI says other servers "should
+  not be used". Note the timing: the initial preprint goes up
+  promptly after the journal sends the manuscript to review (HHMI
+  recommends posting by submission); the revised preprint goes up
+  before journal publication. If coverage is unclear from the
+  declared state (article type, lab role), ask once rather than
+  assume.
+- **Gates — strong prompt, not enforced.** Gates expects funded
+  manuscripts to be preprinted "to the extent feasible", except
+  where the grantee decides a preprint is inappropriate. Ask the
+  preprint question with that expectation stated; respect a no.
+
 ### What the preprint section contains
 
 When in scope:
@@ -261,7 +297,11 @@ When in scope:
   discipline. bioRxiv for life sciences; medRxiv for clinical;
   arXiv for physics/CS/math; ChemRxiv for chemistry; OSF for
   cross-discipline; SSRN for social science / economics; PsyArXiv
-  for psychology; etc.
+  for psychology; etc. Do not send an unreviewed review (survey)
+  or position paper to arXiv CS: since October 2025 that category
+  accepts them only after completed peer review at a journal or
+  conference. For HHMI-covered articles, only HHMI's designated
+  servers (above).
 - **Per-server caveats**: moderation rigor, license terms,
   indexing, the typical timeline from submission to
   appearance.
@@ -290,7 +330,9 @@ post-publication review:
 - **eLife (post-2022 "reviewed preprints" model)** — eLife
   publishes any preprint it selects for review as a reviewed
   preprint, no accept/reject gate. The most aggressive existing
-  implementation of the post-pub review model at high impact.
+  implementation of the post-pub review model at high impact. It
+  has an indexing cost: since Web of Science put eLife on hold in
+  October 2024, eLife is not eligible for a Journal Impact Factor.
 
 The skill names that this is a **strategic choice** about timing,
 transparency, community signal, and field convention — not a
@@ -337,6 +379,12 @@ into:
 - **Never lectures the author about their track record.** If
   pub history says the *Nature* attempt is a stretch, the skill
   says "stretch given your track record" once and moves on.
+- **Never presents a history-driven tier shift as a judgement of
+  the work's merit.** Editorial-stage decisions at *Science* and
+  *Science Advances* show selection associated with institutional
+  prestige, team size, topic and country (Zhang et al. 2026). That is a reason to
+  calibrate the `Stretch` tier against the author's context; it
+  says nothing about the manuscript.
 
 ### Author override
 
@@ -367,7 +415,9 @@ Read `meta.guidance_level` from `MANUSCRIPT_STATE.yaml` (default
 - `full` — open with what venue-fit is doing (scope/audience/
   methodological/novelty/significance/OA assessment per axis;
   not a probability estimate) and why the tier structure
-  matters (most authors over-aim; tiered output saves time);
+  matters (a sizeable minority of papers reach their final venue
+  only after a rejection elsewhere; naming the tiers makes a
+  stretch attempt a deliberate choice);
   close with which tier the author should consider first and
   why. If first invocation this session, also offer
   `/scriptorium:explain venue-fit` so the author can learn the
@@ -390,7 +440,8 @@ levels — only framing changes.
 3. **Apply hard filters.** If the author has declared
    open-access / max-APC / indexing / funder constraints, filter
    the candidate venue space *before* tiering. Honest about
-   what's been filtered.
+   what's been filtered. See "Funder rules in the hard filter"
+   below.
 4. **Ask about preprints** if signals are unclear (see "Preprint
    mode" above).
 5. **Ask about publication history** only if the author signals
@@ -408,6 +459,26 @@ levels — only framing changes.
 10. **Offer to write `candidate_venues`** if the author is in
     state C and confirms. Default: do not write; just
     recommend.
+
+### Funder rules in the hard filter
+
+Per [[venue-selection]] and [[preprint-landscape]], declared
+funders bring APC and indexing rules that apply before tiering.
+As of October 2026:
+
+- **Wellcome** funds APCs only in fully open-access journals or
+  platforms indexed in DOAJ (from 1 January 2025).
+- **HHMI** budgets no longer pay APCs at hybrid journals.
+- **Gates** pays no APCs, and requires immediate CC BY 4.0
+  availability.
+- **NIH** proposed limits on allowable publication costs in July
+  2025. No final notice had been found as of October 2026; treat
+  them as proposed, not as a filter.
+
+A declared `indexing_requirements` entry for a Journal Impact
+Factor excludes eLife, which is not eligible for one. Funder
+policies change; caveat the date and point the author at the
+funder's current policy, as with venue policies.
 
 ## Output format
 
@@ -536,26 +607,36 @@ reasoning above is the source material for one).>
 This skill is grounded in published research and project
 conventions:
 
-- [[venue-selection]] — the multi-axis fit framework. Misra and
-  Agarwal's modern editorial-guidance synthesis; Solomon and
-  Björk on OA-venue selection; the empirical author-venue
-  mismatch literature (Calcagno et al. on submission
-  trajectories) that motivates the tiered output.
+- [[venue-selection]] — the multi-axis fit framework. Bahadoran
+  et al.'s 2020 journal-selection guide; Solomon and Björk on
+  OA-venue selection; Bordage 2001 on reviewers' reasons for
+  rejection (the methodological-fit axis); Calcagno et al. on
+  submission trajectories (about 75% of published articles went
+  first to the journal that published them, so a sizeable
+  minority arrive after a rejection), which motivates the tiered
+  output. Also funder APC rules, eLife's JIF ineligibility, and
+  Zhang et al. 2026 on editorial-stage selection, which bounds
+  how pub history may be used.
 - [[predatory-publishing]] — the refusal layer. Beall's
   detection heuristics, the per-journal-not-per-publisher
-  principle (MDPI nuance), the Hindawi-Wiley case study, and
-  the deference to authoritative human-curated sources
-  (Think.Check.Submit, DOAJ, OASPA, Cabell's).
+  principle (MDPI nuance), the Hindawi-Wiley case study (four
+  closures in 2023, 19 in 2024), the ICMJE's January 2025
+  editorial on suspicious solicitations, and the deference to
+  authoritative human-curated sources (Think.Check.Submit, DOAJ,
+  OASPA, Cabell's).
 - [[preprint-landscape]] — the preprint mode. The ecosystem
-  (arXiv/bioRxiv/medRxiv/ChemRxiv/SSRN/OSF), the pre-vs-post-
-  publication review platforms (PCI, Review Commons,
-  F1000Research, eLife post-2022), and the moving-landscape
-  framing.
+  (arXiv/bioRxiv/medRxiv/ChemRxiv/SSRN/OSF), arXiv CS's rule on
+  review and position papers, the HHMI requirement and Gates
+  expectation, the pre-vs-post-publication review platforms
+  (PCI, Review Commons, F1000Research, eLife post-2022), and the
+  moving-landscape framing.
 - [[editorial-decision-making]] — the desk-rejection literature
-  underwrites the `Probably premature` tier. Bordage 2001
-  *Acad Med* top-10 reject reasons; 70-90% desk-rejection rates
-  at top journals; Bornmann inter-reviewer-agreement κ ≈ 0.17
-  motivating the qualitative (not probabilistic) framing.
+  underwrites the `Probably premature` tier. *Nature* states that
+  about 8% of submissions are accepted and most are declined
+  without being sent out for peer review; the Bornmann, Mutz and
+  Daniel meta-analysis (mean κ ≈ 0.17 for inter-reviewer
+  agreement) motivates the qualitative (not probabilistic)
+  framing.
 - [[significance-positioning]] — venue selection interacts with
   how the paper frames its significance. Stretch venues require
   explicit significance framing in the cover letter and intro.
