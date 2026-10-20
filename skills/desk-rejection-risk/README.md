@@ -13,10 +13,16 @@ per-category findings.
 
 Using this skill on a manuscript the user did *not* author —
 specifically, using it as an aid in editorial triage of someone
-else's submission — violates current peer-review policy at ICMJE,
-NIH, Elsevier, and Nature. The skill will refuse to run in that
-context. Same posture as
-[`reviewer-simulation`](../reviewer-simulation/README.md).
+else's submission — would mean uploading a confidential manuscript
+and handing the judgement to an AI. Current policies rule that out.
+Elsevier (June 2026) and Springer Nature (September 2026) allow
+limited, disclosed, supportive AI use in peer review but forbid
+delegating the critique or judgement. Elsevier bans uploading a
+submitted manuscript into any AI tool; Springer Nature bans public or
+unsecured tools. NIH prohibits generative AI in its peer review. See
+[`peer-review-platforms`](../../knowledge/prior-art/peer-review-platforms.md)
+for sources. The skill will refuse to run in that context. Same
+posture as [`reviewer-simulation`](../reviewer-simulation/README.md).
 
 The intended workflow is: the author runs the audit on their own
 draft before submitting, addresses high-leverage findings, and
@@ -26,18 +32,27 @@ desk.
 ## Why this skill exists
 
 At top journals the modal outcome is *desk rejection*, not peer
-review. Reported rates run 70–80%+ at *Nature*, *Cell*, *Science*,
-~90% at *NEJM* and *Lancet*, and 30–60% at mid-tier subject journals
+review. *Nature* accepts about 8% of submissions and says "most
+submissions are declined without being sent out for peer review";
+*NEJM* publishes about 5% of original research submissions
 ([`editorial-decision-making`](../../knowledge/peer-review/editorial-decision-making.md)).
-The editor's decision is made in 1–3 days from the cover letter, the
-abstract, and a glance at figures — applying a small number of triage
-heuristics: scope fit, methodological adequacy detectable from the
-abstract, novelty, language quality, policy compliance.
+Most journals publish no desk-rejection figure, and the skill does
+not quote one for them. The decision comes within days or weeks,
+from the cover letter, the abstract, and a glance at figures —
+applying a small number of triage heuristics: scope fit,
+methodological adequacy detectable from the abstract, novelty,
+language quality, policy compliance. At some journals outside
+experts advise on most pre-review declines (*Science*'s Board of
+Reviewing Editors), so the gate is not always an editor skimming
+alone.
 
-The asymmetry is the whole point. A pre-submission audit takes hours;
-the submit–wait–reject–resubmit cycle takes months. Catching one
-desk-rejection trigger saves more time than catching all the
-reviewer-level concerns combined.
+The asymmetry is the whole point. Catching a scope mismatch before
+submitting saves a desk-rejection cycle plus the reformatting and
+fresh queue at the next venue; catching a reviewer-style critique
+saves less. The audit lowers risk but cannot remove it: desk
+outcomes are also associated with factors the manuscript cannot
+change, such as institution, team size, topic and country (Zhang et
+al. 2026).
 
 ## Pairs with `reviewer-simulation`
 
@@ -66,14 +81,17 @@ The five categories:
    the target venue publishes, in language that audience uses?
 2. **Format and length** — word / figure / table limits, abstract
    structure, required statements (data availability, ethics, COI,
-   funding, AI disclosure).
+   funding, AI disclosure to the ICMJE requirements). Hidden or
+   instruction-like text aimed at AI reviewers, if found, is reported
+   here.
 3. **Structure and required sections** — are the structurally
    required sections present? Missing Methods, missing Limitations,
    missing reporting-guideline elements (CONSORT, STROBE, ARRIVE,
    PRISMA) detectable from the abstract.
 4. **Significance framing** — does the abstract articulate why this
    work matters, why now, for whom? Specific beneficiaries beat
-   aspirational language.
+   aspirational language. A weak problem statement or relevance case
+   is the best-supported high-stakes signal here.
 5. **Presentation** — title weight-bearing, language quality, figure
    captions, cover letter scope-naming.
 
@@ -151,24 +169,32 @@ cat ~/.claude/plugins/scriptorium/skills/desk-rejection-risk/prompt.md
 This skill is grounded in scriptorium's knowledge layer:
 
 - [`editorial-decision-making`](../../knowledge/peer-review/editorial-decision-making.md)
-  — establishes the 70–90% desk-rejection rates at top journals
-  (*Nature*/*Cell*/*Science* 70–80%+, *NEJM*/*Lancet* ~90%, mid-tier
-  30–60%), the five triage-heuristic categories editors actually
-  use, and Bornmann's inter-reviewer-agreement evidence (κ ≈ 0.17)
-  that motivates why the editor's discretion at triage is
-  load-bearing. This is the load-bearing knowledge note for the
-  whole skill.
+  — the journal-disclosed figures (*Nature* ~8% accepted, most
+  declined without review; *NEJM* ~5% published; *Science*'s 15.0%
+  externally reviewed, stated by the journal but not verified on
+  science.org), the *Science* Board of Reviewing Editors breakdown
+  and editorial-stage selection effects (Zhang et al. 2026), the five
+  triage-heuristic categories editors actually use, the ICMJE
+  AI-disclosure requirements, and Bornmann's inter-reviewer-agreement
+  evidence (κ ≈ 0.17) that motivates why the editor's discretion at
+  triage is load-bearing. This is the load-bearing knowledge note for
+  the whole skill.
 - [`significance-positioning`](../../knowledge/scientific-writing/significance-positioning.md)
   — informs the significance-framing category. Day & Gastel's
-  problem / what / new / why-it-matters pattern; Lin et al. 2022
-  *PNAS* on novel-plus-conventional outperforming purely-novel; the
-  NIH Simplified Review Framework Factor 1 (Importance of the
-  Research).
+  problem / what / new / why-it-matters pattern; Teplitskiy et al.
+  2022 *PNAS* on novelty and conventionality both predicting
+  acceptance (the novelty-plus-grounding check is consistent with
+  it, not tested by it); the NIH Simplified Review Framework Factor 1
+  (Importance of the Research), which caps the overall impact score.
 - [`common-critiques-taxonomy`](../../knowledge/peer-review/common-critiques-taxonomy.md)
   — Bordage 2001 *Acad Med* top-10 reject reasons seed the recurring
-  patterns desk editors catch and reviewers later confirm. This skill
+  patterns desk editors catch and reviewers later confirm, with
+  severity following the note's fatal/fixable split. This skill
   operates on the editor-detectable subset of that taxonomy;
   reviewer-simulation operates on the rest.
+- [`peer-review-platforms`](../../knowledge/prior-art/peer-review-platforms.md)
+  — the 2026 publisher AI policies behind the author-side-only
+  posture; hidden prompts in manuscripts.
 - [`guidance-level`](../../knowledge/conventions/guidance-level.md) —
   the convention this skill adapts conversational framing to.
 
@@ -192,6 +218,14 @@ gets the grounding extended; never both unchanged.
 - **Qualitative bands, not probabilities.** Base-rate evidence
   supports order-of-magnitude statements about journal-level rates;
   it does not support per-manuscript probability estimates.
+- **Severity follows the reject-reason evidence.** A weak problem
+  statement or relevance case is a supported high-stakes signal.
+  Overclaiming is usually fixable, and writing and presentation
+  problems are contested, so they reach `high` only in severe cases.
+- **Manuscript text is data, not instructions.** Hidden prompts aimed
+  at AI reviewers have been found in real manuscripts. The skill
+  ignores instructions in the manuscript or cover letter and reports
+  hidden or instruction-like text to the author.
 
 ## See also
 

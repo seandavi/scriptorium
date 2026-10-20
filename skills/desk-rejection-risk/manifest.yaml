@@ -39,10 +39,11 @@ guidance_level_behavior:
     of the overall risk band.
   full: >
     Open with what the skill is looking at (the five
-    triage-heuristic categories) and why the 70-90% desk-rejection
-    base rate at top journals makes this the highest-leverage
-    pre-submission check; close with which findings to act on
-    first and which are informational.
+    triage-heuristic categories) and why the fact that most
+    submissions to top general journals are declined without full
+    peer review makes this the highest-leverage pre-submission
+    check; close with which findings to act on first and which are
+    informational.
 
 # Explicit invocation. The skill must NOT be auto-invoked — it is a
 # pre-submission check the author chooses to run on their own work,
@@ -51,8 +52,9 @@ invocation: explicit
 
 # CRITICAL: author-side only. The skill must refuse to run on a
 # manuscript the user did not author. Editorial-side use (AI-triaging
-# someone else's submission) violates ICMJE, NIH, Elsevier, and Nature
-# peer-review policy — same posture as reviewer-simulation.
+# someone else's submission) would delegate judgement to AI, which
+# NIH, Elsevier and Springer Nature peer-review AI policies forbid —
+# same posture as reviewer-simulation.
 positioning: author-side-only
 
 platforms:
@@ -87,6 +89,7 @@ grounding:
   - knowledge/peer-review/editorial-decision-making.md
   - knowledge/scientific-writing/significance-positioning.md
   - knowledge/peer-review/common-critiques-taxonomy.md
+  - knowledge/prior-art/peer-review-platforms.md
 
 non_goals:
   - Editorial-side triage of someone else's submission.
