@@ -1,6 +1,6 @@
 # AI writing failure modes
 
-*Last updated: 2026-05-17*
+*Last updated: 2026-10-20*
 
 ## Synthesis
 
@@ -9,7 +9,9 @@ well-characterised categories: **hallucinated references**,
 **authorial-voice loss / lexical homogenisation**, **automation
 complacency**, and (more speculatively) **skill degradation over
 time**. Three of the four are well-documented in the empirical
-literature; the fourth is mostly hype with thin evidence. Scriptorium
+literature; the fourth still has thin evidence for writing
+specifically, though 2025 work in adjacent settings has moved it
+from pure speculation to "plausible, weakly evidenced". Scriptorium
 should be honest about which it defends against and which it does
 not.
 
@@ -48,9 +50,15 @@ The pattern is consistent across replications: LLMs hallucinate
 plausible-looking citations at high rates, and the hallucinations
 are often hard to detect by surface inspection because the cited
 authors are real, the journals are plausible, and the topic
-matches. See [[hallucination-in-llm-citations]] for the deeper
-review and [[citation-accuracy-evidence]] for downstream
-consequences.
+matches. Since 2025 the problem has been measured in the
+published literature itself, not just in prompted experiments: an
+audit of about 2.5 million PubMed Central open-access papers found
+nearly 3,000 (2,810) with references that could not be traced to
+any known publication — 4,046 fabricated references among 97.1
+million verified — with rates climbing steeply since 2023 [13]. See
+[[hallucination-in-llm-citations]] for the deeper review and the
+2025–2026 prevalence studies, and [[citation-accuracy-evidence]]
+for downstream consequences.
 
 The defence: **never let a generation step add citations**. Audit
 existing citations against retrievable sources
@@ -61,14 +69,21 @@ transformation skills don't add them") is a direct response.
 ### 2. Authorial-voice loss and lexical homogenisation
 
 The "ChatGPT smell" has become measurable. Kobak et al. [3]
-analysed ~15 million PubMed abstracts from 2010–2024, examining
+analysed over 15 million PubMed abstracts from 2010–2024, examining
 *excess vocabulary* — words whose 2024 frequency substantially
-exceeded the pre-ChatGPT (2021–2022) baseline. Terms with the
-highest excess included **"delve", "underscore", "primarily",
-"meticulous", "boast", "intricate", "realm", "commendable"**.
-Over 100 terms showed meaningful surges. The authors estimate
-that **at least 10% of 2024 PubMed abstracts were processed with
-LLMs** — implying ~150,000 papers per year.
+exceeded a pre-LLM baseline extrapolated from 2021–2022. They
+identified 454 excess words in 2024, mostly style words. Rare
+words with the strongest excess included **"delves",
+"underscores", and "showcasing"**; common words with the largest
+excess included **"potential", "findings", and "crucial"**; words
+such as **"meticulous", "intricate", "realm", and "commendable"**
+are also on the excess list. In the peer-reviewed version
+(*Science Advances*, 2025) the authors estimate that **at least
+13.5% of 2024 PubMed abstracts were processed with LLMs**, with the
+lower bound reaching 40% in some subcorpora [3]. A parallel
+analysis of 1.1 million arXiv, bioRxiv, and Nature-portfolio papers
+(2020–2024) found the fastest growth in computer science, with up
+to 22% of papers showing LLM modification by September 2024 [8].
 
 Detection studies (Sadasivan et al. 2023, "Can AI-Generated Text
 Be Reliably Detected?" [4]) show the reverse problem: as LLM
@@ -82,10 +97,16 @@ A separate strand of evidence is the **homogenisation effect**:
 Agarwal et al. [5] found that AI writing suggestions push prose
 toward Western, English-native, and majority-culture norms,
 diminishing the cultural and stylistic nuances of writers from
-underrepresented backgrounds. This is the inverse of the
-ESL-helpful framing in [[esl-writers-swales-hyland]] — the same
-tool that helps a hedging-uncertain ESL writer get reviewable
-prose can also flatten a writer's distinctive voice.
+underrepresented backgrounds. Doshi & Hauser [9] found the same
+pattern at the level of content in a controlled experiment: access
+to LLM-generated ideas made individual short stories rated more
+creative and better written, but the stories were more similar to
+each other than stories written without AI — "an increase in
+individual creativity at the risk of losing collective novelty."
+This is the inverse of the ESL-helpful framing in
+[[esl-writers-swales-hyland]] — the same tool that helps a
+hedging-uncertain ESL writer get reviewable prose can also flatten
+a writer's distinctive voice.
 
 The defence: **conservative-edit posture**. A transformation skill
 that preserves terminology declared in `MANUSCRIPT_STATE.yaml`,
@@ -113,12 +134,17 @@ them into a theoretical model. Key findings:
 
 Applied to writing assistance: studies on co-writing with
 opinionated LLMs (Jakesch et al. 2023, the Buschek/Bhat line of
-CHI work [7]) show that **users who accept more AI suggestions
-exhibit measurable attitude shifts toward the AI's bias**, and
-**most users do not notice they are being influenced**. The 2023
-Cornell study found that a biased AI writing assistant doubled
-the probability of users writing the assistant's position on a
-contested social question.
+CHI work [7]) show that **an opinionated assistant shifts both what
+users write and what they later report believing**, and **most
+users do not notice they are being influenced**. In Jakesch et
+al.'s experiment (N=1,506), participants given a model configured
+to argue one side of a contested social question were about twice
+as likely (2.04× and 2.0×) as controls to argue that side in their
+own post; among participants whose view the model supported, only
+10% noticed its suggestions were imbalanced [5, 7]. A 2025 survey
+of 319 knowledge workers adds a mechanism: higher confidence in
+generative AI was associated with less critical thinking, while
+higher self-confidence was associated with more [10].
 
 The implication for scriptorium: every accepted edit is a small
 attitude shift. A tool that emits voluminous suggestions and
@@ -143,18 +169,39 @@ modes. The hypothesis: extended use of AI writing assistance
 erodes the user's ability to write without it, with downstream
 costs for thinking, learning, and disciplinary fluency.
 
-Evidence is thin. The genre is mostly speculative essays (Marc
-Watkins on writing pedagogy; press coverage of student writing
-samples) and short-horizon experimental studies (Bhat et al.,
-some 2024 CHI work) that cannot answer the long-horizon question.
-There is *some* analogous evidence from GPS-and-navigation
+Evidence for writing specifically is still thin. The genre was
+mostly speculative essays (Marc Watkins on writing pedagogy; press
+coverage of student writing samples) and short-horizon experimental
+studies (Bhat et al., some 2024 CHI work) that cannot answer the
+long-horizon question. Three 2025 studies narrow the gap without
+closing it:
+
+- **Kosmyna et al. 2025** [11] (preprint, not peer-reviewed): 54
+  participants wrote essays over several sessions with an LLM, a
+  search engine, or no tool, under EEG. LLM users showed the
+  weakest brain connectivity, the lowest self-reported ownership
+  of their essays, and difficulty quoting their own work; when
+  switched to writing without the tool, they showed reduced
+  engagement. Small sample, single lab, essay-writing rather than
+  scholarly writing.
+- **Lee et al. 2025** [10] (CHI 2025): a self-report survey, so it
+  measures perceived rather than actual effort; it links trust in
+  generative AI to reduced critical thinking.
+- **Budzyń et al. 2025** [12] (*Lancet Gastroenterology &
+  Hepatology*): the clearest clinical analogue. After AI-assisted
+  polyp detection was introduced at four Polish centres, the
+  adenoma detection rate of standard, *non*-AI-assisted
+  colonoscopies fell from 28.4% to 22.4%. Observational
+  before/after design; a perceptual-motor task, not writing.
+
+There is also older analogous evidence from GPS-and-navigation
 literature (reduced spatial cognition with prolonged GPS use) and
-from calculator-and-mental-arithmetic literature, but transfer to
-writing is speculative.
+from calculator-and-mental-arithmetic literature. Transfer of any
+of this to scholarly writing remains an inference.
 
 The honest position: **flag this as a real concern but mark the
-evidence as weak**. Scriptorium's design language should not
-overclaim that conservative-edit posture defends against
+evidence as weak for writing**. Scriptorium's design language
+should not overclaim that conservative-edit posture defends against
 skill degradation. It probably does not — what it defends against
 is unintended *manuscript* degradation, not unintended *author*
 degradation.
@@ -197,7 +244,9 @@ The concrete uses are:
 ## Implementation priority for scriptorium
 
 **Verdict:** No new skill. **DESIGN.md defensive section**: yes,
-high priority.
+high priority. (Reconsidered 2026-10-20: the verdict holds. The
+new evidence strengthens the case for the existing defences but
+does not call for a new skill.)
 
 **Why useful context anyway:**
 1. **Defends design choices already in `DESIGN.md`.** The four
@@ -229,12 +278,16 @@ preservation" check becomes load-bearing (e.g., users complain
 that their prose comes out flattened after a critique-and-revise
 cycle), a `voice-fidelity-audit` skill could become justified in
 v0.3+. The data it would need: a sample of the author's prior
-prose to fingerprint against. Operationally non-trivial.
+prose to fingerprint against. Operationally non-trivial. The
+Doshi & Hauser result [9] — individually better, collectively more
+similar — is the specific risk such a skill would watch for.
 
 ## Open questions / weak evidence
 
-- **Skill degradation** is poorly evidenced. Treat as a real
-  concern but do not overclaim defences.
+- **Skill degradation** is poorly evidenced for writing. The 2025
+  studies [10, 11, 12] are self-report, preprint, or
+  non-writing analogues. Treat as a real concern but do not
+  overclaim defences.
 - **Voice-loss measurement** is open. The Kobak et al. excess-
   vocabulary method [3] works at population scale (millions of
   abstracts) but is noisy for single manuscripts.
@@ -260,23 +313,26 @@ in ChatGPT-generated medical content. *Cureus*, 15(5), e39238.
 DOI: 10.7759/cureus.39238. PMID: 37337480.
 
 [3] Kobak, D., González-Márquez, R., Horvát, E.-Á., & Lause, J.
-(2024). Delving into ChatGPT usage in academic writing through
-excess vocabulary. arXiv:2406.07016. (See also subsequent extended
-analysis "Delving into LLM-assisted writing in biomedical
-publications through excess vocabulary".)
+(2025). Delving into LLM-assisted writing in biomedical
+publications through excess vocabulary. *Science Advances*,
+11(27), eadt3813. DOI: 10.1126/sciadv.adt3813. Preprint:
+arXiv:2406.07016 (first posted 2024 as "Delving into ChatGPT usage
+in academic writing through excess vocabulary").
 
 [4] Sadasivan, V. S., Kumar, A., Balasubramanian, S., Wang, W., &
 Feizi, S. (2023). Can AI-Generated Text be Reliably Detected?
-arXiv:2303.11156. (Originally posted 2023; subsequent NeurIPS /
-ICLR follow-up work in 2024 builds on this framing.)
+arXiv:2303.11156. (Later published in *Transactions on Machine
+Learning Research*, per the arXiv record.)
 
-[5] Agarwal, D., Naaman, M., & Vashistha, A. (2024). AI Suggestions
+[5] Agarwal, D., Naaman, M., & Vashistha, A. (2025). AI Suggestions
 Homogenize Writing Toward Western Styles and Diminish Cultural
-Nuances. arXiv:2409.11360. See also Jakesch, M., Bhat, A.,
-Buschek, D., Zalmanson, L., & Naaman, M. (2023). Co-Writing with
-Opinionated Language Models Affects Users' Views. *Proceedings of
-the 2023 CHI Conference on Human Factors in Computing Systems*.
-DOI: 10.1145/3544548.3581196.
+Nuances. *Proceedings of the 2025 CHI Conference on Human Factors
+in Computing Systems*, 1–21. DOI: 10.1145/3706598.3713564.
+arXiv:2409.11360. See also Jakesch, M., Bhat, A., Buschek, D.,
+Zalmanson, L., & Naaman, M. (2023). Co-Writing with Opinionated
+Language Models Affects Users' Views. *Proceedings of the 2023 CHI
+Conference on Human Factors in Computing Systems*. DOI:
+10.1145/3544548.3581196. arXiv:2302.00560.
 
 [6] Parasuraman, R., & Manzey, D. H. (2010). Complacency and bias
 in human use of automation: An attentional integration. *Human
@@ -285,7 +341,56 @@ Factors*, 52(3), 381–410. DOI: 10.1177/0018720810376055. PMID:
 
 [7] Jakesch et al. 2023, as above [5]; the broader Bhat/Buschek
 line at CHI 2023–2025 on writing-assistant suggestion-acceptance
-bias. For the homogenisation pull specifically, see also Reizinger,
-P., Bonastre, J.-F., et al. work on AI text fingerprinting (2024)
-[TODO verify exact citation; the originally referenced "Reizinger
-2024" did not resolve cleanly in search].
+bias. (The "Reizinger 2024" AI-text-fingerprinting citation that
+previously appeared here could not be resolved to any real work
+and has been removed; Doshi & Hauser [9] is the verified
+replacement for the homogenisation point.)
+
+[8] Liang, W., Zhang, Y., Wu, Z., Lepp, H., Ji, W., Zhao, X., Cao,
+H., Liu, S., He, S., Huang, Z., Yang, D., Potts, C., Manning, C. D.,
+& Zou, J. (2025). Quantifying large language model usage in
+scientific papers. *Nature Human Behaviour*, 9(12), 2599–2609.
+DOI: 10.1038/s41562-025-02273-8. PMID: 40760036.
+
+[9] Doshi, A. R., & Hauser, O. P. (2024). Generative AI enhances
+individual creativity but reduces the collective diversity of
+novel content. *Science Advances*, 10(28), eadn5290. DOI:
+10.1126/sciadv.adn5290.
+
+[10] Lee, H.-P., Sarkar, A., Tankelevitch, L., Drosos, I., Rintel,
+S., Banks, R., & Wilson, N. (2025). The Impact of Generative AI on
+Critical Thinking: Self-Reported Reductions in Cognitive Effort and
+Confidence Effects From a Survey of Knowledge Workers. *Proceedings
+of the 2025 CHI Conference on Human Factors in Computing Systems*,
+1–22. DOI: 10.1145/3706598.3713778.
+
+[11] Kosmyna, N., et al. (2025). Your Brain on ChatGPT:
+Accumulation of Cognitive Debt when Using an AI Assistant for
+Essay Writing Task. arXiv:2506.08872. (Preprint; not
+peer-reviewed.)
+
+[12] Budzyń, K., Romańczyk, M., Kitala, D., et al. (2025).
+Endoscopist deskilling risk after exposure to artificial
+intelligence in colonoscopy: a multicentre, observational study.
+*The Lancet Gastroenterology & Hepatology*, 10(10), 896–903. DOI:
+10.1016/S2468-1253(25)00133-5. PMID: 40816301. (PubMed lists an
+erratum: *Lancet Gastroenterol Hepatol* 10(11):e12, DOI
+10.1016/S2468-1253(25)00294-8.)
+
+[13] Topaz, M., Roguin, N., Gupta, P., Zhang, Z., & Peltonen, L.-M.
+(2026). Fabricated citations: an audit across 2·5 million
+biomedical papers. *The Lancet*, 407(10541), 1779–1781. DOI:
+10.1016/S0140-6736(26)00603-3. PMID: 42107362. A research letter,
+not a full Article; *The Lancet* later published a linked
+Department of Error notice (408:218, DOI
+10.1016/S0140-6736(26)01339-5), whose content was not checked.
+Counts (2,810 papers; 4,046 fabricated references; 97.1 million
+verified references; PMC open access, 1 January 2023 – 18 February
+2026) are from: Columbia University School of Nursing (2026, May 7).
+Nearly 3,000 peer-reviewed medical papers have fake citations, a
+Columbia Nursing AI-assisted audit finds [Press release].
+https://www.eurekalert.org/news-releases/1127364 . "Nearly 3,000"
+and the trend wording follow *Nature*'s news report: Naddaf, M.
+(2026). Surge in fake citations uncovered by audit of 2.5 million
+biomedical-science papers. *Nature*, 653, 658–659. DOI:
+10.1038/d41586-026-00748-w.
