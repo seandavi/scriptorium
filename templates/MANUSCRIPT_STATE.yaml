@@ -18,6 +18,14 @@
 #     #            end-of-phase recaps; the complete experience, designed
 #     #            so an author learns the workflow as they fill the YAML.
 #     #            Best on a first scriptorium project.
+#   overrides:                # guards you choose to override for this project
+#     - guard: nih-application-prose  # a guard id from a skill's manifest.yaml
+#       skills: [specific-aims]       # or ["*"] for every skill that declares it
+#       note: "Institution's grants office reviewed our AI use"  # optional
+#     # Policy and scope guards only; accuracy guards cannot be
+#     # overridden. Skills still state the concern in one line and
+#     # list the guard under "Overrides applied" in their output.
+#     # See knowledge/conventions/author-authority.md.
 
 project:
   title: "Working title goes here"
