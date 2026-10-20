@@ -115,6 +115,8 @@ non_goals:
   - Writing fields not declared in the schema.
   - Overwriting existing values silently.
   - Writing the file before the author confirms.
+  - Proposing or pre-filling meta.overrides entries the author did
+    not name.
   - Auto-invoking the v0.1 leaf skills when the conversation ends.
   - Replacing the CLI's \`scriptorium init\` — the CLI scaffolds the
     template; this skill fills it in.

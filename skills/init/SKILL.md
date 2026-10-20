@@ -5,6 +5,7 @@ grounding:
   - schemas/manuscript-state.schema.json
   - knowledge/conventions/guidance-level.md
   - knowledge/conventions/declared-work-scope.md
+  - knowledge/conventions/author-authority.md
   - knowledge/peer-review/common-critiques-taxonomy.md
 ---
 
@@ -91,8 +92,9 @@ happen. This is one turn, not a wall of text. Something like:
 > (core claims, known weaknesses, terminology, audience, phase).
 > What we're really doing in this step is turning your manuscript
 > into *declared work* — the prose and scaffolding scriptorium
-> operates on. The later skills critique, audit, and refine; none
-> of them generate from blankness. You can stop at any point; only
+> operates on. The later skills critique, audit, and refine; by
+> default none of them generate from blankness, though you can
+> override that per skill. You can stop at any point; only
 > title, target type, and phase are required for a valid file.
 > Ready?"
 
@@ -271,6 +273,26 @@ which fields are load-bearing for which downstream skill.
 - **`document_phase.submission_target_date`** — *"Do you have a
   target submission date?"* Skip if unknown.
 
+- **`meta.overrides`** (optional) — *"Some skills decline certain
+  requests by default: running at outline phase, say, or drafting
+  a missing section. If you already know you want a skill to
+  proceed past one of those for this whole project, I can record
+  that here. Most people skip this."*
+
+  *Why this matters:* policy and scope guards are defaults the
+  author can override ([[author-authority]]). An entry here lets
+  the named skills proceed without asking; they still state the
+  concern each run and list the guard under "Overrides applied".
+  Accuracy guards, such as never inventing a citation, cannot be
+  overridden. *How to answer:* skip unless you have a specific
+  guard in mind; you can add one later, when a skill names it.
+
+  Never propose or pre-fill entries. Record only a guard the
+  author names, with the skills it applies to (`"*"` for every
+  skill that declares it) and an optional note. Guard ids are
+  listed under `guards:` in each skill's `manifest.yaml`;
+  `scriptorium validate` rejects unknown ids and accuracy guards.
+
 If the file already has values for any of these, **show them first**
 and ask whether to update, add to, or leave alone.
 
@@ -377,6 +399,8 @@ populated, Y left for later). Next: <suggested skill> when you're ready.
 - Invent fields not in the schema.
 - Silently overwrite existing values.
 - Write the file before the author confirms.
+- Propose or pre-fill `meta.overrides` entries. Record only guards
+  the author names.
 - Validate after writing (validation must precede the write so the
   author never receives a broken file).
 - Ask a wall of questions. The conversation should feel like a
@@ -396,6 +420,9 @@ This skill is grounded in:
   introduces to the author and writes to `meta.guidance_level`.
   Init itself always runs at `full`; the level it sets controls
   every later skill.
+- [[author-authority]] — the guard kinds and the `meta.overrides`
+  entry init offers, opt-in and never pre-filled. Init's orientation
+  calls the declared-work boundary a default for the same reason.
 - [[common-critiques-taxonomy]] — informs *why* certain fields
   matter for downstream skills. `known_weaknesses`, `target_venue`,
   and `core_claims` are the load-bearing inputs for
