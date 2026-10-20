@@ -25,6 +25,7 @@ scriptorium validate MANUSCRIPT_STATE.yaml
 
 | Key | Required | Purpose |
 |---|---|---|
+| `meta` | no | Scriptorium-side preferences, not properties of the manuscript: `guidance_level` (see [Guidance level](/concepts/guidance-level/)) and `overrides` (see [below](#metaoverrides)). |
 | `project` | yes | Title, target type (manuscript / grant / review / …), target venue. |
 | `document_phase` | yes | Where the document is in its lifecycle: outline → draft → review → revision → submission → post-submission → accepted. |
 | `core_claims` | no | What the document is arguing. Critique skills test whether the prose supports each claim; transformation skills preserve them. |
@@ -42,6 +43,43 @@ scriptorium init my-manuscript/
 ```
 
 Writes a starter `MANUSCRIPT_STATE.yaml` with all top-level keys present and commented. Edit it to match your project, then `scriptorium validate` it.
+
+## `meta.overrides`
+
+Guards the author has chosen to override for this project. Each skill
+declares its guards in `manifest.yaml`; only `policy` and `scope`
+guards can be overridden. [Author authority](/concepts/author-authority/)
+explains the guard kinds, the precedence and the "Overrides applied"
+line.
+
+```yaml
+meta:
+  overrides:
+    - guard: citation-recommendations
+      skills: [citation-audit, gap-finder]
+      note: "Name verified papers for unsupported claims; I decide what to cite."
+    - guard: outline-phase
+      skills: ["*"]
+```
+
+`overrides` is an array. Each entry is an object with these keys and
+no others:
+
+| Key | Required | Type | Meaning |
+|---|---|---|---|
+| `guard` | yes | string, kebab-case | A guard id declared under `guards:` in a skill's `manifest.yaml`. |
+| `skills` | yes | non-empty array of unique strings | Skill names the override applies to, each kebab-case, or `"*"` for every skill that declares the guard. |
+| `note` | no | string | Free text for the author's own record. Skills don't interpret it. |
+
+A per-run answer from the author takes precedence over these entries,
+and the skill still states the guard's concern in one line.
+
+Beyond the schema, `scriptorium validate` checks each entry against the
+guards the bundled skills declare. It rejects:
+
+- a guard id no bundled skill declares;
+- a guard of kind `accuracy`;
+- a skill listed in `skills` that does not declare the guard.
 
 ## A note on `known_weaknesses`
 
