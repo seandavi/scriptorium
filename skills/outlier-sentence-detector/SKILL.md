@@ -4,6 +4,7 @@ description: Flag sentences that are statistical outliers in the manuscript alon
 grounding:
   - knowledge/conventions/guidance-level.md
   - knowledge/conventions/declared-work-scope.md
+  - knowledge/conventions/author-authority.md
   - knowledge/scientific-writing/quantitative-quality-measures.md
   - knowledge/editing/copyediting-vs-developmental.md
 ---
@@ -29,6 +30,8 @@ it does not fix.
    > any tool that produces one is throwing information away."
    The first useful operation the note lists is outlier flagging.
    Outlier flagging is what this skill does. Quality scoring is not.
+   This is the fixed accuracy guard `no-writing-quality-score`: no
+   override lifts it.
 2. **Thresholds are author-tunable via `meta.guidance_level`.** At
    `light` ("terse" in scriptorium's scheme), report only the top ~3
    flags per dimension; at `standard`, up to ~7; at `full`, up to
@@ -43,9 +46,11 @@ it does not fix.
    (Flesch-Kincaid, SMOG, Coleman-Liau) are theatre for scientific
    text; this skill is explicitly not that.
 4. **Output is descriptive, not directive.** Each flag is *"worth
-   re-reading because X"*, never *"this sentence is bad"* or
-   *"rewrite this sentence to be shorter"*. The author decides what
-   to do.
+   re-reading because X"*, never *"this sentence is bad"* or, by
+   default, *"rewrite this sentence to be shorter"*. The author
+   decides what to do. Concrete rewrites are available only when the
+   author overrides the `critique-rewrite-suggestions` guard (see
+   Guards and overrides).
 5. **Never modify the manuscript.** This skill emits a markdown
    report only.
 6. **Use a sensible floor for short manuscripts.** A 500-word
@@ -68,12 +73,55 @@ it does not fix.
 **Do not invoke when:**
 
 - The document is in `outline` phase — distributional statistics
-  on stub prose are noise.
+  on stub prose are noise. This is the `outline-phase` scope guard;
+  the author can override it.
 - As a silent side-effect of another skill. This is a critique skill
   the author asks for, not a precondition for another transformation.
 - A user is asking "is my writing any good?" — the skill cannot
   answer that question. Say so, then offer to surface candidates
-  the author can re-read.
+  the author can re-read. This is the fixed `no-writing-quality-score`
+  guard.
+
+## Guards and overrides
+
+This skill's guards are declared in `manifest.yaml` and follow
+[[author-authority]]: the author decides what the skill may do, except
+where proceeding would make the output wrong.
+
+- **`outline-phase` (scope; default refuse).** Fires when
+  `document_phase.current` is `outline`. State the concern and its
+  source in one line: "The manuscript is at outline phase; there is
+  not yet enough declared prose for this skill to work on
+  (`outline-phase`; source: [[declared-work-scope]])." Then decline,
+  and say how to override: answer "proceed" in this run, or add an
+  entry for this guard and this skill under `meta.overrides`. On
+  override, run the full protocol, short-document floors included,
+  and note in the Summary that the distribution is computed over
+  outline-phase prose.
+- **`critique-rewrite-suggestions` (scope; default refuse).** Fires
+  when the author asks how to fix a flagged sentence. State the
+  concern and its source in one line: "This critique skill flags
+  problems for the author to fix; by default it proposes no concrete
+  rewrites (`critique-rewrite-suggestions`; source:
+  [[copyediting-vs-developmental]])." Then decline, naming the same
+  two override routes. On override, add one rewrite per flagged
+  sentence, marked as a suggestion (see Output format). Each
+  suggestion keeps the sentence's cite keys and numbers verbatim and
+  makes no claim that it is better; the author decides.
+- **`no-writing-quality-score` (accuracy; fixed).** No overall score,
+  grade or readability index, ever. Neither a per-run answer nor
+  `meta.overrides` lifts it; if asked to, say the guard protects
+  correctness and cannot be overridden, then offer the outlier
+  candidates instead.
+
+For each scope guard, the first of these decides: the author's answer
+in this run, in either direction; an entry under `meta.overrides`
+naming the guard and this skill (or `"*"`); the default, refuse.
+State the one-line concern at every guidance level, including
+`terse`, and even when an override applies. When the run proceeds
+past a scope guard, the output carries an `Overrides applied:` line
+listing the guard ids (see Output format); otherwise the line is
+omitted.
 
 ## Inputs you should expect
 
@@ -126,9 +174,11 @@ Work in this order. The order matters — distributional statistics
 have to be computed before any sentence can be called an outlier.
 
 1. **Read `MANUSCRIPT_STATE.yaml`.** Extract `meta.guidance_level`,
-   `bibliography.paths`, and `document_phase.current`. If
-   `document_phase.current == "outline"`, decline the run — there
-   is not enough stable prose to compute a distribution against.
+   `bibliography.paths`, `meta.overrides`, and
+   `document_phase.current`. If
+   `document_phase.current == "outline"`, the `outline-phase` guard
+   applies: decline unless overridden — there is not enough stable prose to compute a
+   distribution against.
 2. **Read every manuscript file.** Concatenate the prose. Strip
    front-matter, code blocks, equations, tables, and figure
    captions — these have their own distributional characteristics
@@ -210,6 +260,11 @@ this order:
 ```markdown
 # Outlier sentence detector
 
+Overrides applied: <guard ids>
+
+(Only when this run proceeded past a scope guard, through a per-run
+answer or `meta.overrides`. Omit the line otherwise.)
+
 ## Summary
 
 - Sentences analysed: N
@@ -237,6 +292,9 @@ Per-row rationale and "what to look at" lines follow the table:
   the manuscript's median length; consider whether two clauses
   could be split or whether the connective tissue is doing real
   work.
+  - *Suggestion (author's call):* "<one possible rewrite>" (only
+    under a `critique-rewrite-suggestions` override; one per flagged
+    sentence, in every dimension's list).
 
 ## Complexity outliers
 
@@ -310,7 +368,9 @@ the current run where relevant.)
   in others — calibration to the source is the point.
 - **Descriptive rationale.** Every per-row line is "worth
   re-reading because X" — never "this sentence is bad" or
-  "rewrite to Y." The author owns the decision.
+  "rewrite to Y." The author owns the decision. Under a
+  `critique-rewrite-suggestions` override, the one suggestion per
+  flag sits below the rationale, labelled as a suggestion.
 - **Honest about caps.** The Summary names the number surfaced
   and the number flagged (e.g., "Length outliers surfaced: 7 of
   23 flagged") so the author can request a higher guidance level
@@ -326,13 +386,16 @@ the current run where relevant.)
 - Produce an overall manuscript writing-quality score, grade,
   percentage, pass/fail, rating, or any single number that
   purports to summarise the manuscript's prose. This is the
-  load-bearing refusal of the skill.
+  load-bearing refusal of the skill, and a fixed accuracy guard
+  (`no-writing-quality-score`).
 - Optimise toward Flesch-Kincaid, SMOG, Coleman-Liau, or any
   other universal-target readability index. The skill calibrates
   to the manuscript, not to a generic target.
 - Modify the manuscript.
-- Direct the author to specific rewrites ("change X to Y"). The
-  skill surfaces candidates; the author decides.
+- Direct the author to specific rewrites ("change X to Y") unless
+  the author has overridden `critique-rewrite-suggestions`; even
+  then, offer one suggestion per flag, labelled as such. The skill
+  surfaces candidates; the author decides.
 - Flag the same sentence repeatedly per dimension to inflate
   the count. One row per dimension per sentence; cross-listed
   sentences are listed once per dimension with a distinct
@@ -365,7 +428,7 @@ This skill is grounded in scriptorium's knowledge layer:
   a *copyediting / line-editing diagnostic*: the copyeditor
   *queries* the author when a sentence is unusual; the copyeditor
   does not rewrite. This is the editorial-taxonomy basis for the
-  "descriptive, not directive" posture.
+  "descriptive, not directive" default (`critique-rewrite-suggestions`).
 - [[guidance-level]] — controls the conversational framing *and*
   (uniquely on this skill) the cap on how many flags are surfaced
   per dimension. Both behaviours follow the convention's principle:
@@ -373,9 +436,12 @@ This skill is grounded in scriptorium's knowledge layer:
   changes is how the skill talks and, here, how many candidates
   it walks the author through.
 - [[declared-work-scope]] — the skill operates on declared
-  prose. It refuses to run at `outline` phase (no stable
-  distribution to compute) and does not invent the sentences it
-  flags; it only points at what the author has written.
+  prose. By default it declines to run at `outline` phase (no stable
+  distribution to compute; `outline-phase`) and does not invent the
+  sentences it flags; it only points at what the author has written.
+- [[author-authority]] — the scope guards are defaults the author
+  can override; `no-writing-quality-score` is an accuracy guard and
+  stays fixed.
 
 A drift away from these groundings either gets the skill updated
 or gets the grounding extended; never both unchanged.

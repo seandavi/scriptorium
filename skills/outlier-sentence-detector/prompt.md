@@ -27,6 +27,8 @@ and note in the output that the run was un-grounded.
    pass/fail verdict, or any single number that purports to summarise
    the manuscript's writing quality. General-purpose writing-quality
    scoring is theatre for scientific text; outlier flagging is not.
+   This is the fixed accuracy guard `no-writing-quality-score`: no
+   override lifts it.
 2. **Thresholds are author-tunable via `meta.guidance_level`.** At
    `terse`, surface only the top ~3 flags per dimension; at `standard`,
    up to ~7; at `full`, up to ~15. If every sentence appears as an
@@ -37,21 +39,64 @@ and note in the output that the run was un-grounded.
    systematically mis-score scientific prose; the skill explicitly
    does not do that.
 4. **Output is descriptive, not directive.** Each flag is *"worth
-   re-reading because X"* — never *"this sentence is bad"* or
-   *"rewrite this sentence."* The author decides what to do.
+   re-reading because X"* — never *"this sentence is bad"* or, by
+   default, *"rewrite this sentence."* The author decides what to do.
+   Concrete rewrites are available only under a
+   `critique-rewrite-suggestions` override (see below).
 5. **Never modify the manuscript.** Emit a markdown report only.
 6. **Use absolute floors for short manuscripts.** A 500-word abstract
    has too small a distribution for pure σ-based thresholding to
    produce sensible results. Apply the floors named in the protocol.
+
+## Guards and overrides
+
+The author decides what this pass may do, except where proceeding
+would make the output wrong.
+
+- **`outline-phase` (scope; default refuse).** Fires when
+  `document_phase.current` is `outline`. State the concern and its
+  source in one line: "The manuscript is at outline phase; there is
+  not yet enough declared prose for this skill to work on
+  (`outline-phase`; source: scriptorium's declared-work-scope
+  convention)." Then decline, and say how to override: answer
+  "proceed" in this run, or add an entry for this guard and this
+  skill under `meta.overrides`. On override, run the full protocol,
+  short-document floors included, and note in the Summary that the
+  distribution is computed over outline-phase prose.
+- **`critique-rewrite-suggestions` (scope; default refuse).** Fires
+  when the author asks how to fix a flagged sentence. State the
+  concern and its source in one line: "This critique skill flags
+  problems for the author to fix; by default it proposes no concrete
+  rewrites (`critique-rewrite-suggestions`; source: scriptorium's
+  copyediting-vs-developmental note)." Then decline, naming the same
+  two override routes. On override, add one rewrite per flagged
+  sentence below its rationale, marked *Suggestion (author's call)*. Each suggestion keeps the sentence's
+  cite keys and numbers verbatim and makes no claim that it is
+  better.
+- **`no-writing-quality-score` (accuracy; fixed).** No overall score,
+  grade or readability index, ever. Neither a per-run answer nor
+  `meta.overrides` lifts it; if asked to, say the guard protects
+  correctness and cannot be overridden, then offer the outlier
+  candidates instead.
+
+For each scope guard, the first of these decides: the author's answer
+in this run, in either direction; an entry under `meta.overrides`
+naming the guard and this skill (or `"*"`); the default, refuse.
+State the one-line concern at every guidance level, including
+`terse`, and even when an override applies. When the run proceeds
+past a scope guard, the output carries an `Overrides applied:` line
+listing the guard ids; otherwise the line is omitted.
 
 ## Operational protocol
 
 Work in this order:
 
 1. Read `MANUSCRIPT_STATE.yaml`. Extract `meta.guidance_level`,
-   `bibliography.paths`, and `document_phase.current`. If
-   `document_phase.current == "outline"`, decline the run — there is
-   not enough stable prose to compute a distribution against.
+   `bibliography.paths`, `meta.overrides`, and
+   `document_phase.current`. If
+   `document_phase.current == "outline"`, the `outline-phase` guard
+   applies: decline unless overridden — there is not enough stable
+   prose to compute a distribution against.
 2. Read the manuscript prose. Strip front-matter, code blocks,
    equations, tables, and figure captions — these would skew the
    statistics. Strip bibliography prose.
@@ -99,6 +144,9 @@ order:
 
 ```markdown
 # Outlier sentence detector
+
+Overrides applied: <guard ids>
+(Only when this run proceeded past a scope guard; omit otherwise.)
 
 ## Summary
 
@@ -172,6 +220,8 @@ order:
   for this document.
 - **Descriptive, not directive.** Per-row lines are "worth re-reading
   because X" — never "this sentence is bad" or "rewrite to Y."
+  Under a `critique-rewrite-suggestions` override, one labelled
+  suggestion per flag sits below the rationale.
 - **Honest about caps.** The Summary names "surfaced of flagged" so
   the author can request a higher guidance level for the full list.
 
@@ -179,12 +229,14 @@ order:
 
 - Produce an overall manuscript writing-quality score, grade,
   percentage, pass/fail, rating, or any single number that purports
-  to summarise the prose. This is the load-bearing refusal.
+  to summarise the prose. This is the load-bearing refusal, and a
+  fixed accuracy guard (`no-writing-quality-score`).
 - Optimise toward Flesch-Kincaid, SMOG, Coleman-Liau, or any other
   universal-target readability index.
 - Modify the manuscript.
-- Direct the author to specific rewrites. Surface candidates; the
-  author decides.
+- Direct the author to specific rewrites unless the author has
+  overridden `critique-rewrite-suggestions`; even then, one labelled
+  suggestion per flag. Surface candidates; the author decides.
 - Flag the same sentence repeatedly per dimension to inflate the
   count.
 - Surface so many flags the report is unusable. If every sentence
