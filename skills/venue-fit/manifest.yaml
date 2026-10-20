@@ -47,9 +47,10 @@ guidance_level_behavior:
     Open with what venue-fit is doing (scope / audience /
     methodological / novelty / significance / OA assessment per
     axis; not a probability estimate) and why the tier structure
-    matters (most authors over-aim; tiered output saves time);
-    close with which tier the author should consider first and
-    why.
+    matters (a sizeable minority of papers reach their final venue
+    only after a rejection elsewhere; naming the tiers makes a
+    stretch attempt a deliberate choice); close with which tier the
+    author should consider first and why.
 
 # Explicit invocation only. The skill is invoked when the author is
 # choosing a venue or pressure-testing a declared one. It is not a
@@ -94,10 +95,12 @@ inputs:
     required: false
     description: >
       Optional declared constraints. Open-access required?
-      max_apc_usd? Indexing requirements (PubMed, Scopus, WoS)?
-      Preprint preference? Funder constraints (NIH, Wellcome,
-      cOAlition S, HHMI)? When declared, applied as hard filters
-      before tiering.
+      max_apc_usd? Indexing requirements (PubMed, Scopus, WoS,
+      Journal Impact Factor)? Preprint preference? Funder
+      constraints (NIH, Wellcome, cOAlition S, HHMI, Gates)? When
+      declared, applied as hard filters before tiering, including
+      funder APC rules. A declared HHMI funder makes the preprint
+      section required for covered original research articles.
 
 # Knowledge-layer documents that ground this skill's design.
 grounding:
