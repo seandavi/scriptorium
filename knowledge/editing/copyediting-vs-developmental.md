@@ -1,6 +1,6 @@
 # Copyediting vs developmental editing: the editing taxonomy
 
-*Last updated: 2026-05-17*
+*Last updated: 2026-10-20*
 
 ## Synthesis
 
@@ -31,8 +31,9 @@ agent design.
 
 ## Evidence
 
-**Einsohn (2011, 2019), *The Copyeditor's Handbook* (3rd ed., UC
-Press, ISBN 978-0520286726).** The most widely used English-language
+**Einsohn (2011, 2019), *The Copyeditor's Handbook* (4th ed., with
+Marilyn Schwartz, UC Press 2019, ISBN 978-0520286726; 3rd ed.
+2011).** The most widely used English-language
 reference on copyediting. Einsohn is explicit about scope:
 "Copyeditors are expected to query structural and organizational
 problems, but they are not expected to fix these problems.
@@ -162,6 +163,9 @@ output legible to anyone trained in the editorial tradition.
   particularly soft: a heavy line edit and a light developmental edit
   produce similar artifacts. Scriptorium should not pretend the
   boundary is sharper than it is.
+- The Einsohn quotations above were not re-checked page by page
+  against the 4th edition in the 2026-10-20 refresh. Treat them as
+  work-level attributions until they are.
 
 ## References
 
@@ -171,9 +175,11 @@ output legible to anyone trained in the editorial tradition.
 
 [^2]: Mossop B. *Revising and Editing for Translators*. 4th ed.
     Routledge; 2020. ISBN 978-1138895164. See chapter 17, "The
-    Revision Parameters."
+    Revision Parameters." (Open Library dates this ISBN to 2019.
+    The chapter number was not re-verified in the 2026-10-20
+    refresh.)
 
 [^3]: Council of Science Editors. *Scientific Style and Format: The
     CSE Manual for Authors, Editors, and Publishers*. 9th ed.
     University of Chicago Press; 2024. ISBN 978-0226683942.
-    https://www.csemanual.org/
+    DOI: 10.7208/cse9. https://www.csemanual.org/

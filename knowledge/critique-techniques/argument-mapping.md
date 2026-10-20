@@ -1,6 +1,6 @@
 # Argument mapping: diagramming structure to expose gaps
 
-*Last updated: 2026-05-17*
+*Last updated: 2026-10-20*
 
 ## Synthesis
 
@@ -22,11 +22,18 @@ prose are rarely formal-logic errors. They are missing warrants
 qualifiers ("results generalise to X" without specifying the boundary),
 and unaddressed rebuttals ("the alternative explanation is not
 discussed"). A structured argument map turns those failure modes into
-locatable, nameable absences rather than vague complaints. Empirically,
-controlled studies of computer-aided argument mapping in critical-
-thinking instruction find gains of 0.7–0.85 SD in critical-thinking
-test scores [^3], which is among the larger educational effects in the
-literature on transferable reasoning skill.
+locatable, nameable absences rather than vague complaints. The
+empirical evidence comes from van Gelder's pooled analysis of 26
+pre/post studies of one-semester critical-thinking courses built
+around computer-aided argument mapping [^3]. It reports a weighted
+gain of about 0.7 SD in critical-thinking test scores, and 0.85 SD
+for the 15 high-intensity studies. Net of the roughly 0.11 SD gained
+from a semester of college alone, the added value is about
+0.6–0.7 SD. Even so, this is among the larger educational effects in
+the literature on transferable reasoning skill. Two caveats: many of
+the pooled studies are unpublished, and the designs are pre/post,
+not controlled comparisons. (The study counts and the 0.11 SD
+baseline have not been checked at page level; see [^3].)
 
 For scriptorium, argument mapping is the underlying theory for skills
 that audit logical flow — particularly `argumentative-flow` and
@@ -107,10 +114,12 @@ readily into a sequence of audit prompts.
 
 ### Computational argument-mapping tools
 
-- **Rationale** and **bCisive** (Austhink / Tim van Gelder) — commercial
-  argument-mapping software with a long track record of educational use;
-  Rationale is the engine behind the 0.7–0.85 SD critical-thinking
-  gains cited above [^3].
+- **Rationale** and **bCisive** (Austhink / Tim van Gelder) —
+  commercial argument-mapping software with a long track record of
+  educational use. They come from the same research programme as the
+  pooled critical-thinking gains cited above [^3]. That analysis
+  pools argument-mapping-based courses in general, so the gains are
+  not specific to this software.
 - **MindMup** — lightweight, free, browser-based concept/argument mapping
   used widely in classroom settings; not Toulmin-specific but well-
   suited to argument-tree work.
@@ -118,7 +127,9 @@ readily into a sequence of audit prompts.
   prototype originally developed with Walton; implements computational
   evaluation of arguments built from schemes, including critical-
   question handling [^6]. Available at
-  https://carneades.github.io/.
+  https://carneades.github.io/. The project site's most recent
+  release post is Carneades 4.3 (July 2017), so treat it as a
+  dormant research codebase.
 
 For scriptorium, the relevant lesson is not to embed these tools but
 to *steal their schema*: a Toulmin-style decomposition plus a Walton-
@@ -176,6 +187,10 @@ remains responsible for verifying that the warrants are sound.
   empirical question scriptorium should track: do authors who see a
   Toulmin-decomposed critique actually revise more substantively
   than authors who receive prose-only critique?
+- The pooled effect sizes in [^3] come from pre/post designs, many
+  of them unpublished, and van Gelder presents the meta-analysis as
+  unfinished. Cite the 0.7 / 0.85 SD figures as indicative, not as
+  controlled-trial effects.
 - LLMs are particularly prone to inventing plausible-but-absent
   warrants when prompted to "fill in the missing premise." The
   conservative-edit posture (see DESIGN.md) implies that critique
@@ -193,18 +208,46 @@ remains responsible for verifying that the warrants are sound.
 [^3]: van Gelder T. Using argument mapping to improve critical
     thinking skills. In: Davies M, Barnett R, eds. *The Palgrave
     Handbook of Critical Thinking in Higher Education*. Palgrave
-    Macmillan, 2015. Effect sizes reported across multiple
-    semester-long courses: 0.7–0.85 SD in critical-thinking measures.
+    Macmillan, 2015:183–192. DOI: 10.1057/9781137378057_12.
+    The chapter pools 26 pre/post studies of one-semester
+    argument-mapping-based critical-thinking courses. It reports
+    a weighted effect size of about 0.7 SD, 0.85 SD for the 15
+    high-intensity studies, and a value added over a semester of
+    college of about 0.6 (0.7 for high intensity). The baseline
+    it subtracts is a gain of about 0.11 SD from a semester of
+    college alone. (Corrected 2026-10-20: the effect sizes were
+    previously described as coming from controlled studies; the
+    DOI and pages were added. Verification status: the figures
+    were read from the author's PDF on reasoninglab.com early in
+    the refresh. A later attempt to re-fetch it for a page-level
+    check timed out. Secondary summaries agree on 0.7, 0.85 and
+    0.11 SD. The study counts (26; 15 high-intensity) and the
+    description of the meta-analysis as unfinished have not been
+    independently confirmed or checked at page level.)
 
 [^4]: Paul R, Elder L. *The Miniature Guide to Critical Thinking:
     Concepts and Tools*. 8th edition. Foundation for Critical
-    Thinking, 2019. ISBN 9780944583401. See also
-    https://louisville.edu/ideastoaction/about/criticalthinking/framework.
+    Thinking / Rowman & Littlefield, 2019. ISBN 9781538134948.
+    See also the earlier online article by Paul & Elder (1997),
+    which lists the eight elements and seven of the standards:
+    https://www.criticalthinking.org/pages/the-elements-of-reasoning-and-the-intellectual-standards/480.
+    (Corrected 2026-10-20: the ISBN previously given,
+    9780944583401, resolves to Elder's *Glossary of Critical
+    Thinking Terms and Concepts*. The University of Louisville
+    framework URL previously given now redirects to an unrelated
+    page.)
 
 [^5]: Browne MN, Keeley SM. *Asking the Right Questions: A Guide to
     Critical Thinking*. 12th edition. Pearson, 2017.
-    ISBN 9780134431994 (print); 9780137501731 (eText).
+    ISBN 9780134431994 (print); 9780137501731 (eText; not
+    resolvable in Open Library as of 2026-10-20 — print ISBN
+    verified).
 
-[^6]: Gordon TF, Walton D. The Carneades argumentation system. *Argument
-    & Computation*. Open-source repository:
-    https://carneades.github.io/. License MPL-2.0.
+[^6]: Gordon TF, Prakken H, Walton D. The Carneades model of argument
+    and burden of proof. *Artificial Intelligence*. 2007;
+    171(10–15):875–896. DOI: 10.1016/j.artint.2007.04.010.
+    Open-source system: https://carneades.github.io/; current
+    codebase (carneades-4) licensed MPL-2.0. (Corrected
+    2026-10-20: the entry previously cited "Gordon TF, Walton D.
+    The Carneades argumentation system. *Argument & Computation*"
+    with no year, volume, or identifier.)

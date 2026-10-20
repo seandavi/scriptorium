@@ -1,6 +1,6 @@
 # Internal consistency: detecting contradictions and drift within a single manuscript
 
-*Last updated: 2026-05-17*
+*Last updated: 2026-10-20*
 
 ## Synthesis
 
@@ -126,7 +126,7 @@ Failure modes:
   Results: the reported primary outcome is Y.
 
 The introduction–results mismatch is the textual fingerprint of
-HARKing (Kerr 1998; see [[logical-fallacy-detection]]). Yarkoni (2019)
+HARKing (Kerr 1998; see [[logical-fallacy-detection]]). Yarkoni (2022)
 [^1] argues that even when the hypothesis literally matches, the
 *verbal* hypothesis is often broader than the *statistical*
 hypothesis the analysis actually tests — a more subtle but equally
@@ -158,16 +158,20 @@ narrative re-fit.
   randomization; the results table reports the post-randomization
   groups."
 - **Penelope.ai** [^3] — pre-submission manuscript-quality checker
-  used by several journals (BMJ Open and others); applies a
-  customisable battery of 30+ checks. Like SciScore, primarily
+  used by several journals (BMJ Open and others). It applies a
+  customisable battery of checks: article and abstract structure,
+  title page, declarations, tables, figures, referencing, and
+  whether a reporting checklist applies. Like SciScore, primarily
   presence-of-element rather than consistency-of-element.
 - **Statcheck** [^4] — discussed in detail at
   [[statistical-inconsistency]]; detects internal inconsistencies
   between p-values and their test statistics + degrees of freedom.
 - **scrutiny** (R package, github.com/lhdjung/scrutiny) [^5] —
-  bundles GRIM, GRIMMER, DEBIT, SPRITE for downstream use; relevant
-  here because GRIM-class checks are internal-consistency checks at
-  the level of the reported summary statistics.
+  bundles GRIM, GRIMMER and DEBIT consistency tests (plus
+  duplication analysis and a framework for writing new tests)
+  for downstream use. These are relevant here because GRIM-class
+  checks are internal-consistency checks at the level of the
+  reported summary statistics.
 
 Outside these specific tools, internal-consistency auditing remains
 largely manual — and that gap is one of the more obvious places where
@@ -222,22 +226,31 @@ LLM limits — be honest:
 ## References
 
 [^1]: Yarkoni T. The generalizability crisis. *Behavioral and Brain
-    Sciences*. 2019 (online); 45:e1. DOI: 10.1017/S0140525X20001685.
+    Sciences*. 2022; 45:e1. Published online 21 December 2020;
+    preprint 2019. DOI: 10.1017/S0140525X20001685.
     Argues that the verbal-vs-statistical hypothesis mismatch is a
     pervasive form of internal inconsistency even when literal
-    hypothesis statements are preserved.
+    hypothesis statements are preserved. (Date corrected
+    2026-10-20 from "2019 (online)".)
 
 [^2]: Menke J, Roelandse M, Ozyurt B, Martone M, Bandrowski A. The Rigor
     and Transparency Index Quality Metric for Assessing Biological and
-    Psychological Research Articles. *iScience*. 2020; 23(11):101698.
+    Medical Science Methods. *iScience*. 2020; 23(11):101698.
     DOI: 10.1016/j.isci.2020.101698. SciScore product page:
-    https://sciscore.com/.
+    https://sciscore.com/. (Title corrected 2026-10-20; previously
+    given as "...Assessing Biological and Psychological Research
+    Articles".)
 
 [^3]: Penelope.ai — automated pre-submission manuscript checking.
-    https://www.penelope.ai/. No primary methods paper located in
-    accessible sources; described in journal editorial workflow
-    documentation. [TODO verify a peer-reviewed methods reference if
-    one exists.]
+    https://www.penelope.ai/. No peer-reviewed methods paper exists
+    as of an October 2026 search. The best primary description is
+    the vendor's BMJ Open case study, which describes the checks
+    above:
+    https://www.penelope.ai/blog/2018/2/12/9id69afc4jd8sy6h36vc2x8px69myo.
+    (Resolved 2026-10-20: this entry previously ended in a
+    "[TODO verify]" marker asking for a methods reference. The
+    earlier "30+ checks" figure could not be sourced and has been
+    removed.)
 
 [^4]: Nuijten MB, Hartgerink CHJ, van Assen MALM, Epskamp S, Wicherts
     JM. The prevalence of statistical reporting errors in psychology
@@ -245,5 +258,7 @@ LLM limits — be honest:
     DOI: 10.3758/s13428-015-0664-2. PMID: 26497820.
 
 [^5]: Jung LH. scrutiny: Error detection in science (R package).
-    https://github.com/lhdjung/scrutiny. Bundles GRIM, GRIMMER, DEBIT,
-    SPRITE implementations.
+    https://github.com/lhdjung/scrutiny. Implements GRIM, GRIMMER
+    and DEBIT, plus duplication analysis. (Corrected 2026-10-20:
+    the entry previously also listed SPRITE. No SPRITE function
+    was found in the repository in October 2026.)

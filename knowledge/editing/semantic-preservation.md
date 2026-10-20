@@ -1,6 +1,6 @@
 # Semantic preservation: how to think about "preserving meaning" measurably
 
-*Last updated: 2026-05-17*
+*Last updated: 2026-10-20*
 
 ## Synthesis
 
@@ -14,9 +14,11 @@ Skopos school's emphasis on *function in target context* are the
 intellectual ancestors of any serious account of "did the meaning
 survive the edit." The computational literature offers a different
 toolkit — sentence embeddings, BERTScore, and related metrics — that
-can quantify surface-level semantic overlap but are notoriously bad
-at the cases that matter most (polarity flips, hedging changes,
-numerical changes).
+can quantify surface-level semantic overlap. These metrics are
+documented to be insensitive to some of the cases that matter most:
+negation [^4] and numerical changes [^5]. Hedging changes are a
+plausible further weak spot, but this note has no direct source for
+that (researcher inference).
 
 The practical posture scriptorium adopts is **conservative preservation
 by structured invariants**, not measured similarity. Rather than
@@ -79,21 +81,29 @@ weighted by inverse document frequency. Outperforms n-gram metrics
 wording. Widely used for summarization and machine translation
 evaluation.[^3]
 
-But — and this is the load-bearing limitation — BERTScore and
-embedding-similarity metrics have a documented **antonymy problem**:
-"the best treatment" and "the worst treatment" have very similar
-contextual embeddings because the contexts are nearly identical
-except for one polarity-bearing token. The cosine similarity remains
-high; the *meaning* is opposite. Similarly, "p < 0.05" and "p < 0.5"
-have near-identical embeddings but profoundly different scientific
-claims.[^4]
+But — and this is the load-bearing limitation — BERTScore and other
+BERT-based metrics are insensitive to negation. Anschütz et al.
+(2023) summarise prior work showing that models such as BERT "lack
+understanding of negated phrases and do not attribute sufficient
+importance to the word 'not'". They conclude that "learned
+evaluation metrics based on these models are insensitive to
+negations".[^4] The minimal-pair studies they review, including the
+DEMETR benchmark, tested BERTScore and other metrics on negation and
+antonym perturbations, and found that most metrics "struggle to
+detect negations".[^4] Numbers are a second documented weak spot:
+BERTScore "exhibits low sensitivity to numerical variation".[^5]
+Two illustrative cases (researcher examples, not measured results):
+"the best treatment" and "the worst treatment" differ by one
+polarity-bearing token in an otherwise identical context; "p < 0.05"
+and "p < 0.5" differ by one character but make profoundly different
+scientific claims.
 
 For scientific manuscripts, the differences that matter are exactly
 the differences embedding metrics handle worst: numerical changes,
 hedging strength, polarity, scope of claims. A revision that flips
-"we observed an effect" to "we did not observe an effect" might
-register as 95%+ similar under BERTScore — and be catastrophically
-wrong.
+"we observed an effect" to "we did not observe an effect" could
+still receive a high BERTScore (an illustration, not a measured
+figure) — and be catastrophically wrong.
 
 **Why diff-size is not preservation.** A small textual diff and a
 preserved meaning are *not the same thing*. Single-word changes can
@@ -188,6 +198,9 @@ machine-checkable subset of it.
 - Embedding-based metrics may be useful for *triage* — flagging
   paragraphs where similarity is unexpectedly low — even if they
   cannot serve as accept/reject criteria.
+- No source in this note measures embedding-metric sensitivity to
+  hedging-strength changes specifically. The negation and numerical
+  evidence [^4], [^5] makes it plausible, but it is not shown.
 
 ## References
 
@@ -205,12 +218,29 @@ machine-checkable subset of it.
     Evaluating text generation with BERT. *International Conference
     on Learning Representations*. 2020. arXiv:1904.09675.
 
-[^4]: The "antonymy problem" — contextual embeddings of antonyms
-    (e.g. "best"/"worst") remain neighbours in BERT space, yielding
-    high BERTScore similarity even when polarity has been flipped —
-    is widely discussed in the BERTScore follow-on literature and
-    in broader sentence-embedding evaluation work (e.g. SemEval
-    STS-task analyses; numerical-semantic-evaluation critiques such
-    as Sun et al., FinNuE, arXiv:2511.09997). It is not pinned to
-    a single canonical methodology paper; the original BERTScore
-    paper (entry [^3]) does not claim immunity to it.
+[^4]: Anschütz M, Miguel Lozano D, Groh G. This is not correct!
+    Negation-aware evaluation of language generation systems. In:
+    *Proceedings of the 16th International Natural Language
+    Generation Conference (INLG 2023)*. Association for
+    Computational Linguistics; 2023:163–175.
+    DOI: 10.18653/v1/2023.inlg-main.12. arXiv:2307.13989.
+    Its related-work section reviews the minimal-pair studies,
+    including Karpinska M, Raj N, Thai K, Song Y, Gupta A, Iyyer M.
+    DEMETR: Diagnosing evaluation metrics for translation. In:
+    *Proceedings of EMNLP 2022*:9540–9561.
+    DOI: 10.18653/v1/2022.emnlp-main.649. arXiv:2210.13746.
+    (Added 2026-10-20. The note previously described a "documented
+    antonymy problem" with no direct source; the negation evidence
+    here replaces it. No source was found that measures antonym
+    pairs such as "best"/"worst" on their own, so that example is
+    now labelled illustrative.)
+
+[^5]: Huang Y-S, Lee Y-Y, Chou T-H, Lin C, Wang C-J. FinNuE:
+    Exposing the risks of using BERTScore for numerical semantic
+    evaluation in finance. arXiv:2511.09997 (2025; FinAI@CIKM 2025
+    workshop, non-archival). It reports that BERTScore "exhibits
+    low sensitivity to numerical variation" and often assigns high
+    similarity to numerically divergent text pairs. (Corrected
+    2026-10-20: FinNuE was previously attributed to "Sun et al."
+    and listed as an antonymy critique. It is by Huang et al. and
+    concerns numerical, not polarity, insensitivity.)
