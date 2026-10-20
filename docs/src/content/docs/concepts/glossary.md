@@ -12,6 +12,18 @@ This page exists so the rest of the docs can link to a single
 definition; cross-references should point here rather than
 duplicating definitions inline.
 
+## Accuracy guard
+
+A [guard](#guard) of kind `accuracy`: it exists because overriding it
+would make the skill's output wrong, not merely riskier. Examples are
+`no-parametric-citations` (no citations from model memory),
+`preserve-quantities-verbatim` and `no-false-verification-claims`.
+Accuracy guards always default to `refuse`, and neither a per-run
+answer nor `meta.overrides` can override them; `scriptorium validate`
+rejects an override that names one.
+
+See: [Author authority](/concepts/author-authority/).
+
 ## Argumentative flow
 
 The logical and structural coherence of a section's prose —
@@ -40,8 +52,10 @@ See: [Schema reference](/reference/manuscript-state-schema/),
 What scriptorium operates on: prose the author has already
 written, or scaffolding the author has committed to in
 `MANUSCRIPT_STATE.yaml` (claims, weaknesses, terminology,
-audience, target venue). Scriptorium does not produce prose from
-blankness; the proposer role (Hayes 2012) stays with the author.
+audience, target venue). By default scriptorium does not produce
+prose from blankness; the proposer role (Hayes 2012) stays with the
+author. The boundary is enforced by scope [guards](#guard), which
+the author can [override](#override).
 
 See: [Declared-work scope](/concepts/declared-work-scope/),
 [`knowledge/conventions/declared-work-scope`](https://github.com/seandavi/scriptorium/blob/main/knowledge/conventions/declared-work-scope.md).
@@ -70,6 +84,19 @@ checklist applies to a manuscript;
 prose.
 
 See: <https://www.equator-network.org/>.
+
+## Guard
+
+A refusal or check a skill declares under `guards:` in its
+`manifest.yaml`, with an `id`, a `kind` (`policy`, `scope` or
+`accuracy`), a one-line `summary`, an optional `source` and a
+`default` (`ask` or `refuse`). When a guard fires, the skill states
+the concern and its source in one line, at every guidance level.
+Policy and scope guards can be [overridden](#override);
+[accuracy guards](#accuracy-guard) cannot.
+
+See: [Author authority](/concepts/author-authority/),
+[`knowledge/conventions/author-authority`](https://github.com/seandavi/scriptorium/blob/main/knowledge/conventions/author-authority.md).
 
 ## Guidance level
 
@@ -103,12 +130,25 @@ what the manuscript is arguing (`core_claims`), the limitations
 already acknowledged (`known_weaknesses`),
 `terminology.preferred` / `forbidden` / `synonyms`, `style`
 (tone, voice, audience), `constraints`, the `target_venue`, the
-`document_phase`, and `meta.guidance_level`. Every skill reads
+`document_phase`, `meta.guidance_level` and `meta.overrides`.
+Every skill reads
 it; only `init` writes it. It is a local file; nothing in
 scriptorium uploads or syncs it.
 
 See: [Schema reference](/reference/manuscript-state-schema/),
 the [worked example](https://github.com/seandavi/scriptorium/blob/main/templates/MANUSCRIPT_STATE.example.yaml).
+
+## Override
+
+The author's decision to let a skill proceed past a policy or scope
+[guard](#guard). It is given either as a per-run answer, which wins
+in either direction, or as a standing entry under `meta.overrides`
+in `MANUSCRIPT_STATE.yaml` naming the guard and the skills (or
+`"*"`). A skill that proceeds past a guard lists it on an
+"Overrides applied" line in its output.
+
+See: [Author authority](/concepts/author-authority/),
+[Schema reference](/reference/manuscript-state-schema/#metaoverrides).
 
 ## Preservation contract
 
@@ -182,8 +222,8 @@ the stage (`outline` / `draft` / `review` / `revision` /
 `submission` / `post-submission` / `accepted`). Scriptorium
 occupies the *translator* and *evaluator* roles in Hayes' 2012
 cognitive-process model — most useful at `draft` through
-`submission`. The author owns the *proposer* role; outline and
-ideation are out of scope.
+`submission`. The author owns the *proposer* role; by default,
+outline and ideation are out of scope.
 
 See: [Workflow stage](/concepts/workflow-stage/).
 
@@ -194,6 +234,8 @@ See: [Workflow stage](/concepts/workflow-stage/).
   what scriptorium operates on.
 - [Guidance level](/concepts/guidance-level/) — the author's
   dial.
+- [Author authority](/concepts/author-authority/) — which
+  guards the author can override.
 - [Workflow stage](/concepts/workflow-stage/) — where in the
   writing process scriptorium fits.
 - [Skills reference](/reference/skills/) — the catalog.

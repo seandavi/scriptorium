@@ -11,6 +11,7 @@ The Concepts section is the largest part of these docs — and deliberately so. 
 
 - [Design](/concepts/design/) — the agentic-scriptorium thesis, design philosophy, and the shared-state contract.
 - [Knowledge layer](/concepts/knowledge/) — the evidence base every skill grounds in. Browse by subsection from the sidebar.
+- [Author authority](/concepts/author-authority/) — which skill refusals are defaults the author can override, which are fixed, and how to override.
 
 ## What "Concepts" means here
 

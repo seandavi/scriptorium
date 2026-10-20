@@ -29,9 +29,10 @@ behaviour is grounded in.
 Scriptorium operates on **declared work** — prose the author has
 already written, or scaffolding the author has committed to in
 `MANUSCRIPT_STATE.yaml` (claims, weaknesses, terminology, target
-venue, audience). It does not produce prose from blankness.
+venue, audience). By default it does not produce prose from
+blankness.
 
-This is a structural commitment, not a stylistic preference. The
+This is a structural default, not a stylistic preference. The
 full rationale lives in
 [declared-work scope](/concepts/declared-work-scope/) — that page
 is the answer to the most common reasonable fear about AI writing
@@ -39,7 +40,8 @@ tools, which is *the model will write the paper for me*.
 
 The short version: scriptorium reads what you have written and
 emits structured findings about it. The author retains the
-proposer role.
+proposer role, and decides whether a skill may step outside that
+default (see [Who decides](#who-decides)).
 
 ## What it does to that prose
 
@@ -85,23 +87,38 @@ or reject.
 
 ## What it doesn't do
 
-These are explicit non-goals, not aspirations for later versions.
-The full list lives in the [roadmap's non-goals
+The full list of non-goals lives in the [roadmap's non-goals
 section](https://github.com/seandavi/scriptorium/blob/main/docs/roadmap.md#explicit-non-goals);
 the three that matter for the mental model:
 
-- **No blank-slate prose generation.** No skill drafts a section
-  from nothing. The proposer role
-  ([Hayes 2012](/concepts/workflow-stage/)) is the author's.
-- **No autonomous reviewing.** `reviewer-simulation` and
-  `desk-rejection-risk` are author-side only. Editorial-side use
-  on someone else's manuscript would mean uploading a confidential
-  manuscript and delegating the critique to AI, which current NIH
-  and publisher reviewer policies rule out. The skills refuse to run
-  that way.
+- **No blank-slate prose generation by default.** By default no
+  skill drafts a section from nothing. The proposer role
+  ([Hayes 2012](/concepts/workflow-stage/)) is the author's. This
+  is a scope guard: an author can override it for a skill that
+  declares it.
+- **Not built for reviewing someone else's work.**
+  `reviewer-simulation` and `desk-rejection-risk` are author-side.
+  Running one as a reviewer or editor of a submitted manuscript
+  would mean uploading a confidential manuscript and handing the
+  critique to AI, which current NIH and publisher reviewer policies
+  restrict (NIH prohibits it outright). The skills name that
+  concern and ask before proceeding.
 - **No overall quality score.** No letter grade, no Flesch-Kincaid,
   no aggregate writing-quality number. Skills emit anchored
-  findings, not aggregates.
+  findings, not aggregates. This one is fixed: no single number
+  captures writing quality, so a score would be wrong output.
+
+## Who decides
+
+Each refusal above is a declared **guard** in the skill's
+`manifest.yaml`. Policy guards (a funder's or publisher's rule) and
+scope guards (the declared-work boundary) are defaults the author
+can override, for one run or in `MANUSCRIPT_STATE.yaml` under
+`meta.overrides`. Accuracy guards (no citations from model memory,
+no altered statistics, no claim to have checked what the skill
+never saw) are fixed. A skill that proceeds past a guard says so in
+its output with an "Overrides applied" line.
+[Author authority](/concepts/author-authority/) has the details.
 
 ## The dial
 
@@ -134,8 +151,8 @@ for the author.
 The `document_phase` field in `MANUSCRIPT_STATE.yaml` signals
 which stage you're in (`outline` / `draft` / `review` /
 `revision` / `submission` / `post-submission` / `accepted`).
-Several skills refuse to run on `outline` because there's nothing
-declared to ground against — that's the [declared-work
+Several skills decline by default on `outline` because there's
+nothing declared to ground against — that's the [declared-work
 scope](/concepts/declared-work-scope/) principle expressed at the
 phase axis.
 
@@ -178,11 +195,13 @@ If you want to read the conceptual basis in more depth first, the
 three deeper concept pages are:
 
 - [Declared-work scope](/concepts/declared-work-scope/) — what
-  scriptorium operates on and what it refuses.
+  scriptorium operates on and what it declines by default.
 - [Guidance level](/concepts/guidance-level/) — the author's dial
   over surface area of critique.
 - [Workflow stage](/concepts/workflow-stage/) — where scriptorium
   fits in the writing process.
+- [Author authority](/concepts/author-authority/) — which refusals
+  the author can override, and which are fixed.
 
 And the cross-cutting reference:
 
