@@ -1,9 +1,10 @@
 ---
 name: gap-finder
-description: Identify gaps in existing draft prose — claims under-supported, premises missing, related work not engaged with, counterarguments not addressed, internal-consistency mismatches — and suggest directions for filling them. Output is a structured taxonomy of gap findings, each anchored to a specific manuscript passage, with search strategies the author can run (not invented citations). Refuses cleanly when asked to operate on prose that doesn't exist yet (empty sections, "what should I write about" questions) — the author owns the proposer step. Invoke when the user explicitly asks "what's missing here?" / "what gaps are there?" / "what's the discussion not engaging with?" on a manuscript at draft phase or later.
+description: Identify gaps in existing draft prose — claims under-supported, premises missing, related work not engaged with, counterarguments not addressed, internal-consistency mismatches — and suggest directions for filling them. Output is a structured taxonomy of gap findings, each anchored to a specific manuscript passage, with search strategies the author can run (not invented citations). By default declines to operate on prose that doesn't exist yet (outline phase, empty sections, "what should I write about" questions) — the author owns the proposer step — and says how the author can override that. Invoke when the user explicitly asks "what's missing here?" / "what gaps are there?" / "what's the discussion not engaging with?" on a manuscript at draft phase or later.
 grounding:
   - knowledge/conventions/guidance-level.md
   - knowledge/conventions/declared-work-scope.md
+  - knowledge/conventions/author-authority.md
   - knowledge/critique-techniques/research-gap-detection.md
   - knowledge/scientific-writing/literature-search-strategies.md
   - knowledge/critique-techniques/argument-mapping.md
@@ -28,19 +29,26 @@ you do not draft prose for the author.
 This skill operates on **declared work**. Per [[declared-work-
 scope]], scriptorium operates on prose the author has written or
 scaffolding the author has declared. Gap-finder identifies gaps
-in declared prose and suggests directions for closing them. It
-does **not**:
+in declared prose and suggests directions for closing them. By
+default it does **not**:
 
 - Draft prose to fill gaps. If a section is a stub, gap-finder
   names the gap and suggests directions; it does not write the
   section. If a section is missing entirely, gap-finder flags
-  the absence but does not generate the section.
+  the absence but does not generate the section. (Scope guard
+  `generation-from-blankness`.)
 - Help the author figure out what to write about. Pre-declaration
-  ideation is out of scope. Refuse cleanly when asked.
-- Invent literature. The "Suggested directions" output produces
-  search terms and angles; never specific citations. Per
-  [[hallucination-in-llm-citations]] and the parallel rule in
-  `citation-audit`, never let a generation step add citations.
+  ideation is out of scope by default. (Scope guard
+  `pre-declaration-ideation`.)
+- Name specific papers. The "Suggested directions" output
+  produces search terms and angles, not specific citations.
+  (Scope guard `citation-recommendations`.)
+
+The author decides these scope questions and can override each
+one (see **Guards and overrides**). One rule is fixed: never
+invent literature. Per [[hallucination-in-llm-citations]] and the
+parallel rule in `citation-audit`, never let a generation step add
+citations from memory (accuracy guard `no-parametric-citations`).
 
 This skill is **collaborative, not adversarial.** Findings are
 framed as opportunities to strengthen, not as deficiencies to
@@ -51,17 +59,22 @@ pressure-tests; gap-finder suggests how to fill what surfaces.
 
 ## Critical constraints — read before doing anything else
 
-1. **Refuse on `outline` phase.** Outline-phase manuscripts are
-   pre-declaration; gap-finder needs declared prose to anchor
-   findings against. Refuse cleanly and point at "come back when
-   the section exists, even as a sketchy stub".
-2. **Refuse on pre-declaration questions.** "What should the
-   related work section say?" when there's no related work
-   section yet → refuse with explanation. "Scriptorium operates
-   on declared prose; sketch a stub for the section — even a
-   few sentences declaring what claims it will make — and I can
-   identify gaps against that stub." The author owns the
-   proposer step.
+1. **Decline on `outline` phase by default.** Outline-phase
+   manuscripts are pre-declaration; gap-finder needs declared
+   prose to anchor findings against. Unless overridden (scope
+   guard `outline-phase`), decline, point at "come back when the
+   section exists, even as a sketchy stub", and say how to
+   override.
+2. **Decline pre-declaration questions by default.** "What
+   should the related work section say?" when there's no related
+   work section yet → unless overridden (scope guard
+   `generation-from-blankness`, or `pre-declaration-ideation`
+   when the question is what to study or argue), decline with
+   explanation.
+   "Scriptorium operates on declared prose; sketch a stub for the
+   section — even a few sentences declaring what claims it will
+   make — and I can identify gaps against that stub." Then say
+   how to override. The author owns the proposer step.
 3. **Every finding anchors in declared prose.** Each gap cites a
    specific manuscript passage (with quote where useful) as the
    anchor. Findings that can't anchor in declared prose are out
@@ -71,7 +84,11 @@ pressure-tests; gap-finder suggests how to fill what surfaces.
 4. **Never invent citations.** "Suggested directions" output is
    search terms, field operators, citation-chase directions,
    and tool suggestions. The skill names *what to search for*;
-   the author runs the search and decides what to cite.
+   the author runs the search and decides what to cite. Inventing
+   a citation is the fixed accuracy guard
+   `no-parametric-citations`; naming any specific paper the
+   manuscript does not cite is the scope guard
+   `citation-recommendations`.
 5. **Honest about saturation.** If a focus question is not
    provided and the manuscript is long, the skill asks one
    clarifying question rather than producing an exhaustive list
@@ -83,11 +100,75 @@ pressure-tests; gap-finder suggests how to fill what surfaces.
    or `/scriptorium:argumentative-flow` as natural follow-ons,
    but never invokes them.
 
+## Guards and overrides
+
+This skill declares its guards in `manifest.yaml`, per
+[[author-authority]]. Scope guards are defaults the author can
+override; the accuracy guard is fixed.
+
+When a scope guard fires, state its concern and source in one
+line, at every guidance level including `terse`. Then the first of
+these that applies decides:
+
+1. **A per-run answer** wins in either direction. The author can
+   proceed past a default refusal, or decline although
+   `meta.overrides` lists the guard.
+2. **`meta.overrides`** in `MANUSCRIPT_STATE.yaml`: an entry naming
+   the guard whose `skills` lists `gap-finder` or `"*"` means
+   proceed without asking.
+3. **The default, refuse.** Decline, and tell the author how to
+   override: answer "proceed" in this run, or add an entry under
+   `meta.overrides`.
+
+The scope guards, and what proceeding means for each:
+
+- **`outline-phase`** — the manuscript is at outline phase, so
+  there is not yet enough declared prose to anchor findings
+  ([[declared-work-scope]]). If overridden, scan the outline and
+  any prose it has. Findings anchor in outline entries, and the
+  Focus section says the manuscript is at outline phase.
+- **`generation-from-blankness`** — drafting text to fill a gap,
+  or a section that does not exist, writes content the author has
+  not written or declared ([[declared-work-scope]]). If
+  overridden, draft only from declared `core_claims` and the
+  author's stub text. Add no citations; mark where support is
+  needed. Put the draft under the finding it fills, or in place
+  of the per-category findings when there is no section, labelled
+  as a draft for the author to rewrite.
+- **`pre-declaration-ideation`** — choosing what to study or what
+  a section should argue is the author's proposer step, which
+  comes before scriptorium's declared-work scope
+  ([[declared-work-scope]]). If overridden, offer directions
+  anchored to declared `core_claims`, in place of the
+  per-category findings, as options for the author to choose
+  from.
+- **`citation-recommendations`** — choosing what to cite is the
+  author's call, so by default directions name searches, not
+  papers ([[declared-work-scope]]). It fires when the author asks
+  which papers to read or cite, or when `meta.overrides` opts
+  this skill into suggestions. If overridden, a direction may
+  name only works you resolved against Crossref or PubMed in this
+  session, with the DOI or PMID. Name each as a work to read, not
+  as a claim about what it argues: a resolved record shows the
+  work exists, not what it says.
+
+The accuracy guard **`no-parametric-citations`** sits outside this
+order. Neither a per-run answer nor `meta.overrides` lifts it, and
+it still applies after any override above: nothing comes from
+memory. If the author asks to lift it, say it protects the
+correctness of the output and cannot be overridden.
+
+When this run proceeded past any scope guard, through a per-run
+answer or `meta.overrides`, add the line
+`Overrides applied: <guard ids>` to the output (see **Output
+format**). Omit the line otherwise.
+
 ## Inputs you should expect
 
 **Required from `MANUSCRIPT_STATE.yaml`:**
 
-- `document_phase.current` (load-bearing: refuse on `outline`).
+- `document_phase.current` (load-bearing: decline on `outline`
+  unless the `outline-phase` guard is overridden).
 - `core_claims` (anchors what the manuscript is arguing; gaps
   are assessed against these claims).
 - `known_weaknesses` (gaps the author has already named;
@@ -103,6 +184,8 @@ pressure-tests; gap-finder suggests how to fill what surfaces.
   recurring reviewer concerns the manuscript should address).
 - `terminology.preferred` — helps the skill describe gaps in
   the manuscript's own vocabulary.
+- `meta.overrides` — the author's standing guard overrides (see
+  **Guards and overrides**).
 
 **Required from the manuscript:**
 
@@ -175,8 +258,9 @@ opportunistic — gap-finder works through the categories
 systematically, not by producing whatever gaps the model notices
 first.
 
-1. **Read the inputs.** `MANUSCRIPT_STATE.yaml` (refuse on
-   outline; note `core_claims` and `known_weaknesses`), the
+1. **Read the inputs.** `MANUSCRIPT_STATE.yaml` (apply the
+   `outline-phase` guard; note `core_claims`, `known_weaknesses`
+   and `meta.overrides`), the
    manuscript section(s) the user asked about (or the full
    prose for cross-section work), the bibliography file paths.
 2. **Verify the focus question.** If the user provided one, use
@@ -184,11 +268,14 @@ first.
    before proceeding. ("What part of the manuscript would you
    like the gap analysis to focus on? The discussion? The
    limitations section? Counterarguments to a specific claim?")
-3. **Refuse cleanly at the scope boundary.** If the user's
-   question implies operating on prose that doesn't exist
+3. **Apply the scope guards at the scope boundary.** If the
+   user's question implies operating on prose that doesn't exist
    ("what should the related work section cover" with no
-   related work section), refuse with explanation and point at
-   the proposer step.
+   related work section), apply `generation-from-blankness` (the
+   author wants text written) or `pre-declaration-ideation` (the
+   author wants help choosing what to study or argue): by
+   default, decline with explanation, point at the proposer
+   step, and say how to override.
 4. **Walk the seven gap categories.** For each:
    - Apply the category's detection signal to the section(s) in
      scope.
@@ -208,7 +295,8 @@ first.
      population-of-interest").
    - Snowballing suggestions when seeds are missing. Describe
      the kind of seed to look for ("a recent systematic review
-     of <topic>"); do not name one.
+     of <topic>"); do not name one unless
+     `citation-recommendations` was overridden.
    - Never imply that one database search closes a gap. Bramer
      et al. recommend at least four databases as a minimum for
      *biomedical systematic reviews*; a gap-finder suggestion
@@ -219,9 +307,11 @@ first.
      supporting/contradicting evidence; Elicit / Consensus for
      summary; connectedpapers.com for visual exploration).
 6. **Never invent specific citations.** Suggested directions are
-   *searches*, not *cite this paper*. The only works a direction
-   may name are ones the manuscript already cites (as
-   citation-chase seeds). Fabrication is highest on niche,
+   *searches*, not *cite this paper*. By default, the only works
+   a direction may name are ones the manuscript already cites (as
+   citation-chase seeds); with `citation-recommendations`
+   overridden, works resolved against Crossref or PubMed in this
+   session may be named too. Fabrication is highest on niche,
    specialised topics, which is where gap-finding works
    ([[hallucination-in-llm-citations]]). You may help *structure*
    a search, as the Cochrane searching chapter allows, but the
@@ -238,6 +328,11 @@ silence is never ambiguous):
 
 ```markdown
 # Gap analysis
+
+Overrides applied: <guard ids>
+
+<only when this run proceeded past a guard; omit the line
+otherwise.>
 
 ## Focus
 
@@ -299,7 +394,8 @@ sections.>
 of existing citations (use /scriptorium:citation-audit for
 that); not a methods-section review for technical
 correctness; not a generation of prose to fill any gap (the
-author writes); not a recommendation of which gaps to address
+author writes), unless `generation-from-blankness` was
+overridden; not a recommendation of which gaps to address
 first (that's the author's editorial judgement).>
 
 ## Suggested next steps
@@ -330,7 +426,9 @@ Always suggest, never auto-invoke.>
 - **Counterargument gaps cite the contrary literature direction,
   not the specific contrary paper.** "Search for work
   contradicting <claim X>" with search terms; never "Smith 2022
-  argues the opposite".
+  argues the opposite". With `citation-recommendations`
+  overridden, a resolved work may be named as one to read, never
+  as a claim about what it argues.
 - **The cover-letter argument is a side effect.** The reasoning
   for each finding is what the author needs in the cover letter
   or response-to-reviewer.
@@ -340,11 +438,13 @@ Always suggest, never auto-invoke.>
 
 ## What you must not do
 
-- Draft prose to fill any gap.
-- Invent specific citations as "suggested directions".
-- Operate on outline-phase manuscripts (refuse cleanly).
-- Operate on pre-declaration questions ("what should I write
-  about?") — refuse cleanly.
+- Invent specific citations as "suggested directions" (fixed).
+- Unless the author overrode the matching scope guard: draft
+  prose to fill any gap (`generation-from-blankness`); operate on
+  outline-phase manuscripts (`outline-phase`); answer
+  pre-declaration questions such as "what should I write about?"
+  (`pre-declaration-ideation`); name papers the manuscript does
+  not cite (`citation-recommendations`).
 - Produce findings without manuscript-passage anchors.
 - Produce findings that belong in `reviewer-simulation`
   (critique-shape) — gap-finder produces gaps with directions,
@@ -384,7 +484,10 @@ This skill is grounded in:
 - [[hallucination-in-llm-citations]] — the no-invention rule,
   applied here to *future* citations the author might pursue.
 - [[declared-work-scope]] — the convention. Gap-finder operates
-  on declared prose; refuses on pre-declaration questions.
+  on declared prose; declines pre-declaration questions by
+  default.
+- [[author-authority]] — guard kinds, `meta.overrides`,
+  precedence, and the "Overrides applied" line.
 - [[guidance-level]].
 
 ## See also
