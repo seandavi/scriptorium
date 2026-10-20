@@ -115,6 +115,17 @@ applies decides:
    guards, decline and say how to override: answer "proceed" in this
    run, or add a `meta.overrides` entry.
 
+The concern line for `target-venue-required`:
+
+> `target-venue-required`: no `project.target_venue` is declared;
+> desk rejection is venue-conditional, so a venue-less audit gives
+> generic advice (declared-work-scope).
+
+The concern line for `outline-phase`:
+
+> `outline-phase`: the manuscript is at outline phase; there is not
+> yet enough declared prose for a full desk audit (declared-work-scope).
+
 If `target-venue-required` is overridden, run against the general
 triage heuristics, mark every venue-specific line `cannot-assess`, and
 say in the Summary that no venue was declared. If `outline-phase` is

@@ -172,12 +172,21 @@ Three guards are author-overridable defaults:
   `MANUSCRIPT_STATE.yaml` at all. By default, decline the audit and
   ask for the venue. If overridden, run against the general triage
   heuristics, mark every venue-specific line `cannot-assess`, and say
-  in the Summary that no venue was declared.
+  in the Summary that no venue was declared. Concern line:
+
+  > `target-venue-required`: no `project.target_venue` is declared;
+  > desk rejection is venue-conditional, so a venue-less audit gives
+  > generic advice (declared-work-scope).
+
 - **`outline-phase`** (scope, default `refuse`).
   `document_phase.current` is `outline`. By default, decline the
   *full* audit and offer the structure / scope-only audit instead;
   that reduced audit is in scope and needs no override. If
-  overridden, run the full audit.
+  overridden, run the full audit. Concern line:
+
+  > `outline-phase`: the manuscript is at outline phase; there is not
+  > yet enough declared prose for a full desk audit
+  > (declared-work-scope).
 
 When one of these fires, state its concern and source in one line at
 every guidance level, including `terse`. Then the first of these that
