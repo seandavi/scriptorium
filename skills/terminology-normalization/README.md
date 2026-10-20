@@ -54,6 +54,28 @@ pass after `argumentative-flow`.
 - **Propose stylistic rewrites** beyond what the terminology
   lists license. Stylistic variation is preserved.
 
+## Guards and overrides
+
+The guards are declared in [`manifest.yaml`](manifest.yaml) and follow
+[`author-authority`](../../knowledge/conventions/author-authority.md).
+
+| Guard | Kind | Default | Author can override? |
+|---|---|---|---|
+| `terminology-lists-required` | scope | refuse | Yes: answer "proceed" in the run, or list it under `meta.overrides` |
+| `outline-phase` | scope | refuse | Yes: as above |
+
+With no terminology declared (no state file, or empty lists and the
+default catalog declined) or at `outline` phase, the skill states the
+concern in one line and declines unless the author overrides the
+guard. Overriding `terminology-lists-required` runs
+undeclared-variant detection only; it never invents a preferred or
+forbidden list. Overriding `outline-phase` runs the full check with a
+note that the terminology may not yet be stable. Either way the
+output carries an `Overrides applied: <guard ids>` line. That line is
+the skill's one output addition under author authority; it is absent
+when no override was applied. The consent rules (no auto-apply, no
+promotion without the author) are not guards.
+
 ## Inputs
 
 - **Manuscript text** — file path(s) or pasted prose. For
@@ -97,6 +119,8 @@ cat ~/.claude/plugins/scriptorium/skills/terminology-normalization/prompt.md
 
 ```markdown
 # Terminology normalization
+
+Overrides applied: <guard ids>   (only when an override was applied)
 
 ## Summary
 - Preferred terms declared: N
@@ -175,6 +199,9 @@ This skill is grounded in scriptorium's knowledge layer:
   — grounds the exemption for significance claims proper, and
   NIH's Innovation language as the reason not to push "novel" in
   grant prose.
+- [`author-authority`](../../knowledge/conventions/author-authority.md)
+  — the skill's two scope guards are defaults the author can
+  override.
 
 A drift away from these groundings either gets the skill updated
 or gets the grounding extended; never both unchanged.
