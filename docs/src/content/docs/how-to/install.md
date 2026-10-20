@@ -43,13 +43,41 @@ You should see entries like `scriptorium:citation-audit`, `scriptorium:reviewer-
 
 ## Other agents (Codex, Gemini, Hermes, ChatGPT, …)
 
-Each skill ships with a platform-neutral `prompt.md` you can paste into any LLM directly. Bundle all skills into one prompt pack:
+Each skill ships with a platform-neutral `prompt.md` you can paste into any LLM directly. The CLI's `prompt-pack` subcommand emits these prompts in a shape your agent can use.
+
+### Per-skill files (default)
 
 ```bash
-scriptorium prompt-pack --output scriptorium-prompts.md
+scriptorium prompt-pack --output prompts/
 ```
 
-Drop the resulting markdown into your agent's context, then invoke skills by name.
+This writes one `.md` per shipped skill into `prompts/` plus a `README.md` manifest listing each skill, its category, and a one-line description:
+
+```text
+prompts/
+  README.md
+  citation-audit.md
+  reviewer-simulation.md
+  argumentative-flow.md
+  ...
+```
+
+Paste the specific prompt you want into your agent's context — most non-Claude-Code users only need one skill at a time, not all of them.
+
+If you'd like the filenames to carry the project namespace (useful when you're dropping skills from multiple sources into the same directory), add `--prefix scriptorium-`:
+
+```bash
+scriptorium prompt-pack --prefix scriptorium- --output prompts/
+# writes prompts/scriptorium-citation-audit.md, etc.
+```
+
+### Single concatenated file
+
+If you want every skill prompt in one document — for archival, for an agent that loads its whole system prompt from a single file, or just to scan everything at once — use `--single-file`:
+
+```bash
+scriptorium prompt-pack --single-file --output scriptorium-prompts.md
+```
 
 ## Without any agent — manual use
 
