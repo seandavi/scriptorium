@@ -1,6 +1,6 @@
 # ESL writers and the Swales / Hyland tradition
 
-*Last updated: 2026-05-17*
+*Last updated: 2026-10-20*
 
 ## Synthesis
 
@@ -78,11 +78,16 @@ Hyland's 2005 *Metadiscourse* [4] distinguishes:
   attitude markers, self-mentions, engagement markers).
 
 Hyland & Jiang's 2018 corpus study [5] tracked these features across
-four disciplines over fifty years and documented a *significant
-increase in interactive features and decrease in interactional
-types*, which they read as academic prose becoming more author-driven
-and less reader-engaging — a finding that informs how to interpret
-"stance" advice. The full title — "*In this paper we suggest*:
+four disciplines over fifty years (a 2.2-million-word corpus from top
+journals) and documented a *significant increase in interactive
+features and a significant decrease in interactional types*. The
+decline is not uniform: the abstract reports that interactional
+metadiscourse "shows a marked decline in the discursive soft
+knowledge fields and a substantial increase in the science subjects"
+[5]. Reading the overall shift as academic prose becoming more
+author-driven and less reader-engaging is this note's interpretation,
+and the field split matters for how to interpret "stance" advice in
+the sciences. The full title — "*In this paper we suggest*:
 Changing patterns of disciplinary metadiscourse" — is itself an
 example of the construction it studies.
 
@@ -152,6 +157,12 @@ skill*; instead, **embed ESL-aware checks in existing critique
 skills** (v0.1 / v0.3) and call this out explicitly in skill
 descriptions.
 
+*Reviewed 2026-10-20:* the verdict holds. The refresh corrected
+identifiers and sharpened the Hyland & Jiang finding (interactional
+metadiscourse rose in the sciences), which reinforces the existing
+point that stance norms are field-specific; it does not create a
+case for a standalone skill.
+
 **If Yes (later):** the trigger would be evidence that users want a
 standalone audit framed around hedging/stance/citation-integration.
 The skill would be `stance-and-hedging-audit`, v0.3+. Required data:
@@ -195,12 +206,18 @@ Research Settings*. Cambridge University Press. ISBN
 
 [2] Swales, J. M. (2004). *Research Genres: Explorations and
 Applications*. Cambridge University Press. ISBN 9780521533348
-(paperback; hardback ISBN 9780521825603). [TODO verify hardback
-ISBN — the originally listed 9780521531344 appears not to be the
-canonical hardback identifier.]
+(paperback; hardback ISBN 9780521825948; ebook ISBN
+9781139524827). DOI: 10.1017/CBO9781139524827. (The hardback ISBN
+previously listed here, 9780521825603, belongs to a different
+Cambridge book; corrected 2026-10-20 against the Crossref record
+for the DOI.)
 
 [3] Hyland, K. (1998). *Hedging in Scientific Research Articles*.
-John Benjamins Publishing. ISBN 9789027250698.
+Pragmatics & Beyond New Series 54. John Benjamins Publishing.
+ISBN 9789027250674 (hardback; US ISBN 9781556198168).
+DOI: 10.1075/pbns.54. (The ISBN previously listed here,
+9789027250698, resolves to a different Benjamins title; corrected
+2026-10-20 against the Crossref record for the DOI.)
 
 [4] Hyland, K. (2005). *Metadiscourse: Exploring Interaction in
 Writing*. Continuum. ISBN 9780826476104.

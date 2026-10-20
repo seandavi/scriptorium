@@ -1,6 +1,6 @@
 # Visualization and figure design in scientific manuscripts
 
-*Last updated: 2026-05-17*
+*Last updated: 2026-10-20*
 
 ## Synthesis
 
@@ -43,6 +43,13 @@ sub-references. The skill is worth scoping as v0.3 with explicit
 LLM-capability honesty: catch the cheap misalignments
 (panel-numbering, axis-unit mismatches, figure-counter drift) and
 route the harder ones to human review.
+
+As of October 2026 the text-only half of that plan has shipped:
+the v0.3 `figure-text-alignment` skill compares captions with
+body-text references and never reads figure images. Benchmarks
+published in 2025–2026 [7] [8] show that current multimodal models
+still score low on real figure-text inconsistencies, which keeps
+the image-reading half deferred.
 
 ## Evidence and frameworks
 
@@ -152,6 +159,36 @@ the absence is itself worth noting — practitioners assert these
 errors are common but, to our knowledge, no peer-reviewed prevalence
 estimate exists.
 
+The nearest thing to a corpus is now PRISMM-Bench (Selch et al.,
+accepted at ICLR 2026 per its arXiv record) [7]: 384 inconsistencies
+across text, figures, tables, and equations, mined from reviewer
+comments on 353 papers and human-verified. It shows that
+reviewer-flagged cross-modal inconsistencies are real and
+collectable, but it is a benchmark built from flagged cases, not a
+prevalence estimate — it says nothing about what fraction of
+manuscripts contain such errors.
+
+### Multimodal model capability on scientific figures (2025–2026)
+
+Two benchmarks bear directly on whether an image-reading
+sub-skill is ready:
+
+- **PRISMM-Bench** [7] evaluated 21 large multimodal models,
+  including GPT-5 (high reasoning) and Gemini 2.5 Pro, on
+  identifying, remedying, and pair-matching real reviewer-flagged
+  inconsistencies. Performance ranged from 27.8% to 53.9%.
+- **MuSciClaims** (Lal et al. 2025, preprint) [8] tests whether
+  models can verify scientific claims against figures. Most
+  vision-language models scored about 0.3–0.5 F1 and the best 0.72
+  F1; models were biased toward judging claims as supported, were
+  poor at localising evidence within figures, and often failed to
+  understand basic figure components.
+
+*Researcher inference:* both results argue against shipping an
+image-reading sub-skill now, and the bias toward "supported" is
+the specific failure that would make such a skill miss real
+misalignments while appearing to pass them.
+
 ### Image forensics overlap
 
 Bik et al. (2016) [6] — already detailed in
@@ -170,7 +207,9 @@ alignment is text-tractable and integrity requires image processing.
 ## How this informs scriptorium
 
 A `figure-text-alignment` skill is a v0.3 candidate, with explicit
-limits on what it can deliver.
+limits on what it can deliver. (Status, October 2026: the text-only
+sub-skill below has shipped as `figure-text-alignment`; the
+multimodal sub-skill remains deferred.)
 
 **What is tractable for an LLM-only skill:**
 
@@ -236,21 +275,30 @@ candidate inconsistencies, each with:
 
 ## Implementation priority for scriptorium
 
-**Verdict:** **Maybe later** — `figure-text-alignment` is plausibly
-v0.3 but should not ship before its capability limits are honest.
+**Verdict:** Reconsidered 2026-10-20. **Sub-skill A (text-only):
+Yes — shipped in v0.3** as `figure-text-alignment`.
+**Sub-skill B (multimodal): Maybe later** — the 2025–2026
+benchmark results [7] [8] do not meet the flip condition below.
 
-**Condition that would flip to Yes:**
+(Original May 2026 verdict, kept for the record: **Maybe later** —
+`figure-text-alignment` is plausibly v0.3 but should not ship
+before its capability limits are honest.)
+
+**Condition that would flip Sub-skill B to Yes:**
 
 - Multimodal LLM capability on scientific figures becomes
   demonstrably reliable for the bounded sub-tasks listed above
-  (axis-label match, plot-type match, panel-letter check).
+  (axis-label match, plot-type match, panel-letter check). As of
+  October 2026, the best published results on real figure-text
+  inconsistencies are 27.8–53.9% [7], and the best figure-claim
+  verification result is 0.72 F1 [8]; neither is close.
 - Author demand surfaces — the skill is most valuable to
   high-volume authors and to groups with many trainees producing
   draft manuscripts.
 - The deterministic sub-skills (cross-reference consistency,
   panel-letter consistency, counter drift, axis-unit cross-check)
   are independently valuable and could ship earlier as a
-  text-only first cut.
+  text-only first cut. (This is what happened in v0.3.)
 
 **If Yes (anticipated scope):**
 
@@ -270,7 +318,10 @@ v0.3 but should not ship before its capability limits are honest.
   - Figure assets (PDF / PNG / SVG referenced from the manuscript).
   - Captions in machine-readable form.
   - `MANUSCRIPT_STATE.figure_index` listing every figure with its
-    file path and caption.
+    file path and caption. (The shipped text-only skill does not
+    use this: figure locations are not declared in the schema, and
+    the skill discovers captions and references from the manuscript
+    text. A `figure_index` becomes necessary only for Sub-skill B.)
   - For Sub-skill B, multimodal-capable model access.
 
 **Honest limits:**
@@ -292,11 +343,16 @@ v0.3 but should not ship before its capability limits are honest.
   figure references" appears to be missing. *What would close
   this gap: a corpus study analogous to Bik et al. (2016) for
   image duplication, but targeting caption-vs-body and
-  axis-label-vs-body alignment.*
+  axis-label-vs-body alignment.* PRISMM-Bench [7] is a collection
+  of flagged cases, not a prevalence estimate, so the gap remains
+  open as of October 2026.
 - Multimodal LLM accuracy on scientific figures is improving
   rapidly but is not benchmarked specifically for the
   text-alignment task scriptorium would deploy. Internal
   evaluation is required before any Sub-skill B claims.
+  PRISMM-Bench [7] and MuSciClaims [8] are the closest public
+  benchmarks; neither isolates caption-vs-image alignment, and
+  MuSciClaims is an unrefereed preprint.
 - The boundary between figure-text alignment and
   pattern-claim-verification is fuzzy. A claim that "Group A is
   higher than Group B" requires either trust in the rendered
@@ -322,3 +378,10 @@ v0.3 but should not ship before its capability limits are honest.
 6. Bik EM, Casadevall A, Fang FC. The prevalence of inappropriate
    image duplication in biomedical research publications. *mBio*.
    2016;7(3):e00809-16. doi:10.1128/mBio.00809-16. PMID: 27273827.
+7. Selch L, Hou Y, Mirza MJ, Doveh S, Glass J, Feris R, Lin W.
+   PRISMM-Bench: A Benchmark of Peer-Review Grounded Multimodal
+   Inconsistencies. arXiv:2510.16505; 2025 (arXiv comment: accepted
+   at ICLR 2026).
+8. Lal YK, Bandham M, Hasan MS, Kashi A, Koupaee M,
+   Balasubramanian N. MuSciClaims: Multimodal Scientific Claim
+   Verification. arXiv:2506.04585; 2025. Preprint.

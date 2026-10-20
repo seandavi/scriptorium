@@ -1,6 +1,6 @@
 # Plain language and lay summaries in scientific writing
 
-*Last updated: 2026-05-17*
+*Last updated: 2026-10-20*
 
 ## Synthesis
 
@@ -13,19 +13,22 @@ agency public communication. The EU Clinical Trials Regulation
 536/2014 [2] requires lay summaries for every clinical trial
 conducted in EU member states. The Wellcome Trust, MRC, NIHR, and
 other major funders require lay summaries on grant applications [3].
-Cochrane has mandated plain-language summaries for every systematic
-review since 2013 [4]. PLOS journals require an Author Summary (a
-non-technical summary of findings) for original research [5]. The
+Cochrane requires a plain-language summary in every systematic
+review, written to a standardised template [4, 9]. PLOS
+Computational Biology asks for a non-technical Author Summary in
+every research article [5], and PLOS Medicine asks for a bulleted
+Author Summary when research articles are revised after peer
+review [12]. The
 NIH Clear Communication initiative is the dominant US-side
 infrastructure for plain-language public-facing research
 communication [6].
 
 The relevant point for scriptorium is that lay-summary writing is
 a **distinct genre with codified expectations**, not a "simpler
-abstract." Cochrane plain-language summaries follow specific
-templates with a "key messages" section, a clearly headed
-intervention/comparison/outcome structure, GRADE language
-translation, and length norms (~400–700 words). EU CTR lay
+abstract." Cochrane plain-language summaries follow a standardised
+template (introduced in 2022) with a "Key messages" section, fixed
+question-style headings, and plain-language translation of GRADE
+certainty statements [9]. EU CTR lay
 summaries follow regulator-specified content checklists. Funders
 score lay summaries explicitly. A skill that purports to
 "simplify" a manuscript without respecting these genre conventions
@@ -59,8 +62,12 @@ that fund them (NIH, NSF, CDC, FDA) and that increasingly require
 plain-language elements in their applications and outputs.
 
 **EU Clinical Trials Regulation 536/2014.** [2] Applies to all
-clinical trials conducted in EU/EEA member states (in force since
-January 2022). Sponsors must submit, within one year of trial
+clinical trials conducted in EU/EEA member states (applicable since
+31 January 2022, when the Clinical Trials Information System went
+live; new trial applications have had to go through CTIS since
+31 January 2023; since 31 January 2025, trials approved under the
+earlier Clinical Trials Directive that are still running must also
+comply [10]). Sponsors must submit, within one year of trial
 completion (six months for paediatric trials), a lay summary
 written so as to be understandable to non-specialists. Content is
 regulator-prescribed: identification, sponsor, scientific
@@ -90,25 +97,44 @@ required, they are evaluated by lay-reviewer panels.
 
 ### Practitioner standards
 
-**Cochrane plain-language summaries.** [4] Cochrane has mandated PLS
-for every systematic review since the early 2010s; the standards
-have evolved through "PLEACS" (Plain Language Expectations for
-Authors of Cochrane Summaries) into the current handbook guidance.
-Current template: 400–700 words, standardised headings, top-line
-"Key messages" (2–3 short bullets), explicit GRADE-language
-translation ("we are confident that…", "we are not confident
-because…"), search date stated, technical terms avoided. The
+**Cochrane plain-language summaries.** [4, 9, 11] Cochrane has
+required a PLS for every systematic review for many years. The
+earlier standards, PLEACS (Plain Language Expectations for Authors
+of Cochrane Summaries), were replaced in 2022 by new guidance and a
+template, incorporated into the online Handbook as a supplement to
+the Reporting chapter [9]. The template's standardised headings are:
+plain language summary title; Key messages; a tailored heading
+(e.g., "What is epilepsy?"); an optional tailored heading; What did
+we want to find out?; What did we do?; What did we find?; an
+optional Main results heading; What are the limitations of the
+evidence?; How up to date is this evidence? [9]. The guidance also
+describes how to incorporate GRADE statements when reporting the
+results [9]. The Handbook describes the PLS as a stand-alone
+summary whose audience "may include people with a health condition,
+carers, healthcare workers, or policy makers", some of whom may not
+have English as a first language [11]. (Length guidance is set in
+the template itself; the specific word range was not re-verified in
+the 2026-10 refresh, so it is not quoted here.) The
 Cochrane standards are the most rigorously documented genre
 conventions for plain-language summaries; they are the natural
 reference if scriptorium ever builds a lay-summary skill.
 
-**PLOS Author Summaries.** [5] PLOS Biology, PLOS Medicine, and PLOS
-Computational Biology require an Author Summary for original
-research. The summary appears immediately after the abstract and is
-intended to be accessible to non-experts in the immediate field.
-The PLOS guidance specifies that it must address what the work
-contributes, why it matters, and what readers should take from it,
-without jargon. The length norm is roughly 150–200 words.
+**PLOS Author Summaries.** [5, 12] PLOS Computational Biology asks
+all authors of research articles to include "a 150-200 word
+non-technical summary of the work" immediately after the abstract.
+The summary should be written in the first person, be distinct from
+the scientific abstract, and make the findings "accessible to a
+wide audience that includes both scientists and non-scientists",
+placing the work in a broader context and avoiding acronyms and
+complex terminology [5]. PLOS Medicine uses a different format and
+timing: its submission guidelines do not ask for an Author Summary,
+but authors of research articles revised after peer review are
+asked for one that will immediately follow the Abstract, written as
+"2-3 single sentence bullet points" under three questions — Why Was
+This Study Done?, What Did the Researchers Do and Find?, and What Do
+These Findings Mean? — including the headline numbers and the
+study's limitations [12]. Formats differ by journal, so the
+requirement should be confirmed per venue.
 
 ### Science-communication research
 
@@ -204,6 +230,12 @@ The risks of getting a lay-summary skill wrong are non-trivial:
 **Verdict:** **Maybe later** — a dedicated `lay-summary-pass` skill
 is plausible but not v0.1.
 
+*Reviewed 2026-10-20:* none of the flip conditions below has been
+met. The end of the EU CTR transition period (31 January 2025) [10]
+widens the set of trials that need lay summaries, but that demand
+falls on trial sponsors rather than on manuscript authors, so the
+verdict stands.
+
 **Condition that would flip to Yes:**
 
 - Funder mandates expand and authors begin asking for explicit
@@ -254,7 +286,10 @@ machinery is mature.
   systematically worse than human ones is thin. Plausible failure
   modes (overclaim, deficit-model affect, numeric framing errors)
   are documented in the science-communication literature but not
-  benchmarked against LLM output specifically.
+  benchmarked against LLM output specifically. (This note is a
+  tier-1 note; the 2026-10 refresh verified identifiers and policy
+  facts but did not sweep the post-2025 literature on LLM-generated
+  lay summaries.)
 - The Cochrane PLS template is mature and detailed; the EU CTR
   template is regulator-defined but less didactically documented.
   Funder lay-summary norms vary widely; there is no single template.
@@ -282,10 +317,13 @@ machinery is mature.
    Interventions*. Chapter III, Section 2 supplementary material.
    https://training.cochrane.org/handbook/current/chapter-iii-s2-supplementary-material
    (accessed 2026-05-17).
-5. Public Library of Science. Submission Guidelines: PLOS Medicine
-   Author Summary.
-   https://journals.plos.org/plosmedicine/s/submission-guidelines
-   (accessed 2026-05-17).
+5. Public Library of Science. Submission Guidelines: PLOS
+   Computational Biology (Author Summary).
+   https://journals.plos.org/ploscompbiol/s/submission-guidelines
+   (accessed 2026-10-20). (Replaces the earlier PLOS Medicine
+   submission-guidelines link. PLOS Medicine's submission
+   guidelines do not describe an Author Summary; the journal
+   requests one at revision instead, see [12].)
 6. National Institutes of Health. Plain Language at NIH (Clear
    Communication).
    https://www.nih.gov/institutes-nih/nih-office-director/office-communications-public-liaison/clear-communication/plain-language-nih
@@ -297,3 +335,23 @@ machinery is mature.
    public understanding of science: Using practice to inform
    theory. In: Kahlor LA, Stout PA, eds. *Communicating Science:
    New Agendas in Communication*. Routledge; 2010:11–39.
+9. Cochrane. ME Support Digest, Issue 3, March 2022: "New guidance
+   and template for writing Cochrane Plain language summaries is now
+   available" (replaces PLEACS; lists the template headings).
+   https://pages.cochrane.org/ME-Support-Digest-March-2022
+   (accessed 2026-10-20).
+10. European Medicines Agency. Clinical Trials Regulation.
+    https://www.ema.europa.eu/en/human-regulatory-overview/research-development/clinical-trials-human-medicines/clinical-trials-regulation
+    (accessed 2026-10-20). (CTIS live from 31 January 2022;
+    mandatory for new applications from 31 January 2023;
+    transition for Directive-approved trials ended 31 January 2025.)
+11. Cumpston M, Lasserson T, Flemyng E, Page MJ. Chapter III:
+    Reporting the review [last updated July 2026]. In: Higgins JPT,
+    Thomas J, Chandler J, et al., eds. *Cochrane Handbook for
+    Systematic Reviews of Interventions* version 6.5. Cochrane; 2026.
+    https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-iii
+    (accessed 2026-10-20).
+12. Public Library of Science. Revising Your Manuscript: PLOS
+    Medicine (Author Summary).
+    https://journals.plos.org/plosmedicine/s/revising-your-manuscript
+    (accessed 2026-10-20).

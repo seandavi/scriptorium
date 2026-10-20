@@ -1,6 +1,6 @@
 # Discipline conventions beyond biomedicine
 
-*Last updated: 2026-05-17*
+*Last updated: 2026-10-20*
 
 ## Synthesis
 
@@ -29,12 +29,17 @@ more useful — than pretending otherwise.
 
 ### Physics: PRL Letters and arXiv preprint norms
 
-*Physical Review Letters* enforces a strict 4.5-printed-page limit
-(approximately 3500 words) and explicitly forbids the standard
-IMRaD section structure. A PRL is a single continuous argument, with
-methods compressed into the body or relegated to supplementary
-material. The implicit reader is assumed to know the field's prior
-work and notation; introductions are typically a single paragraph.
+*Physical Review Letters* limits the core of a Letter to 3,750
+words, with figures, tables, and displayed equations counted as
+word equivalents — roughly four journal pages [4]. Since a July 2024
+editorial [6], a Letter may also carry up to about two pages of
+peer-reviewed "End Matter" after the references for specialist
+technical detail, which does not count against the limit. A PRL is
+written as a single continuous argument without IMRaD section
+headings, with methods compressed into the body or moved to End
+Matter or supplementary material. The implicit reader is assumed to
+know the field's prior work and notation; introductions are
+typically a single paragraph.
 
 The dominant submission norm in physics is to post to arXiv at or
 before journal submission. The result is that the *preprint* is the
@@ -100,10 +105,11 @@ often comes years after the working paper has circulated.
 
 John Cochrane's "Writing Tips for PhD Students" [3] is the most
 widely cited internal guide and is worth reading just to see how
-different the field's prose norms are: it explicitly tells students
-that "you are primarily a writer", emphasises the one-paragraph
-contribution statement, and advises against travelogue-style
-methods sections.
+different the field's prose norms are: it tells students to figure
+out the paper's one central contribution and write it down in one
+paragraph, to state that contribution before reviewing the
+literature, and not to write the paper as a "travelogue" of the
+search process.
 
 ### Humanities and qualitative social sciences
 
@@ -184,12 +190,20 @@ choice — scriptorium should be honest about it.
    ([[reviewer-archetypes-evidence]]) are not portable.
    Cross-disciplinary calibration is a v0.4+ problem.
 
+5. **Venue length rules are not stable.** The May 2026 version of
+   this note gave PRL's limit as about 4.5 pages / 3,500 words; the
+   October 2026 check found a 3,750-word limit plus End Matter
+   introduced in 2024 [6]. Any length or structure rule a skill
+   encodes for a venue needs a dated source and a refresh path,
+   not a hard-coded constant.
+
 ## Implementation priority for scriptorium
 
 **Verdict:** No new skill in v0.1–v0.3. The implementation
 priority is a **documentation change**: a scope statement in
 `DESIGN.md` and a one-line scope note in each critique skill's
-description.
+description. Reconsidered 2026-10-20: still holds; no evidence in
+this refresh changes it.
 
 **If Yes (later):** in v0.5+ ("knowledge layer + platform adapters"
 phase in `DESIGN.md`), if scriptorium gains traction outside
@@ -222,13 +236,25 @@ miscalibrated for their work. That's the trigger for
   field-vs-field. NeurIPS papers and biomedical papers differ less
   along some dimensions than NeurIPS and *Journal of Machine
   Learning Research* papers.
+- The PRL details above (3,750 words, End Matter, no section
+  headings) were checked in October 2026 against the 2024
+  editorial's DOI record and secondary summaries of the APS length
+  guide. The APS author pages refused automated access, so their
+  current wording was not read directly.
+- The Cochrane paraphrase above was checked in October 2026 against
+  secondary quotations only; the original PDF could not be
+  retrieved. An earlier version of this note quoted Cochrane as
+  saying "you are primarily a writer"; that quotation could not be
+  confirmed and was removed.
+- The ML venue page limits (8–10 pages) and review-cycle lengths
+  were not re-checked against each venue's 2026 call in this
+  refresh.
 
 ## References
 
 [1] Swales, J. M. (2004). *Research Genres: Explorations and
 Applications*. Cambridge University Press. ISBN 9780521533348
-(paperback; hardback ISBN 9780521825603). [TODO verify hardback
-ISBN.]
+(paperback; hardback ISBN 9780521825948).
 
 [2] Krantz, S. G. (2017). *A Primer of Mathematical Writing*,
 Second Edition. American Mathematical Society. ISBN
@@ -242,9 +268,14 @@ https://www.johnhcochrane.com/research-all/writing-tips-for-phd-studentsnbsp
 
 [4] *Physical Review Letters* author guidelines. American Physical
 Society. https://journals.aps.org/prl/authors. (Style and length
-norms as of 2024–2026.)
+norms as of 2024–2026; the length rules are set out in the APS
+length guide, https://journals.aps.org/authors/length-guide.)
 
 [5] International Committee of Medical Journal Editors. ICMJE
 Recommendations. https://www.icmje.org. (Provided as the
 biomedical reference point against which other-discipline
 conventions are contrasted.)
+
+[6] Garisto, R., & Chaté, H. (2024). Editorial: Whither Letters?
+*Physical Review Letters*, 133(3), 030001.
+doi:10.1103/PhysRevLett.133.030001.

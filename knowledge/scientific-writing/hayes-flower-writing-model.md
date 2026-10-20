@@ -1,6 +1,6 @@
 # Hayes-Flower writing model and cognitive load in scientific prose
 
-*Last updated: 2026-05-17*
+*Last updated: 2026-10-20*
 
 ## Synthesis
 
@@ -18,13 +18,16 @@ writers move between the three processes constantly. [1, 2]
 
 Sweller's **cognitive load theory** (1988; updated 2019) gives the
 parallel account on the *reader* side. Working memory is severely
-limited (roughly 4±1 chunks for novel information); long-term memory
-is functionally unlimited but accessible only through schemas that
-have to be constructed. Anything in the text that imposes load
+limited for novel information (Cowan's review puts the limit at
+roughly three to five chunks [7]); long-term memory is functionally
+unlimited but accessible only through schemas that have to be
+constructed. Anything in the text that imposes load
 without contributing to schema construction — clunky syntax, gratuitous
 nominalisations, badly ordered information — is **extraneous load**
 and degrades comprehension. Anything that helps the reader build the
-intended schema is **germane load** and is the load you want. [3, 4]
+intended schema is **germane** processing and is the load you want.
+(The 2019 update no longer treats germane load as a separate additive
+source; see below.) [3, 4]
 
 The link this document makes explicit: **Gopen and Swan's
 reader-expectation principles
@@ -71,19 +74,30 @@ tradition in composition research.
 
 ### Hayes' 2012 update
 
-Hayes' "Modeling and Remodeling Writing" [2] revised the architecture
-in three important ways:
+Hayes' "Modeling and Remodeling Writing" [2] reviews the succession
+of adult-writing models he and colleagues proposed from 1980 onward,
+the changes between them, and the reasons for those changes; it then
+proposes models of young children's expository writing and describes
+three running computer programs that simulate them. The adult
+architecture it arrives at differs from 1981 in three important ways:
 
-1. **Motivation and affect** are now top-level components, not
-   absent.
-2. **Working memory** is foregrounded as the bottleneck constraining
-   all processing — making the link to Sweller's cognitive load
-   theory explicit.
+1. **Motivation** is now an explicit component, sitting at a control
+   level alongside goal setting, the current plan, and writing
+   schemas, rather than being absent.
+2. **Working memory** is foregrounded, at a resource level with
+   long-term memory, attention, and reading, as the bottleneck
+   constraining all processing — making the link to Sweller's
+   cognitive load theory explicit.
 3. The three processes are renamed and reorganised: **proposer**
    (generates content), **translator** (turns proposals into
    language), **transcriber** (turns language into orthography),
    and **evaluator** (the reviewer role). The collaboration among
    these and the task environment is mediated by a control structure.
+
+(The control/process/resource-level layout and the placement of
+motivation are taken from secondary summaries of the 2012 article;
+the publisher full text was not retrievable on 2026-10-20. The
+abstract-level description above is from the publisher record [2].)
 
 For scriptorium specifically, Hayes' 2012 emphasis on working memory
 as the bottleneck is the connection point: a writer with working
@@ -97,8 +111,9 @@ processes that actually require human judgement.
 
 Sweller's 1988 paper [3] introduced cognitive load theory in the
 context of problem solving and learning. The 2019 twenty-year update
-with van Merrienboer and Paas [4] consolidates four decades of
-empirical work. The theory distinguishes three types of load:
+with van Merrienboer and Paas [4] summarises, in its own words, "the
+last 20 years of cognitive load theory" — the work between their 1998
+paper and 2018. The theory distinguishes three types of load:
 
 - **Intrinsic load**: the inherent difficulty of the material
   relative to the learner's existing schemas. Manipulable only by
@@ -107,6 +122,17 @@ empirical work. The theory distinguishes three types of load:
   *presented*, not by what it *is*. Manipulable by editing.
 - **Germane load**: load that contributes to schema construction —
   the productive cognitive work.
+
+The 2019 update revises the third category. Sweller, van Merrienboer
+and Paas write that "rather than contributing to the total load,
+germane cognitive load redistributes working memory resources from
+extraneous activities to activities directly relevant to learning by
+dealing with information intrinsic to the learning task" — a
+departure from their 1998 paper, which had treated germane load as
+substituting for extraneous load [4]. For scriptorium the practical
+reading is unchanged: editing can only lower extraneous load; it
+frees capacity for the reader's germane processing but does not
+create it.
 
 The pedagogical injunction is to minimise extraneous load so that
 working-memory capacity is available for germane processing. Applied
@@ -117,9 +143,12 @@ working memory that the reader needed for the actual argument.
 The 2019 update further documents the **expertise-reversal effect**
 (scaffolding that helps novices hurts experts) and the **transient
 information effect** (information that disappears before working
-memory can process it). Both are relevant to scientific writing —
-short-circuited passages and densely cross-referenced material
-exhibit these failure modes routinely.
+memory can process it). The expertise-reversal effect bears directly
+on scientific writing. The transient information effect is defined
+for spoken text, video, and animation [4]; printed prose is not
+transient in that sense, so applying it to densely cross-referenced
+or short-circuited passages is an analogy (researcher inference),
+not a finding of the 2019 paper.
 
 ### Sweetland Center and practitioner translation
 
@@ -132,7 +161,10 @@ parallel structure, and the staging of new information after old.
 Other comparable translations appear at Duke's Thompson Writing
 Program and in graduate research-skills curricula, but Sweetland's
 materials are the most explicit about the cognitive-science
-grounding.
+grounding. (Not re-verified on 2026-10-20: the Sweetland site
+returned HTTP 403 to automated fetches, so this characterisation of
+its materials rests on the 2026-05-17 pass. Treat it as framing, not
+evidence.)
 
 ## How this informs scriptorium
 
@@ -187,7 +219,11 @@ helps one and hurts the other.
 
 **Verdict:** **No new skill.** This is theoretical grounding for
 existing skills (`argumentative-flow`, `reviewer-simulation`) and
-future skills (`compression`).
+future skills (`compression`). Reconsidered 2026-10-20: the verdict
+holds. The corrections in this refresh (germane load as
+redistribution, the transient-information effect as spoken/animated
+media only) sharpen the vocabulary skills should use but do not
+change what any skill does.
 
 **Why useful context anyway:**
 
@@ -200,7 +236,9 @@ future skills (`compression`).
 - Prompts inside existing skills should reference cognitive-load
   vocabulary ("extraneous load", "schema construction") when
   explaining their diagnoses. This makes diagnoses inspectable in
-  language the reader can engage with.
+  language the reader can engage with. Prompts should not describe
+  germane load as a quantity a skill can add or count, and should
+  not invoke the transient-information effect for printed prose.
 - The `target_reader_expertise` field is a small, cheap addition to
   MANUSCRIPT_STATE that lights up cognitive-load-aware behaviour in
   multiple skills. Worth adding in v0.2 even before any skill formally
@@ -218,9 +256,11 @@ quantification (see [[quantitative-quality-measures]]).
   sentence-level structural choices is theoretically clean but
   empirically under-validated for scientific text. Eye-tracking and
   reading-time work on actual research articles is sparse.
-- The 2012 Hayes architecture has not been operationalised
-  computationally in any reference implementation — it remains a
-  descriptive model, not a generative one.
+- The 2012 Hayes adult-writing architecture remains a descriptive
+  model, not a generative one, as far as this sweep found. Hayes'
+  2012 article does describe three running computer programs, but
+  they simulate his models of *young children's* expository writing
+  [2], not the adult architecture.
 - The expertise-reversal effect is well-established for instructional
   materials (Kalyuga and colleagues, Nückles et al. on writing-to-
   learn journals); the *direct* extension to expert/novice reading of
@@ -252,3 +292,6 @@ quantification (see [[quantitative-quality-measures]]).
    resources for graduate and faculty writers, including science-
    writing materials.
    https://lsa.umich.edu/sweetland (accessed 2026-05-17).
+7. Cowan N. The magical number 4 in short-term memory: A
+   reconsideration of mental storage capacity. *Behavioral and Brain
+   Sciences*. 2001;24(1):87–114. doi:10.1017/S0140525X01003922.

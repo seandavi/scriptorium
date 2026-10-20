@@ -1,6 +1,6 @@
-## Narrative frameworks for scientific writing
+# Narrative frameworks for scientific writing
 
-*Last updated: 2026-05-17*
+*Last updated: 2026-10-20*
 
 ## Synthesis
 
@@ -76,7 +76,9 @@ seminars. Where Schimel is opinionated about narrative form, Heard is
 practical and process-oriented: how to start, how to break through stuck
 drafts, how to handle coauthors, how to read peer-review comments without
 falling apart. The 2nd edition adds chapters on effective reading, journal
-selection, and preprints.
+selection, and preprints. (Not re-verified on 2026-10-20: the publisher page
+was unreachable, and a library catalogue table of contents lists a "Reading"
+chapter without making clear which edition it describes.)
 
 Heard does not propose a competing structural framework; he largely accepts
 IMRaD and emphasizes the *workflow* around the draft. This is why
@@ -91,9 +93,15 @@ Randy Olson's "And, But, Therefore" framework — published in book form as
 Chicago Press, 2015; ISBN 978-0-226-27084-5) [3] — compresses narrative to
 three connectives. Setup ("**And**" = context the audience already shares),
 tension ("**But**" = the problem or contradiction), resolution
-("**Therefore**" = consequence). Olson traces the form to screenwriter Frank
-Daniel (via a TV-writers' remark by Trey Parker and Matt Stone), not to
-empirical work on scientific communication.
+("**Therefore**" = consequence). The book itself is organised as Thesis /
+Antithesis / Synthesis, with "the ABT template" as its sentence-level
+method chapter [3]. Secondary accounts trace Olson's immediate inspiration
+to *South Park* creators Trey Parker and Matt Stone's writers'-room rule of
+replacing "and then" between story beats with "but" or "therefore". The
+form comes from screenwriting and dialectic, not from empirical work on
+scientific communication. (An earlier version of this note attributed the
+form to screenwriter Frank Daniel; that attribution was not verified in
+this refresh and has been removed.)
 
 ABT is best treated as a **forcing function for compressed framing**: it
 collapses any abstract, talk opening, tweet, or grant specific aim down to a
@@ -102,9 +110,10 @@ framing is descriptive rather than argumentative. ABT does not provide
 guidance on what to do once the reader is engaged; for that the OCAR/LDR
 machinery is more useful.
 
-ABT is a marketing-tier framework — widely adopted in science communication
-(NIH, NSF, AAAS workshops cite it) but lightly evaluated in peer-reviewed
-literature.
+ABT is a marketing-tier framework: widely used in science-communication
+training, lightly evaluated in peer-reviewed literature. (The earlier claim
+that NIH, NSF, and AAAS workshops cite it was not re-verified in this
+refresh.)
 
 ### IMRaD and its critics (Sollaci & Pereira, 2004)
 
@@ -132,14 +141,21 @@ IMRaD but do not require it.
 
 George Whitesides's "Whitesides' Group: Writing a Paper," *Advanced
 Materials* 16(15): 1375–1377 (2004), DOI: 10.1002/adma.200400767 [5], is
-short, dense, and unusual. Its core move is to invert the temporal
-relationship between writing and research. Rather than writing the paper
-after the experiments, Whitesides argues you should outline the paper *at
-the start of the project* — figures, tables, claims and all — and let the
-outline tell you which experiments are worth doing.
+short, dense, and unusual. The publisher abstract notes that the essay had
+circulated within the Whitesides group since 1989 [5]. Its core move is to
+invert the temporal relationship between writing and research. Rather than
+writing the paper after the experiments, Whitesides argues you should
+outline the paper *at the start of the project* — figures, tables, claims
+and all — and let the outline tell you which experiments are worth doing.
 
-> "The paper, and the ideas that structure it, are the *plan* for the
-> research. The data come later."
+> "A paper is not just an archival device for storing a completed research
+> program; it is also a structure for planning your research in progress."
+
+(Quoted as reproduced in secondary sources; the primary PDF could not be
+fetched on 2026-10-20. An earlier version of this note carried a different
+quotation — "The paper, and the ideas that structure it, are the *plan* for
+the research. The data come later." — that could not be found in any source
+and has been replaced.)
 
 In Whitesides's group this took the literal form of pre-experimental
 outlines that evolved as data accumulated. The reason this is relevant to
@@ -167,6 +183,27 @@ results" model.
 - **Outline-as-state.** The Whitesides idea — outline as living research
   artifact — argues that `MANUSCRIPT_STATE.yaml` should be able to hold a
   full document outline, not just claim summaries. This is a roadmap item.
+
+## Implementation priority for scriptorium
+
+**Verdict:** **No new skill** — grounding for existing and planned skills.
+Reconsidered 2026-10-20: the verdict holds. The refresh corrected an
+unsourced Whitesides quotation and the ABT attribution; neither changes what
+a skill does. Skills that quote Whitesides should use the corrected wording
+above or paraphrase.
+
+- **Yes (current):** `argumentative-flow` uses OCAR as its structural
+  template; `reviewer-simulation` applies the ABT "But"-clause test to
+  abstracts and aims.
+- **Yes (planned, v0.4):** `specific-aims` grounds in ABT plus Schimel's
+  challenge-sentence diagnostic.
+- **Maybe later:** outline-as-state in `MANUSCRIPT_STATE.yaml`. Flips to Yes
+  when a drafting skill (`results-narrative` / `discussion-drafting`) needs
+  to read or update a document outline.
+
+**Why useful context anyway:** the evidence for all four frameworks is
+testimonial, not experimental. Skills should present OCAR/ABT as diagnostic
+lenses the author can reject, not as rules with outcome evidence behind them.
 
 ## Open questions / weak evidence
 
