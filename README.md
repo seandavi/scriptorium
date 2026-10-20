@@ -183,7 +183,7 @@ Easiest install — no Python toolchain needed:
 ```
 
 (`seandavi/scriptorium` is the GitHub `owner/repo` shorthand for
-<https://github.com/seandavi/scriptorium>. Append `@v0.2.0` or any
+<https://github.com/seandavi/scriptorium>. Append `@v0.3.0` or any
 ref to pin.)
 
 Once installed, run:
@@ -336,10 +336,9 @@ See [DESIGN.md](DESIGN.md) for the full design philosophy and the
 
 ## Status
 
-v0.2 shipped (CHANGELOG: [`[0.2.0]`](CHANGELOG.md#020---2026-05-20)).
-v0.3 work is substantively merged on `main` (no version tag yet):
-`compression`, `figure-text-alignment`, `reporting-guideline-compliance`,
-and `outlier-sentence-detector`. Sixteen skills total, fifty-plus
+v0.3 shipped (CHANGELOG: [`[0.3.0]`](CHANGELOG.md#030---2026-10-20)),
+adding `compression`, `figure-text-alignment`,
+`reporting-guideline-compliance` and `outlier-sentence-detector`. Sixteen skills total, fifty-plus
 knowledge notes, the consolidated `scriptorium` CLI (six subcommands),
 the shared-state schema, the trace schema, the Venice example. Pre-1.0
 shape: the skill catalog is growing; CLI surface and schema may still

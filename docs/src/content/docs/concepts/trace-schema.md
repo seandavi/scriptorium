@@ -63,7 +63,7 @@ A minimal tier-1 record:
   "trace_schema_version": 1,
   "submission_id": "5f1d7c8e-3a2b-4c5d-9e8f-1234567890ab",
   "submitted_at": "2026-05-17T14:32:11Z",
-  "scriptorium_version": "0.2.0",
+  "scriptorium_version": "0.3.0",
   "consent_tier": "structured-only",
   "provenance": {
     "source": "claude-code-transcript",
@@ -98,7 +98,7 @@ A tier-2 record adds the freeform skill output text:
   "trace_schema_version": 1,
   "submission_id": "5f1d7c8e-3a2b-4c5d-9e8f-1234567890ab",
   "submitted_at": "2026-05-17T14:32:11Z",
-  "scriptorium_version": "0.2.0",
+  "scriptorium_version": "0.3.0",
   "consent_tier": "output-text",
   "provenance": {"source": "claude-code-transcript", "session_id": "b497916e-..."},
   "skill": {"name": "citation-audit", "invocation_surface": "claude-code"},
