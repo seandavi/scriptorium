@@ -10,26 +10,29 @@ full checklist — that's a separate downstream skill.
 
 The user will provide, or you should ask for:
 
-1. **The manuscript methods section** — load-bearing; refuse if
-   absent.
+1. **The manuscript methods section** — load-bearing; if absent,
+   the `methods-section-required` guard applies.
 2. **Title and abstract** for disambiguation.
 3. **`MANUSCRIPT_STATE.yaml`** declaring `document_phase.current`
-   (refuse on `outline`), and optionally `project.target_type`,
+   (the `outline-phase` guard applies on `outline`), and
+   optionally `meta.overrides`, `project.target_type`,
    `project.target_venue`, `core_claims`.
 4. **Optional**: registration metadata (ClinicalTrials.gov,
    PROSPERO, OSF registration) — strong signals about
    applicable checklists.
 
-If methods is missing or too sketchy to discriminate, refuse
+If methods is missing, decline by default (see *Guards and author
+overrides*). If it is too sketchy to discriminate, say so
 honestly: "low confidence — methods section is too sketchy to
 infer reliably; flesh out the design before running this
 inference."
 
 ## Hard constraints
 
-1. **Refuse on `outline` phase.**
-2. **Methods section is load-bearing.** Title and abstract
-   alone are insufficient.
+1. **Decline on `outline` phase by default (`outline-phase`).**
+2. **Methods section is load-bearing (`methods-section-required`).**
+   Title and abstract alone are insufficient; decline without
+   methods unless the author overrides the guard.
 3. **Multiple checklists can apply.** Animal RCTs need ARRIVE
    2.0 + CONSORT 2025 (plus CONSORT-AI 2020 if AI-enabled).
    Systematic reviews with meta-analysis need PRISMA. AI-based
@@ -37,9 +40,9 @@ inference."
    CONSORT-AI 2020, with the version mismatch named. Declared
    generative-AI use adds GAMER to the design checklist. Surface
    multi-checklist explicitly.
-4. **Confidence levels are honest.** Low confidence is the
-   right answer when the design isn't clear, not a confident
-   wrong guess.
+4. **Confidence levels are honest (`no-inference-beyond-evidence`;
+   fixed).** Low confidence is the right answer when the design
+   isn't clear, not a confident wrong guess.
 5. **Never declare authoritatively.** Recommendation only —
    the author confirms.
 6. **Don't run the full checklist.** Stop at the inference;
@@ -49,6 +52,41 @@ inference."
    CONSORT 2010. SPIRIT 2025 for trial protocols. PRISMA 2020
    over PRISMA 2009. TRIPOD+AI 2024 over TRIPOD 2015 for
    AI-based prediction models. Note supersession when relevant.
+
+## Guards and author overrides
+
+The author decides the scope guards; the accuracy guard is fixed.
+
+**Scope guards** (decline by default; the author can override).
+Sources are scriptorium knowledge notes:
+
+- `outline-phase` — the manuscript is at outline phase; there is
+  not yet a methods section to infer from (source:
+  `declared-work-scope`).
+- `methods-section-required` — no methods section; title and
+  abstract alone rarely tell adjacent designs apart (source:
+  `reporting-guidelines`).
+
+When one fires, state the concern and its source in one line, at
+every guidance level. Then: a per-run answer from the author wins,
+in either direction; otherwise an entry for the guard under
+`meta.overrides` (with this skill or `"*"` under `skills`) means
+proceed; otherwise decline and tell the author how to override
+(say "proceed" now, or add the guard under `meta.overrides` in
+`MANUSCRIPT_STATE.yaml`).
+
+What proceeding changes: `outline-phase` infers from whatever
+methods stub exists. `methods-section-required` infers from the
+title, abstract and any registration metadata, with every
+inference capped at `low` confidence.
+
+**Accuracy guard** (fixed; no per-run answer or `meta.overrides`
+lifts it): `no-inference-beyond-evidence`. If asked to override
+it, say it protects the correctness of the inference and cannot
+be overridden.
+
+When the run proceeds past a scope guard, put one line under the
+report title: `Overrides applied: <guard ids>`. Omit it otherwise.
 
 ## Major design-to-checklist mapping
 
@@ -140,6 +178,8 @@ a wrong one.
 ```markdown
 # Reporting-guideline fit
 
+Overrides applied: <guard ids>   (only when the run proceeded past a scope guard)
+
 ## Summary
 <methods-section signal strength; count and names of inferred
 guidelines; recommended next step.>
@@ -191,8 +231,9 @@ side enforcement.>
 
 - Run the full reporting-guideline-compliance audit.
 - Declare a checklist as authoritatively applicable.
-- Operate on outline phase.
-- Force a confident answer when methods is sketchy.
+- Operate on outline phase, or without a methods section, unless
+  the author overrides the guard.
+- Force a confident answer when methods is sketchy (fixed).
 - Write to MANUSCRIPT_STATE.yaml.
 - Conflate the inference with the audit.
 - Recommend a superseded checklist version when the current
