@@ -172,11 +172,7 @@ def test_replace_sentinel_block_substitutes_between_markers(  # type: ignore[no-
 ) -> None:
     """The helper must replace content between markers exactly once."""
     text = (
-        "preamble\n"
-        "<!-- GENERATED:demo:start -->\n"
-        "OLD BODY\n"
-        "<!-- GENERATED:demo:end -->\n"
-        "trailer\n"
+        "preamble\n<!-- GENERATED:demo:start -->\nOLD BODY\n<!-- GENERATED:demo:end -->\ntrailer\n"
     )
     updated, replaced = preprocess_module._replace_sentinel_block(text, "demo", "NEW BODY")
     assert replaced is True
@@ -227,7 +223,9 @@ def test_workflow_stage_table_renders_yes_for_declared_phases(  # type: ignore[n
     init_row = next(line for line in table.splitlines() if line.startswith("| `init`"))
     assert init_row.count(" yes ") == 5
     # desk-rejection-risk runs only at revision + submission
-    drr_row = next(line for line in table.splitlines() if line.startswith("| `desk-rejection-risk`"))
+    drr_row = next(
+        line for line in table.splitlines() if line.startswith("| `desk-rejection-risk`")
+    )
     assert drr_row.count(" yes ") == 2
 
 
