@@ -1,6 +1,6 @@
 ---
 name: reporting-guideline-compliance
-description: Run an EQUATOR Network reporting-guideline checklist (CONSORT, STROBE, PRISMA, ARRIVE, STARD, TRIPOD/TRIPOD+AI, CARE, COREQ, CHEERS, plus AI extensions) against a manuscript and classify every checklist item as present / partial / missing / not-applicable. For each item, anchors the classification in a quoted passage from the declared manuscript prose, or explicitly names the gap. Downstream of the v0.2 reporting-guideline-fit skill (which infers which checklist applies); this skill runs the checklist. Validation skill — surfaces gaps for the author to address; does not modify the manuscript and does not invent prose to fill missing items.
+description: Run an EQUATOR Network reporting-guideline checklist (CONSORT, SPIRIT, STROBE, PRISMA, ARRIVE, STARD, TRIPOD/TRIPOD+AI, CARE, COREQ, CHEERS, plus AI extensions) against a manuscript and classify every checklist item as present / partial / missing / not-applicable. For each item, anchors the classification in a quoted passage from the declared manuscript prose, or explicitly names the gap. Downstream of the v0.2 reporting-guideline-fit skill (which infers which checklist applies); this skill runs the checklist. Validation skill — surfaces gaps for the author to address; does not modify the manuscript and does not invent prose to fill missing items.
 grounding:
   - knowledge/conventions/guidance-level.md
   - knowledge/conventions/declared-work-scope.md
@@ -19,13 +19,14 @@ gap when one isn't there).
 
 This is the **downstream audit** in the reporting-guidelines
 workflow. The upstream `reporting-guideline-fit` skill (v0.2)
-infers *which* EQUATOR checklist applies — CONSORT 2010 for RCTs,
-STROBE for observational, PRISMA 2020 for systematic reviews,
-ARRIVE 2.0 for animal research, STARD 2015 for diagnostic
-accuracy, TRIPOD+AI 2024 for AI-based prediction models, CARE for
-case reports, COREQ for qualitative, CHEERS 2022 for health
-economic evaluations, plus AI-extensions where applicable. This
-skill runs the chosen checklist.
+infers *which* EQUATOR checklist applies — CONSORT 2025 for RCT
+reports, SPIRIT 2025 for trial protocols, STROBE for
+observational, PRISMA 2020 for systematic reviews, ARRIVE 2.0
+for animal research, STARD 2015 for diagnostic accuracy,
+TRIPOD+AI 2024 for AI-based prediction models, CARE for case
+reports, COREQ for qualitative, CHEERS 2022 for health economic
+evaluations, plus AI-extensions where applicable. This skill
+runs the chosen checklist.
 
 The two skills are deliberately separate. Conflating them
 produces a single audit that fails silently when the upstream
@@ -41,10 +42,10 @@ is run. The skill **does not invent prose** to fill a missing
 item; it surfaces the gap. The author addresses it.
 
 `not-applicable` is a **first-class outcome**. Several checklist
-items don't apply to every study — CONSORT item 17b (presentation
-of binary outcomes) is N/A for a continuous-outcome trial; PRISMA
-item 12 (risk-of-bias in synthesis) is N/A when no synthesis is
-performed; ARRIVE items on housing don't apply to *in silico*
+items don't apply to every study — CONSORT 2010 item 17b
+(presentation of binary outcomes) is N/A for a continuous-outcome
+trial; the PRISMA 2020 synthesis items are N/A when no synthesis
+is performed; ARRIVE items on housing don't apply to *in silico*
 studies that happen to live alongside an animal arm. Mark these
 cleanly with a one-sentence justification rather than padding
 with "consider adding…". A genuine N/A is not a gap.
@@ -85,19 +86,37 @@ skill exists to avoid.
 6. **Anchor every `present` and `partial` in a quoted passage.**
    No claim of presence without a location-anchored quote. An
    unsourced "yes, the methods covers this" is hand-waving and
-   erodes the audit's trust.
-7. **Name the checklist version explicitly.** PRISMA 2020 (not
-   PRISMA 2009). TRIPOD+AI 2024 (not TRIPOD 2015) for AI-based
-   prediction models. CONSORT-AI extension when applicable. The
-   version is load-bearing — item numbers shift between
-   versions.
-8. **Never write to `MANUSCRIPT_STATE.yaml`.** The schema
+   erodes the audit's trust. LLM checklist walks agree with
+   expert raters on about 90% of trial-reporting items, so
+   roughly one item decision in ten is wrong; the quote is how
+   the author catches those.
+7. **Name the checklist version explicitly.** CONSORT 2025 (not
+   CONSORT 2010) for trial reports; CONSORT 2010 only when the
+   author or venue requires it. SPIRIT 2025 for trial protocols.
+   PRISMA 2020 (not PRISMA 2009). TRIPOD+AI 2024 (not TRIPOD
+   2015) for AI-based prediction models. The version is
+   load-bearing — item numbers shift between versions (CONSORT
+   2010 item 7a, sample size, is CONSORT 2025 item 16a), so
+   every item number carries its checklist version. For an
+   AI-intervention trial, run the 2025 base checklist plus the
+   2020 AI extension (CONSORT-AI or SPIRIT-AI) and state the
+   version mismatch: the extensions were built on the 2010 and
+   2013 base checklists, and no updated versions had been
+   published as of October 2026.
+8. **Default flow-diagram items to `partial`.** Completeness of
+   the participant flow diagram is a figure-borne check, and the
+   one published vision-model result detected missing
+   flow-diagram details with only 57% accuracy. Classify these
+   items `partial` with a request that the author verify the
+   diagram, unless the prose itself reports every required
+   number.
+9. **Never write to `MANUSCRIPT_STATE.yaml`.** The schema
    deliberately doesn't carry a `reporting_compliance:` field;
    the audit re-runs cleanly each time. The output is a report,
    not state.
-9. **Do not re-infer the checklist.** That's
-   `reporting-guideline-fit`'s job. If the author wants to
-   change the audited checklist, they re-run that skill.
+10. **Do not re-infer the checklist.** That's
+    `reporting-guideline-fit`'s job. If the author wants to
+    change the audited checklist, they re-run that skill.
 
 ## Invocation discipline — when to invoke, when not
 
@@ -107,7 +126,7 @@ skill exists to avoid.
   `MANUSCRIPT_STATE.yaml#reporting_guideline`, passed as
   `reporting_guideline_fit_output`, or named explicitly in the
   invocation (`/scriptorium:reporting-guideline-compliance with CONSORT
-  2010`).
+  2025`).
 - The manuscript is in `draft`, `revision`, or `submission`
   phase.
 - The author wants a pre-submission audit, a revision-targeted
@@ -138,7 +157,7 @@ skill exists to avoid.
   `reporting-guideline-fit` run, in which case the
   high-confidence inferred guideline(s) drive the audit.
 - An explicit guideline named in the invocation
-  (`with CONSORT 2010`, `with PRISMA 2020`, etc.).
+  (`with CONSORT 2025`, `with PRISMA 2020`, etc.).
 
 If none of these is present, refuse and point the author at
 `/scriptorium:reporting-guideline-fit`.
@@ -187,9 +206,9 @@ Read `meta.guidance_level` from `MANUSCRIPT_STATE.yaml` (default
 - `full` — open with what reporting guidelines do (minimum-
   information standards so reviewers and readers can evaluate
   methodology consistently — the EQUATOR Network maintains the
-  registry of ~600 active guidelines), what this audit
-  produces (per-item present / partial / missing / N-A with a
-  quoted anchor or explicit gap), and how to read it (act on
+  registry, whose library lists roughly 700 records), what
+  this audit produces (per-item present / partial / missing /
+  N-A with a quoted anchor or explicit gap), and how to read it (act on
   `missing` first, then `partial`; `N/A` is not a gap; the
   audit does not invent prose to fill gaps). If first
   invocation this session, also offer
@@ -215,11 +234,15 @@ against confident-wrong answers on ambiguous items.
    - `project.target_venue` — for venue-specific requirements.
    - `core_claims`, `known_weaknesses` — for context.
    - `meta.guidance_level` — for framing only.
-2. **Identify the checklist version.** PRISMA 2020 (not 2009).
+2. **Identify the checklist version.** CONSORT 2025 for trial
+   reports (CONSORT 2010 only when the author or venue requires
+   it). SPIRIT 2025 for trial protocols. PRISMA 2020 (not 2009).
    TRIPOD+AI 2024 for AI-based prediction models (not TRIPOD
-   2015). Name the version explicitly in the output. Item
-   numbers and counts change between versions; auditing against
-   the wrong version mis-numbers every finding.
+   2015). For AI-intervention trials, add CONSORT-AI or
+   SPIRIT-AI (2020) to the 2025 base checklist and state the
+   version mismatch. Name the version explicitly in the output.
+   Item numbers and counts change between versions; auditing
+   against the wrong version mis-numbers every finding.
 3. **Read the manuscript.** Title, abstract, methods, results,
    discussion, and any flow diagram or supplement. Multi-file
    manuscripts: read each file declared under `sections` or
@@ -238,8 +261,11 @@ against confident-wrong answers on ambiguous items.
      **not** propose phrasing.
    - If the item does not apply to this study, classify
      `not-applicable` with a one-sentence justification
-     ("continuous primary outcome — item 17b on binary
-     outcome presentation does not apply").
+     ("continuous primary outcome — CONSORT 2010 item 17b on
+     binary outcome presentation does not apply").
+   - If the item is about the participant flow diagram's
+     completeness, default to `partial` with a request that the
+     author verify the diagram (constraint 8).
 5. **Cross-check against `known_weaknesses`.** An item the
    author has already named in `known_weaknesses` is `partial`
    (the gap is acknowledged but not addressed in the prose),
@@ -264,8 +290,10 @@ in order:
 
 ## Summary
 
-- Checklist audited: <NAME VERSION> (e.g., CONSORT 2010, PRISMA
-  2020, ARRIVE 2.0, TRIPOD+AI 2024)
+- Checklist audited: <NAME VERSION> (e.g., CONSORT 2025, SPIRIT
+  2025, PRISMA 2020, ARRIVE 2.0, TRIPOD+AI 2024; for an
+  AI-intervention trial, CONSORT 2025 + CONSORT-AI 2020 with the
+  version mismatch stated)
 - Item count: N
 - Present: N
 - Partial: N
@@ -358,9 +386,9 @@ the current run where relevant.)
   "No allocation-concealment mechanism described" is the right
   level. "Consider adding: 'Allocation was concealed using
   sequentially numbered opaque envelopes…'" is **not**.
-- **Version-anchored.** The output names CONSORT 2010, PRISMA
-  2020, TRIPOD+AI 2024, etc., explicitly — item numbers and
-  counts depend on the version.
+- **Version-anchored.** The output names CONSORT 2025, SPIRIT
+  2025, PRISMA 2020, TRIPOD+AI 2024, etc., explicitly — item
+  numbers and counts depend on the version.
 - **Highest-priority gaps section is short and substantive.**
   Three to six items the reviewer is most likely to call out;
   not every missing item gets promoted.
@@ -383,8 +411,11 @@ the current run where relevant.)
 - Skip checklist items the audit is unsure about. Walk every
   item; the value is in coverage.
 - Audit against a superseded checklist version when a current
-  version applies (PRISMA 2009 when 2020 is current; TRIPOD
-  2015 when TRIPOD+AI 2024 is current for AI-based models).
+  version applies (CONSORT 2010 when 2025 is current, unless the
+  author or venue requires 2010; PRISMA 2009 when 2020 is
+  current; TRIPOD 2015 when TRIPOD+AI 2024 is current for
+  AI-based models).
+- Cite a checklist item number without its version.
 - Run other skills as side effects.
 
 ## Grounding
@@ -392,10 +423,15 @@ the current run where relevant.)
 This skill is grounded in scriptorium's knowledge layer:
 
 - [[reporting-guidelines]] — the primary anchor. EQUATOR
-  Network registry; design-specific checklists (CONSORT 2010,
-  STROBE, PRISMA 2020, ARRIVE 2.0, STARD 2015, TRIPOD 2015 /
-  TRIPOD+AI 2024, CARE, COREQ, CHEERS 2022); AI-extension
-  landscape (CONSORT-AI / SPIRIT-AI / STARD-AI / TRIPOD+AI).
+  Network registry; design-specific checklists (CONSORT 2025,
+  which replaced CONSORT 2010 in April 2025 and renumbered the
+  items; SPIRIT 2025 for protocols; STROBE, PRISMA 2020, ARRIVE
+  2.0, STARD 2015, TRIPOD 2015 / TRIPOD+AI 2024, CARE, COREQ,
+  CHEERS 2022); AI-extension landscape (CONSORT-AI / SPIRIT-AI /
+  STARD-AI / TRIPOD+AI), including SPIRIT 2025's own advice to
+  keep using the existing extensions until they are aligned
+  (applying that to CONSORT-AI is the note's inference by
+  analogy).
   The note's framing of reporting guidelines as the
   **validation contract** ("a trial paper that omits
   randomization details is not recoverable by good prose") is
@@ -406,7 +442,14 @@ This skill is grounded in scriptorium's knowledge layer:
   per-item status (present / partial / missing /
   not-applicable) with a span pointer for each 'present'
   claim" — that anchor pattern is exactly what this skill's
-  output table implements.
+  output table implements. The note's 2025–2026 validation
+  studies of LLM adherence checking put agreement with expert
+  raters at about 90% across three studies; AutoReporter, the
+  only one to report chance-corrected agreement, gives Cohen's
+  κ of 0.70–0.77. That error rate is why the quoted anchor is
+  mandatory. The one vision-model result (57% accuracy at
+  detecting missing flow-diagram details, a single small
+  study) is why flow-diagram items default to `partial`.
 - [[declared-work-scope]] — the convention. The audit
   operates on declared manuscript prose; refuses cleanly on
   outline or when the applicable checklist is unknown; never
