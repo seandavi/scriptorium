@@ -1,6 +1,6 @@
 # Guidance level: how much framing each skill adds around its work
 
-*Last updated: 2026-05-20*
+*Last updated: 2026-10-20*
 
 ## Synthesis
 
@@ -163,10 +163,16 @@ qualify — they have no conversation to adapt.
 *information density* of a skill's output should not change with
 guidance level — `citation-audit` still produces the same structured
 claim-by-claim assessment regardless of level. What changes is the
-framing and explanatory prose around the structured work.
+framing and explanatory prose around the structured work. Nor does
+it suppress guard statements: when a guard fires, the one-line
+statement of the concern appears at every level, `terse` included
+([[author-authority]]).
 
 ## Cross-references
 
+- [[author-authority]] — guards and `meta.overrides`; the sibling
+  `meta` preference that controls what skills may do, where this
+  one controls how they talk.
 - `schemas/manuscript-state.schema.json` — canonical enum and
   default.
 - `templates/MANUSCRIPT_STATE.yaml` — commented `meta:` block author

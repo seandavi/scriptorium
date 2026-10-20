@@ -9,6 +9,13 @@
 
 meta:
   guidance_level: full       # first scriptorium project for this author
+  # Guards the author overrides for this project (policy and scope
+  # guards only). Uncomment once the named skill declares the guard;
+  # `scriptorium validate` rejects unknown guard ids.
+  # overrides:
+  #   - guard: nih-application-prose
+  #     skills: [specific-aims]   # or ["*"] for every skill that declares it
+  #     note: "Institution's grants office reviewed our AI use"
 
 project:
   title: "Single-cell transcriptomic profiling of CD8+ T cell exhaustion in pancreatic ductal adenocarcinoma"

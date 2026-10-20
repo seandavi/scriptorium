@@ -39,10 +39,10 @@ knowledge/
 ├── critique-techniques/      # how to find problems systematically (7 notes)
 ├── reproducibility/          # the crisis context scriptorium responds to (1 note)
 ├── author-roles/             # career stage, role, and language behavioral evidence (2 notes)
-└── conventions/              # the load-bearing conventions skills share (2 notes)
+└── conventions/              # the load-bearing conventions skills share (3 notes)
 ```
 
-Current size: 51 notes (50 markdown + 1 Quarto), grown from the
+Current size: 52 notes (51 markdown + 1 Quarto), grown from the
 first-pass batch of ~40. The October 2026 refresh re-verified existing
 notes and added none. The most recent additions track v0.2 and v0.3
 work:
@@ -58,13 +58,16 @@ work:
 - `knowledge/author-roles/author-role-evidence.md` — persona / voice work.
 - `knowledge/conventions/declared-work-scope.md` — the project-wide refusal-on-blankness convention.
 - `knowledge/conventions/guidance-level.md` — the project-wide framing convention.
+- `knowledge/conventions/author-authority.md` — guards and author overrides.
 
-The two `conventions/` notes are project-wide rather than topical:
+The three `conventions/` notes are project-wide rather than topical:
 they define the [`declared-work-scope`](conventions/declared-work-scope.md)
-refusal posture every skill inherits, and the
+refusal posture every skill inherits, the
 [`guidance-level`](conventions/guidance-level.md) framing every
-conversation-bearing skill respects. Each is explained user-side in
-its concept page
+conversation-bearing skill respects, and the
+[`author-authority`](conventions/author-authority.md) guards that let
+the author override policy and scope refusals. The first two are
+explained user-side in their concept pages
 ([declared-work-scope](../docs/src/content/docs/concepts/declared-work-scope.md)
 and [guidance-level](../docs/src/content/docs/concepts/guidance-level.md));
 the knowledge notes here are the underlying evidence record for those

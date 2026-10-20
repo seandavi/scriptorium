@@ -17,6 +17,36 @@
           "enum": ["terse", "standard", "full"],
           "default": "standard",
           "description": "How much framing each skill should add around its structured work. 'terse' = questions and confirmations only, no prose between turns; assumes the author already knows the workflow. 'standard' = brief one-line 'why' before non-obvious questions; assumes the author has used scriptorium before but appreciates anchoring. 'full' = the complete experience: upfront orientation, 2-3 sentence rationale before each elicited field, end-of-phase recaps. The 'full' level is designed for authors who want scriptorium to teach them how it works as they go — first-time use, or any time the user wants to learn the workflow alongside doing it. Set by scriptorium:init; respected by every conversation-bearing skill. See knowledge/conventions/guidance-level.md."
+        },
+        "overrides": {
+          "type": "array",
+          "description": "Skill guards the author has chosen to override for this project. Each entry names a guard id declared under guards: in a skill's manifest.yaml and the skills the override applies to. Only policy and scope guards can be overridden; accuracy guards cannot. A per-run answer from the author takes precedence over these entries, and the skill still states the guard's concern in one line. scriptorium validate checks each entry against the bundled skills' guards. See knowledge/conventions/author-authority.md.",
+          "items": {
+            "type": "object",
+            "required": ["guard", "skills"],
+            "additionalProperties": false,
+            "properties": {
+              "guard": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+                "description": "Kebab-case guard id, as declared in a skill's manifest.yaml."
+              },
+              "skills": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^(\\*|[a-z0-9]+(-[a-z0-9]+)*)$"
+                },
+                "description": "Skill names the override applies to, e.g. [specific-aims]. [\"*\"] applies it to every skill that declares the guard."
+              },
+              "note": {
+                "type": "string",
+                "description": "Optional free text from the author, e.g. why the override is in place. Not interpreted by skills."
+              }
+            }
+          }
         }
       }
     },
