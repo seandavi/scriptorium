@@ -2,7 +2,7 @@
 
 You are running a **reporting-guideline-compliance** audit on a scientific
 manuscript. Your job is to walk an EQUATOR Network reporting-
-guideline checklist (CONSORT, STROBE, PRISMA, ARRIVE, STARD,
+guideline checklist (CONSORT, SPIRIT, STROBE, PRISMA, ARRIVE, STARD,
 TRIPOD/TRIPOD+AI, CARE, COREQ, CHEERS, plus AI extensions where
 applicable) against the manuscript and classify every checklist
 item as `present`, `partial`, `missing`, or `not-applicable`,
@@ -28,7 +28,7 @@ The user will paste, or you should ask for:
    - A `MANUSCRIPT_STATE.yaml#reporting_guideline` field (if
      the schema carries it).
    - Output from a prior `reporting-guideline-fit` run.
-   - An explicitly named checklist (`with CONSORT 2010`, etc.).
+   - An explicitly named checklist (`with CONSORT 2025`, etc.).
    If none of these is supplied, refuse and point at the
    upstream `reporting-guideline-fit` skill.
 
@@ -46,18 +46,31 @@ honestly and recommend running `reporting-guideline-fit` first.
    the author at the upstream `reporting-guideline-fit` skill.
 5. **Walk every checklist item.** Coverage is the point.
 6. **Anchor every `present` and `partial` in a quoted
-   passage** with a section/location reference.
-7. **Use the current checklist version.** PRISMA 2020 (not
+   passage** with a section/location reference. LLM checklist
+   walks agree with experts on about 90% of trial-reporting
+   items; the quote is how the author catches the rest.
+7. **Use the current checklist version.** CONSORT 2025 (not
+   2010) for trial reports, unless the author or venue requires
+   2010. SPIRIT 2025 for trial protocols. PRISMA 2020 (not
    2009). TRIPOD+AI 2024 for AI-based prediction models (not
-   TRIPOD 2015). CONSORT-AI extension when applicable. Name
-   the version explicitly — item numbers shift.
-8. **`not-applicable` is a first-class outcome.** Carries a
+   TRIPOD 2015). Name the version explicitly and tag every item
+   number with it — item numbers shift (CONSORT 2010 item 7a is
+   CONSORT 2025 item 16a). For an AI-intervention trial, add
+   CONSORT-AI or SPIRIT-AI (2020) to the 2025 base checklist
+   and state the version mismatch.
+8. **Default flow-diagram items to `partial`.** Flow-diagram
+   completeness is a figure-borne check; the one published
+   vision-model result was 57% accurate at spotting missing
+   details. Mark these `partial` and ask the author to verify
+   the diagram, unless the prose itself reports every required
+   number.
+9. **`not-applicable` is a first-class outcome.** Carries a
    one-sentence justification; not padded with "consider
    adding…".
-9. **`partial` is the right call on ambiguous mappings.**
-   Touched but not fully satisfied → `partial` with a
-   one-line "what would tip this to `present`" note.
-10. **Do not re-infer the checklist.** Run the one you are
+10. **`partial` is the right call on ambiguous mappings.**
+    Touched but not fully satisfied → `partial` with a
+    one-line "what would tip this to `present`" note.
+11. **Do not re-infer the checklist.** Run the one you are
     given.
 
 ## How to produce the audit
@@ -69,9 +82,12 @@ Work in this order:
    unknown — point at `reporting-guideline-fit`),
    `project.target_venue`, `core_claims`, `known_weaknesses`,
    `meta.guidance_level`.
-2. Identify the checklist version. PRISMA 2020 (not 2009).
-   TRIPOD+AI 2024 (not TRIPOD 2015) for AI-based prediction
-   models. Name the version explicitly.
+2. Identify the checklist version. CONSORT 2025 for trial
+   reports; SPIRIT 2025 for trial protocols. PRISMA 2020 (not
+   2009). TRIPOD+AI 2024 (not TRIPOD 2015) for AI-based
+   prediction models. For AI-intervention trials, the 2025 base
+   checklist plus CONSORT-AI or SPIRIT-AI (2020), with the
+   version mismatch stated. Name the version explicitly.
 3. Read the full manuscript (every section declared under
    `sections` or `supplements`).
 4. Walk each checklist item systematically. For each item,
@@ -85,6 +101,8 @@ Work in this order:
      statement. Do **not** propose replacement prose.
    - `not-applicable` — does not apply to this study.
      One-sentence justification.
+   - Flow-diagram completeness items default to `partial`, with
+     a request that the author verify the diagram.
 5. Cross-check against `known_weaknesses`. Items the author has
    acknowledged but not yet addressed in the prose are
    `partial` (acknowledged), not `missing`.
@@ -143,8 +161,8 @@ desk-rejection risk. Do **not** propose prose; name the gap.)
   would tip to `present`", not forced binary.
 - `not-applicable` carries a one-sentence justification.
 - Missing rows name the gap; they do not propose prose.
-- Version-anchored output (CONSORT 2010, PRISMA 2020,
-  TRIPOD+AI 2024).
+- Version-anchored output (CONSORT 2025, SPIRIT 2025, PRISMA
+  2020, TRIPOD+AI 2024), with every item number version-tagged.
 - Highest-priority gaps section is short and substantive (3–6
   items).
 - Acknowledged-but-unaddressed gaps cross-reference

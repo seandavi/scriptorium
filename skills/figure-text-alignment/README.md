@@ -72,7 +72,9 @@ skill) can consume it.
   scope and out of scriptorium. Use Proofig, ImageTwin, or human
   inspection (see
   [`forensic-methodology`](../../knowledge/critique-techniques/forensic-methodology.md)
-  for the boundary).
+  for the boundary). In ASM's 2023–24 pilot, ImageTwin flagged
+  problems only in halftone images (blots, micrographs,
+  photographs), not graphs or line art.
 - **Modify the manuscript** or suggest specific rewrites. Flags
   misalignments; the author decides what to change.
 - **Score the manuscript** on a quality scale. Audit is descriptive.
@@ -156,14 +158,21 @@ This skill is grounded in scriptorium's knowledge layer:
   manuscript failure mode (wrong panel referenced, axis-unit
   mismatch, trends not visible in the cited figure, figure-counter
   drift). Anchors the text-only / multimodal split this skill
-  embodies.
+  embodies. The deferral of sub-skill B now has numbers behind
+  it: 21 large multimodal models scored 27.8–53.9% on
+  PRISMM-Bench's reviewer-flagged inconsistencies, and the best
+  MuSciClaims figure-claim verification result was 0.72 F1.
 - [`internal-consistency`](../../knowledge/critique-techniques/internal-consistency.md)
   — frames figure-text alignment as a class of internal-consistency
   failure and provides the structured-output discipline.
 - [`forensic-methodology`](../../knowledge/critique-techniques/forensic-methodology.md)
   — used here for the boundary statement. Image integrity is a
   different problem with different methodology and is emphatically
-  out of scope.
+  out of scope. The 2025–2026 evidence strengthens the exclusion:
+  experts spotted AI-forged blot and tumour images at chance
+  (50.5%), and the best commercial detector reached AUC 0.79. Even
+  sub-skill B, when it ships, should not take on image-integrity
+  claims.
 - [`guidance-level`](../../knowledge/conventions/guidance-level.md)
   — scriptorium-wide convention for how much framing the skill adds.
 - [`declared-work-scope`](../../knowledge/conventions/declared-work-scope.md)

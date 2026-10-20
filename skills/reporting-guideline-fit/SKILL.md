@@ -1,6 +1,6 @@
 ---
 name: reporting-guideline-fit
-description: Read the manuscript's methods section (and abstract/title for context) and infer which EQUATOR Network reporting guideline applies — CONSORT for RCTs, STROBE for observational, PRISMA for systematic reviews, ARRIVE for animal research, TRIPOD/TRIPOD+AI for prediction models, STARD for diagnostic accuracy, CARE for case reports, COREQ for qualitative, with relevant AI-extensions (CONSORT-AI, SPIRIT-AI, TRIPOD+AI) when applicable. Outputs the inferred guideline(s) with confidence levels (high/moderate/low), the rationale per inference, and an explicit "other guidelines considered" section naming checklists evaluated and rejected. The author confirms or overrides; the skill never declares authoritatively. Upstream inference for the reporting-guideline-compliance skill — this skill stops at "which checklist applies?"; running the full checklist against the manuscript is the downstream skill's job. Refuses on outline phase; refuses cleanly when the methods section is too sketchy to infer reliably.
+description: Read the manuscript's methods section (and abstract/title for context) and infer which EQUATOR Network reporting guideline applies — CONSORT for RCTs, SPIRIT for trial protocols, STROBE for observational, PRISMA for systematic reviews, ARRIVE for animal research, TRIPOD/TRIPOD+AI for prediction models, STARD for diagnostic accuracy, CARE for case reports, COREQ for qualitative, TRIPOD-LLM or REFINE for LLM studies, CHART for chatbot health-advice studies, with relevant AI-extensions (CONSORT-AI, SPIRIT-AI, TRIPOD+AI) when applicable, and GAMER as an add-on disclosure checklist when generative-AI use is declared. Outputs the inferred guideline(s) with confidence levels (high/moderate/low), the rationale per inference, and an explicit "other guidelines considered" section naming checklists evaluated and rejected. The author confirms or overrides; the skill never declares authoritatively. Upstream inference for the reporting-guideline-compliance skill — this skill stops at "which checklist applies?"; running the full checklist against the manuscript is the downstream skill's job. Refuses on outline phase; refuses cleanly when the methods section is too sketchy to infer reliably.
 grounding:
   - knowledge/conventions/guidance-level.md
   - knowledge/conventions/declared-work-scope.md
@@ -58,16 +58,20 @@ silently when the inference is wrong. Keep the steps separate.
    isn't clear, not a confident wrong guess. The honest default
    when uncertain is to say so.
 3. **Multiple checklists can apply.** An animal randomised
-   intervention study uses both ARRIVE 2.0 and CONSORT (or
-   CONSORT-AI if AI-enabled). The skill must surface the
+   intervention study uses both ARRIVE 2.0 and CONSORT 2025
+   (plus CONSORT-AI 2020 if AI-enabled). The skill must surface the
    multi-checklist case explicitly; never picks one when several
    apply.
-4. **Honest about extensions and successors.** PRISMA 2020
-   replaced PRISMA 2009. TRIPOD+AI 2024 supersedes TRIPOD 2015
-   for AI-based prediction models. CONSORT-AI extends CONSORT
-   for AI-enabled trials. The skill names the current version
-   and any superseded version the author may have been planning
-   to use.
+4. **Honest about extensions and successors.** CONSORT 2025
+   replaced CONSORT 2010 in April 2025 and renumbered the
+   checklist. SPIRIT 2025 is the current protocol checklist.
+   PRISMA 2020 replaced PRISMA 2009. TRIPOD+AI 2024 supersedes
+   TRIPOD 2015 for AI-based prediction models. CONSORT-AI and
+   SPIRIT-AI (2020) extend the trial checklists for AI-enabled
+   trials, but were built on the 2010 and 2013 base checklists;
+   pair them with the 2025 base checklist and name the version
+   mismatch. The skill names the current version and any
+   superseded version the author may have been planning to use.
 5. **Never declare authoritatively.** The skill recommends; the
    author confirms. Even at high confidence, the output frames
    the inference as "the design as described points to X" rather
@@ -123,13 +127,23 @@ The skill applies design-specific signals from the methods
 section. Detection is structured and rule-based, not
 opportunistic.
 
-### CONSORT 2010 (and CONSORT-AI 2020) — RCTs
+### CONSORT 2025 (and CONSORT-AI 2020) — RCT reports
 
 Signals: random allocation to two or more groups; allocation
 concealment; intention-to-treat (or per-protocol) analysis;
-participant flow diagram; trial registration. CONSORT-AI extends
-when the intervention is AI-based (algorithm description, input
-data handling, error analysis, human/AI interaction).
+participant flow diagram; trial registration; results reported.
+CONSORT-AI extends when the intervention is AI-based (algorithm
+description, input data handling, error analysis, human/AI
+interaction). Recommend CONSORT 2025 over CONSORT 2010 unless
+the venue explicitly requires the older version.
+
+### SPIRIT 2025 (and SPIRIT-AI 2020) — trial protocols
+
+Signals: the manuscript is a protocol for a randomised trial —
+planned procedures in the future tense ("participants will be
+randomised"), a schedule of enrolment, interventions and
+assessments, no results. Recommend SPIRIT 2025, not CONSORT, for
+a protocol. SPIRIT-AI extends when the intervention is AI-based.
 
 ### STROBE — observational studies
 
@@ -146,7 +160,9 @@ Signals: protocol-based literature search; database-and-search-
 strategy methods; PRISMA flow diagram (or its language); PROSPERO
 registration; eligibility criteria; risk-of-bias assessment;
 synthesis methodology. Replaced PRISMA 2009 (still seen in some
-older manuscripts).
+older manuscripts). As of October 2026, PRISMA 2020 is still
+current: an AI-related partial update is listed as under
+development, and no successor has been published.
 
 ### ARRIVE 2.0 — animal research
 
@@ -174,6 +190,28 @@ expanded to 27 items, unified regression and ML reporting, added
 fairness and trustworthiness items. Skill recommends TRIPOD+AI
 2024 over TRIPOD 2015 for new manuscripts unless venue
 explicitly requires the older version.
+
+### TRIPOD-LLM / REFINE — LLM and foundation-model studies
+
+Signals: the study develops, tunes, prompt-engineers, or
+evaluates a large language model or foundation model in
+biomedical or medical research, including imaging AI. TRIPOD-LLM
+(an extension of TRIPOD+AI) and REFINE overlap in scope, and it
+is not yet clear which one journals will require. Name both and
+let the target venue's requirement decide.
+
+### CHART — chatbot health-advice studies
+
+Signals: the study evaluates a generative-AI chatbot's answers to
+health questions or the health advice it gives.
+
+### GAMER — add-on disclosure of generative-AI use
+
+Signals: the manuscript declares that generative-AI tools were
+used in the research or in writing the paper. GAMER is a
+nine-item checklist for disclosing that use in medical research.
+It is an **add-on** to the design checklist, never a replacement:
+surface it alongside whichever design checklist applies.
 
 ### CARE — case reports
 
@@ -226,10 +264,10 @@ Read `meta.guidance_level` from `MANUSCRIPT_STATE.yaml` (default
   the chosen checklist).
 - `full` — open with what reporting guidelines do (standardise
   reporting so reviewers and readers can evaluate methodology
-  consistently — the EQUATOR Network maintains the registry of
-  ~500 active guidelines), why the inference matters (authors
-  often don't know which checklist applies to their study
-  design, especially across the AI-extension landscape), and
+  consistently — the EQUATOR Network maintains the registry,
+  whose library lists roughly 700 records), why the inference
+  matters (authors often don't know which checklist applies to
+  their study design, especially across the AI-extension landscape), and
   the major design-to-checklist mapping. If first invocation
   this session, also offer
   `/scriptorium:explain reporting-guideline-fit`.
@@ -251,9 +289,12 @@ changes.
    moderate / low / no-match.
 3. **Identify multi-checklist applicability.** Animal RCTs
    need ARRIVE + CONSORT. AI-based diagnostic tools need
-   STARD-AI (and STARD baseline). Systematic reviews with a
-   meta-analysis sub-component need PRISMA. Surface all
-   applicable checklists, not just the most prominent.
+   STARD-AI (and STARD baseline). AI-intervention trials need
+   CONSORT 2025 + CONSORT-AI (or SPIRIT 2025 + SPIRIT-AI for
+   the protocol). Systematic reviews with a meta-analysis
+   sub-component need PRISMA. A manuscript that declares
+   generative-AI use adds GAMER to its design checklist. Surface
+   all applicable checklists, not just the most prominent.
 4. **Confirm with high-vs-low confidence assignment.** For each
    recommended guideline:
    - **High confidence**: methods clearly describes a design
@@ -274,10 +315,9 @@ changes.
    CONSORT and STROBE; the skill names which and why one was
    chosen).
 6. **Recommend the next step.** Point the author at the v0.3
-   `reporting-guideline-compliance` skill (or, while that's not yet
-   built, at the EQUATOR-published checklist URL and a
-   manual checklist walkthrough). Never run the checklist
-   itself.
+   `reporting-guideline-compliance` skill (with the
+   EQUATOR-published checklist URL as a manual fallback). Never
+   run the checklist itself.
 7. **Emit the structured markdown report.**
 
 ## Output format
@@ -296,21 +336,22 @@ applicable guidelines; recommended next step.>
 
 ## Inferred guideline(s)
 
-<per recommended guideline: name (with version — CONSORT 2010,
-PRISMA 2020, ARRIVE 2.0, TRIPOD+AI 2024, etc.); confidence
-(high / moderate / low); one paragraph naming the methods-
-section signals that matched, with quotes where useful;
+<per recommended guideline: name (with version — CONSORT 2025,
+SPIRIT 2025, PRISMA 2020, ARRIVE 2.0, TRIPOD+AI 2024, etc.);
+confidence (high / moderate / low); one paragraph naming the
+methods-section signals that matched, with quotes where useful;
 URL or DOI for the checklist (from EQUATOR registry); whether
-an AI-extension applies and which.>
+an AI-extension applies and which; whether the GAMER add-on
+applies.>
 
 ## Why this guideline (per inference)
 
 <expanded rationale per guideline. The methods quotes from
 the inferred-guideline section get expanded here with
-additional context — "the methods describes random allocation
-to two arms (intent-to-treat analysis named on p. 7), which
-maps to CONSORT 2010 items 8-9 and 16". Useful when the
-author wants to verify the inference against their own
+additional context — "the methods describes computer-generated
+random allocation to two arms (p. 7), which maps to the CONSORT
+2025 sequence-generation items 17a–b". Useful when the author
+wants to verify the inference against their own
 understanding of the design.>
 
 ## Other guidelines considered
@@ -326,7 +367,10 @@ STROBE instead).>
 
 <only when more than one checklist applies. Names the
 combination explicitly (animal RCT → ARRIVE 2.0 + CONSORT
-2010; AI-based diagnostic → STARD 2015 + STARD-AI extension).
+2025; AI-based diagnostic → STARD 2015 + STARD-AI extension;
+AI-intervention trial → CONSORT 2025 + CONSORT-AI 2020, with
+the version mismatch named; declared generative-AI use →
+design checklist + GAMER).
 Notes that multi-checklist applicability is intentional, not
 a confusion of the inference.>
 
@@ -344,11 +388,9 @@ ambiguity.">
 
 <concrete: "Once you confirm the inference, run
 /scriptorium:reporting-guideline-compliance with [chosen guideline] to
-audit the manuscript against the checklist items. Until
-reporting-guideline-compliance lands in v0.3, the EQUATOR Network
-publishes the [checklist] at [URL]; a manual walkthrough is
-feasible for any of the v0.1 supported checklists." Concrete
-URLs where stable.>
+audit the manuscript against the checklist items. For a manual
+walkthrough, the EQUATOR Network publishes the [checklist] at
+[URL]." Concrete URLs where stable.>
 
 ## What this inference did NOT do
 
@@ -379,13 +421,18 @@ was the right choice); not editor-side enforcement.>
   STROBE", but "considered STROBE because the prose used
   'cohort' language; rejected because the methods also describes
   randomisation to two arms, which moves the design to CONSORT".
-- **Version honesty**: PRISMA 2020 over PRISMA 2009; TRIPOD+AI
-  2024 over TRIPOD 2015 for AI-based prediction models. The
-  skill names supersession explicitly.
+- **Version honesty**: CONSORT 2025 over CONSORT 2010; PRISMA
+  2020 over PRISMA 2009; TRIPOD+AI 2024 over TRIPOD 2015 for
+  AI-based prediction models. The skill names supersession
+  explicitly.
 - **AI-extensions surfaced when applicable**: CONSORT-AI for
   AI-enabled trials; SPIRIT-AI for the protocol; TRIPOD+AI for
   AI-based prediction models; STARD-AI for AI-based diagnostic
-  tools.
+  tools; TRIPOD-LLM or REFINE for LLM studies; CHART for
+  chatbot health-advice studies.
+- **GAMER surfaced as an add-on**: when the manuscript declares
+  generative-AI use, GAMER appears alongside the design
+  checklist, not in place of it.
 
 ## What you must not do
 
@@ -405,8 +452,11 @@ was the right choice); not editor-side enforcement.>
 - Conflate the inference with the full audit. Stop at "which
   checklist?" — never start running the checklist itself.
 - Recommend a checklist version that's been superseded
-  (PRISMA 2009 when PRISMA 2020 is current; TRIPOD 2015 when
-  TRIPOD+AI 2024 is current for AI-based prediction models).
+  (CONSORT 2010 when CONSORT 2025 is current; PRISMA 2009 when
+  PRISMA 2020 is current; TRIPOD 2015 when TRIPOD+AI 2024 is
+  current for AI-based prediction models).
+- Recommend GAMER in place of a design checklist. It is a
+  disclosure add-on.
 - Run other skills as side effects.
 
 ## Grounding
@@ -415,10 +465,12 @@ This skill is grounded in published research:
 
 - [[reporting-guidelines]] — the primary anchor. The EQUATOR
   Network registry, the design-specific checklists (CONSORT
-  2010, STROBE, PRISMA 2020, ARRIVE 2.0, STARD 2015,
-  TRIPOD+AI 2024, CARE, COREQ, CHEERS 2022), the AI-extension
-  landscape (CONSORT-AI / SPIRIT-AI / STARD-AI / TRIPOD+AI),
-  and the EQUATOR-published rationale for why standardised
+  2025, SPIRIT 2025, STROBE, PRISMA 2020, ARRIVE 2.0, STARD
+  2015, TRIPOD+AI 2024, CARE, COREQ, CHEERS 2022), the
+  AI-extension landscape (CONSORT-AI / SPIRIT-AI / STARD-AI /
+  TRIPOD+AI), the 2025–2026 LLM guidelines (TRIPOD-LLM, REFINE,
+  CHART, and GAMER as a disclosure add-on), and the
+  EQUATOR-published rationale for why standardised
   reporting matters. The skill's detection heuristics map
   directly to the design-discriminating signals each checklist
   was built to capture.

@@ -1,10 +1,10 @@
 # reporting-guideline-compliance — audit a manuscript against its EQUATOR checklist
 
 Walks an EQUATOR Network reporting-guideline checklist (CONSORT
-2010, STROBE, PRISMA 2020, ARRIVE 2.0, STARD 2015, TRIPOD 2015 /
-TRIPOD+AI 2024, CARE, COREQ, CHEERS 2022, plus AI-extensions
-where applicable) against a manuscript, and classifies every
-checklist item as `present`, `partial`, `missing`, or
+2025, SPIRIT 2025, STROBE, PRISMA 2020, ARRIVE 2.0, STARD 2015,
+TRIPOD 2015 / TRIPOD+AI 2024, CARE, COREQ, CHEERS 2022, plus
+AI-extensions where applicable) against a manuscript, and
+classifies every checklist item as `present`, `partial`, `missing`, or
 `not-applicable`. Each `present` and `partial` row anchors in a
 quoted manuscript excerpt; each `missing` row names the gap
 explicitly without proposing replacement prose.
@@ -33,23 +33,37 @@ is known and the manuscript is in `draft` / `revision` /
   a quoted excerpt from the manuscript and a location. An
   unsourced "yes, this is covered" is the failure mode this
   skill exists to avoid.
+- **Flow diagrams default to `partial`.** Items on the
+  participant flow diagram's completeness are marked `partial`
+  with a request that the author verify the diagram, because
+  the evidence that a model can spot missing flow-diagram
+  details is weak.
 - **Explicit gaps.** Every `missing` row names what is absent
   ("no allocation-concealment mechanism described") — the skill
   does not propose replacement prose.
 - **`not-applicable` as a first-class outcome.** Items that
-  genuinely don't apply (CONSORT item 17b on binary outcomes
-  for a continuous-outcome trial; PRISMA item 12 when no
-  synthesis is performed) are marked `not-applicable` with a
-  one-sentence justification rather than padded with "consider
+  genuinely don't apply (CONSORT 2010 item 17b on binary
+  outcomes for a continuous-outcome trial; the PRISMA 2020
+  synthesis items when no synthesis is performed) are marked
+  `not-applicable` with a one-sentence justification rather than padded with "consider
   adding…".
 - **Acknowledged-but-unaddressed cross-reference.** Items the
   author has named in `MANUSCRIPT_STATE.yaml#known_weaknesses`
   but not yet addressed in the prose are surfaced as `partial`
   (acknowledged) rather than `missing` (surprise).
-- **Version honesty.** PRISMA 2020 (not 2009). TRIPOD+AI 2024
-  (not TRIPOD 2015) for AI-based prediction models. CONSORT-AI
-  extension when applicable. The named version is load-bearing
-  — item numbers shift between versions.
+- **Version honesty.** CONSORT 2025 (not 2010) for trial
+  reports, unless the author or venue requires 2010. SPIRIT 2025
+  for trial protocols. PRISMA 2020 (not 2009). TRIPOD+AI 2024
+  (not TRIPOD 2015) for AI-based prediction models. The named
+  version is load-bearing — item numbers shift between versions,
+  so every item number carries its version. CONSORT 2010 item
+  17b is about binary outcomes; in CONSORT 2025, items 17a–b
+  cover sequence generation.
+- **AI-intervention trials.** The 2025 base checklist plus the
+  2020 AI extension (CONSORT-AI or SPIRIT-AI), with the version
+  mismatch stated. SPIRIT 2025 recommends using the existing
+  extensions until they are aligned; applying the same approach
+  to CONSORT-AI is an inference by analogy.
 
 ## What it does not do
 
@@ -86,7 +100,7 @@ is known and the manuscript is in `draft` / `revision` /
   `meta.guidance_level` (framing).
 - **Which checklist to audit.** One of: output from a prior
   `reporting-guideline-fit` run; an explicit checklist named in
-  the invocation (`with CONSORT 2010`, etc.); or (when the
+  the invocation (`with CONSORT 2025`, etc.); or (when the
   schema carries it) `MANUSCRIPT_STATE.yaml#reporting_guideline`.
 
 If the applicable checklist isn't supplied, the skill refuses
@@ -160,8 +174,8 @@ checklist items actually map to manuscript prose:
   mode this skill exists to avoid.
 - `not-applicable` is a **first-class outcome**. Several
   checklist items don't apply to every study (continuous-outcome
-  trial → item 17b on binary outcomes is N/A; *in silico*
-  arm of a study with an animal arm → ARRIVE housing items
+  trial → CONSORT 2010 item 17b on binary outcomes is N/A;
+  *in silico* arm of a study with an animal arm → ARRIVE housing items
   don't apply to the *in silico* arm). Padding these with
   "consider adding…" is dishonest; marking them cleanly with
   a one-sentence justification is the right answer.
@@ -202,16 +216,25 @@ This skill is grounded in scriptorium's knowledge layer:
 
 - [`reporting-guidelines`](../../knowledge/scientific-writing/reporting-guidelines.md)
   — the primary anchor. The EQUATOR Network registry, the
-  design-specific checklists (CONSORT 2010, STROBE, PRISMA
-  2020, ARRIVE 2.0, STARD 2015, TRIPOD 2015 / TRIPOD+AI 2024,
-  CARE, COREQ, CHEERS 2022) with their canonical citations,
-  the AI-extension landscape (CONSORT-AI / SPIRIT-AI /
-  STARD-AI / TRIPOD+AI), and the framing of reporting
-  guidelines as the **validation contract** for scholarly
-  writing. The note names this skill explicitly as the
-  per-item present / partial / missing / not-applicable
-  audit "with a span pointer for each 'present' claim" —
-  the output table is exactly that.
+  design-specific checklists (CONSORT 2025 and CONSORT 2010,
+  SPIRIT 2025, STROBE, PRISMA 2020, ARRIVE 2.0, STARD 2015,
+  TRIPOD 2015 / TRIPOD+AI 2024, CARE, COREQ, CHEERS 2022) with
+  their canonical citations, the AI-extension landscape
+  (CONSORT-AI / SPIRIT-AI / STARD-AI / TRIPOD+AI), and the
+  framing of reporting guidelines as the **validation
+  contract** for scholarly writing. The note names this skill
+  explicitly as the per-item present / partial / missing /
+  not-applicable audit "with a span pointer for each 'present'
+  claim" — the output table is exactly that. Its 2025–2026
+  validation studies of LLM adherence checking report about
+  90% agreement with expert raters across three studies, and
+  AutoReporter, the only one to report chance-corrected
+  agreement, gives Cohen's κ of 0.70–0.77. Roughly one item
+  decision in ten is wrong, which is why quoted anchors are
+  mandatory. The one vision-model result, 57% accuracy at
+  detecting missing flow-diagram details, comes from a single
+  small study; flow-diagram items therefore default to
+  `partial`.
 - [`declared-work-scope`](../../knowledge/conventions/declared-work-scope.md)
   — the convention. The audit operates on declared manuscript
   prose; refuses cleanly on outline or when the applicable
@@ -246,7 +269,9 @@ updated or gets the grounding extended; never both unchanged.
   honest `partial` and `not-applicable` labels — is more useful
   than walking only the items the audit is sure about. Coverage
   is the value proposition.
-- **Version-anchored.** PRISMA 2020 has 27 items in a different
+- **Version-anchored.** CONSORT 2025 has 30 items against
+  CONSORT 2010's 25, and renumbers them: sample size moved from
+  item 7a to 16a. PRISMA 2020 has 27 items in a different
   layout from PRISMA 2009's 27 items; TRIPOD+AI 2024's 27 items
   are different again from TRIPOD 2015's 22. Naming the version
   is load-bearing.

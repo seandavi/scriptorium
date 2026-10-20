@@ -1,10 +1,13 @@
 # reporting-guideline-fit — infer which EQUATOR checklist applies
 
 Reads the manuscript's methods section and infers which EQUATOR
-Network reporting guideline applies — CONSORT 2010, STROBE,
-PRISMA 2020, ARRIVE 2.0, TRIPOD/TRIPOD+AI 2024, STARD 2015, CARE,
-COREQ, CHEERS 2022, plus AI-extensions (CONSORT-AI, SPIRIT-AI,
-STARD-AI, TRIPOD+AI) where applicable.
+Network reporting guideline applies — CONSORT 2025, SPIRIT 2025,
+STROBE, PRISMA 2020, ARRIVE 2.0, TRIPOD/TRIPOD+AI 2024, STARD
+2015, CARE, COREQ, CHEERS 2022, TRIPOD-LLM, REFINE, CHART, plus
+AI-extensions (CONSORT-AI, SPIRIT-AI, STARD-AI, TRIPOD+AI) where
+applicable. When the manuscript declares generative-AI use, it
+also surfaces GAMER as an add-on disclosure checklist; GAMER
+never replaces the design checklist.
 
 This is the **upstream inference** in the reporting-guidelines
 workflow. Stops at "which checklist?"; the downstream
@@ -45,12 +48,16 @@ The skill takes a stand on three forms of honesty:
    right answer when the methods is too sketchy to
    discriminate, not a confident wrong guess.
 2. **Multi-checklist applicability is surfaced.** An animal
-   randomised intervention study uses ARRIVE + CONSORT (or
-   CONSORT-AI). The skill never picks one when several apply.
-3. **Versioning is honest.** PRISMA 2020 over PRISMA 2009;
-   TRIPOD+AI 2024 over TRIPOD 2015 for AI-based prediction
-   models. The skill names supersession explicitly when
-   relevant.
+   randomised intervention study uses ARRIVE 2.0 + CONSORT 2025
+   (plus CONSORT-AI 2020 if AI-enabled). The skill never picks
+   one when several apply.
+3. **Versioning is honest.** CONSORT 2025 over CONSORT 2010;
+   SPIRIT 2025 for trial protocols; PRISMA 2020 over PRISMA
+   2009; TRIPOD+AI 2024 over TRIPOD 2015 for AI-based
+   prediction models. CONSORT-AI and SPIRIT-AI (2020) were
+   built on the older base checklists, so pairing them with a
+   2025 checklist comes with the version mismatch named. The
+   skill names supersession explicitly when relevant.
 
 ## What it explicitly will not do
 
@@ -71,11 +78,18 @@ The skill takes a stand on three forms of honesty:
 Primarily grounded in
 [`knowledge/scientific-writing/reporting-guidelines.md`](../../knowledge/scientific-writing/reporting-guidelines.md)
 — the EQUATOR Network registry, design-specific checklists
-(CONSORT 2010, STROBE, PRISMA 2020, ARRIVE 2.0, STARD 2015,
-TRIPOD+AI 2024, CARE, COREQ, CHEERS 2022), the AI-extension
-landscape (CONSORT-AI/SPIRIT-AI 2020, TRIPOD+AI 2024,
-STARD-AI), and the rationale for why standardised reporting
-matters.
+(CONSORT 2025, SPIRIT 2025, STROBE, PRISMA 2020, ARRIVE 2.0,
+STARD 2015, TRIPOD+AI 2024, CARE, COREQ, CHEERS 2022), the
+AI-extension landscape (CONSORT-AI/SPIRIT-AI 2020, TRIPOD+AI
+2024, STARD-AI), the 2025–2026 LLM guidelines (TRIPOD-LLM,
+REFINE, CHART, and the GAMER disclosure checklist), and the
+rationale for why standardised reporting matters. The note's
+routing guidance for this skill: trial protocols to SPIRIT
+2025, trial reports to CONSORT 2025 (plus CONSORT-AI for AI
+interventions), LLM-evaluation studies to TRIPOD-LLM or REFINE,
+chatbot health-advice studies to CHART, and GAMER as an
+additional disclosure checklist whenever generative AI was
+used.
 
 ## See also
 
