@@ -11,7 +11,9 @@ category: critique          # critique | validation | normalization | transforma
 description: >
   Audit a manuscript's existing citations for claim-support alignment,
   primary-vs-review mismatch, causal overreach, and unsupported
-  assertions. Reports findings as structured markdown.
+  assertions, and check that each reference's identifier resolves to
+  the work the reference describes. Reports findings as structured
+  markdown.
 
 # Skills are split by what they can produce.
 # This is a CRITIQUE skill — it assesses; it does not modify the manuscript
@@ -46,7 +48,8 @@ guidance_level_behavior:
     findings. The full table with per-claim rationale.
   full: >
     Open with what this skill produces (claim-level alignment
-    classifications, pattern-level smells) and how to read it
+    classifications, reference identity findings, pattern-level
+    smells) and how to read it
     (per-claim, then patterns); close with which findings to act
     on first and which are informational. The structured output
     itself is unchanged across levels.
@@ -92,11 +95,14 @@ grounding:
   - knowledge/citations/citation-accuracy-evidence.qmd
   - knowledge/citations/citation-overreach-research.md
   - knowledge/citations/hallucination-in-llm-citations.md
+  - knowledge/prior-art/reference-managers.md
+  - knowledge/prior-art/peer-review-platforms.md
 
 # What this skill explicitly is NOT.
 non_goals:
   - Adding or suggesting new citations.
   - Modifying the manuscript text.
   - Detecting retractions (separate utility; out of v0.1).
-  - Validating bibliography entries themselves (separate utility).
+  - Validating bibliography entries beyond the reference identity
+    check (author lists, page numbers, formatting; separate utility).
   - Scoring the manuscript on a quality scale.
