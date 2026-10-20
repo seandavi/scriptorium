@@ -30,7 +30,9 @@ terminology-normalization) inherit it.
 
 - **Paragraph order** within the section.
 - **Sentence order** within paragraphs (Gopen & Swan: topic position,
-  stress position, old-info-then-new).
+  stress position, old-info-then-new). Findings are diagnoses the
+  author can overrule: Gopen & Swan say the principles are not rules
+  and that "any reader expectation can be violated to good effect".
 - **Transitions** — connective tissue between paragraphs.
 - **Claims hierarchy** — paragraph-leading sentence should state the
   paragraph's claim.
@@ -72,8 +74,9 @@ If preservation conflicts with a proposed improvement, **preservation
 wins**. The pass surfaces the conflict in Remaining weaknesses rather
 than silently violating.
 
-The BERTScore antonymy problem ([`semantic-preservation`](../../knowledge/editing/semantic-preservation.md))
-means embedding similarity is **not** a safe automated guard against
+BERTScore and similar metrics are insensitive to negation and to
+numerical changes ([`semantic-preservation`](../../knowledge/editing/semantic-preservation.md)),
+so embedding similarity is **not** a safe automated guard against
 meaning flips. The skill reads the revised text against the source for
 semantic preservation; it does not delegate that check to an
 automated similarity metric.
@@ -149,6 +152,8 @@ This skill is grounded in scriptorium's knowledge layer:
 - [`reader-expectation-approach`](../../knowledge/scientific-writing/reader-expectation-approach.md)
   — Gopen & Swan's topic and stress positions; old-info-then-new.
   Mechanism-level grounding for sentence- and paragraph-level work.
+  The principles have not been tested in reading-time experiments;
+  the skill presents them as diagnoses, not rules.
 - [`narrative-frameworks`](../../knowledge/scientific-writing/narrative-frameworks.md)
   — Schimel's OCAR/LDR; Heard; Whitesides. Framework-level grounding
   for section-level structural work.
@@ -156,15 +161,19 @@ This skill is grounded in scriptorium's knowledge layer:
   — Toulmin's claim / data / warrant. Used to diagnose logical gaps
   inside structural reorganization.
 - [`semantic-preservation`](../../knowledge/editing/semantic-preservation.md)
-  — Nida's formal/dynamic equivalence; BERTScore antonymy problem.
+  — Nida's formal/dynamic equivalence; BERTScore's insensitivity to
+  negation and numerical changes.
   Grounds the constraint that embedding similarity is not safe as
   the only preservation check.
 - [`revision-research`](../../knowledge/editing/revision-research.md)
-  — Sommers 1980. The empirical case for *small* changes serving
-  *structural* goals.
+  — Sommers 1980. The empirical case for aiming revision at
+  structure rather than wording. Keeping each change small is the
+  skill's reviewability constraint, not a Sommers finding.
 - [`esl-writers-swales-hyland`](../../knowledge/scientific-writing/esl-writers-swales-hyland.md)
-  — hedging and stance patterns vary legitimately. The skill must
-  not "smooth out" deliberate ESL hedging.
+  — hedging and stance patterns vary legitimately, and stance norms
+  are field-specific (interactional metadiscourse rose in the
+  sciences; Hyland & Jiang 2018). The skill must not "smooth out"
+  deliberate ESL hedging.
 
 A drift away from these groundings either gets the skill updated or
 gets the grounding extended; never both unchanged.
