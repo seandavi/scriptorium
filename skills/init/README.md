@@ -42,6 +42,8 @@ surface.
    `forbidden`, `style.tone`, `style.voice`, `style.audience`,
    `constraints.max_word_count`, `document_phase`. Existing values
    are shown first; the author chooses to update, add to, or leave.
+   It also offers `meta.overrides` (standing overrides of a skill's
+   policy or scope guards), opt-in and never pre-filled.
 4. **Confirm** — shows the full proposed YAML as a diff against the
    existing file (or template). Validates against the schema. If
    validation fails, surfaces the errors as conversational prompts,
@@ -60,6 +62,8 @@ surface.
   before any change is proposed.
 - **Write the file before validation passes.** Validation precedes
   write.
+- **Pre-fill `meta.overrides`.** It records only guards the author
+  names; accuracy guards cannot be overridden.
 - **Auto-invoke the v0.1 leaf skills** when the conversation ends.
   `citation-audit`, `reviewer-simulation`, `argumentative-flow` —
   the author invokes those, not this skill.
@@ -160,6 +164,9 @@ This skill is grounded in:
   `known_weaknesses`, `target_venue`, and `core_claims` are the
   load-bearing inputs for `reviewer-simulation`; capturing them well
   here makes that skill's output much sharper.
+- [`author-authority`](../../knowledge/conventions/author-authority.md)
+  — the guard kinds and the `meta.overrides` entry the skill
+  offers.
 
 This skill is a utility, not an evidence-grounded critique or
 transformation. The grounding is intentionally light.

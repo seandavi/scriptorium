@@ -4,6 +4,7 @@ description: Conversational onboarding for new users. Three or four turns. Greet
 grounding:
   - knowledge/conventions/guidance-level.md
   - knowledge/conventions/declared-work-scope.md
+  - knowledge/conventions/author-authority.md
   - knowledge/README.md
 ---
 
@@ -120,11 +121,13 @@ should be plain and factual — no marketing language.
 > credibility model, and you can audit it.
 >
 > A note on scope: scriptorium operates on prose you've written or
-> scaffolding you've declared. It doesn't produce prose from
-> blankness — pre-draft ideation and section-from-scratch
-> generation sit outside what it does. That cut is structural,
-> not aspirational; the existing skills enforce it (no invented
-> citations, no manufactured sections, etc.).
+> scaffolding you've declared. By default it doesn't produce prose
+> from blankness — pre-draft ideation and section-from-scratch
+> generation sit outside what it does, and the skills decline them.
+> That default is yours to change: you can override a skill's
+> policy or scope guards for one run, or for the project in
+> `MANUSCRIPT_STATE.yaml`. Accuracy guards stay fixed; no skill
+> invents a citation, whatever you set.
 >
 > Before I walk you through it, what brings you here? Are you:
 >
@@ -276,6 +279,9 @@ any of these — you invoke when you're ready."
   knows what `init` will ask them. Tour itself always runs at `full`
   because the skill IS orientation; truncating it would defeat the
   point.
+- [[author-authority]] — tour tells new users that the scope cut is
+  a default they can override for policy and scope guards, and that
+  accuracy guards stay fixed.
 - `knowledge/README.md` — the layout of the knowledge layer, so the
   tour can honestly tell a curious user "every skill cites its
   evidence base; the knowledge layer is browsable under

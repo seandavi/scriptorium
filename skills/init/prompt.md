@@ -94,6 +94,14 @@ These cannot be inferred. Ask one or two at a time, never as a wall:
   submission / post-submission / accepted."*
 - **`document_phase.submission_target_date`** — *"Target submission
   date, if known?"*
+- **`meta.overrides`** (optional) — *"Some skills decline certain
+  requests by default (running at outline phase, drafting a missing
+  section). Want any skill to proceed past one of those for this
+  whole project? Most people skip this."* Accuracy guards, such as
+  never inventing a citation, cannot be overridden. Never propose or
+  pre-fill entries; record only a guard the user names, with the
+  skills it applies to (`"*"` for all that declare it) and an
+  optional note.
 
 If a field already has a value in the existing file, show it first
 and ask whether to update, add to, or leave alone.
@@ -147,6 +155,7 @@ Next: <suggested skill> when you're ready.
 - Invent fields not in the schema.
 - Silently overwrite existing values.
 - Output the final YAML before the user confirms.
+- Propose or pre-fill `meta.overrides` entries.
 - Validate after writing — validation must precede the write.
 - Ask a wall of questions.
 - Auto-invoke other scriptorium skills when this conversation ends.

@@ -35,7 +35,7 @@ above this prompt's directory, but only if
 `.claude-plugin/plugin.json` exists there (an `npx skills` install
 sits in an agent's `skills/` directory, which is not scriptorium's);
 (2) the copy bundled next to this prompt under `assets/<path>` (the
-plugin manifest, the schema, `knowledge/README.md` and the two
+plugin manifest, the schema, `knowledge/README.md` and the three
 `knowledge/conventions/` notes); (3) for other `knowledge/` notes
 and other skills' `SKILL.md`,
 `https://raw.githubusercontent.com/seandavi/scriptorium/main/<path>`.
@@ -53,19 +53,21 @@ producing the explanation. Do not guess.
 
 Read the plugin manifest, the schema, every `skills/*/SKILL.md`
 frontmatter, `knowledge/README.md`,
-`knowledge/conventions/guidance-level.md`, and
-`knowledge/conventions/declared-work-scope.md`. Synthesize one
+`knowledge/conventions/guidance-level.md`,
+`knowledge/conventions/declared-work-scope.md`, and
+`knowledge/conventions/author-authority.md`. Synthesize one
 screenful: what scriptorium is, the MANUSCRIPT_STATE-plus-skills
 architecture, the v0.1/v0.2 skills (one line each), the **evidence
 base** (every skill cites the published research it grounds in;
 name a few anchor citations — Greenberg 2009 *BMJ* for
 citation-distortion, Bornmann κ ≈ 0.17 for the multi-lens reviewer
 design, Gopen & Swan reader-expectation theory), the **scope cut**
-(scriptorium operates on declared work, not blank-slate
+(by default, scriptorium operates on declared work, not blank-slate
 generation — grounded in Hayes' 2012 proposer/translator/evaluator
-model and the AI-writing-failure-modes literature), and the three
-guidance levels. Close with "where to go next" and a `Sources`
-list.
+model and the AI-writing-failure-modes literature; the author can
+override policy and scope guards per run or in `meta.overrides`,
+while accuracy guards stay fixed), and the three guidance levels.
+Close with "where to go next" and a `Sources` list.
 
 ### Explain a named skill
 
@@ -86,7 +88,8 @@ the note), and what it explicitly will not do. Close with a
 Read the schema to extract the field's type, enum (if any), default,
 and description. Grep every `SKILL.md` for the field name and list
 the skills that consume it. If a corresponding knowledge note exists
-(e.g. `meta.guidance_level` → `knowledge/conventions/guidance-level.md`),
+(e.g. `meta.guidance_level` → `knowledge/conventions/guidance-level.md`,
+`meta.overrides` → `knowledge/conventions/author-authority.md`),
 read it and summarise the rationale. Close with guidance on how to
 choose a value, and a `Sources` list.
 

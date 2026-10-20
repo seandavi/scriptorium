@@ -29,6 +29,7 @@ SKILL_ASSETS: dict[str, tuple[str, ...]] = {
         "knowledge/README.md",
         "knowledge/conventions/guidance-level.md",
         "knowledge/conventions/declared-work-scope.md",
+        "knowledge/conventions/author-authority.md",
     ),
     "tour": (
         "knowledge/README.md",

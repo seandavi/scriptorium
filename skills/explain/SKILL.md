@@ -4,6 +4,7 @@ description: Explain scriptorium itself, a named skill, or a named MANUSCRIPT_ST
 grounding:
   - knowledge/conventions/guidance-level.md
   - knowledge/conventions/declared-work-scope.md
+  - knowledge/conventions/author-authority.md
   - knowledge/README.md
 ---
 
@@ -72,8 +73,9 @@ use the first that exists:
 2. **The bundled copy** — `assets/<path>` inside this skill's
    directory. A standalone `npx skills add` install carries
    `.claude-plugin/plugin.json`, `schemas/manuscript-state.schema.json`,
-   `knowledge/README.md`, `knowledge/conventions/guidance-level.md`
-   and `knowledge/conventions/declared-work-scope.md`.
+   `knowledge/README.md`, `knowledge/conventions/guidance-level.md`,
+   `knowledge/conventions/declared-work-scope.md` and
+   `knowledge/conventions/author-authority.md`.
 3. **GitHub `main`** — for other `knowledge/` notes and other
    skills' `SKILL.md`, fetch
    `https://raw.githubusercontent.com/seandavi/scriptorium/main/<path>`.
@@ -99,6 +101,9 @@ Read in this order, then synthesize a single markdown response:
    `grounding`) for the per-skill summary.
 4. `knowledge/conventions/guidance-level.md` for the
    framing-vs-execute convention every skill respects.
+5. `knowledge/conventions/declared-work-scope.md` and
+   `knowledge/conventions/author-authority.md` for the scope
+   default and how the author overrides it.
 
 Produce the output described in **Output format → A. System
 overview** below. Aim for one screenful, not a manual.
@@ -125,7 +130,8 @@ overview** below. Aim for one screenful, not a manual.
 2. Read each `skills/*/SKILL.md` and grep for the field name; list
    the skills that read or write it.
 3. If the field has a corresponding knowledge note (e.g.
-   `meta.guidance_level` → `knowledge/conventions/guidance-level.md`),
+   `meta.guidance_level` → `knowledge/conventions/guidance-level.md`,
+   `meta.overrides` → `knowledge/conventions/author-authority.md`),
    read it and summarise the rationale.
 4. Produce the output described in **Output format → C. Field
    explanation** below.
@@ -197,17 +203,21 @@ skill reads it>
 
 ## Scope — what scriptorium does and does not operate on
 
-<3-4 sentences. Lead with: scriptorium operates on prose the author
-has written or scaffolding the author has declared; it does not
-produce prose from blankness. Cite the
+<4-5 sentences. Lead with: by default, scriptorium operates on
+prose the author has written or scaffolding the author has
+declared; it does not produce prose from blankness. Cite the
 [[declared-work-scope]] convention and the Hayes 2012
 proposer/translator/evaluator framing. Name one concrete
 implication (e.g., "gap-finder names missing sections as gaps but
 doesn't draft them"; "no skill helps figure out what to study
-before there's a draft"). Close by saying generation skills like
-the planned v0.4 specific-aims are in scope because they transform
-declared scaffolding — the cut is generation-from-blankness, not
-generation-as-such.>
+before there's a draft"). Say generation skills like the planned
+v0.4 specific-aims are in scope because they transform declared
+scaffolding — the cut is generation-from-blankness, not
+generation-as-such. Close with the [[author-authority]]
+convention: the cut is a default, not a rule. The author can
+override a policy or scope guard for one run or for the project
+(`meta.overrides`); accuracy guards, such as never inventing a
+citation, stay fixed.>
 
 ## How scriptorium talks to you
 
@@ -227,6 +237,7 @@ generation-as-such.>
 - `knowledge/README.md`
 - `knowledge/conventions/guidance-level.md`
 - `knowledge/conventions/declared-work-scope.md`
+- `knowledge/conventions/author-authority.md`
 ```
 
 ### B. Skill explanation
@@ -355,6 +366,9 @@ This skill is grounded in:
 - [[guidance-level]] — the convention `explain` itself honors when
   rendering its output, and the convention it introduces to new
   users during a system overview.
+- [[author-authority]] — the guard kinds and `meta.overrides`, so
+  the overview presents the scope cut as the author's overridable
+  default and keeps accuracy guards fixed.
 - `knowledge/README.md` — the layout of the knowledge layer, so the
   skill can navigate when asked about a knowledge note by slug or
   topic.
