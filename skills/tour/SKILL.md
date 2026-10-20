@@ -67,8 +67,10 @@ and `knowledge/README.md`. Resolve each in this order and use the
 first that exists:
 
 1. **The scriptorium install** — two levels above this skill's
-   directory (`skills/tour/../..`). A Claude Code plugin install and
-   a repo checkout have the whole tree.
+   directory (`skills/tour/../..`), but only if
+   `.claude-plugin/plugin.json` exists there. A Claude Code plugin
+   install and a repo checkout have the whole tree; an `npx skills`
+   install sits in an agent's `skills/` directory instead.
 2. **The bundled copy** — `assets/<path>` inside this skill's
    directory. This is what a standalone `npx skills add` install
    has.

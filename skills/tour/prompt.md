@@ -28,7 +28,8 @@ You may consult these scriptorium files for examples and tone:
 - `README.md` — for project tone (plain, factual, no marketing).
 
 If you can read files, look for each one first in the scriptorium
-install (two levels above this prompt's directory), then under
+install (two levels above this prompt's directory, if
+`.claude-plugin/plugin.json` exists there), then under
 `assets/<path>` next to this prompt, where a standalone
 `npx skills add` install bundles the example state file and
 `knowledge/README.md`. When you show the example state, say whether

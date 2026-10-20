@@ -59,8 +59,10 @@ Read `schemas/manuscript-state.schema.json` from the first of these
 that exists:
 
 1. **The scriptorium install** — two levels above this skill's
-   directory (`skills/init/../../schemas/`). Present in a Claude
-   Code plugin install and in a repo checkout.
+   directory (`skills/init/../../schemas/`), but only if
+   `.claude-plugin/plugin.json` exists there. Present in a Claude
+   Code plugin install and in a repo checkout; an `npx skills`
+   install sits in an agent's `skills/` directory instead.
 2. **The bundled copy** — `assets/schemas/manuscript-state.schema.json`
    inside this skill's directory. This is what a standalone
    `npx skills add` install has.

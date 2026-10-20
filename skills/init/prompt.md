@@ -10,7 +10,8 @@ CLI writes a template; you fill it in with the author's actual intent.
 1. **Never invent fields not in the schema.** The canonical schema
    is `schemas/manuscript-state.schema.json`. If you can read files,
    take it from the scriptorium install (two levels above this
-   prompt's directory) or, failing that, from the copy bundled next
+   prompt's directory, if `.claude-plugin/plugin.json` exists there)
+   or, failing that, from the copy bundled next
    to this prompt at `assets/schemas/manuscript-state.schema.json`,
    and tell the user which one you used. Otherwise ask the user to
    paste it or to tell you what fields the local install supports.

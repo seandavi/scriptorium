@@ -63,8 +63,12 @@ relative to the scriptorium root. Resolve each one in this order and
 use the first that exists:
 
 1. **The scriptorium install** — two levels above this skill's
-   directory (`skills/explain/../..`). A Claude Code plugin install
-   and a repo checkout have the whole tree.
+   directory (`skills/explain/../..`), but only if
+   `.claude-plugin/plugin.json` exists there. A Claude Code plugin
+   install and a repo checkout have the whole tree. An
+   `npx skills` install sits in an agent directory such as
+   `.claude/skills/` or `.agents/skills/`; that `skills/` holds the
+   user's skills, not scriptorium's, so skip this step.
 2. **The bundled copy** — `assets/<path>` inside this skill's
    directory. A standalone `npx skills add` install carries
    `.claude-plugin/plugin.json`, `schemas/manuscript-state.schema.json`,
@@ -73,8 +77,8 @@ use the first that exists:
 3. **GitHub `main`** — for other `knowledge/` notes and other
    skills' `SKILL.md`, fetch
    `https://raw.githubusercontent.com/seandavi/scriptorium/main/<path>`.
-   Without a local `skills/` tree, take the list of skill names from
-   the lifecycle table in `README.md` fetched the same way.
+   Without a scriptorium install, take the list of skill names from
+   the "What ships today" list in `README.md` fetched the same way.
 
 Say which source you used: in the `Sources` section, mark each file
 not read from the scriptorium install with `(bundled copy)` or
