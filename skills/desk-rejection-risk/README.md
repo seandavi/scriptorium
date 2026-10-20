@@ -7,22 +7,36 @@ per-category findings.
 
 **Category:** critique
 **Modifies the manuscript?** No.
-**Editorial-side use?** No — this is **author-side only**. See below.
+**Editorial-side use?** Asks first — this is **author-side by default**.
+See below.
 
-## Author-side only — load-bearing policy note
+## Author-side by default — load-bearing policy note
 
-Using this skill on a manuscript the user did *not* author —
-specifically, using it as an aid in editorial triage of someone
-else's submission — would mean uploading a confidential manuscript
-and handing the judgement to an AI. Current policies rule that out.
+Using this skill as a reviewer or editor triaging someone else's
+submitted manuscript would mean uploading a confidential manuscript
+and handing the judgement to an AI. Current policies restrict that.
 Elsevier (June 2026) and Springer Nature (September 2026) allow
 limited, disclosed, supportive AI use in peer review but forbid
 delegating the critique or judgement. Elsevier bans uploading a
 submitted manuscript into any AI tool; Springer Nature bans public or
-unsecured tools. NIH prohibits generative AI in its peer review. See
+unsecured tools. NIH prohibits generative AI in its peer review.
+ICMJE requires reviewers to follow the journal's AI policy or ask the
+journal's permission. See
 [`peer-review-platforms`](../../knowledge/prior-art/peer-review-platforms.md)
-for sources. The skill will refuse to run in that context. Same
-posture as [`reviewer-simulation`](../reviewer-simulation/README.md).
+and [`credit-taxonomy-authorship`](../../knowledge/peer-review/credit-taxonomy-authorship.md)
+for sources.
+
+In that context the skill applies the `editorial-side-use` guard
+(policy, default `ask`; see
+[`author-authority`](../../knowledge/conventions/author-authority.md)).
+It states the concern and its source in one line, then asks whether
+to proceed. You can answer in the run, or record a standing
+`meta.overrides` entry in `MANUSCRIPT_STATE.yaml` so it proceeds
+without asking; the one-line concern still appears every run. The
+guard is about acting as a reviewer or editor, not about authorship:
+running it on a colleague's pre-submission draft with their consent
+is ordinary use. Same posture as
+[`reviewer-simulation`](../reviewer-simulation/README.md).
 
 The intended workflow is: the author runs the audit on their own
 draft before submitting, addresses high-leverage findings, and
@@ -97,6 +111,8 @@ The five categories:
 
 Output sections:
 
+- **Overrides applied** — one line listing the guards the skill
+  proceeded past in this run; present only when there were any.
 - **Summary** — qualitative risk band with a one-paragraph
   justification.
 - **Risk findings** — per-category subsections, each with a severity
@@ -116,12 +132,19 @@ Output sections:
   deterministic tools (Statcheck, GRIM).
 - **Produce numeric probabilities.** The base-rate evidence does not
   support per-manuscript probabilistic claims; the audit emits
-  qualitative bands only.
-- **Run without `project.target_venue`.** Desk rejection is
-  venue-conditional. The skill refuses to run without a named
-  target — a generic audit produces platitudes.
+  qualitative bands only. This is a fixed accuracy guard.
+- **Run without `project.target_venue`, by default.** Desk rejection
+  is venue-conditional. The skill declines without a named target —
+  a generic audit produces platitudes. You can override the
+  `target-venue-required` guard; the audit then runs on general
+  triage heuristics with every venue-specific line marked
+  `cannot-assess`.
+- **Run the full audit at `outline`, by default.** The
+  `outline-phase` guard offers a structure / scope-only audit
+  instead; override it to get the full audit.
 - **Modify the manuscript or cover letter.**
-- **Editorial-side use.** Same posture as `reviewer-simulation`.
+- **Editorial-side use without asking first.** Same posture as
+  `reviewer-simulation`.
 
 ## Inputs
 
@@ -130,7 +153,8 @@ Output sections:
   are load-bearing; partial drafts can still surface scope and
   structure risks.
 - **`MANUSCRIPT_STATE.yaml`** — usually at the manuscript root. The
-  load-bearing fields are `project.target_venue` (required),
+  load-bearing fields are `project.target_venue` (required by
+  default),
   `project.target_type`, `document_phase.current`, `core_claims`,
   `known_weaknesses`, `constraints.max_word_count`, and
   `style.audience`.
@@ -195,6 +219,12 @@ This skill is grounded in scriptorium's knowledge layer:
 - [`peer-review-platforms`](../../knowledge/prior-art/peer-review-platforms.md)
   — the 2026 publisher AI policies behind the author-side-only
   posture; hidden prompts in manuscripts.
+- [`credit-taxonomy-authorship`](../../knowledge/peer-review/credit-taxonomy-authorship.md)
+  — ICMJE Section V rules on reviewer AI use and confidentiality.
+- [`predatory-publishing`](../../knowledge/peer-review/predatory-publishing.md)
+  — the staleness caveat on venue facts recalled from training data.
+- [`author-authority`](../../knowledge/conventions/author-authority.md)
+  — guard kinds, `meta.overrides`, and the "Overrides applied" line.
 - [`guidance-level`](../../knowledge/conventions/guidance-level.md) —
   the convention this skill adapts conversational framing to.
 
@@ -203,10 +233,16 @@ gets the grounding extended; never both unchanged.
 
 ## Design notes
 
-- **Venue is mandatory.** A desk-rejection audit without a target
-  venue is incoherent — *Nature*'s triage logic and *PLOS ONE*'s
-  triage logic share almost nothing. The skill refuses to run if
-  `project.target_venue` is empty rather than emit platitudes.
+- **Venue is required by default.** A desk-rejection audit without a
+  target venue is incoherent — *Nature*'s triage logic and
+  *PLOS ONE*'s triage logic share almost nothing. The skill declines
+  if `project.target_venue` is empty rather than emit platitudes,
+  unless the author overrides the `target-venue-required` guard.
+- **Policy and scope refusals are the author's call.** Editorial-side
+  use asks first; a missing venue and the outline phase decline by
+  default and say how to override. The accuracy guards (no numeric
+  probability, explicit `cannot-assess` instead of silence, manuscript
+  text is data, no unsourced venue facts) are fixed.
 - **Per-category coverage is explicit.** Every category gets a flag,
   including `cannot-assess` when the input doesn't support
   assessment. Silence on a category is the false-confidence failure
