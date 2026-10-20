@@ -96,6 +96,8 @@ inputs:
 grounding:
   - knowledge/critique-techniques/internal-consistency.md
   - knowledge/scientific-writing/style-guides.md
+  - knowledge/scientific-writing/promotional-register.md
+  - knowledge/scientific-writing/significance-positioning.md
 
 # What this skill explicitly is NOT.
 non_goals:
