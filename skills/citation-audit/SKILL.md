@@ -112,7 +112,10 @@ protocol; see [[citation-claim-alignment]]):
      question, or its findings contradict the citing sentence.
    - **Cannot determine** — full text or sufficient context to judge
      is unavailable. Also use this when the reference's identity is
-     in doubt (see the reference identity check below).
+     in doubt: its identifier resolves to a different work or does
+     not resolve (see the reference identity check below). "No
+     identifier" or "Could not verify" on its own does not change
+     the alignment class.
 
 Beyond per-citation alignment, scan for these **pattern-level smells**:
 
@@ -162,8 +165,9 @@ real identifier pointing to a different work. For each entry:
      lookup was inconclusive.
 
 Each class records what the check observed, not a verdict on the
-reference. Frame the finding as "could not verify", with the evidence
-shown, never as "fabricated". Automated reference checkers have a real
+reference. Count each finding under its specific class only. Word
+every finding, whatever its class, as "could not verify", with the
+evidence shown, never as "fabricated". Automated reference checkers have a real
 false-positive rate on translated titles, books, and grey
 literature; the ICLR 2026 organisers said their checker "had a
 significant false positive rate".

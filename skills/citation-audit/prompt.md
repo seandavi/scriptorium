@@ -52,7 +52,10 @@ the reference-accuracy / editorial spot-check protocol; Greenberg
 3. **Compare** what the claim asserts to what the cited reference's
    metadata (and, if provided, full text) actually supports.
 4. **Classify** the alignment. Use "cannot determine" when the
-   reference's identity is in doubt (see below).
+   reference's identity is in doubt: its identifier resolves to a
+   different work or does not resolve (see below). "No identifier"
+   or "Could not verify" on its own does not change the alignment
+   class.
 
 Beyond per-citation alignment, scan for these pattern-level smells:
 
@@ -91,8 +94,9 @@ and report any problem as one of:
   inconclusive)
 
 Each class records what the check observed, not a verdict on the
-reference. Frame it as "could not verify", with the evidence shown,
-never as "fabricated": automated checkers have a real false-positive
+reference. Count each finding under its specific class only. Word
+every finding, whatever its class, as "could not verify", with the
+evidence shown, never as "fabricated": automated checkers have a real false-positive
 rate on translated titles, books, and grey literature. A
 bibliography exported from a reference manager is not verified
 metadata. Reference managers mis-capture some output types, such as
