@@ -18,9 +18,9 @@ jobs:
       - name: Sync dev deps
         run: uv sync --extra dev
       - name: ruff check
-        run: uv run ruff check src tests
+        run: uv run ruff check src tests scripts
       - name: ruff format --check
-        run: uv run ruff format --check src tests
+        run: uv run ruff format --check src tests scripts
       - name: yamllint
         run: uv run yamllint .
       - name: Install Node + markdownlint
