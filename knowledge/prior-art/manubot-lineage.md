@@ -1,6 +1,6 @@
 # The manubot lineage: manuscript-as-software
 
-*Last updated: 2026-05-17*
+*Last updated: 2026-10-20*
 
 ## Synthesis
 
@@ -23,7 +23,7 @@ Key contributions of the paper:
 3. **Continuous publication.** When source changes, rendered outputs rebuild and republish to a web page. There is no "submission" event; there is a continuously-current version.
 4. **Versioned, immutable history.** The git log is the manuscript's history; nothing is lost.
 
-The software is at `manubot/manubot` (474 stars, last pushed 2026-01-01) [2] and the user-facing template is `manubot/rootstock` (479 stars, last pushed 2026-01-18) [3]. The paper itself was authored in manubot at `greenelab/meta-review` (50 stars, last pushed 2020-05-25) [4] — that repo has not been updated since 2020, a useful datapoint on post-publication maintenance.
+The software is at `manubot/manubot` (476 stars, last pushed 2026-08-02) [2] and the user-facing template is `manubot/rootstock` (480 stars, last pushed 2026-01-18) [3]. The paper itself was authored in manubot at `greenelab/meta-review` (51 stars, last pushed 2020-05-25) [4] — that repo has not been updated since 2020, a useful datapoint on post-publication maintenance.
 
 ### The Greene Lab lineage
 
@@ -33,29 +33,29 @@ The manubot pattern was used for multiple Greene Lab papers and collaborations, 
 
 Quarto is Posit's open-source successor to R Markdown and the most active current development in the manuscript-as-software space.
 
-- `quarto-dev/quarto-cli` has 5,640 stars, last pushed 2026-05-15 [5] — actively maintained.
+- `quarto-dev/quarto-cli` has 6,104 stars, last pushed 2026-10-20 [5] — actively maintained.
 - "Reproducible Manuscripts with Quarto" (Çetinkaya-Rundel, 2023) at posit::conf [6] introduced the **Quarto Manuscript** project template: a self-contained directory whose source produces HTML, PDF, JATS XML, and a connected `index.qmd` with executable code blocks.
-- The USGS published a Quarto manuscript template [7] and *Journal of Fish and Wildlife Management* has a reproducible-manuscript workflow piece [8] — early evidence of journal-side adoption.
+- USGS scientists published a Quarto manuscript template, and demonstrated it for the *Journal of Fish and Wildlife Management*, in a 2024 article in that journal (Erickson, Archer & Fienen; doi:10.3996/jfwm-24-003) [7][8] — early evidence of journal-side adoption.
 
 Quarto Manuscripts extends manubot in two ways: (a) **executable code embedded in the manuscript** (R, Python, Julia, Observable JS via Jupyter/Knitr); (b) **multi-format build with rich cross-references** (sub-figures, layout panels, hoverable citations, callouts). Where manubot is "manuscript-as-prose-software," Quarto Manuscripts is "manuscript-as-executable-document."
 
 ### `quartobot` and Quarto + manubot
 
-Less formalized than either parent. `quartobot` exists as a community pattern combining manubot's citation-by-identifier with Quarto's rendering, but is not a sustained codebase [TODO verify current state]. The conceptual point: Quarto and manubot are converging, with Quarto absorbing most of the manuscript-as-software energy circa 2025–2026.
+`quartobot` is now a maintained codebase rather than a loose community pattern. It lives at `seandavi/quartobot` (MIT-licensed; created 2026-05-13; last pushed 2026-10-01) [12] and is published on PyPI (first release 0.1.0 on 2026-05-14; 0.6.0 on 2026-05-28) [13]; the earlier `quartobot/quartobot` repository is an archived redirect to it. Its README describes it as "Citation resolution and manuscript-as-software CI for Quarto": a Quarto pre-render hook resolves persistent-identifier cite keys (`@doi:`, `@pmid:`, `@arxiv:`, `@isbn:`, `@url:`, `@wikidata:`, `@pmc:`) through manubot's resolver into a committed bibliography, adds render and PR-preview CI scaffolding, and exposes the resolver to agents through an MCP server [12]. It describes itself as the work to close manubot's open "Quarto integration" issue, opened in April 2022 [12][14]. (Disclosure: quartobot is maintained by scriptorium's author, and this knowledge layer's `.qmd` notes build with it.) The conceptual point stands: Quarto and manubot are converging, with Quarto absorbing most of the manuscript-as-software energy circa 2025–2026 — but the identifier-driven citation step still comes from manubot, now via a third-party Quarto extension rather than Quarto itself.
 
 ### Distill.pub
 
 Distill was a peer-reviewed ML journal (founded 2017, supported by Google, OpenAI, DeepMind, Y Combinator Research) [9] that demonstrated **interactive scientific publishing**: articles could include explorable visualizations, live model interactions, and code-driven figures. Articles included Olah's "Building Blocks of Interpretability," Carter & Nielsen's "Using Artificial Intelligence to Augment Human Intelligence," and others that defined a new aesthetic for ML communication.
 
-Distill went on **indefinite hiatus in 2021**. The published explanation cited reviewer burnout, the editorial cost of interactive articles, and the difficulty of sustaining a journal that was also a research artifact. The lesson for scriptorium: **the editorial labor cost of high-quality publication does not vanish when you change the technology** — it shifts. Distill failed not because the tooling was bad but because the editorial pipeline was expensive.
+Distill announced a one-year hiatus in 2021 "which may be extended indefinitely"; its about page now describes it as on **indefinite hiatus**. The published explanation cited volunteer editor burnout, the structural friction of running a journal, and the editorial cost of interactive articles — with early articles, volunteer editors often spent 50 or more hours improving a single submission [9]. The lesson for scriptorium: **the editorial labor cost of high-quality publication does not vanish when you change the technology** — it shifts. Distill failed not because the tooling was bad but because the editorial pipeline was expensive.
 
 ### Idyll
 
-Idyll (Conlen & Heer, ACM UIST 2018, DOI: 10.1145/3242587.3242600) [10] is a markup language for authoring interactive narratives. Repo `idyll-lang/idyll` has 2,033 stars, last pushed 2023-02-04 — effectively dormant. Idyll's intellectual contribution (a structured author interface to JavaScript components, allowing rich interactivity without becoming a web developer) has been largely absorbed by Observable, Quarto, and Svelte-based article systems.
+Idyll (Conlen & Heer, ACM UIST 2018, DOI: 10.1145/3242587.3242600) [10] is a markup language for authoring interactive narratives. Repo `idyll-lang/idyll` has 2,042 stars, last pushed 2023-02-04 — effectively dormant. Idyll's intellectual contribution (a structured author interface to JavaScript components, allowing rich interactivity without becoming a web developer) has been largely absorbed by Observable, Quarto, and Svelte-based article systems.
 
 ### Observable / Observable Notebooks
 
-Mike Bostock's (d3.js) Observable platform [11] is the most active interactive-publishing environment as of 2026. Observable Notebooks are reactive JavaScript documents with executable cells and inline visualization. The Observable Framework is a static-site generator for data apps. Observable was directly involved with Distill and is conceptually intertwined with the manuscript-as-software pattern.
+Mike Bostock's (d3.js) Observable platform [11] is the most active interactive-publishing environment as of 2026. Observable Notebooks are reactive JavaScript documents with executable cells and inline visualization. The Observable Framework is a static-site generator for data apps. Observable is conceptually intertwined with the manuscript-as-software pattern.
 
 ### What the pattern has and hasn't achieved
 
@@ -70,7 +70,7 @@ Mike Bostock's (d3.js) Observable platform [11] is the most active interactive-p
 - Mainstream adoption. Word and Overleaf still dominate.
 - A shared model of *what the manuscript is doing* (claims, terminology, target venue, constraints). Manubot and Quarto track *what is written*, not *what is meant*.
 - Editorial workflows beyond the build. There is no "review this PR for argument structure" in the manubot pipeline — only "does it build?" and "do humans approve?"
-- AI integration. Manubot pre-dates the LLM era; Quarto post-dates it but does not integrate AI capabilities natively.
+- AI integration. Manubot pre-dates the LLM era; Quarto post-dates it but does not integrate AI capabilities natively. (quartobot's MCP server, 2026, exposes citation resolution to agents — resolution only, not editorial judgment [12].)
 - Sustainability of high-end interactive publication (Distill is the cautionary tale).
 
 ## How this informs scriptorium
@@ -81,23 +81,33 @@ Mike Bostock's (d3.js) Observable platform [11] is the most active interactive-p
 - **Distill's failure mode is a design lesson.** The editorial labor of producing a great paper does not go away when you add AI; it gets redistributed. Scriptorium should be designed so that AI capabilities reduce the *load* on editorial labor, not just add a new ingestion task ("now you also have to maintain this YAML file").
 - **The greenelab/meta-review repo's 2020-05-25 last-commit date is a sustainability signal.** The manubot paper itself stopped being maintained five years ago. Scriptorium will face the same pull. The defense is: keep the surface area small, document the pattern such that others can carry it, and make `MANUSCRIPT_STATE.yaml` valuable enough that authors maintain it whether or not the toolchain is alive.
 
+## Implementation priority for scriptorium
+
+**Verdict:** No (framing only).
+
+**Why this is useful context anyway:** this lineage is scriptorium's conceptual anchor and positions it as an editorial layer on top of manubot/Quarto rendering, not a competitor to them. It justifies `MANUSCRIPT_STATE.yaml` as the missing primitive and the resolver-agnostic citation stance `citation-audit` takes. No skill renders manuscripts or resolves identifiers. The 2026-10 refresh (quartobot now a maintained package; updated repository figures; the Distill and USGS corrections) did not change this verdict.
+
 ## Open questions / weak evidence
 
 - **No published evaluation of manubot's claimed benefits.** The 2019 paper makes the case theoretically; there is no empirical study (then or since) of whether manubot manuscripts are better, more accurate, more reproducible, or more widely cited than Word-authored equivalents. Scriptorium could contribute by being designed for evaluation from the start.
 - **Quarto Manuscripts is still pre-mainstream.** USGS adoption is encouraging, but the workflow is most common among R-centric researchers. JATS XML output is the strongest signal for journal-side integration.
-- **The manubot/Quarto convergence is partial.** Quarto has not absorbed identifier-driven citations as a first-class concept (it supports CSL but citation entries are still local). A formal bridge would be valuable.
+- **The manubot/Quarto convergence is partial.** Quarto has not absorbed identifier-driven citations as a first-class concept (it supports CSL but citation entries are still local). Third-party bridges now exist (quartobot, 2026 [12]), but manubot's "Quarto integration" issue remains open [14] and no bridge has been adopted by Quarto itself.
 - **The "is markdown enough for science?" debate is unsettled.** Word-style track changes, semantic comments, and graphical annotation are difficult to replicate in pure-text workflows. The biggest practical adoption blocker is not the tooling but the social workflow of co-author commentary.
+- **Distill's dates differ by source.** Its about page says it "operated 2016-2021"; Wikipedia gives a March 2017 founding [9]. The difference may reflect pre-launch work versus public launch; it does not affect this note's argument.
 
 ## References
 
 1. Himmelstein DS, Rubinetti V, Slochower DR, Hu D, Malladi VS, Greene CS, Gitter A. "Open collaborative writing with Manubot." *PLOS Computational Biology* 15(6): e1007128 (2019). DOI: 10.1371/journal.pcbi.1007128. https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1007128
-2. manubot/manubot GitHub. https://github.com/manubot/manubot (474 stars; pushedAt 2026-01-01).
-3. manubot/rootstock GitHub. https://github.com/manubot/rootstock (479 stars; pushedAt 2026-01-18).
-4. greenelab/meta-review GitHub. https://github.com/greenelab/meta-review (50 stars; pushedAt 2020-05-25).
-5. quarto-dev/quarto-cli GitHub. https://github.com/quarto-dev/quarto-cli (5,640 stars; pushedAt 2026-05-15).
+2. manubot/manubot GitHub. https://github.com/manubot/manubot (476 stars; pushedAt 2026-08-02; checked 2026-10-20).
+3. manubot/rootstock GitHub. https://github.com/manubot/rootstock (480 stars; pushedAt 2026-01-18; checked 2026-10-20).
+4. greenelab/meta-review GitHub. https://github.com/greenelab/meta-review (51 stars; pushedAt 2020-05-25; checked 2026-10-20).
+5. quarto-dev/quarto-cli GitHub. https://github.com/quarto-dev/quarto-cli (6,104 stars; pushedAt 2026-10-20; checked 2026-10-20).
 6. Çetinkaya-Rundel M. "Reproducible Manuscripts with Quarto." posit::conf 2023. https://mine.quarto.pub/manuscripts-conf23/
 7. USGS. "A Reproducible Manuscript Workflow with a Quarto Template." https://www.usgs.gov/publications/a-reproducible-manuscript-workflow-a-quarto-template
-8. *Journal of Fish and Wildlife Management*. "A Reproducible Manuscript Workflow With a Quarto Template." 15(1):251. https://meridian.allenpress.com/jfwm/article/15/1/251/501496/A-Reproducible-Manuscript-Workflow-With-a-Quarto
-9. Distill journal. https://distill.pub/about/ ; Wikipedia entry on Distill (journal). Indefinite hiatus announcement: https://distill.pub/2021/distill-hiatus/
-10. Conlen M, Heer J. "Idyll: A Markup Language for Authoring and Publishing Interactive Articles on the Web." ACM UIST 2018. DOI: 10.1145/3242587.3242600. https://dl.acm.org/doi/10.1145/3242587.3242600 ; repo idyll-lang/idyll (2,033 stars; pushedAt 2023-02-04).
+8. Erickson RA, Archer AA, Fienen MN. "A Reproducible Manuscript Workflow With a Quarto Template." *Journal of Fish and Wildlife Management* 15(1):251–258 (2024). DOI: 10.3996/jfwm-24-003. https://meridian.allenpress.com/jfwm/article/15/1/251/501496/A-Reproducible-Manuscript-Workflow-With-a-Quarto
+9. Distill journal. https://distill.pub/about/ ; Wikipedia entry on Distill (journal). Hiatus announcement: https://distill.pub/2021/distill-hiatus/
+10. Conlen M, Heer J. "Idyll: A Markup Language for Authoring and Publishing Interactive Articles on the Web." ACM UIST 2018. DOI: 10.1145/3242587.3242600. https://dl.acm.org/doi/10.1145/3242587.3242600 ; repo idyll-lang/idyll (2,042 stars; pushedAt 2023-02-04; checked 2026-10-20).
 11. Observable. https://observablehq.com/
+12. seandavi/quartobot GitHub. https://github.com/seandavi/quartobot (MIT; created 2026-05-13; pushedAt 2026-10-01; checked 2026-10-20). Documentation: https://seandavi.github.io/quartobot/
+13. quartobot on PyPI. https://pypi.org/project/quartobot/ (0.1.0 uploaded 2026-05-14; 0.6.0 uploaded 2026-05-28).
+14. manubot/manubot issue #332, "Quarto integration" (opened 2022-04-05 by agitter; open as of 2026-10-20). https://github.com/manubot/manubot/issues/332
