@@ -1,6 +1,6 @@
 # CSL and bibliographic standards
 
-*Last updated: 2026-05-17*
+*Last updated: 2026-10-20*
 
 ## Synthesis
 
@@ -14,8 +14,8 @@ citations are rendered) — Citation Style Language (CSL); a **storage
 layer** (how references are stored) — BibTeX/BibLaTeX, CSL-JSON,
 RIS; and an **identifier layer** (how works, authors, organizations,
 and funders are pinpointed) — DOI / CrossRef / DataCite, ORCID, ROR,
-the Open Funder Registry, and CURIE prefixes coordinated by the
-Bioregistry.
+the Open Funder Registry (now transitioning into ROR), and CURIE
+prefixes coordinated by the Bioregistry.
 
 Each layer is independently mature. CSL governs nearly every modern
 reference manager (Zotero, Mendeley, Paperpile, and most academic
@@ -23,7 +23,9 @@ word-processor integrations). Persistent identifier coverage is now
 high enough that "the bibliography exists in machine-readable form
 with stable identifiers" is a reasonable assumption for any
 contemporary manuscript. Manubot's reliance on Bioregistry CURIE
-prefixes — currently spanning 1,677 identifier types — illustrates the
+prefixes — the Bioregistry held 1,504 records when it was described
+in 2022, and switching to it added 365 prefixes to the ~700 manubot
+had supported through Identifiers.org — illustrates the
 practical reach of this infrastructure beyond pure DOI/ORCID lookups.
 
 Scriptorium's job is to read whatever bibliography the manuscript
@@ -34,10 +36,10 @@ a stable artifact to anchor against.
 
 ## Evidence
 
-**Citation Style Language (CSL).** Originally conceived by Bruce
-D'Arcus in 2006 for OpenOffice citation rendering, formalized as an
-XML-based specification. Early CSL adoption was driven by Simon
-Kornblith's Zotero integration; Mendeley followed and (with Columbia
+**Citation Style Language (CSL).** Created by Bruce D'Arcus and
+shaped by early contributions from Simon Kornblith of Zotero; Zotero
+was the first program to adopt CSL, and CSL is an XML-based
+specification. Mendeley followed and (with Columbia
 University Libraries) obtained an Alfred P. Sloan Foundation grant to
 build the CSL style editor. Mendeley and Elsevier have donated to the
 CSL project since 2014.[^1]
@@ -67,15 +69,19 @@ BibLaTeX as a first-class input.
 
 **DOIs and CrossRef.** The Digital Object Identifier system, operated
 for scholarly content primarily by CrossRef and DataCite, is the most
-widely deployed persistent identifier for academic works. CrossRef
-holds metadata for ~175 million scholarly works as of the
-October 2025 public data file (https://www.crossref.org/blog/2025-public-data-file-now-available/;
-the corpus continues to grow at ~5M records/year, with the 2026
-public data file reporting ~180M records) and exposes structured
+widely deployed persistent identifier for academic works. CrossRef's
+2025 public data file contained metadata for over 165 million research
+outputs (https://www.crossref.org/blog/2025-public-data-file-now-available/),
+and its 2026 public data file, released 17 March 2026, contains
+nearly 180 million records, 12.7 million of them new since the
+previous year (https://www.crossref.org/blog/2026-public-data-file-now-available/).
+CrossRef exposes structured
 metadata via a public REST API. CrossRef's metadata records
 increasingly carry references *to* other works, ORCID author
 identifiers, and ROR institutional identifiers — turning the citation
-graph itself into queryable infrastructure.[^2]
+graph itself into queryable infrastructure. The 2026 data file
+reports ORCID identifiers for authors up 20% and ROR identifiers for
+organisations up 250% year on year.[^2]
 
 **DataCite.** Mirrors CrossRef for datasets, software, and other
 research outputs. Particularly important in data-citation contexts;
@@ -91,26 +97,36 @@ disambiguator for "who is the author" in contexts where lastname-only
 attribution is ambiguous.[^3]
 
 **ROR.** The Research Organization Registry, launched in 2019, is
-jointly run by California Digital Library, CrossRef, DataCite, and
-(formerly) ORCID. ROR provides CC0-licensed open identifiers for
+operated by California Digital Library, CrossRef, and DataCite. ROR
+provides CC0-licensed open identifiers for
 research organizations, replacing the historically fragmented
 landscape of institutional identifiers. ROR is now the de facto
 standard for affiliation identification in CrossRef metadata.[^4]
 
-**Open Funder Registry (FundRef).** CrossRef's funder identifier
-service. The registry contains over 15,000 funder entries; CrossRef
-holds funding metadata on more than 1.7 million works. This matters
-for `MANUSCRIPT_STATE.yaml` declaring grant numbers and funder
-identifiers consistently.
+**Open Funder Registry (FundRef) → ROR.** CrossRef's funder
+identifier service is being folded into ROR. CrossRef announced the
+plan to transition the Open Funder Registry into ROR in 2023; since
+5 March 2025 members can deposit ROR IDs anywhere they previously
+deposited Funder IDs, while Funder IDs remain supported "until the
+community is ready to transition."[^7] On 15 September 2026 CrossRef
+began matching funder names deposited *without* an identifier to ROR
+IDs (reported 99% precision); existing Open Funder Registry IDs are
+not replaced and previously deposited records are unchanged.[^8] For
+`MANUSCRIPT_STATE.yaml`, this means a funder may legitimately be
+identified by either a Funder ID (which CrossRef represents as a DOI)
+or a ROR ID; consistency within one manuscript matters more than
+which scheme is used.
 
 **Bioregistry and CURIE prefixes.** The Bioregistry is a meta-registry
 that catalogs identifier prefixes across biology, biomedicine, and
 adjacent fields. CURIEs (Compact URIs) take the form `prefix:identifier`
 (e.g., `doi:10.1136/bmj.b2680`, `clinicaltrials:NCT04280705`,
-`pmid:19622839`). Bioregistry currently catalogs **1,677 prefixes**
-(as referenced by manubot). Manubot — the open scholarly-publishing
+`pmid:19622839`). When it was described in *Scientific Data* (version
+0.5.132, October 2022), the Bioregistry integrated 23 external
+registries and contained **1,504 records**; it has grown since, and
+the live count is published at https://bioregistry.io. Manubot — the open scholarly-publishing
 tool — initially used Identifiers.org for ~700 prefixes, then migrated
-to Bioregistry for both broader coverage and more rigorous validation
+to Bioregistry, which added support for 365 more, for both broader coverage and more rigorous validation
 (open contribution model; better regex patterns; resolution of
 namespace inconsistencies).[^5][^6]
 
@@ -159,6 +175,22 @@ is a clean separation of concerns that scriptorium should mirror in
 spirit: identifier resolution, metadata retrieval, and rendering are
 three different jobs, and conflating them is where errors enter.
 
+## Implementation priority for scriptorium
+
+**Verdict:** No (as a standalone skill).
+
+**Why this is useful context anyway:** these standards define the
+input contract every citation-aware skill relies on — the
+`bibliography` pointer in `MANUSCRIPT_STATE.yaml`, `citation-audit`'s
+assumption of an identifier-resolved bibliography, and the project
+rule that no skill writes bibliography entries. A skill that
+validated CSL, formatted references, or resolved identifiers would
+duplicate mature infrastructure (reference managers, CrossRef,
+Bioregistry, manubot/quartobot); see the roadmap non-goal "No
+replacement for reference managers". The 2026-10 refresh (CrossRef
+corpus size, the Funder Registry → ROR transition, the Bioregistry
+count) did not change this verdict.
+
 ## Open questions / weak evidence
 
 - Coverage of non-biomedical fields by Bioregistry is uneven;
@@ -178,7 +210,12 @@ three different jobs, and conflating them is where errors enter.
 [^1]: Citation Style Language. About. https://citationstyles.org/about/
 
 [^2]: CrossRef. Public REST API and infrastructure documentation.
-    https://crossref.org/
+    https://crossref.org/ . 2025 public data file:
+    https://www.crossref.org/blog/2025-public-data-file-now-available/ .
+    Rittman M, del Ojo Elías C, Montilla L. 2026 public data file now
+    available. CrossRef blog, 17 March 2026.
+    https://www.crossref.org/blog/2026-public-data-file-now-available/ ;
+    dataset doi:10.13003/nggf-vt1j.
 
 [^3]: ORCID. Public-facing documentation.
     https://orcid.org/ . CrossRef–ORCID auto-update:
@@ -189,7 +226,16 @@ three different jobs, and conflating them is where errors enter.
 
 [^5]: Hoyt CT, Balk M, Callahan TJ, et al. Unifying the identification
     of biomedical entities with the Bioregistry. *Scientific Data*.
-    2022;9:714. doi:10.1038/s41597-022-01807-3.
+    2022;9:714. doi:10.1038/s41597-022-01807-3. PMID: 36402838.
 
 [^6]: Manubot. Usage documentation, citation prefix support.
     https://github.com/manubot/rootstock/blob/main/USAGE.md
+
+[^7]: Feeney P. Come ROR with us: Using ROR IDs in place of Funder
+    IDs. CrossRef blog, 5 March 2025.
+    https://www.crossref.org/blog/come-ror-with-us-using-ror-ids-in-place-of-funder-ids/
+
+[^8]: Rittman M, Gaudioso Pedraza R, del Ojo Elias C, Portenoy J,
+    Tkaczyk D. Improving how funding connects to research outputs.
+    CrossRef blog, 15 September 2026.
+    https://www.crossref.org/blog/improving-how-funding-connects-to-research-outputs/

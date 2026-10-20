@@ -5,7 +5,7 @@ bibliography: references.json
 link-citations: true
 ---
 
-*Last updated: 2026-05-17*
+*Last updated: 2026-10-20*
 
 ## Synthesis
 
@@ -47,20 +47,28 @@ references, of which **8%** were major (preventing identification of
 the source). This is the foundational study; subsequent work largely
 confirms its numbers.
 
-The @doi:10.1002/14651858.MR000002.pub3 Cochrane methodology
-systematic review (66 studies analyzing 3,836 references across 74
-biomedical journals) reported a median citation-error rate of **38%**
-(range 4–67%) across more than 27,000 references, and a median
-"major and minor quotation errors" rate of **20%** (range 0–50%).
-Technical editing was associated with lower error rates.
+The @doi:10.1002/14651858.MR000002.pub3 Cochrane methodology review
+(Wager & Middleton 2008, *Technical editing of research reports in
+biomedical journals*) located 66 surveys of reference accuracy, which
+together checked over 27,000 references in over 100 journals. The
+median citation-error rate per journal was **38%** (range 4–67%), and
+the median quotation-error rate per journal was **20%** (range
+0–50%); pooled, 761 of 3,836 references (20%) assessed for quotation
+accuracy were quoted inaccurately. More intensive editorial processes
+were associated with fewer reference errors, but the evidence for
+that is weak: only three of the 32 technical-editing studies in the
+review were randomised controlled trials, many of the others compared
+before and after, and the review describes most of them as small and
+probably under-powered. Most of the reference-accuracy surveys were
+single-time-point "snapshots" of one or a few journals.
 
 @pmid:26528420 — systematic review and meta-analysis of 28 studies
 (1985–2013) covering 7,321 references. Pooled prevalence: **major**
 quotation errors 11.9% (95% CI 8.4–16.6); **minor** errors 11.5%
 (95% CI 8.3–15.7); **total** quotation errors 25.4% (95% CI 19.5–32.4).
-Their conclusion: "quotation errors are common in medical journal
-articles," and "even the lowest estimate of total quotation errors
-was considerable (6.7%)."
+Their conclusion: readers "should be aware of the fact that quotation
+errors are common," and "even the lowest estimate of total quotation
+errors was considerable (6.7%)."
 
 @pmid:33599711 re-examined frequently cited biomedical papers by
 going back to the original first authors to verify what their own
@@ -77,17 +85,24 @@ Critical sub-findings from @pmid:33599711:
   the claim attributed to it at all.
 - **Inaccurately cited numerical data** (16.6%) and **inaccurate
   interpretation** (15.4%) were the next two categories.
-- **Citation chains** accounted for ~20–24% of inaccuracies — errors
+- **Citation chains** accounted for ~19–24% of inaccuracies (24% in
+  the feasibility study, 19.3% in the verification set) — errors
   copied from previous citing articles rather than introduced fresh.
 - **Review articles** were more likely than primary research articles
   to contain inaccuracies, and inaccuracy rose with time since the
   cited paper's publication.
 
-**Specialty-specific evidence** — @doi:10.1177/00031348211067993 on
-surgical literature found inaccuracy rates broadly consistent with
-the general biomedical figures, with higher rates in lower-evidence
-study designs. This pattern (higher inaccuracy where the claim is
-fuzzier) recurs across specialties.
+**Specialty-specific evidence** — @doi:10.1177/00031348211067993
+(Sauder et al. 2022, *The American Surgeon*) evaluated 5,973
+citations from highly cited studies in ten top-ranked surgical
+journals (2015–2020) and found **15.2%** inaccurate, broadly
+consistent with the general biomedical figures. It found *no*
+statistically significant difference in inaccuracy by year or by
+study level of evidence (P = .21); differences were by journal. The
+article carries a January 2025 publisher expression of concern
+(doi:10.1177/00031348241305412) that was issued across a large batch
+of *American Surgeon* articles, so its figures should be treated as
+corroborating rather than load-bearing.
 
 ## How this informs scriptorium
 
@@ -123,6 +138,22 @@ silently dropping or replacing references — which would otherwise
 *introduce* the citation errors documented above as a side effect of
 helpful-looking edits.
 
+## Implementation priority for scriptorium
+
+**Verdict:** Yes (v0.1).
+
+**Skill:** `citation-audit` (critique phase). This note supplies the
+prevalence baselines the skill's framing rests on: a ~20% median
+quotation-error rate per journal (Wager & Middleton 2008), a pooled
+25.4% total quotation-error rate (Jergas & Baethge 2015), and the
+review-article and citation-chain risk factors (Pavlovic et al.
+2021). Required data: the manuscript, its bibliography, and — for
+anything stronger than a metadata-only assessment — the cited
+abstracts or full texts. The 2026-10 refresh did not change the
+verdict; it corrected two figures (the Cochrane review's denominators
+and the surgical study's level-of-evidence finding), neither of which
+the skill depends on.
+
 ## Open questions / weak evidence
 
 - Most accuracy studies are biomedical. Engineering, physics, and the
@@ -135,11 +166,15 @@ helpful-looking edits.
   (vs. merely misattribute who said what) is not well quantified.
   Greenberg's distortion analysis in [[citation-overreach-research]]
   is the closest existing work and is qualitative.
+- "Bibliographic errors are mostly solved" holds for journal articles
+  with DOIs. Reference managers still mishandle other output types —
+  a 2025 study found most frequently used reference managers do not
+  adequately support dataset citation (see [[reference-managers]]).
 
 ## Build note
 
 This document is rendered from `citation-accuracy-evidence.qmd` via
-[Quarto](https://quarto.org/) with a [quartobot](https://github.com/quartobot/quartobot)
+[Quarto](https://quarto.org/) with a [quartobot](https://github.com/seandavi/quartobot)
 pre-render step. Cite keys in prose use persistent identifiers
 directly (`@pmid:`, `@doi:`); quartobot resolves them through manubot
 into `references.json` before Quarto's citeproc renders the final

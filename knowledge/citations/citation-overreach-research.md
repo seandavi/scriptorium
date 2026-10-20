@@ -1,6 +1,6 @@
 # Citation overreach: spin, amplification, and primary-vs-review cascades
 
-*Last updated: 2026-05-17*
+*Last updated: 2026-10-20*
 
 ## Synthesis
 
@@ -35,7 +35,7 @@ support is offered (primary data, secondary synthesis, opinion) and
 
 **Boutron et al. (2010), *JAMA* 303(20):2058–2064** — analyzed 72
 RCTs with statistically nonsignificant primary outcomes published in
-2006. Spin (defined as reporting that distorts the interpretation of
+December 2006. Spin (defined as reporting that distorts the interpretation of
 results to favor the intervention) appeared in **18.0%** of titles,
 **37.5%** of abstract Results sections, and **58.3%** of abstract
 Conclusions. In **23.6%** of abstracts the conclusion focused only on
@@ -57,12 +57,15 @@ each step adds confidence and removes caveats.[^2]
 analysis. Greenberg constructed a "claim-specific citation network"
 of all PubMed papers addressing whether β-amyloid is abnormally
 present in inclusion body myositis muscle: 242 papers containing
-relevant statements, 675 citations, **220,609 citation paths**.
+relevant statements, 675 citations, **220,609 citation paths**
+(220,553 of them supporting the claim).
 Greenberg documented three distortion mechanisms:
 
-- **Citation bias** — papers supporting the claim received **94%** of
-  citations; papers weakening or refuting it received only **6%**,
-  despite equal publication timing (p=0.01).
+- **Citation bias** — the supportive primary-data papers received
+  **94%** of the 214 citations to primary data; the six papers whose
+  data weakened or refuted the claim received only **6%**, measured
+  over the 12 years after all of these data had been published
+  (P=0.01).
 - **Amplification** — citation of papers that contain no primary
   data, expanding the apparent evidence base without adding evidence.
 - **Invention** — including *citation transmutation* (hypothesis
@@ -86,13 +89,17 @@ it raises the prior probability that any single citation, if treated
 as definitive, is more likely than naive readers assume to be
 defending a false or fragile finding.[^4]
 
-**Review-citing-review (no single canonical paper)** — practitioner
-literature in evidence-based medicine, particularly Greenhalgh's
-"How to read a paper" series, consistently warns that researchers
-cite reviews where they should cite primary sources. This is partially
-captured in the Pavlovic finding (see [[citation-accuracy-evidence]])
-that review articles attract higher inaccuracy rates and that
-citation chains account for ~20–24% of errors. The mechanism: each
+**Review-citing-review (no single canonical paper)** — the closest
+primary statement of the mechanism is Greenberg's own: amplification
+"is instead introduced into belief systems through the citing of
+review papers and other papers that lack data addressing the
+claim."[^3] Practitioner guidance in evidence-based medicine commonly
+gives the same advice (cite the primary source), but no single
+canonical source for that advice was located when this note was
+checked in October 2026. The mechanism is partially captured in the
+Pavlovic finding (see [[citation-accuracy-evidence]]) that review
+articles attract higher inaccuracy rates and that citation chains
+account for ~19–24% of errors. The mechanism: each
 review summarizes the previous review's summary; effect sizes
 flatten, caveats drop, hedging language disappears, and the original
 primary finding is no longer directly inspectable from any single
@@ -127,6 +134,20 @@ state-level analog of Boutron's spin findings — a transformation
 skill operating under this constraint should refuse to harden hedged
 language and should surface (not silently fix) hedged-vs-asserted
 mismatches between abstract conclusions and main-text results.
+
+## Implementation priority for scriptorium
+
+**Verdict:** Yes (v0.1).
+
+**Skills:** `citation-audit` (critique phase) — the overreach and
+review-only-support sections of its report, and the "possible
+amplification / invention" pattern flag; `reviewer-simulation` — the
+evidence-skeptic persona's Greenberg categories. Required data: the
+manuscript, its bibliography, and cited abstracts or full texts for
+any overreach judgment stronger than a suspect-flag. The 2026-10
+refresh did not change the verdict; the corrections (the Greenberg
+citation-bias denominator and the review-cascade attribution) do not
+alter what the skills look for.
 
 ## Open questions / weak evidence
 
