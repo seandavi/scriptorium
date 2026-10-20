@@ -34,6 +34,30 @@ lifecycle_phases:
   - revision
   - submission
 
+# How this skill frames its output at each meta.guidance_level value.
+# Sourced from the conversational-style section of SKILL.md so the
+# concept page (concepts/guidance-level.md) renders from manifest.
+# Consumed by docs build (concepts/guidance-level page generator).
+guidance_level_behavior:
+  terse: >
+    Open with one line ("running reporting-guideline-compliance
+    against <checklist> <version>"); emit the markdown report; no
+    closing summary.
+  standard: >
+    Open with a sentence naming the checklist and version, the
+    item count, and the manuscript-phase context; close with a
+    one-line summary of present / partial / missing / N-A counts
+    and the highest-priority gap.
+  full: >
+    Open with what reporting guidelines do (minimum-information
+    standards so reviewers and readers can evaluate methodology
+    consistently — the EQUATOR Network registry of ~600 active
+    guidelines), what this audit produces (per-item present /
+    partial / missing / N-A with a quoted anchor or explicit
+    gap), and how to read it (act on missing first, then partial;
+    N/A is not a gap; the audit does not invent prose to fill
+    gaps).
+
 # Explicit invocation. Invoked when the applicable checklist is
 # known (declared in state, passed from reporting-guideline-fit,
 # or named in the invocation) and the manuscript is in draft,

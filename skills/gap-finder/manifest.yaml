@@ -32,6 +32,28 @@ lifecycle_phases:
   - review
   - revision
 
+# How this skill frames its output at each meta.guidance_level value.
+# Sourced from the conversational-style section of SKILL.md so the
+# concept page (concepts/guidance-level.md) renders from manifest.
+# Consumed by docs build (concepts/guidance-level page generator).
+guidance_level_behavior:
+  terse: >
+    Open with one line ("running gap analysis"); emit the markdown
+    report; no closing summary. Surfaces the top three to five
+    anchored gaps.
+  standard: >
+    Open with a sentence naming the focus question and the gap
+    categories that will be checked; close with which category
+    had the most findings and whether any are load-bearing. The
+    full anchored list.
+  full: >
+    Open with what gap-finder is doing (structured taxonomy of
+    seven gap categories: literature, evidence, methodological,
+    population, translation, counterargument,
+    internal-consistency) and why this matters (the seven
+    categories suggest different remediation strategies). Adds
+    per-gap search strategies the author can run.
+
 # Explicit invocation. The skill is invoked when the author asks
 # "what's missing here?" with a manuscript section in mind. Not a
 # side-effect of any other skill.

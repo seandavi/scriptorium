@@ -32,6 +32,25 @@ lifecycle_phases:
   - review
   - revision
 
+# How this skill frames its output at each meta.guidance_level value.
+# Sourced from the conversational-style section of SKILL.md so the
+# concept page (concepts/guidance-level.md) renders from manifest.
+# Consumed by docs build (concepts/guidance-level page generator).
+guidance_level_behavior:
+  terse: >
+    Open with one line ("running argumentative-flow on <section>");
+    emit the markdown report; no closing summary.
+  standard: >
+    Open with the section's role in the manuscript and what the
+    structural diagnosis will check; close with a one-line summary
+    of the most material structural issue found.
+  full: >
+    Open with what reader-expectation theory predicts about how the
+    section should be organised (topic position to subject to stress
+    position) and what narrative frameworks add; close with which
+    proposed changes are about logic vs. about flow. The ESL-aware
+    hedging preservation is surfaced in the preservation report.
+
 # Explicit invocation is hard-coded into the prompt. This skill must
 # NEVER auto-invoke or be invoked as a follow-up to another skill's
 # output without the user re-asking. The author owns their voice;

@@ -31,6 +31,26 @@ lifecycle_phases:
   - revision
   - submission
 
+# How this skill frames its output at each meta.guidance_level value.
+# Sourced from the conversational-style section of SKILL.md so the
+# concept page (concepts/guidance-level.md) renders from manifest.
+# Consumed by docs build (concepts/guidance-level page generator).
+guidance_level_behavior:
+  terse: >
+    Open with a one-line "running citation audit"; emit the
+    markdown report; no closing summary. Surfaces only the
+    highest-priority claim-citation mismatches.
+  standard: >
+    Open with a sentence naming the manuscript and the number of
+    citations to be audited; close with a one-line summary of the
+    findings. The full table with per-claim rationale.
+  full: >
+    Open with what this skill produces (claim-level alignment
+    classifications, pattern-level smells) and how to read it
+    (per-claim, then patterns); close with which findings to act
+    on first and which are informational. The structured output
+    itself is unchanged across levels.
+
 # The skill MUST be invoked explicitly. It is safe to suggest in contexts
 # where the user is reviewing citations, but it should never be auto-invoked
 # (e.g. in a pre-commit hook or implicitly inside another skill) without

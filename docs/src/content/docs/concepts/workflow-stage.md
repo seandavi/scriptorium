@@ -126,24 +126,31 @@ and produce useful output; outside the marked stages the skill
 either refuses cleanly or returns thin output because the
 declared state it needs is not yet present.
 
+The table is generated from each skill's
+`manifest.yaml#lifecycle_phases` at docs-build time — adding or
+removing a skill, or changing the declared phases, regenerates it
+without manual edits.
+
+<!-- GENERATED:workflow-stage-table:start -->
 | Skill | Outline | Draft | Review | Revision | Submission |
 |---|---|---|---|---|---|
-| `argumentative-flow` | — | yes | yes | yes | yes |
-| `author-contribution-audit` | — (refuses) | — | yes | yes | yes |
+| `argumentative-flow` | — | yes | yes | yes | — |
+| `author-contribution-audit` | — | — | yes | yes | yes |
 | `citation-audit` | — | yes | yes | yes | yes |
-| `compression` | — | yes | yes | yes | yes |
-| `desk-rejection-risk` | — | — | optional | yes | yes |
+| `compression` | — | — | — | yes | yes |
+| `desk-rejection-risk` | — | — | — | yes | yes |
 | `explain` | yes | yes | yes | yes | yes |
-| `figure-text-alignment` | — (refuses) | yes | yes | yes | yes |
-| `gap-finder` | — (refuses) | yes | yes | yes | yes |
+| `figure-text-alignment` | — | yes | yes | yes | — |
+| `gap-finder` | — | yes | yes | yes | — |
 | `init` | yes | yes | yes | yes | yes |
 | `outlier-sentence-detector` | — | yes | yes | yes | yes |
-| `reporting-guideline-compliance` | — (refuses) | optional | yes | yes | yes |
-| `reporting-guideline-fit` | — (refuses) | yes | yes | yes | yes |
-| `reviewer-simulation` | — | optional | yes | yes | yes |
-| `terminology-normalization` | — | yes | yes | yes | yes |
+| `reporting-guideline-compliance` | — | — | yes | yes | yes |
+| `reporting-guideline-fit` | — | yes | yes | yes | — |
+| `reviewer-simulation` | — | — | yes | yes | yes |
+| `terminology-normalization` | — | yes | yes | yes | — |
 | `tour` | yes | yes | yes | yes | yes |
-| `venue-fit` | — (refuses) | yes | yes | yes | yes |
+| `venue-fit` | — | — | yes | yes | yes |
+<!-- GENERATED:workflow-stage-table:end -->
 
 The source of truth for each skill's refusal behaviour is its
 `manifest.yaml` and `SKILL.md` in the
