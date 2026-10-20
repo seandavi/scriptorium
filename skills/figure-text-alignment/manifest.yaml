@@ -16,8 +16,8 @@ description: >
   (orphan figure, phantom figure, panel mismatch, axis/units
   divergence, direction divergence). Text-only subset of figure-text
   alignment; multimodal counterpart (sub-skill B) is explicitly
-  deferred. Does not read figure images. Does not modify the
-  manuscript.
+  deferred. Does not read figure images by default (an
+  author-overridable scope guard). Does not modify the manuscript.
 
 # Critique skill — assesses; does not modify the manuscript and does
 # not invent figure content.
@@ -26,8 +26,8 @@ produces:
 
 modifies: []                 # No file modifications.
 
-# document_phase values the skill is designed to operate on. Refuses
-# cleanly on outline-phase manuscripts.
+# document_phase values the skill is designed to operate on. Declines
+# outline-phase manuscripts by default (outline-phase scope guard).
 # Consumed by docs build (reference/skills page generator).
 lifecycle_phases:
   - draft
@@ -51,8 +51,9 @@ guidance_level_behavior:
     caption-vs-body-text alignment classification + pattern-level
     flags) and what it explicitly does not do (read figure
     images); close with which findings to act on first and which
-    are informational. The no-image-reading posture is never
-    relaxed based on guidance level.
+    are informational. Guidance level never relaxes a guard; the
+    no-image-reading default changes only through the author's
+    override.
 
 # Explicit invocation. The skill is invoked when the author asks for
 # a figure-text alignment check (typically pre-submission or during
@@ -80,9 +81,10 @@ inputs:
     required: false
     description: >
       MANUSCRIPT_STATE.yaml from the project root, when present.
-      Useful fields: document_phase.current (refuses on outline),
-      meta.guidance_level (framing), core_claims (context for which
-      figures are load-bearing). Figure locations are typically NOT
+      Useful fields: document_phase.current (declines on outline
+      by default), meta.guidance_level (framing), meta.overrides
+      (guards the author has overridden), core_claims (context for
+      which figures are load-bearing). Figure locations are typically NOT
       declared here — the skill discovers figures from the
       manuscript text. If the state file is missing the skill
       proceeds and notes the reduced grounding in the output.
@@ -92,19 +94,62 @@ inputs:
 grounding:
   - knowledge/conventions/guidance-level.md
   - knowledge/conventions/declared-work-scope.md
+  - knowledge/conventions/author-authority.md
   - knowledge/scientific-writing/visualization-figures.md
   - knowledge/critique-techniques/internal-consistency.md
   - knowledge/critique-techniques/forensic-methodology.md
+  - knowledge/editing/copyediting-vs-developmental.md
+
+# Guards this skill applies, per knowledge/conventions/author-authority.md.
+# Scope guards are defaults the author can override (per run or under
+# meta.overrides); accuracy guards are fixed.
+guards:
+  - id: generation-from-blankness
+    kind: scope
+    summary: "Nothing declared to ground against: this would write content (a section, a missing item, a caption) the author has not written or declared."
+    source: "knowledge/conventions/declared-work-scope.md"
+    default: refuse
+  - id: outline-phase
+    kind: scope
+    summary: "The manuscript is at outline phase; there is not yet enough declared prose for this skill to work on."
+    source: "knowledge/conventions/declared-work-scope.md"
+    default: refuse
+  - id: figure-image-reading
+    kind: scope
+    summary: "This skill is text-only by default; reading figure images uses vision that has not been validated on scientific figures, so every image-derived finding would be labelled unvalidated."
+    source: "knowledge/scientific-writing/visualization-figures.md"
+    default: refuse
+  - id: critique-rewrite-suggestions
+    kind: scope
+    summary: "This critique skill flags problems for the author to fix; by default it proposes no concrete rewrites. If overridden, it proposes one per flagged item, marked as a suggestion."
+    source: "knowledge/editing/copyediting-vs-developmental.md"
+    default: refuse
+  - id: no-inference-beyond-evidence
+    kind: accuracy
+    summary: "When the input cannot support a judgement, the skill says 'cannot determine' or 'low confidence' rather than forcing a confident answer."
+    default: refuse
+  - id: no-invented-manuscript-facts
+    kind: accuracy
+    summary: "The skill never states facts about the author's work (figure content, who did what, what the study did) that the manuscript and declared state do not contain."
+    source: "knowledge/conventions/declared-work-scope.md"
+    default: refuse
+  - id: no-image-integrity-claims
+    kind: accuracy
+    summary: "The skill makes no image-integrity claims (duplication, manipulation); expert reviewers detect AI-forged images at chance (50.5%)."
+    source: "knowledge/critique-techniques/forensic-methodology.md"
+    default: refuse
 
 # What this skill explicitly is NOT.
 non_goals:
   - >
-    Does not read figure images. Multimodal alignment (axis-label
-    match, plot-type match, colour-channel description,
+    Does not read figure images by default. Multimodal alignment
+    (axis-label match, plot-type match, colour-channel description,
     pattern-claim verification) is sub-skill B, deferred until
     LLM-vision reliability for scientific figures is validated
     against a known-mismatch test set. See issue #14 and the v0.3
-    roadmap deferred section.
+    roadmap deferred section. The author can override the
+    figure-image-reading guard; every image-derived finding is then
+    labelled unvalidated vision.
   - >
     Does not perform image-integrity checks (duplication,
     manipulation, splicing). That is a different problem with
@@ -113,11 +158,14 @@ non_goals:
   - Does not modify the manuscript, captions, or figure files.
   - Does not invent figure content the caption did not state.
   - Does not suggest specific rewrites of captions or body-text
-    references. Flags misalignments; the author decides.
+    references by default. Flags misalignments; the author decides
+    (critique-rewrite-suggestions guard, author-overridable).
   - Does not score the manuscript on a quality scale.
   - Does not verify sample-size consistency across sections
     (Methods N vs. Results N vs. caption n=). Closer to a future
     statistics-consistency skill.
-  - Does not operate on outline-phase manuscripts. Refuses cleanly.
+  - Does not operate on outline-phase manuscripts by default
+    (outline-phase guard, author-overridable).
   - Does not generate captions for figures that lack them, or
-    body-text references for orphan figures.
+    body-text references for orphan figures, by default
+    (generation-from-blankness guard, author-overridable).

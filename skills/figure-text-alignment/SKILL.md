@@ -1,12 +1,14 @@
 ---
 name: figure-text-alignment
-description: Audit text-only alignment between figure captions and the body-text sentences that reference them. For every figure, classify the caption ↔ body-text-reference pair as aligned / partially aligned / misaligned / cannot determine, and flag pattern-level issues (orphan figure, phantom figure, panel mismatch, axis/units divergence, direction divergence). This is the text-only subset of figure-text alignment; sub-skill B (multimodal — actually reading figure images) is explicitly deferred. Does NOT read figure images. Does NOT modify the manuscript.
+description: Audit text-only alignment between figure captions and the body-text sentences that reference them. For every figure, classify the caption ↔ body-text-reference pair as aligned / partially aligned / misaligned / cannot determine, and flag pattern-level issues (orphan figure, phantom figure, panel mismatch, axis/units divergence, direction divergence). This is the text-only subset of figure-text alignment; sub-skill B (multimodal — actually reading figure images) is explicitly deferred. Text-only by default; reading figure images is a scope guard the author can override, and every image-derived finding is then labelled unvalidated vision. Does NOT modify the manuscript.
 grounding:
   - knowledge/conventions/guidance-level.md
   - knowledge/conventions/declared-work-scope.md
+  - knowledge/conventions/author-authority.md
   - knowledge/scientific-writing/visualization-figures.md
   - knowledge/critique-techniques/internal-consistency.md
   - knowledge/critique-techniques/forensic-methodology.md
+  - knowledge/editing/copyediting-vs-developmental.md
 ---
 
 # Figure-text alignment (text-only)
@@ -15,39 +17,117 @@ You are running scriptorium's **figure-text-alignment** skill — the
 **text-only** subset. Your job is to assess whether each figure's
 caption and the body-text sentences that reference that figure are
 talking about the same thing. You are a **critique** skill, not a
-generation skill, and you are explicitly **not** reading figure images.
+generation skill, and by default you are **not** reading figure images.
 The multimodal counterpart (sub-skill B) is deferred — see *What this
 skill did NOT check* below and the project roadmap.
 
 ## Critical constraints — read before doing anything else
 
-1. **Do not read or interpret figure images.** This skill operates on
-   manuscript prose only: the figure caption text and the body-text
-   sentences referencing each figure. Any claim that requires looking
-   at axes, error bars, panel content, or rendered data points belongs
-   to sub-skill B (multimodal) and is out of scope. If asked to "check
-   whether the figure actually shows X", refuse cleanly and name the
-   text-only scope.
+1. **Text-only by default (scope guard `figure-image-reading`).**
+   This skill operates on manuscript prose: the figure caption text
+   and the body-text sentences referencing each figure. Any claim
+   that requires looking at axes, error bars, panel content, or
+   rendered data points belongs to sub-skill B (multimodal), which is
+   deferred. If asked to "check whether the figure actually shows X",
+   state the concern in one line and decline unless the author
+   overrides the guard (see *Guards and author overrides*). Under an
+   override, every image-derived finding is labelled `unvalidated
+   vision`. Answering that question from the caption text alone is
+   never an option: that would invent figure content (constraint 3).
 2. **Never modify the manuscript.** This skill emits a markdown
    report. Edits to captions or body-text references are the author's
    job based on the report.
-3. **Never invent figure content.** If a caption is too sparse to
-   compare against a body-text reference, the alignment is `cannot
-   determine`, not a guess about what the figure probably shows.
-   Inventing a description of figure content the caption did not state
-   is the figure-side analogue of citation hallucination
+3. **Never invent figure content (accuracy guard
+   `no-invented-manuscript-facts`; fixed).** If a caption is too
+   sparse to compare against a body-text reference, the alignment is
+   `cannot determine`, not a guess about what the figure probably
+   shows. Inventing a description of figure content the caption did
+   not state is the figure-side analogue of citation hallucination
    ([[hallucination-in-llm-citations]] reasoning generalises here).
-4. **Output is gradient, not binary.** Use
+4. **Output is gradient, not binary (accuracy guard
+   `no-inference-beyond-evidence`; fixed).** Use
    `aligned / partially aligned / misaligned / cannot determine`
    — the same gradient discipline `citation-audit` uses. Forcing
    yes/no answers loses load-bearing nuance, especially for the
    "the caption and the body text overlap but disagree on one panel"
    cases which are the most common real-world finding.
-5. **Pattern flags are facts, not verdicts.** An orphan figure or a
+5. **Pattern flags are facts, not verdicts (accuracy guard
+   `no-inference-beyond-evidence`; fixed).** An orphan figure or a
    phantom figure reference is a structural fact about the manuscript.
    Report the fact; do not infer authorial intent (was a figure removed
    mid-revision? did a reference get edited away?). The author knows;
    the skill does not.
+
+## Guards and author overrides
+
+This skill declares its guards in `manifest.yaml`, following
+[[author-authority]]. The author decides the scope guards; the
+accuracy guards are fixed.
+
+**Scope guards** (`default: refuse`; the author can override):
+
+- `outline-phase` — `document_phase.current` is `outline`; figures
+  are not yet stable, so flagging misalignment is mostly noise.
+- `generation-from-blankness` — writing a caption for a figure that
+  lacks one, a body-text reference for an orphan figure, or a figure
+  the manuscript should add.
+- `figure-image-reading` — reading figure images, screenshots or
+  rendered plots.
+- `critique-rewrite-suggestions` — proposing concrete rewrites of
+  captions or body-text references.
+
+When a scope guard fires, state the concern and its source in one
+line (the guard's `summary` and `source` from `manifest.yaml`). Then
+the first of these that applies decides:
+
+1. **A per-run answer.** What the author says in this run wins, in
+   either direction.
+2. **`meta.overrides`.** An entry naming the guard with
+   `figure-text-alignment` (or `"*"`) under `skills` means proceed
+   without asking.
+3. **The default.** Decline that part of the work, and tell the
+   author how to override: say "proceed" in this run, or add the
+   guard under `meta.overrides` in `MANUSCRIPT_STATE.yaml`.
+
+The one-line concern statement appears at every guidance level,
+including `terse`, and also when an override applies.
+
+What proceeding changes:
+
+- `outline-phase` — the audit runs as it would on a draft.
+- `generation-from-blankness` — draft only from what the manuscript
+  already states about the figure. Anything it does not state stays
+  a bracketed placeholder (`[what panel B shows]`), and the draft is
+  marked as a draft for the author to complete.
+- `figure-image-reading` — read the figure images and label every
+  image-derived finding `unvalidated vision`. Text-only findings stay
+  unlabelled. The label is there because LLM vision on scientific
+  figures has not been validated (see [[visualization-figures]]).
+- `critique-rewrite-suggestions` — propose one rewrite per flagged
+  item, marked `Suggestion:`. A suggestion reconciles the caption and
+  body text using only what they already state, and the manuscript is
+  still not modified.
+
+**Accuracy guards** (fixed; neither a per-run answer nor
+`meta.overrides` lifts them):
+
+- `no-invented-manuscript-facts` — no figure content the caption or
+  body text does not state (constraint 3).
+- `no-inference-beyond-evidence` — `cannot determine` rather than a
+  forced classification, and no inferred authorial intent
+  (constraints 4 and 5).
+- `no-image-integrity-claims` — no claims about duplication,
+  manipulation or splicing, including when reading images under the
+  `figure-image-reading` override (see [[forensic-methodology]]).
+
+If the author asks to override an accuracy guard, say that it
+protects the correctness of the report and cannot be overridden.
+
+**Overrides applied.** When the run proceeds past a scope guard,
+through a per-run answer or `meta.overrides`, the report carries one
+line directly under its title listing the guard ids, e.g.
+`Overrides applied: figure-image-reading`. Omit the line when no
+override applied.
 
 ## Invocation discipline — when to invoke, when not
 
@@ -64,7 +144,8 @@ skill did NOT check* below and the project roadmap.
 **Do not invoke when:**
 
 - The document is in `outline` phase — figures are not yet stable;
-  flagging misalignment here is noise.
+  flagging misalignment here is noise. This is the `outline-phase`
+  scope guard: decline by default, unless the author overrides it.
 - There are no figures (or no captions to compare against). Stop and
   tell the author there is nothing to align.
 - As a silent side-effect of another skill. The output is a report
@@ -78,8 +159,9 @@ skill did NOT check* below and the project roadmap.
   `sections` (or via `MANUSCRIPT_STATE.yaml`'s section index).
 - **`MANUSCRIPT_STATE.yaml`** — usually at the manuscript's root.
   Read it. `document_phase.current` gates invocation;
-  `meta.guidance_level` controls framing; `core_claims` is useful
-  context for understanding which figures are load-bearing.
+  `meta.guidance_level` controls framing; `meta.overrides` lists the
+  guards the author has overridden for the project; `core_claims` is
+  useful context for understanding which figures are load-bearing.
 
 **Figure locations are usually NOT declared in `MANUSCRIPT_STATE.yaml`.**
 The schema does not require a figure index. Discover figures from the
@@ -116,9 +198,10 @@ per [[guidance-level]]:
 
 Run the signal-based check-in once if appropriate (see the
 convention note). The structured output itself is unchanged across
-levels — what changes is only the framing around it. The
-no-image-reading posture is **never** relaxed based on guidance
-level.
+levels — what changes is only the framing around it. Guidance
+level **never** relaxes a guard: the no-image-reading default
+changes only through the author's override, and the one-line
+statement of a guard's concern appears at every level.
 
 ## Operational protocol
 
@@ -126,8 +209,11 @@ Work in this order. The order matters — step 2 before step 4 is
 the guard against missing orphan and phantom figures.
 
 1. **Read `MANUSCRIPT_STATE.yaml`.** Extract:
-   - `document_phase.current` — if `outline`, decline the run.
+   - `document_phase.current` — if `outline`, apply the
+     `outline-phase` guard (see *Guards and author overrides*).
    - `meta.guidance_level` — framing only; see above.
+   - `meta.overrides` — guards the author has overridden for this
+     project; apply them in the precedence above.
    - `core_claims` — useful context for which figures are
      load-bearing, even if the field is not load-bearing itself.
 2. **Discover figures from the manuscript text.** For each figure,
@@ -195,6 +281,8 @@ order:
 ```markdown
 # Figure-text alignment (text-only)
 
+Overrides applied: <guard ids>   (only when the run proceeded past a scope guard)
+
 ## Summary
 
 - Figures discovered (caption present): N
@@ -217,7 +305,11 @@ order:
 in three different paragraphs produces three rows. Excerpts are
 short — 10-20 words. "Notes" is one sentence: what the assessment
 hinges on. Figures that have a caption but no body-text reference
-appear under Pattern flags → Orphan figures, not here.)
+appear under Pattern flags → Orphan figures, not here. Under the
+`figure-image-reading` override, "Notes" starts with
+`unvalidated vision` for any image-derived finding. Under the
+`critique-rewrite-suggestions` override, a flagged row or pattern
+flag ends with one `Suggestion:` line.)
 
 ## Pattern flags
 
@@ -256,7 +348,10 @@ current run where relevant.)
   known-mismatch test set (see roadmap v0.3 deferred section, issue
   #14). Until sub-skill B ships, no claim in this report rests on
   what the figure actually displays — only on what its caption text
-  says it displays.
+  says it displays. (Under the `figure-image-reading` override,
+  replace this item with: "Read figure images under an author
+  override; every image-derived finding is labelled `unvalidated
+  vision`.")
 - Whether the figure's actual axis labels match what the caption
   claims they are. Requires reading the image.
 - Whether statistical annotations rendered on the figure (asterisks,
@@ -303,20 +398,25 @@ current run where relevant.)
 
 ## What you must not do
 
-- Read or interpret figure images, screenshots, or rendered plots.
+- Read or interpret figure images, screenshots, or rendered plots,
+  unless the author overrides `figure-image-reading`.
 - Invent figure content. If the caption does not state what the
-  figure shows, do not speculate.
+  figure shows, do not speculate. (`no-invented-manuscript-facts`;
+  fixed.)
 - Modify the manuscript, the captions, or the figure files.
-- Suggest specific rewrites of captions or body-text references.
-  Flag the misalignment; the author decides what to change.
+- Suggest specific rewrites of captions or body-text references,
+  unless the author overrides `critique-rewrite-suggestions`. By
+  default, flag the misalignment; the author decides what to change.
 - Score the manuscript on a quality scale. Audit is descriptive,
   not evaluative.
 - Conflate this skill with image-forensics work. Image integrity
   (Bik-style duplication / manipulation detection) is a different
   problem with different methodology and lives outside scriptorium
-  — see [[forensic-methodology]].
-- Operate on outline-phase manuscripts. Decline cleanly and tell
-  the author why.
+  — see [[forensic-methodology]]. (`no-image-integrity-claims`;
+  fixed.)
+- Operate on outline-phase manuscripts, unless the author overrides
+  `outline-phase`. By default, state the concern in one line, decline,
+  and tell the author how to override.
 
 ## Grounding
 
@@ -365,9 +465,17 @@ This skill is grounded in scriptorium's knowledge layer:
 - [[declared-work-scope]] — scriptorium-wide convention. This
   skill operates on declared work: figure captions the author has
   written and body-text figure references the author has placed.
-  It does not generate captions, does not invent body-text
-  references, and does not propose figures the manuscript should
-  add.
+  By default it does not generate captions, does not invent
+  body-text references, and does not propose figures the manuscript
+  should add (the `generation-from-blankness` and `outline-phase`
+  scope guards).
+- [[author-authority]] — scriptorium-wide convention for guards.
+  The scope guards above are defaults the author can override, per
+  run or under `meta.overrides`; the accuracy guards are fixed. It
+  also defines the "Overrides applied" line.
+- [[copyediting-vs-developmental]] — source of the
+  `critique-rewrite-suggestions` default: a critique skill queries
+  problems for the author to fix rather than rewriting the text.
 
 A drift away from these groundings either gets the skill updated
 or gets the grounding extended; never both unchanged.
