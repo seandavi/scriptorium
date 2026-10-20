@@ -12,7 +12,8 @@ the load-bearing claim. The opening sentence ("a growing literature
 suggests…") is contextual scene-setting; under Gopen & Swan's
 [topic-position principle](https://www.americanscientist.org/article/the-science-of-scientific-writing),
 the topic position of a paragraph belongs to the paragraph's *own*
-claim, not to background framing. The cohort finding — *Bacteroides
+claim, not to background framing. This is a diagnosis the author can
+overrule if the framing-first order is deliberate. The cohort finding — *Bacteroides
 fragilis* abundance vs. carotid intima-media thickness, r = −0.38,
 p = 0.002 — is buried at sentence 2 and competes with the contextual
 opening for attention. A reader scanning topic sentences misses it.

@@ -33,9 +33,9 @@ and note in the output that the run was un-grounded.
    outlier, the output is useless — calibrate to a handful per pass.
 3. **Calibrate against the manuscript itself.** Compute the
    distributional statistics from the submitted prose. Do not import
-   a universal target. Flesch-Kincaid, SMOG, Coleman-Liau, and
-   BERTScore-as-a-gate systematically mis-score scientific prose; the
-   skill explicitly does not do that.
+   a universal target. Flesch-Kincaid, SMOG, and Coleman-Liau
+   systematically mis-score scientific prose; the skill explicitly
+   does not do that.
 4. **Output is descriptive, not directive.** Each flag is *"worth
    re-reading because X"* — never *"this sentence is bad"* or
    *"rewrite this sentence."* The author decides what to do.

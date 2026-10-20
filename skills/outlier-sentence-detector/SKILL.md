@@ -40,8 +40,8 @@ it does not fix.
    submitted prose. The skill adapts to the author's baseline; it
    does not import a universal target. Per
    [[quantitative-quality-measures]], universal-target tools
-   (Flesch-Kincaid, SMOG, Coleman-Liau, BERTScore-as-a-gate) are
-   theatre for scientific text; this skill is explicitly not that.
+   (Flesch-Kincaid, SMOG, Coleman-Liau) are theatre for scientific
+   text; this skill is explicitly not that.
 4. **Output is descriptive, not directive.** Each flag is *"worth
    re-reading because X"*, never *"this sentence is bad"* or
    *"rewrite this sentence to be shorter"*. The author decides what
@@ -349,8 +349,9 @@ This skill is grounded in scriptorium's knowledge layer:
 
 - [[quantitative-quality-measures]] — the load-bearing grounding
   note. Its verdict on writing-quality scoring is *Selective Yes*:
-  general-purpose quality scores (Flesch-Kincaid, SMOG,
-  BERTScore-as-a-gate) are theatre for scientific text, but
+  general-purpose quality scores (Flesch-Kincaid, SMOG) are
+  theatre for scientific text, and BERTScore-based accept/reject
+  for edits is refused outright, but
   narrow outlier-detection skills are defensible because they
   surface candidates for human review without claiming to measure
   quality. This skill is the v0.3 cash-out of that *Selective Yes*.

@@ -326,7 +326,8 @@ human + statcheck). Be specific.)
 
 - **Diagnosis cites the principle.** "The third paragraph's topic
   sentence is at sentence 3 rather than sentence 1, violating Gopen
-  & Swan's topic-position principle" beats "the third paragraph is
+  & Swan's topic-position principle (a diagnosis the author can
+  overrule)" beats "the third paragraph is
   unclear."
 - **Smallest viable edits.** Sommers 1980's finding holds: novice
   revisers do cosmetic sentence-level work; expert revisers do

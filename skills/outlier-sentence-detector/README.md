@@ -28,10 +28,11 @@ The first useful operation the note lists is outlier flagging.
 Outlier flagging is what this skill does. Quality scoring is not.
 
 The grounding note's verdict is **Selective Yes**: general-purpose
-writing-quality scores (Flesch-Kincaid, SMOG, Coleman-Liau,
-BERTScore-as-a-gate) are theatre for scientific text — they
-systematically mis-score correctly-used technical terminology as
-"difficult" and penalise legitimate nominalisation. Narrow
+writing-quality scores are theatre for scientific text. Readability
+formulas (Flesch-Kincaid, SMOG, Coleman-Liau) systematically
+mis-score correctly-used technical terminology as "difficult" and
+penalise legitimate nominalisation. The note separately refuses
+BERTScore-based accept/reject gates for edits. Narrow
 outlier-detection skills are defensible because they surface
 candidates for human review without claiming to measure quality.
 This skill is the v0.3 cash-out of that *Selective Yes*.

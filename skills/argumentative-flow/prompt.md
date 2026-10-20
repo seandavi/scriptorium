@@ -185,7 +185,7 @@ handle better.)
 
 - **Diagnosis cites the principle.** "Paragraph 3 buries the topic
   sentence at position 3, violating Gopen & Swan's topic-position
-  principle" beats "paragraph 3 is unclear."
+  principle (a diagnosis the author can overrule)" beats "paragraph 3 is unclear."
 - **Smallest viable edits.** A revision that changes every sentence
   has likely overreached.
 - **Preservation report is honest.** Never present a clean report on
