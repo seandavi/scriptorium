@@ -32,10 +32,10 @@ scriptorium-side convention rather than a finding from the literature.
 ICMJE's fourth authorship criterion is "agreement to be accountable
 for all aspects of the work in ensuring that questions related to the
 accuracy or integrity of any part of the work are appropriately
-investigated and resolved" [1]. The same recommendations make AI tools
-ineligible for authorship and ask authors to disclose their use [1];
-[[credit-taxonomy-authorship]] covers the detail. Accountability and
-the decision travel together. A tool that refuses on its own reading
+investigated and resolved" [1]. ICMJE's recommendations also make AI
+tools ineligible for authorship and ask authors to disclose their use
+[2]; [[credit-taxonomy-authorship]] covers the detail. Accountability
+and the decision travel together. A tool that refuses on its own reading
 of a policy takes a decision away from the person who answers for it,
 without taking on any of the accountability.
 
@@ -45,7 +45,7 @@ Funder and publisher rules are real constraints, but how they apply to
 a given request is usually a judgement. NIH NOT-OD-25-132 says NIH
 "will not consider applications that are either substantially
 developed by AI, or contain sections substantially developed by AI, to
-be original ideas of applicants" [2]. The notice does not define
+be original ideas of applicants" [3]. The notice does not define
 "substantially" ([[nih-significance-patterns]]). Whether a particular
 use crosses that line depends on facts the author has and the skill
 does not: what the author has already written, how the output will be
@@ -167,7 +167,8 @@ Overrides applied: nih-application-prose
 
 The line is omitted when no override was applied. It makes the output
 self-describing. A co-author or reviewer reading it later can see
-which defaults were set aside without reconstructing the conversation.
+which guards the author chose to proceed past without reconstructing
+the conversation.
 
 ### Validation
 
@@ -224,17 +225,21 @@ and keeps the author informed each time one of them is exercised.
 
 ## References
 
-[1] International Committee of Medical Journal Editors.
+[1] International Committee of Medical Journal Editors. *Defining
+the Role of Authors and Contributors*.
+<https://www.icmje.org/recommendations/browse/roles-and-responsibilities/defining-the-role-of-authors-and-contributors.html>.
+The four authorship criteria are quoted in
+[[credit-taxonomy-authorship]].
+
+[2] International Committee of Medical Journal Editors.
 *Recommendations for the Conduct, Reporting, Editing, and Publication
 of Scholarly Work in Medical Journals*, updated May 2023 (AI
 authorship guidance) and January 2026 (Section V, "Use of Artificial
 Intelligence in Publishing").
 <https://www.icmje.org/news-and-editorials/updated_recommendations_may2023.html>;
 <https://www.icmje.org/news-and-editorials/updated_recommendations_jan2026.html>.
-The four authorship criteria are quoted in
-[[credit-taxonomy-authorship]].
 
-[2] NIH. NOT-OD-25-132: Supporting Fairness and Originality in NIH
+[3] NIH. NOT-OD-25-132: Supporting Fairness and Originality in NIH
 Research Applications. Released July 17, 2025; effective for
 applications submitted to the September 25, 2025 receipt date and
 beyond. <https://grants.nih.gov/grants/guide/notice-files/NOT-OD-25-132.html>

@@ -2,7 +2,8 @@
 
 See ``knowledge/conventions/author-authority.md``. A skill may declare no
 guards. Each declared guard needs the required fields and valid enum
-values, and a policy guard must name its source. An id is unique within a
+values, a policy guard must name its source, and scope and accuracy
+guards must default to refuse. An id is unique within a
 manifest. Several skills may share an id only if they define it
 identically.
 """
@@ -65,8 +66,8 @@ def guard_problems(manifests: dict[str, Any]) -> list[str]:
                 problems.append(f"{where}: default {default!r} not in {GUARD_DEFAULTS}")
             if kind == "policy" and "source" not in guard:
                 problems.append(f"{where}: policy guards must name a source")
-            if kind == "accuracy" and default != "refuse":
-                problems.append(f"{where}: accuracy guards must default to refuse")
+            if kind in ("scope", "accuracy") and default != "refuse":
+                problems.append(f"{where}: {kind} guards must default to refuse")
             if isinstance(guard_id, str):
                 first = definitions.setdefault(guard_id, (skill, guard))
                 if first[0] != skill and first[1] != guard:
@@ -133,6 +134,7 @@ def test_guard_problems_accepts_valid_and_absent_guards() -> None:
         ({"source": None}, "policy guards must name a source"),
         ({"source": " "}, "source must be a non-empty string"),
         ({"summary": "Line one.\nLine two."}, "summary must be one line"),
+        ({"kind": "scope", "default": "ask"}, "scope guards must default to refuse"),
         ({"kind": "accuracy", "default": "ask"}, "accuracy guards must default to refuse"),
     ],
 )
