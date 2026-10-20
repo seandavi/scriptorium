@@ -20,6 +20,11 @@ include_fragments = "none"
 # Honour Markdown link reference labels; treat unresolved fragments as soft.
 no_progress = true
 
+# skills/*/assets/ holds synced copies of knowledge/ notes whose relative
+# links point at files the copy does not carry. The canonical notes are
+# checked under knowledge/.
+exclude_path = ['skills/[^/]+/assets/']
+
 # Hosts we have learned to allow-list:
 #   - localhost / 127.0.0.1: docs examples and dev-mode references
 #   - linkedin.com: blanket-403s headless clients
