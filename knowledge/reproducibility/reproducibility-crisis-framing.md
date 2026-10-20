@@ -1,6 +1,6 @@
 # The reproducibility crisis as the framing context for scriptorium
 
-*Last updated: 2026-05-17*
+*Last updated: 2026-10-20*
 
 ## Synthesis
 
@@ -16,7 +16,7 @@ selective reporting, p-hacking, under-specified methods, weak
 incentives for replication and for transparency), and the reform
 agenda has consolidated around concrete instruments: pre-registration,
 registered reports, data sharing, code sharing, and the TOP
-Guidelines [4, 5, 6].
+Guidelines [4, 5, 6, 8].
 
 For scriptorium, the connection is direct and load-bearing.
 The system's most distinctive design choices —
@@ -75,7 +75,12 @@ combined positive and null effects, success rate was 46%. Beyond the
 quantitative findings, the *qualitative* finding was that none of the
 target experiments could be replicated from the methods sections
 alone — clarifications from original authors were required in every
-case, and roughly two-thirds required protocol modifications. The
+case, and roughly two-thirds required protocol modifications. These
+qualitative findings come from the project's companion paper on
+challenges (*eLife* 2021;10:e67995, listed under [3]). It reports that
+"none of the 193 experiments were described in sufficient detail in the
+original paper" to design replication protocols, and that "67% of the
+peer-reviewed protocols required modifications". The
 methods-section opacity finding is in some ways the more actionable
 result: it implicates writing practice directly, not just analysis
 practice.
@@ -96,25 +101,61 @@ literature is unreliable even before LLMs got their hands on it.
 
 **Munafò et al. (2017), "A manifesto for reproducible science."** [4]
 The consolidation document for the reproducibility-reform movement.
-Identifies failure modes at four levels — methods, reporting and
-dissemination, reproducibility, and evaluation/incentives — and
-specifies countermeasures at each: pre-registration, multi-arm
+Groups its proposed measures into five categories — methods, reporting
+and dissemination, reproducibility, evaluation, and incentives [4] —
+and specifies countermeasures across them: pre-registration, multi-arm
 replication, registered reports, open data, open code, reporting
 checklists, and incentive structures. The manifesto is the most
 cited single reference for the modern reform programme.
 
 **Nosek et al. (2015), TOP Guidelines.** [5] The *Transparency and
 Openness Promotion* guidelines were developed by a working group
-hosted at the Center for Open Science. Eight transparency standards
-(citation, data, materials, code, design, research materials,
-analytic methods, replication, registration) each defined at three
-levels (encouragement, requirement, verification). The TOP framework
+hosted at the Center for Open Science. TOP 2015 defined eight
+standards: citation; data transparency; analytic methods (code)
+transparency; research materials transparency; design and analysis
+transparency; preregistration of studies; preregistration of analysis
+plans; and replication. Each was set at three levels of increasing
+stringency [5]. The TOP framework
 gives journals a vocabulary for "how transparent do we require
-authors to be?" and has been adopted by over a thousand journals.
+authors to be?" and was widely adopted in journal policies. (The
+earlier "over a thousand journals" figure has not been re-verified
+against a current COS source and is removed here.)
 For scriptorium, TOP is the *external* schema against which a
 manuscript's transparency can be assessed; reporting-guideline
 adherence (EQUATOR; see [[reporting-guidelines]]) is the *internal*
 equivalent.
+
+**TOP 2025 supersedes TOP 2015.** [8] The TOP Advisory Board's update
+took effect in 2025 and was published in *Research Integrity and Peer
+Review* in 2026. It states one primary objective, "improving the
+verifiability of empirical research claims", and reorganises the
+standards into three categories:
+
+- **Research Practices**: study registration, study protocol, analysis
+  plan, materials transparency, data transparency, analytic code
+  transparency, and reporting transparency. Each can be implemented in
+  three ways: *Disclosed*, *Shared and Cited*, and *Certified*. These
+  are categorical classifiers, not ranked levels: TOP 2025 states that
+  "ordinal implementation levels for Research Practices were replaced
+  with categorical classifiers", to reduce the likelihood of
+  quantitative scoring [8]. (The COS web page still labels the three
+  categories Level 1–3 [6].)
+- **Verification Practices**: results transparency and computational
+  reproducibility.
+- **Verification Studies**: replication, registered reports, multiverse
+  and many-analyst designs [6, 8].
+
+The language now centres on researchers and studies rather than
+journals, so that funders, research organisations and preprint servers
+can adopt it too. For scriptorium, the practical change is that the
+least demanding category, *Disclosed*, requires only that researchers
+"state whether they performed a practice—and, if so, state the location
+of the resultant research output" [8]. That is a statement in the
+manuscript, which a manuscript-layer tool can check. Whether a
+manuscript says where its protocol, analysis plan, data and code are,
+and whether it reports according to a reporting guideline, is now
+directly expressed as the *Disclosed* category of TOP 2025.
+*(Researcher inference from [8].)*
 
 ### The post-crisis reform infrastructure
 
@@ -122,7 +163,12 @@ The reform agenda is no longer aspirational. It has institutional
 form:
 
 - **Registered reports** — pre-acceptance based on methods, not
-  results. Now offered by ~300 journals.
+  results. They are offered by a growing list of journals, which the
+  Center for Open Science tracks. (We could not re-verify the earlier
+  "~300 journals" count against the COS page on 2026-10-20, so it has
+  been dropped.)
+  TOP 2025 lists registered reports as a named *Verification Study*
+  type [8].
 - **Pre-registration** at the Open Science Framework, AsPredicted,
   ClinicalTrials.gov, and similar repositories. EU CTR 536/2014
   requires pre-registration for clinical trials in EU member states.
@@ -208,6 +254,9 @@ the JOSS paper.**
   registered reports, pre-registration, replication coordination,
   open-data infrastructure, post-publication forensics. Naming what
   is out of scope is part of the honest pitch.
+- When the JOSS paper or DESIGN.md cites TOP, it should cite TOP 2025
+  [8] rather than only TOP 2015 [5]. The 2015 standards and their
+  ordinal levels have been replaced.
 
 **Maybe-later flip conditions for new skills.** Three skills are
 implied by the post-crisis evidence and become more plausible if
@@ -220,7 +269,9 @@ demand pulls:
    candidate (covered in [[reporting-guidelines]]).
 3. `methods-completeness` skill (RRID coverage, software-version
    pins, model-identifier check) — v0.3+ candidate if author demand
-   surfaces; non-trivial scope.
+   surfaces; non-trivial scope. TOP 2025's *Disclosed* category [8]
+   offers a ready-made rubric: does the manuscript say where the
+   protocol, analysis plan, materials, data and code are?
 
 ## Open questions / weak evidence
 
@@ -236,6 +287,9 @@ demand pulls:
   pre-submission quality is itself an unaddressed empirical
   question. Scriptorium should be honest that the impact case is
   largely theoretical until evaluated.
+- How widely TOP 2025 has been adopted is not yet documented. It took
+  effect in 2025, and its peer-reviewed description appeared in August
+  2026 [8].
 
 ## References
 
@@ -245,23 +299,30 @@ demand pulls:
 2. Camerer CF, Dreber A, Holzmeister F, et al. Evaluating the
    replicability of social science experiments in *Nature* and
    *Science* between 2010 and 2015. *Nature Human Behaviour*.
-   2018;2:637–644. doi:10.1038/s41562-018-0399-z.
-3. Errington TM, Denis A, Perfito N, Iorns E, Nosek BA. Investigating
-   the replicability of preclinical cancer biology. *eLife*.
-   2021;10:e71601. doi:10.7554/eLife.71601. See also companion
-   meta-paper: Errington TM et al. Reproducibility in Cancer Biology:
-   What have we learned? *eLife*. 2021;10:e75830.
-   doi:10.7554/eLife.75830, and the project overview Errington TM
-   et al., *eLife*. 2021;10:e67995. doi:10.7554/eLife.67995.
+   2018;2:637–644. doi:10.1038/s41562-018-0399-z. PMID: 31346273.
+3. Errington TM, Mathur M, Soderberg CK, Denis A, Perfito N, Iorns E,
+   Nosek BA. Investigating the replicability of preclinical cancer
+   biology. *eLife*. 2021;10:e71601. doi:10.7554/eLife.71601.
+   PMID: 34874005. See also the companion paper: Errington TM, Denis A,
+   Perfito N, Iorns E, Nosek BA. Challenges for assessing replicability
+   in preclinical cancer biology. *eLife*. 2021;10:e67995.
+   doi:10.7554/eLife.67995. PMID: 34874008. And the accompanying
+   editorial: Rodgers P, Collings A. What have we learned? *eLife*.
+   2021;10:e75830. doi:10.7554/eLife.75830. PMID: 34874010.
 4. Munafò MR, Nosek BA, Bishop DVM, et al. A manifesto for
    reproducible science. *Nature Human Behaviour*. 2017;1:0021.
-   doi:10.1038/s41562-016-0021.
+   doi:10.1038/s41562-016-0021. PMID: 33954258.
 5. Nosek BA, Alter G, Banks GC, et al. Promoting an open research
    culture. *Science*. 2015;348(6242):1422–1425.
    doi:10.1126/science.aab2374. PMID: 26113702.
 6. Center for Open Science. TOP Guidelines.
    https://www.cos.io/initiatives/top-guidelines (accessed
-   2026-05-17).
+   2026-10-20).
 7. Ioannidis JPA. Why most published research findings are false.
    *PLoS Medicine*. 2005;2(8):e124.
    doi:10.1371/journal.pmed.0020124. PMID: 16060722.
+8. Grant S, Corker KS, Mellor D, Stewart SLK, Mayo-Wilson E, Cashin AG,
+   et al.; TOP Advisory Board. TOP 2025: An update to the Transparency
+   and Openness Promotion Guidelines. *Research Integrity and Peer
+   Review*. 2026;11(1):40. doi:10.1186/s41073-026-00223-0.
+   PMID: 42557573. Preprint: MetaArXiv, https://osf.io/preprints/metaarxiv/nmfs6_v2.
