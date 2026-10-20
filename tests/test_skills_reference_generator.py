@@ -14,6 +14,7 @@ import sys
 from pathlib import Path
 
 import pytest
+import yaml
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SKILLS_SRC = REPO_ROOT / "skills"
@@ -332,3 +333,92 @@ def test_process_guidance_level_concept_warns_on_missing_sentinel(  # type: igno
     assert page.read_text(encoding="utf-8") == original
     captured = capsys.readouterr().out
     assert "missing the GENERATED:guidance-level-skills sentinel" in captured
+
+
+# ---------------------------------------------------------------------------
+# Author-authority concept page generator
+# ---------------------------------------------------------------------------
+
+
+def _shipped_guards() -> list[tuple[str, dict[str, str]]]:
+    """Every ``(skill, guard)`` pair declared under ``guards:`` in a manifest."""
+    pairs: list[tuple[str, dict[str, str]]] = []
+    for name in _shipped_skill_names():
+        manifest = yaml.safe_load((SKILLS_SRC / name / "manifest.yaml").read_text("utf-8"))
+        pairs += [(name, guard) for guard in manifest.get("guards") or []]
+    return pairs
+
+
+def test_author_authority_table_has_one_row_per_declared_guard(  # type: ignore[no-untyped-def]
+    preprocess_module,
+) -> None:
+    manifests = preprocess_module._load_manifests()
+    table = preprocess_module._render_author_authority_guard_table(manifests)
+    rows = [line for line in table.splitlines() if line.startswith("| `")]
+    assert len(rows) == len(_shipped_guards())
+    for name, guard in _shipped_guards():
+        prefix = f"| `{name}` | `{guard['id']}` | {guard['kind']} | `{guard['default']}` |"
+        assert any(row.startswith(prefix) for row in rows), f"missing row: {prefix}"
+
+
+def test_author_authority_count_line_matches_manifests(  # type: ignore[no-untyped-def]
+    preprocess_module,
+) -> None:
+    kinds = {guard["id"]: guard["kind"] for _, guard in _shipped_guards()}
+    skills = {name for name, _ in _shipped_guards()}
+    counts = ", ".join(
+        f"{list(kinds.values()).count(kind)} {kind}" for kind in ("policy", "scope", "accuracy")
+    )
+    table = preprocess_module._render_author_authority_guard_table(
+        preprocess_module._load_manifests()
+    )
+    assert table.splitlines()[0] == (
+        f"{len(kinds)} guards ({counts}) declared across {len(skills)} skills."
+    )
+
+
+def test_author_authority_table_omits_skills_without_guards(  # type: ignore[no-untyped-def]
+    preprocess_module,
+) -> None:
+    table = preprocess_module._render_author_authority_guard_table(
+        preprocess_module._load_manifests()
+    )
+    declaring = {name for name, _ in _shipped_guards()}
+    for name in set(_shipped_skill_names()) - declaring:
+        assert f"| `{name}` |" not in table
+
+
+def test_process_author_authority_concept_replaces_block(  # type: ignore[no-untyped-def]
+    preprocess_module, tmp_path, monkeypatch
+) -> None:
+    """``process_author_authority_concept`` must replace only the sentinel block."""
+    page = tmp_path / "author-authority.md"
+    page.write_text(
+        "prose above\n"
+        "<!-- GENERATED:author-authority-guards:start -->\n"
+        "OLD GUARD TABLE\n"
+        "<!-- GENERATED:author-authority-guards:end -->\n"
+        "prose below\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(preprocess_module, "AUTHOR_AUTHORITY_OUT", page)
+    assert preprocess_module.process_author_authority_concept() is True
+    text = page.read_text(encoding="utf-8")
+    assert "prose above" in text
+    assert "prose below" in text
+    assert "OLD GUARD TABLE" not in text
+    assert "| Skill | Guard | Kind | Default | Summary |" in text
+
+
+def test_process_author_authority_concept_warns_on_missing_sentinel(  # type: ignore[no-untyped-def]
+    preprocess_module, tmp_path, monkeypatch, capsys
+) -> None:
+    """A page without the sentinel pair must be left untouched."""
+    page = tmp_path / "author-authority.md"
+    original = "hand-written page with no sentinels\n"
+    page.write_text(original, encoding="utf-8")
+    monkeypatch.setattr(preprocess_module, "AUTHOR_AUTHORITY_OUT", page)
+    assert preprocess_module.process_author_authority_concept() is False
+    assert page.read_text(encoding="utf-8") == original
+    captured = capsys.readouterr().out
+    assert "missing the GENERATED:author-authority-guards sentinel" in captured

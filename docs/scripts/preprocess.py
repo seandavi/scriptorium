@@ -25,7 +25,8 @@ Six things happen:
    from the manifests because the manifests are the source.
 6. Concept pages that mix hand-written prose with manifest-driven tables
    (``concepts/workflow-stage.md`` skill-by-stage table,
-   ``concepts/guidance-level.md`` per-skill block) have their generated
+   ``concepts/guidance-level.md`` per-skill block,
+   ``concepts/author-authority.md`` guard table) have their generated
    blocks replaced in-place between sentinel comments. The surrounding
    prose stays under version control; only the bracketed block changes.
 
@@ -63,6 +64,7 @@ ROADMAP_OUT = CONTENT_ROOT / "roadmap.md"
 SKILLS_OUT = CONTENT_ROOT / "reference" / "skills.md"
 WORKFLOW_STAGE_OUT = CONTENT_ROOT / "concepts" / "workflow-stage.md"
 GUIDANCE_LEVEL_OUT = CONTENT_ROOT / "concepts" / "guidance-level.md"
+AUTHOR_AUTHORITY_OUT = CONTENT_ROOT / "concepts" / "author-authority.md"
 QMD_SRC = DOCS_DIR / "qmd"
 
 # Knowledge subdirectories rendered as sidebar sections — display name +
@@ -1015,6 +1017,91 @@ def process_guidance_level_concept() -> bool:
     return True
 
 
+# ---------------------------------------------------------------------------
+# Concept page: author-authority guard table
+# ---------------------------------------------------------------------------
+#
+# The guard table on ``concepts/author-authority.md`` is regenerated from
+# each manifest's ``guards:`` list (see
+# ``knowledge/conventions/author-authority.md``). One row per skill and
+# guard, in manifest order, so the page shows exactly which guards each
+# skill applies and which of them the author can override.
+
+_GUARD_KINDS: list[str] = ["policy", "scope", "accuracy"]
+
+
+def _render_author_authority_guard_table(manifests: list[dict[str, Any]]) -> str:
+    """Render the skill-by-guard table for ``concepts/author-authority.md``.
+
+    A count line precedes the table: distinct guard ids by kind, and the
+    number of skills that declare any. Skills that declare no guards get
+    no rows.
+    """
+    kind_by_id: dict[str, str] = {}
+    declaring_skills = 0
+    rows: list[str] = [
+        "| Skill | Guard | Kind | Default | Summary |",
+        "|---|---|---|---|---|",
+    ]
+    for m in sorted(manifests, key=lambda m: m["name"]):
+        guards = m.get("guards") or []
+        if guards:
+            declaring_skills += 1
+        for guard in guards:
+            kind_by_id[guard["id"]] = str(guard["kind"])
+            summary = _normalise_description(str(guard["summary"])).replace("|", "\\|")
+            rows.append(
+                "| "
+                + " | ".join(
+                    [
+                        f"`{m['name']}`",
+                        f"`{guard['id']}`",
+                        str(guard["kind"]),
+                        f"`{guard['default']}`",
+                        summary,
+                    ]
+                )
+                + " |"
+            )
+    counts = ", ".join(f"{list(kind_by_id.values()).count(kind)} {kind}" for kind in _GUARD_KINDS)
+    count_line = f"{len(kind_by_id)} guards ({counts}) declared across {declaring_skills} skills."
+    return count_line + "\n\n" + "\n".join(rows)
+
+
+def process_author_authority_concept() -> bool:
+    """Replace the generated guard table inside the concept page.
+
+    Returns True if the table was written, False if the sentinel
+    markers are missing or the page itself does not exist.
+    """
+    if not AUTHOR_AUTHORITY_OUT.is_file():
+        print(f"  (no {AUTHOR_AUTHORITY_OUT.name}; skipping)")
+        return False
+    manifests = _load_manifests()
+    if not manifests:
+        print("  (no skills/ manifests found; skipping)")
+        return False
+    original = AUTHOR_AUTHORITY_OUT.read_text(encoding="utf-8")
+    table = _render_author_authority_guard_table(manifests)
+    updated, replaced = _replace_sentinel_block(original, "author-authority-guards", table)
+    if not replaced:
+        print(
+            f"  ! {AUTHOR_AUTHORITY_OUT.name} is missing the "
+            "GENERATED:author-authority-guards sentinel block; skipping"
+        )
+        return False
+    if updated != original:
+        AUTHOR_AUTHORITY_OUT.write_text(updated, encoding="utf-8")
+        try:
+            rel = AUTHOR_AUTHORITY_OUT.relative_to(DOCS_DIR)
+        except ValueError:
+            rel = AUTHOR_AUTHORITY_OUT
+        print(f"  wrote {rel}")
+    else:
+        print(f"  ({AUTHOR_AUTHORITY_OUT.name} table already up to date)")
+    return True
+
+
 def main() -> None:
     print("Preprocessing scriptorium docs site")
     print(f"  source: {REPO_ROOT}")
@@ -1034,6 +1121,7 @@ def main() -> None:
     print("\n[4/5] Concept-page sentinel blocks")
     process_workflow_stage_concept()
     process_guidance_level_concept()
+    process_author_authority_concept()
 
     print("\n[5/5] Quarto sources")
     n_qmd = process_qmd()
