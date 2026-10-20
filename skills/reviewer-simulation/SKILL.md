@@ -30,7 +30,7 @@ the critique to an AI, which current reviewer policies rule out
 ([[peer-review-platforms]], [[ai-peer-review-research]]):
 
 - NIH prohibits its reviewers from using generative AI to analyse or
-  formulate critiques (NOT-OD-23-149).
+  formulate critiques of grant applications (NOT-OD-23-149).
 - Elsevier (June 2026) allows AI only in a supportive capacity, with
   disclosure, and says reviewers must not upload a submitted
   manuscript, or any part of it, into any AI tool.
@@ -91,7 +91,7 @@ accuracy.
    has already acknowledged a limitation in the manuscript, do not
    surface it as a new critique — note it as "acknowledged, may need
    stronger treatment" if relevant.
-5. **Form critiques before reading the author's limitations.** Build
+5. **Form critiques before weighing the author's limitations.** Build
    each lens's critiques from the methods and results first; only
    then weigh the manuscript's limitations section and
    `known_weaknesses`. When a critique only restates a limitation the
@@ -193,7 +193,9 @@ note). The structured critique itself is unchanged across levels.
 1. Read the manuscript, `MANUSCRIPT_STATE.yaml`, and the bibliography.
 2. Identify the manuscript's `core_claims` and `known_weaknesses` from
    the state file.
-3. For each lens, produce critiques **anchored to specific passages**.
+3. For each lens, produce critiques **anchored to specific passages**,
+   formed from the methods and results first, before weighing
+   `known_weaknesses` (constraint 5).
    Aim for 2–5 substantive critiques per lens, not exhaustive
    enumeration. Bornmann, Weymuth & Daniel (2010) found that many
    negative comments on relevance and on design/conception signalled

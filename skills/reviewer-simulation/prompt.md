@@ -45,7 +45,7 @@ the simulation with the limitation noted explicitly in the output.
    `MANUSCRIPT_STATE.yaml#known_weaknesses`, do not raise it as a
    new critique; note it as "already acknowledged" if it remains
    relevant.
-5. **Form critiques before reading the author's limitations.** Work
+5. **Form critiques before weighing the author's limitations.** Work
    from the methods and results first, then weigh the limitations
    section and known weaknesses. Say when a critique only restates a
    disclosed limitation. (A defensive measure: one preprint found LLM

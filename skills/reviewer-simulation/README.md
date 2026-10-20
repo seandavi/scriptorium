@@ -15,13 +15,13 @@ specifically, using it as an aid in editorial review of someone
 else's submission — would mean uploading a confidential manuscript
 and handing the critique to an AI. Current reviewer policies rule
 that out. NIH prohibits its reviewers from using generative AI to
-analyse or formulate critiques. Elsevier (June 2026) and Springer
-Nature (September 2026) allow limited, disclosed, supportive reviewer
-use but forbid delegating the critique to AI. Elsevier bans uploading
-a submitted manuscript into any AI tool; Springer Nature bans public
-or unsecured tools. ICMJE requires reviewers to follow the journal's
-AI policy or request the journal's permission. The skill will refuse
-to run in that context. See
+analyse or formulate critiques of grant applications. Elsevier
+(June 2026) and Springer Nature (September 2026) allow limited,
+disclosed, supportive reviewer use but forbid delegating the critique
+to AI. Elsevier bans uploading a submitted manuscript into any AI
+tool; Springer Nature bans public or unsecured tools. ICMJE requires
+reviewers to follow the journal's AI policy or request the journal's
+permission. The skill will refuse to run in that context. See
 [`peer-review-platforms`](../../knowledge/prior-art/peer-review-platforms.md)
 for sources.
 

@@ -173,12 +173,12 @@ This skill is grounded in scriptorium's knowledge layer:
   declined without review; *NEJM* ~5% published; *Science*'s 15.0%
   externally reviewed, stated by the journal but not verified on
   science.org), the *Science* Board of Reviewing Editors breakdown
-  and editorial-stage selection effects (Zhang et al. 2026), the five
-  triage-heuristic categories editors actually use, the ICMJE
-  AI-disclosure requirements, and Bornmann's inter-reviewer-agreement
-  evidence (κ ≈ 0.17) that motivates why the editor's discretion at
-  triage is load-bearing. This is the load-bearing knowledge note for
-  the whole skill.
+  (five-year dataset) and editorial-stage selection effects (Zhang
+  et al. 2026), the five triage-heuristic categories editors actually
+  use, the ICMJE AI-disclosure requirements, and Bornmann's
+  inter-reviewer-agreement evidence (κ ≈ 0.17) that motivates why the
+  editor's discretion at triage is load-bearing. This is the
+  load-bearing knowledge note for the whole skill.
 - [`significance-positioning`](../../knowledge/scientific-writing/significance-positioning.md)
   — informs the significance-framing category. Day & Gastel's
   problem / what / new / why-it-matters pattern; Teplitskiy et al.

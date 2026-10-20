@@ -64,10 +64,11 @@ figures, and applies a small number of triage heuristics: scope fit,
 methodological adequacy detectable from the abstract, novelty,
 language quality, and policy compliance. Not every pre-review decline
 is an editor skimming alone, though. At *Science*, editors summarily
-rejected 28.1% of submissions and sent 69.5% to the Board of
-Reviewing Editors, outside experts who give rapid advice; editors
-then declined 75% of those (Zhang et al. 2026). The signals this
-skill audits are the ones visible at that stage, whoever reads them.
+rejected 28.1% of 68,047 submissions over five years and sent 69.5%
+to the Board of Reviewing Editors, outside experts who give rapid
+advice; editors then declined 75% of those (Zhang et al. 2026). The
+signals this skill audits are the ones visible at that stage,
+whoever reads them.
 
 The asymmetry is the whole point of the skill: catching a scope
 mismatch before submitting saves a desk-rejection cycle plus the
@@ -441,13 +442,13 @@ This skill is grounded in scriptorium's knowledge layer:
   (*Nature* ~8% accepted, "most submissions are declined without
   being sent out for peer review"; *NEJM* ~5% published; *Science*'s
   15.0% externally reviewed, stated but not verified on science.org),
-  the *Science* Board of Reviewing Editors breakdown and the
-  editorial-stage selection effects (Zhang et al. 2026), the five
-  triage-heuristic categories editors actually use, the ICMJE
-  AI-disclosure requirements, and Bornmann's inter-reviewer-agreement
-  evidence (κ ≈ 0.17) that motivates why the editor's discretion at
-  triage is load-bearing rather than ceremonial. This is the
-  load-bearing knowledge note.
+  the *Science* Board of Reviewing Editors breakdown (five-year
+  dataset) and the editorial-stage selection effects (Zhang et al.
+  2026), the five triage-heuristic categories editors actually use,
+  the ICMJE AI-disclosure requirements, and Bornmann's
+  inter-reviewer-agreement evidence (κ ≈ 0.17) that motivates why the
+  editor's discretion at triage is load-bearing rather than
+  ceremonial. This is the load-bearing knowledge note.
 - [[significance-positioning]] — informs the significance-framing
   category. The Day & Gastel pattern (problem / what / new / why
   it matters), Teplitskiy et al. 2022 *PNAS* on novelty and
